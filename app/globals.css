@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-primary: #5c5ee6;
+  --color-primary-hover: #4a46d6;
+  --color-accent: #14b79a;
+
+  /* Ink (text) */
+  --color-ink: #1a1d26;
+  --color-ink-secondary: #5a6273;
+  --color-ink-muted: #7c8494;
+  --color-ink-faint: #a9b0be;
+
+  /* Surfaces */
+  --color-surface-app: #eaecf1;
+  --color-surface-panel: #f1f3f6;
+  --color-surface-light: #f8f9fb;
+  --color-surface-card: #ffffff;
+
+  /* Borders */
+  --color-border: #e5e8ee;
+  --color-border-strong: #d3d8e1;
+
+  /* Semantic */
+  --color-success: #0a9380;
+  --color-success-bg: #d0fbef;
+  --color-warning: #92600a;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-error: #b91c1c;
+  --color-error-strong: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fca5a5;
+
+  /* Brand gradient */
+  --gradient-brand: linear-gradient(135deg, #5c5ee6, #14b79a);
+
+  /* Radius */
+  --radius-card: 16px;
+  --radius-card-sm: 12px;
+  --radius-card-lg: 20px;
+  --radius-pill: 999px;
+  --radius-btn: 12px;
+
+  /* Shadows */
+  --shadow-cta: 0 8px 20px -6px rgba(92, 94, 230, 0.5);
+  --shadow-device-frame: 0 30px 70px -20px rgba(26, 29, 38, 0.4);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-accent: var(--color-accent);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ink: var(--color-ink);
+  --color-ink-secondary: var(--color-ink-secondary);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-faint: var(--color-ink-faint);
+
+  --color-surface-app: var(--color-surface-app);
+  --color-surface-panel: var(--color-surface-panel);
+  --color-surface-light: var(--color-surface-light);
+  --color-surface-card: var(--color-surface-card);
+
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning: var(--color-warning);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-warning-border: var(--color-warning-border);
+  --color-error: var(--color-error);
+  --color-error-strong: var(--color-error-strong);
+  --color-error-bg: var(--color-error-bg);
+  --color-error-border: var(--color-error-border);
+
+  --radius-card: var(--radius-card);
+  --radius-card-sm: var(--radius-card-sm);
+  --radius-card-lg: var(--radius-card-lg);
+  --radius-pill: var(--radius-pill);
+  --radius-btn: var(--radius-btn);
+
+  --shadow-cta: var(--shadow-cta);
+  --shadow-device-frame: var(--shadow-device-frame);
+
+  --font-sarabun: var(--font-sarabun), sans-serif;
+  --font-anuphan: var(--font-anuphan), sans-serif;
+  --font-fredoka: var(--font-fredoka), var(--font-anuphan), sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface-app);
+  color: var(--color-ink);
+  font-family: var(--font-sarabun), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-anuphan), sans-serif;
+  color: var(--color-ink);
+}
+
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: #ffffff;
 }
