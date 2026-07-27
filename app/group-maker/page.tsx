@@ -9,48 +9,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.khuncool.com/group-maker",
   },
-  openGraph: {
-    type: "website",
-    title: "สุ่มแบ่งกลุ่มนักเรียน ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool",
-    description:
-      "สุ่มแบ่งกลุ่มนักเรียนตามจำนวนที่ต้องการ ใส่รายชื่อแล้วแบ่งกลุ่มได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องสมัครสมาชิก",
-    url: "https://www.khuncool.com/group-maker",
-    locale: "th_TH",
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebApplication",
-      name: "สุ่มแบ่งกลุ่ม Khuncool",
-      url: "https://www.khuncool.com/group-maker",
-      applicationCategory: "EducationalApplication",
-      operatingSystem: "Web",
-      inLanguage: "th",
-      description:
-        "สุ่มแบ่งกลุ่มนักเรียนตามจำนวนที่ต้องการ ใส่รายชื่อแล้วแบ่งกลุ่มได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องสมัครสมาชิก",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "THB",
-      },
-    },
-  ],
 };
 
 export default function GroupMakerPage() {
   return (
     <main className="flex-1">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       {/* Breadcrumb */}
       <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
         <Link href="/" className="text-ink-faint">
