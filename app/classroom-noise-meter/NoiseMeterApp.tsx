@@ -14,6 +14,8 @@ function winLabel(n: number): string {
 }
 
 function zoneFor(level: number, limit: number) {
+  // "Quiet" zone is anything at or below 60% of the configured limit;
+  // "ok" is between that and the limit itself; anything above is "loud".
   if (level <= limit * 0.6) {
     return {
       label: "เงียบมาก เยี่ยม!",
@@ -53,6 +55,9 @@ export default function NoiseMeterApp() {
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
+  // Kept only so the source node isn't garbage-collected mid-stream;
+  // it's never read directly since ctx.close() in teardown() tears
+  // down the whole audio graph (including this node) for us.
   const srcRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -118,28 +123,50 @@ export default function NoiseMeterApp() {
     analyserRef.current = null;
   }, []);
 
+  // Holds the current rAF tick function in a ref so the loop can
+  // self-schedule (`requestAnimationFrame(() => loopRef.current())`)
+  // without closing over its own `useCallback` binding — avoids the
+  // TDZ/ordering hazard the hooks linter flags when a callback
+  // references itself by name inside its own body.
+  const loopRef = useRef<() => void>(() => {});
+
   const loop = useCallback(() => {
     if (!runningRef.current || !analyserRef.current || !bufRef.current) return;
     analyserRef.current.getByteTimeDomainData(bufRef.current);
     let sum = 0;
     const buf = bufRef.current;
     for (let i = 0; i < buf.length; i++) {
+      // Center each byte sample (0-255) around 0 to get a signed
+      // amplitude in [-1, 1] for the RMS (root-mean-square) calc.
       const v = (buf[i] - 128) / 128;
       sum += v * v;
     }
     const rms = Math.sqrt(sum / buf.length);
+    // Scale the 0-1 RMS value up to a 0-100 "loudness" reading. 260 is
+    // an empirical multiplier tuned so normal classroom talking lands
+    // roughly mid-scale (ported as-is from the source design doc).
     const raw = Math.min(100, Math.round(rms * 260));
+    // Exponential smoothing (70% previous / 30% new) so the meter
+    // doesn't jitter frame to frame.
     const smooth = Math.round(levelRef.current * 0.7 + raw * 0.3);
     if (smooth !== levelRef.current) {
       levelRef.current = smooth;
       setLevel(smooth);
     }
-    rafRef.current = requestAnimationFrame(loop);
+    rafRef.current = requestAnimationFrame(() => loopRef.current());
   }, []);
+
+  useEffect(() => {
+    loopRef.current = loop;
+  }, [loop]);
 
   const tick = useCallback(() => {
     if (phaseRef.current !== "live") return;
     const overNow = levelRef.current > limitRef.current;
+    // Ticks run every 250ms (see setInterval(tick, 250) below), so each
+    // tick that stays over the limit adds 0.25s of "over" hold time.
+    // Once that hold reaches 3s continuously over the limit, the class
+    // loses a star for the current window.
     overHoldRef.current = overNow ? overHoldRef.current + 0.25 : 0;
     let failed = false;
     if (overHoldRef.current >= 3) {
@@ -148,6 +175,9 @@ export default function NoiseMeterApp() {
       failed = true;
     }
     setLeft((l) => {
+      // Countdown for the current star-reward window, decremented by
+      // the same 0.25s per tick; a full window with no 3s-over-limit
+      // failure earns a star.
       const next = l - 0.25;
       if (next <= 0) {
         if (!failed) setStars((s) => s + 1);
@@ -189,7 +219,7 @@ export default function NoiseMeterApp() {
       setLeft(winRef.current);
       setPhase("live");
 
-      rafRef.current = requestAnimationFrame(loop);
+      rafRef.current = requestAnimationFrame(() => loopRef.current());
       tickTimerRef.current = setInterval(tick, 250);
     } catch (e) {
       let framed = true;
@@ -212,7 +242,7 @@ export default function NoiseMeterApp() {
       setReason(r);
       setPhase("denied");
     }
-  }, [loop, tick]);
+  }, [tick]);
 
   const openTab = useCallback(() => {
     try {
