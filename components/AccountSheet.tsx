@@ -225,6 +225,9 @@ export function AccountForm({
           </div>
           <button
             type="button"
+            // Phase 1: no real OAuth wiring yet — closing the sheet mirrors
+            // the "skip" behavior until Google sign-in is implemented.
+            onClick={onSkip}
             className="flex w-full items-center justify-center gap-2 rounded-btn border border-border-strong bg-surface-card py-3 text-sm font-semibold text-ink transition-colors hover:bg-surface-light"
           >
             <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true">

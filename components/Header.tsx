@@ -6,10 +6,30 @@ import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
 
 const PILLARS = [
-  { icon: "🛠️", title: "เครื่องมือออนไลน์", path: "/tools" },
-  { icon: "📱", title: "แอปช่วยงานครู", path: "/apps" },
-  { icon: "📰", title: "บทความครู", path: "/articles" },
-  { icon: "🛍️", title: "ร้านค้าแนะนำ", path: "/shop" },
+  {
+    icon: "🛠️",
+    title: "เครื่องมือออนไลน์",
+    path: "/tools",
+    desc: "เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง",
+  },
+  {
+    icon: "📱",
+    title: "แอปช่วยงานครู",
+    path: "/apps",
+    desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
+  },
+  {
+    icon: "📰",
+    title: "บทความครู",
+    path: "/articles",
+    desc: "ข่าวครู รีวิวสินค้า ข่าวอบรมได้เกียรติบัตร และวิธีทำสื่อการสอน",
+  },
+  {
+    icon: "🛍️",
+    title: "ร้านค้าแนะนำ",
+    path: "/shop",
+    desc: "คัดของใช้ในห้องเรียนพร้อมลิงก์ซื้อ (Affiliate) จากครูจริง",
+  },
 ];
 
 const NAV_LINKS = [
@@ -98,7 +118,7 @@ export default function Header() {
                 <div className="text-[13.5px] font-semibold text-ink">
                   {p.title}
                 </div>
-                <div className="text-[11px] text-ink-faint">{p.path}</div>
+                <div className="text-[11px] text-ink-faint">{p.desc}</div>
               </div>
             </Link>
           ))}
