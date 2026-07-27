@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>สุ่มคำถามในห้องเรียน ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="สุ่มคำถามสำหรับกิจกรรมในห้องเรียน ใส่ชุดคำถามแล้วสุ่มได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องสมัครสมาชิก">
+<link rel="canonical" href="https://www.khuncool.com/tools/question">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- MOBILE -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · สุ่มคำถามหน้าชั้น</span>
+    </div>
+    <div style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="1" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">สุ่มคำถาม</span>
+        </div>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:18px 16px 30px">
+        <!-- display card -->
+        <div style="position:relative;border-radius:20px;padding:28px 20px;min-height:210px;background:linear-gradient(150deg,#2A2775,#0A9380);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;box-shadow:0 18px 40px -14px rgba(42,39,117,.5);margin-bottom:16px">
+          <div style="position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+          <div style="position:relative;width:100%">
+            <div style="font-size:11.5px;color:#C6C9FB;letter-spacing:.05em;margin-bottom:12px">{{ badge }}</div>
+            <div key="{{ animKey }}" style="animation:pop .3s ease;font-size:22px;font-weight:700;line-height:1.4;word-break:break-word">{{ current }}</div>
+          </div>
+        </div>
+
+        <button onClick="{{ pick }}" disabled="{{ pickDisabled }}" style="width:100%;font-family:inherit;font-size:16px;font-weight:700;padding:15px;border:none;border-radius:13px;background:{{ pickBg }};color:#fff;cursor:{{ pickCursor }};box-shadow:0 10px 24px -8px rgba(92,94,230,.5);margin-bottom:16px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ pickLabel }}</button>
+
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">คลังคำถาม ({{ count }})</span>
+            <div style="display:flex;gap:10px">
+              <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+              <span onClick="{{ clearAll }}" style="font-size:12px;color:#DC2626;cursor:pointer">ล้าง</span>
+            </div>
+          </div>
+
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="ใส่คำถาม ทีละบรรทัด…" style="width:100%;height:130px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้คำถามชุดนี้</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input value="{{ newQ }}" onChange="{{ onNewQ }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มคำถาม… กด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                <button onClick="{{ addQ }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto" class="frame-scroll">
+                <sc-for list="{{ questions }}" as="q" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 10px;border-radius:10px;background:#fff;border:1px solid #E5E8EE">
+                    <span style="flex:1">{{ q }}</span>
+                    <span onClick="{{ removeQ }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:15px;line-height:1;flex:none" style-hover="color:#DC2626">×</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <label style="display:flex;align-items:center;gap:9px;margin-top:14px;padding-top:12px;border-top:1px solid #E5E8EE;cursor:pointer;font-size:12.5px;color:#434A58">
+            <input type="checkbox" checked="{{ noRepeat }}" onChange="{{ toggleNoRepeat }}" style="width:17px;height:17px;accent-color:#5C5EE6;cursor:pointer">
+            ไม่ถามซ้ำจนกว่าจะครบทุกข้อ
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · สุ่มคำถามหน้าชั้น</span>
+    </div>
+    <div style="width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="desktop" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">สุ่มคำถามหน้าชั้น</span>
+        </div>
+        <button onClick="{{ toggleFull }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">⛶ เต็มจอ</button>
+        <span style="font-size:12.5px;color:#A9B0BE;font-family:'IBM Plex Mono'">/tools/question</span>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:32px;display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:start">
+        <div>
+          <div style="position:relative;border-radius:24px;padding:56px 40px;min-height:340px;background:linear-gradient(135deg,#2A2775,#0A9380);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;box-shadow:0 24px 50px -16px rgba(42,39,117,.5);margin-bottom:20px">
+            <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+            <div style="position:relative;width:100%">
+              <div style="font-size:13px;color:#C6C9FB;letter-spacing:.06em;margin-bottom:18px">{{ badge }}</div>
+              <div key="{{ animKey }}" style="animation:pop .3s ease;font-size:34px;font-weight:700;line-height:1.4;word-break:break-word">{{ current }}</div>
+            </div>
+          </div>
+          <button onClick="{{ pick }}" disabled="{{ pickDisabled }}" style="width:100%;font-family:inherit;font-size:18px;font-weight:700;padding:17px;border:none;border-radius:14px;background:{{ pickBg }};color:#fff;cursor:{{ pickCursor }};box-shadow:0 12px 28px -8px rgba(92,94,230,.5)" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ pickLabel }}</button>
+        </div>
+
+        <div>
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+              <span style="font-size:15px;font-weight:700">คลังคำถาม ({{ count }})</span>
+              <div style="display:flex;gap:12px">
+                <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+                <span onClick="{{ clearAll }}" style="font-size:12.5px;color:#DC2626;cursor:pointer">ล้าง</span>
+              </div>
+            </div>
+            <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="ใส่คำถาม ทีละบรรทัด…" style="width:100%;height:160px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+                <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้คำถามชุดนี้</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;gap:8px;margin-bottom:14px">
+                  <input value="{{ newQ }}" onChange="{{ onNewQ }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มคำถาม… กด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                  <button onClick="{{ addQ }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px;max-height:280px;overflow-y:auto" class="frame-scroll">
+                  <sc-for list="{{ questions }}" as="q" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;padding:9px 12px;border-radius:10px;background:#fff;border:1px solid #E5E8EE">
+                      <span style="flex:1">{{ q }}</span>
+                      <span onClick="{{ removeQ }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:16px;line-height:1;flex:none" style-hover="color:#DC2626">×</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <label style="display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid #E5E8EE;cursor:pointer;font-size:13.5px;color:#434A58">
+              <input type="checkbox" checked="{{ noRepeat }}" onChange="{{ toggleNoRepeat }}" style="width:18px;height:18px;accent-color:#5C5EE6;cursor:pointer">
+              ไม่ถามซ้ำจนกว่าจะครบทุกข้อ
+            </label>
+          </div>
+          <p style="font-size:12px;color:#A9B0BE;margin:14px 2px 0;line-height:1.6">ใช้คู่กับวงล้อสุ่มชื่อ เพื่อสุ่มทั้งคนตอบและคำถามพร้อมกัน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.sample = [
+      'อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค',
+      'ยกตัวอย่างจากชีวิตจริงที่เกี่ยวกับบทเรียนนี้',
+      'อะไรคือสิ่งที่ยากที่สุดในบทนี้ เพราะอะไร',
+      'ถ้าสอนเรื่องนี้ให้น้อง จะเริ่มอย่างไร',
+      'บทเรียนนี้เชื่อมโยงกับวิชาอื่นได้อย่างไร',
+      'ตั้งคำถาม 1 ข้อที่อยากรู้เพิ่มเกี่ยวกับเรื่องนี้',
+    ];
+    this.state = { questions:[...this.sample], used:[], current:'กดปุ่มเพื่อสุ่มคำถาม', newQ:'', bulkMode:false, bulkText:'', noRepeat:true, animKey:0, rolling:false, started:false };
+  }
+  ac(){ if(!this._ac){ try{ this._ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this._ac=null; } } return this._ac; }
+  blip(){ const ac=this.ac(); if(!ac)return; const o=ac.createOscillator(),g=ac.createGain(); o.type='triangle'; o.frequency.value=660;
+    g.gain.setValueAtTime(.12,ac.currentTime); g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.25);
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+.25); }
+
+  pick=()=>{
+    const qs=this.state.questions; if(qs.length===0||this.state.rolling) return;
+    const ac=this.ac(); if(ac&&ac.state==='suspended') ac.resume();
+    let pool = this.state.noRepeat ? qs.filter(q=>!this.state.used.includes(q)) : qs;
+    if(pool.length===0){ pool=qs; this.setState({ used:[] }); }
+    this.setState({ rolling:true, started:true });
+    let ticks=0; const max=12;
+    const roll=()=>{
+      const q=qs[Math.floor(Math.random()*qs.length)];
+      this.setState(s=>({ current:q, animKey:s.animKey+1 }));
+      ticks++;
+      if(ticks<max){ setTimeout(roll, 60+ticks*14); }
+      else {
+        const final=pool[Math.floor(Math.random()*pool.length)];
+        this.setState(s=>({ current:final, animKey:s.animKey+1, rolling:false, used:s.noRepeat?[...s.used,final]:s.used }));
+        this.blip();
+      }
+    };
+    roll();
+  };
+
+  onNewQ=(e)=>this.setState({ newQ:e.target.value });
+  onKey=(e)=>{ if(e.key==='Enter') this.addQ(); };
+  addQ=()=>{ const v=(this.state.newQ||'').trim(); if(!v)return; this.setState(s=>({ questions:[...s.questions,v], newQ:'' })); };
+  removeQ=(e)=>{ const i=parseInt(e.currentTarget.getAttribute('data-i'),10); this.setState(s=>({ questions:s.questions.filter((_,idx)=>idx!==i) })); };
+  clearAll=()=>this.setState({ questions:[], used:[], current:'ยังไม่มีคำถาม', started:false });
+  toggleNoRepeat=(e)=>this.setState({ noRepeat:e.target.checked, used:[] });
+  toggleBulk=()=>this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.questions.join('\n') }));
+  onBulk=(e)=>this.setState({ bulkText:e.target.value });
+  applyBulk=()=>{ const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean); this.setState({ questions:list, bulkMode:false, used:[] }); };
+
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  renderVals(){
+    const n=this.state.questions.length; const done=this.state.noRepeat && this.state.used.length>=n && n>0;
+    return {
+      toggleFull:this.toggleFull,
+      questions:this.state.questions, count:n, current:this.state.current, animKey:this.state.animKey,
+      newQ:this.state.newQ, bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText, noRepeat:this.state.noRepeat,
+      pick:this.pick, onNewQ:this.onNewQ, onKey:this.onKey, addQ:this.addQ, removeQ:this.removeQ, clearAll:this.clearAll,
+      toggleNoRepeat:this.toggleNoRepeat, toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk,
+      bulkLabel:this.state.bulkMode?'✎ กลับไปทีละข้อ':'✎ วางหลายข้อ',
+      badge: this.state.started ? (done?`ถามครบทุกข้อแล้ว · เริ่มรอบใหม่`:`เหลือ ${this.state.noRepeat? n-this.state.used.length : n} ข้อ`) : `มีคำถาม ${n} ข้อ`,
+      pickLabel:this.state.rolling?'กำลังสุ่ม…':'🎯 สุ่มคำถาม',
+      pickDisabled:n===0||this.state.rolling,
+      pickBg:(n===0||this.state.rolling)?'#B9BCC7':'#5C5EE6',
+      pickCursor:(n===0||this.state.rolling)?'not-allowed':'pointer',
+    };
+  }
+}
+</script>
+</body>
+</html>

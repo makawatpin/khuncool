@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>แอปช่วยงานครู เช็กชื่อ ออมเงิน โฮมรูม ใช้ฟรี | khuncool</title>
+<meta name="description" content="รวมแอปช่วยงานครูใช้ฟรีในเว็บเดียว เช็กชื่อนักเรียน บันทึกเงินออม บันทึกโฮมรูม และกระดานคะแนนกลุ่ม เก็บข้อมูลรายห้องรายคนต่อเนื่อง ล็อกอินแล้วซิงก์ทุกเครื่อง ไม่ต้องติดตั้ง">
+<link rel="canonical" href="https://www.khuncool.com/apps">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+</style>
+<script src="./khuncool-cloud.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"BreadcrumbList","itemListElement":[
+   {"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://www.khuncool.com/"},
+   {"@type":"ListItem","position":2,"name":"แอปช่วยงานครู","item":"https://www.khuncool.com/apps"}]},
+ {"@type":"CollectionPage","name":"แอปช่วยงานครู","url":"https://www.khuncool.com/apps",
+  "inLanguage":"th-TH","description":"รวมแอปบันทึกข้อมูลนักเรียนสำหรับครู ใช้ฟรีผ่านเว็บ ไม่ต้องติดตั้ง"},
+ {"@type":"ItemList","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":4,
+  "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"เช็กชื่อนักเรียน","url":"https://www.khuncool.com/attendance"},
+   {"@type":"ListItem","position":2,"name":"ออมเงินนักเรียน","url":"https://www.khuncool.com/savings"},
+   {"@type":"ListItem","position":3,"name":"บันทึกโฮมรูม","url":"https://www.khuncool.com/homeroom"},
+   {"@type":"ListItem","position":4,"name":"กระดานคะแนนกลุ่ม","url":"https://www.khuncool.com/group-scoreboard"}]},
+ {"@type":"SoftwareApplication","name":"khuncool แอปช่วยงานครู","applicationCategory":"EducationalApplication",
+  "operatingSystem":"Web","url":"https://www.khuncool.com/apps","inLanguage":"th-TH",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"THB"}},
+ {"@type":"FAQPage","mainEntity":[
+   {"@type":"Question","name":"แอปช่วยงานครูต่างจากเครื่องมือครูอย่างไร","acceptedAnswer":{"@type":"Answer","text":"เครื่องมือครูใช้แบบครั้งต่อครั้งในคาบเรียน เช่น สุ่มชื่อหรือจับเวลา ส่วนแอปช่วยงานครูเก็บข้อมูลต่อเนื่องรายห้องรายคน เช่น การมาเรียน เงินออม และบันทึกโฮมรูม เปิดกลับมาดูย้อนหลังและสรุปเป็นรายงานได้"}},
+   {"@type":"Question","name":"ต้องสมัครสมาชิกไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้งานได้เลยโดยไม่ต้องสมัคร ข้อมูลจะเก็บในเครื่องของคุณ แต่ถ้าล็อกอินข้อมูลจะซิงก์ขึ้นบัญชี ทำให้เปิดต่อจากมือถือหรือคอมเครื่องอื่นได้ และไม่หายเมื่อเปลี่ยนเครื่อง"}},
+   {"@type":"Question","name":"ส่งออกข้อมูลไปทำรายงานส่งโรงเรียนได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ ทุกแอปมีหน้าสรุปที่พิมพ์เป็นเอกสารหรือบันทึกเป็น PDF ได้ เช่น สรุปการมาเรียนรายเดือน และสรุปยอดเงินออมรายห้อง"}},
+   {"@type":"Question","name":"ข้อมูลนักเรียนปลอดภัยแค่ไหน","acceptedAnswer":{"@type":"Answer","text":"ข้อมูลผูกกับบัญชีของครูผู้ใช้เท่านั้น ไม่เปิดเผยต่อสาธารณะและไม่ถูกนำไปขาย ครูลบข้อมูลห้องเรียนหรือลบบัญชีได้เองตลอดเวลา"}}]}]}
+</script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · /apps · หน้ารวมแอป</span>
+    </div>
+    <div style="width:390px;height:900px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">แอปช่วยงานครู</span>
+        </div>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:14px 16px 0;display:flex;align-items:center;gap:6px;font-size:11.5px;color:#8A93A3">
+        <a href="./Khuncool Home v2.dc.html" style="color:#8A93A3">หน้าแรก</a><span>›</span><span style="color:#434A58;font-weight:600">แอปช่วยงานครู</span>
+      </div>
+
+      <div style="padding:12px 16px 22px">
+        <h1 style="font-size:26px;line-height:1.32;margin:0 0 10px">แอปช่วยงานครู<br>บันทึกข้อมูลนักเรียนใช้ฟรี</h1>
+        <p style="font-size:14px;color:#434A58;margin:0 0 14px;line-height:1.7;text-wrap:pretty">เช็กชื่อ ออมเงิน บันทึกโฮมรูม และคะแนนกลุ่ม เก็บต่อเนื่องรายห้องรายคน เปิดจากมือถือระหว่างสอนแล้วทำสรุปต่อจากคอมที่บ้านได้ ไม่ต้องติดตั้งโปรแกรม</p>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          <sc-for list="{{ trustChips }}" as="c" hint-placeholder-count="3">
+            <span style="font-size:11.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:5px 10px;border-radius:20px">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ apps }}" as="a" hint-placeholder-count="4">
+          <a href="{{ a.href }}" style="display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #E5E8EE;border-radius:16px;background:#fff;color:inherit" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+            <div style="display:flex;gap:11px;align-items:center">
+              <div style="width:42px;height:42px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;background:{{ a.bg }}">{{ a.icon }}</div>
+              <div style="flex:1;min-width:0">
+                <h2 style="font-size:16px;margin:0 0 2px">{{ a.title }}</h2>
+                <p style="font-size:12px;color:#5A6273;margin:0">{{ a.sub }}</p>
+              </div>
+              <span style="font-size:13px;font-weight:600;color:#4A46D6;flex:none">เปิด ›</span>
+            </div>
+            <p style="font-size:12.5px;color:#5A6273;margin:0;line-height:1.65">{{ a.desc }}</p>
+          </a>
+        </sc-for>
+      </div>
+
+      <div style="padding:0 16px 24px">
+        <h2 style="font-size:18px;margin:0 0 4px">ใช้ตอนไหนในงานประจำวัน</h2>
+        <p style="font-size:13px;color:#5A6273;margin:0 0 12px;line-height:1.65">เลือกจากงานที่ต้องทำวันนี้</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
+            <a href="{{ c.href }}" style="display:flex;gap:10px;align-items:center;padding:12px 13px;border-radius:13px;background:#F8F9FB;border:1px solid #EEF0F4;color:inherit" style-hover="background:#F1F2FC">
+              <span style="flex:1;font-size:13px;color:#434A58;line-height:1.55">{{ c.q }}</span>
+              <span style="font-size:12px;font-weight:600;color:#4A46D6;flex:none;white-space:nowrap">{{ c.a }} ›</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 24px">
+        <h2 style="font-size:18px;margin:0 0 12px">คำถามที่ครูถามบ่อย</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ faqsM }}" as="f" hint-placeholder-count="4">
+            <div style="border:1px solid #E5E8EE;border-radius:14px;overflow:hidden;background:#fff">
+              <button onClick="{{ f.toggle }}" style="width:100%;font-family:inherit;text-align:left;display:flex;gap:10px;align-items:center;padding:13px;border:none;background:none;cursor:pointer" style-hover="background:#F8F9FB">
+                <span style="flex:1;font-size:13.5px;font-weight:600;line-height:1.5">{{ f.q }}</span>
+                <span style="font-size:15px;color:#8A93A3;flex:none">{{ f.mark }}</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:13px;color:#5A6273;line-height:1.7;margin:0;padding:0 13px 14px">{{ f.a }}</p>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:22px 16px 28px">
+        <h2 style="font-size:15px;margin:0 0 8px">มองหาเครื่องมือใช้สดในคาบเรียน</h2>
+        <a href="./Khuncool Tools.dc.html" style="font-size:13px">ดูเครื่องมือครูทั้งหมด ›</a>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px">
+          <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+            <a href="{{ r.href }}" style="font-size:13px;line-height:1.6">{{ r.t }}</a>
+          </sc-for>
+        </div>
+        <div style="font-size:11px;color:#A9B0BE;margin-top:16px">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1280 · hub page คู่ขนานกับ /tools</span>
+    </div>
+    <div style="width:1280px;height:900px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:18px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:13px 32px">
+        <div style="display:flex;align-items:center;gap:22px">
+          <a href="./Khuncool Home v2.dc.html" style="display:flex;align-items:center;gap:8px;color:inherit">
+            <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:32px;height:32px;flex:none;object-fit:contain">
+            <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em">khuncool</span>
+          </a>
+          <nav style="display:flex;gap:4px;flex:1">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+              <a href="{{ n.href }}" style="font-size:15px;color:#434A58;padding:9px 14px;border-radius:9px" style-hover="background:#F8F9FB;color:#5C5EE6">{{ n.t }}</a>
+            </sc-for>
+          </nav>
+          <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+        </div>
+      </div>
+
+      <div style="padding:18px 32px 0;display:flex;align-items:center;gap:7px;font-size:12.5px;color:#8A93A3">
+        <a href="./Khuncool Home v2.dc.html" style="color:#8A93A3">หน้าแรก</a><span>›</span><span style="color:#434A58;font-weight:600">แอปช่วยงานครู</span>
+      </div>
+
+      <div style="padding:16px 32px 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start">
+        <div>
+          <h1 style="font-size:42px;line-height:1.25;margin:0 0 14px;max-width:17ch">แอปช่วยงานครู บันทึกข้อมูลนักเรียนใช้ฟรี</h1>
+          <p style="font-size:16px;color:#434A58;margin:0 0 16px;line-height:1.8;max-width:56ch;text-wrap:pretty">khuncool รวมแอปที่ครูไทยต้องใช้ทุกวันไว้ในเว็บเดียว ทั้งเช็กชื่อนักเรียน บันทึกเงินออม บันทึกโฮมรูม และกระดานคะแนนกลุ่ม ต่างจากเครื่องมือใช้สดในคาบตรงที่แอปกลุ่มนี้เก็บข้อมูลต่อเนื่องรายห้องรายคน ย้อนดูได้ สรุปเป็นรายงานส่งโรงเรียนได้ และเมื่อล็อกอินแล้วข้อมูลจะซิงก์ตามไปทุกเครื่องโดยไม่ต้องติดตั้งโปรแกรมใด ๆ</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ trustChips }}" as="c" hint-placeholder-count="3">
+              <span style="font-size:12.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:6px 12px;border-radius:20px">{{ c }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#F8F9FB;border:1px solid #EEF0F4;border-radius:18px;padding:20px 22px">
+          <h2 style="font-size:15px;margin:0 0 12px">เลือกจากงานที่ต้องทำวันนี้</h2>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
+              <a href="{{ c.href }}" style="display:flex;gap:10px;align-items:center;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #EEF0F4;color:inherit" style-hover="border-color:#C6C9FB">
+                <span style="flex:1;font-size:13.5px;color:#434A58">{{ c.q }}</span>
+                <span style="font-size:12.5px;font-weight:600;color:#4A46D6;flex:none;white-space:nowrap">{{ c.a }} ›</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 32px 34px">
+        <h2 style="font-size:24px;margin:0 0 6px">แอปทั้งหมด</h2>
+        <p style="font-size:14.5px;color:#5A6273;margin:0 0 18px;line-height:1.7;max-width:62ch">แต่ละแอปมีหน้าของตัวเอง เปิดใช้ได้ทันทีโดยไม่ต้องสมัคร ล็อกอินเมื่อต้องการให้ข้อมูลตามไปทุกเครื่อง</p>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+          <sc-for list="{{ apps }}" as="a" hint-placeholder-count="4">
+            <a href="{{ a.href }}" style="display:flex;flex-direction:column;padding:22px;border:1px solid #E5E8EE;border-radius:18px;background:#fff;color:inherit;height:100%" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+              <div style="display:flex;gap:14px;align-items:center;margin-bottom:13px">
+                <div style="width:50px;height:50px;flex:none;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;background:{{ a.bg }}">{{ a.icon }}</div>
+                <div style="flex:1;min-width:0">
+                  <h3 style="font-size:19px;margin:0 0 2px">{{ a.title }}</h3>
+                  <p style="font-size:13px;color:#5A6273;margin:0">{{ a.sub }}</p>
+                </div>
+              </div>
+              <p style="font-size:13.5px;color:#5A6273;margin:0 0 14px;line-height:1.7;flex:1">{{ a.desc }}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+                <sc-for list="{{ a.feats }}" as="f" hint-placeholder-count="3">
+                  <span style="font-size:12px;color:#434A58;background:#F1F2F6;padding:4px 10px;border-radius:8px">{{ f }}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                <span style="font-family:'IBM Plex Mono';font-size:11px;color:#8A93A3">{{ a.slug }}</span>
+                <span style="font-size:13px;font-weight:600;color:#4A46D6">เปิดใช้งาน ›</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 32px 36px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start">
+        <div>
+          <h2 style="font-size:24px;margin:0 0 16px">คำถามที่ครูถามบ่อย</h2>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ faqsD }}" as="f" hint-placeholder-count="4">
+              <div style="border:1px solid #E5E8EE;border-radius:15px;overflow:hidden;background:#fff">
+                <button onClick="{{ f.toggle }}" style="width:100%;font-family:inherit;text-align:left;display:flex;gap:12px;align-items:center;padding:15px 17px;border:none;background:none;cursor:pointer" style-hover="background:#F8F9FB">
+                  <span style="flex:1;font-size:15px;font-weight:600;line-height:1.5">{{ f.q }}</span>
+                  <span style="font-size:16px;color:#8A93A3;flex:none">{{ f.mark }}</span>
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <p style="font-size:14px;color:#5A6273;line-height:1.75;margin:0;padding:0 17px 16px">{{ f.a }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:24px;margin:0 0 16px">ทำไมงานเอกสารครูถึงควรอยู่ในที่เดียว</h2>
+          <p style="font-size:14.5px;color:#434A58;line-height:1.85;margin:0 0 14px;text-wrap:pretty">ครูส่วนใหญ่บันทึกการมาเรียนในสมุด บันทึกเงินออมในไฟล์ Excel และเขียนบันทึกโฮมรูมในอีกเล่ม พอถึงสิ้นเดือนต้องเปิดสามที่เพื่อทำรายงานเดียว การรวมทุกอย่างไว้ในบัญชีเดียวทำให้กรอกครั้งเดียวแล้วดึงสรุปออกมาได้ทันที และไม่ต้องกังวลว่าสมุดจะหายหรือไฟล์จะอยู่คนละเครื่อง</p>
+          <p style="font-size:14.5px;color:#434A58;line-height:1.85;margin:0 0 18px;text-wrap:pretty">แอปทุกตัวใช้รายชื่อนักเรียนชุดเดียวกันกับเครื่องมือในคาบเรียน เพิ่มรายชื่อห้องหนึ่งครั้ง แล้วใช้ได้ทั้งการสุ่มชื่อ แบ่งกลุ่ม เช็กชื่อ และบันทึกเงินออม</p>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+              <a href="{{ r.href }}" style="display:flex;gap:10px;align-items:center;padding:13px 15px;border-radius:13px;background:#F8F9FB;border:1px solid #EEF0F4;color:inherit" style-hover="background:#F1F2FC">
+                <span style="flex:1;font-size:14px;color:#434A58">{{ r.t }}</span>
+                <span style="font-size:13px;color:#4A46D6;flex:none">อ่าน ›</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:26px 32px 32px;display:flex;align-items:center;gap:16px">
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;margin-bottom:3px">ล็อกอินครั้งเดียว ใช้ต่อได้ทุกเครื่อง</div>
+          <div style="font-size:13px;color:#5A6273">รายชื่อนักเรียน คะแนน และบันทึกทั้งหมดจะซิงก์ขึ้นบัญชีของคุณ</div>
+        </div>
+        <a href="./Khuncool Account.dc.html" style="font-size:14px;font-weight:600;padding:11px 20px;border-radius:11px;background:#5C5EE6;color:#fff;flex:none" style-hover="background:#4A46D6;color:#fff">สร้างบัญชีฟรี</a>
+      </div>
+      <div style="padding:16px 32px 26px;font-size:11.5px;color:#A9B0BE">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+    </div>
+  </div>
+
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#0A9380;color:#fff;padding:4px 9px;border-radius:6px">SEO SPEC</span>
+      <span style="font-size:13px;color:#5A6273">สำหรับ Claude Code</span>
+    </div>
+    <div style="width:420px;background:#1A1D26;color:#D8DBE2;border-radius:18px;padding:24px;font-family:'IBM Plex Mono';font-size:11.5px;line-height:1.85">
+      <div style="color:#7BE8CE;margin-bottom:4px">URL</div>
+      <div style="margin-bottom:16px">https://www.khuncool.com/apps</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">TITLE</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun'">แอปช่วยงานครู เช็กชื่อ ออมเงิน โฮมรูม ใช้ฟรี | khuncool</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">META DESCRIPTION</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun';color:#A9B0BE">รวมแอปช่วยงานครูใช้ฟรีในเว็บเดียว เช็กชื่อนักเรียน บันทึกเงินออม บันทึกโฮมรูม และกระดานคะแนนกลุ่ม เก็บข้อมูลรายห้องรายคนต่อเนื่อง ล็อกอินแล้วซิงก์ทุกเครื่อง ไม่ต้องติดตั้ง</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">H1 — มีหนึ่งเดียวในหน้า</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun'">แอปช่วยงานครู บันทึกข้อมูลนักเรียนใช้ฟรี</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">คีย์เวิร์ดเป้าหมาย</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun';color:#A9B0BE">หลัก: แอปช่วยงานครู, แอปเช็กชื่อนักเรียน<br>รอง: โปรแกรมเช็กชื่อนักเรียนฟรี, บันทึกเงินออมนักเรียน, บันทึกโฮมรูมออนไลน์, แอปครูประจำชั้น</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">STRUCTURED DATA ที่ฝังไว้แล้ว</div>
+      <div style="margin-bottom:16px;color:#A9B0BE">BreadcrumbList · CollectionPage<br>ItemList (4 แอป) · SoftwareApplication · FAQPage</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">INTERNAL LINK</div>
+      <div style="margin-bottom:16px;color:#A9B0BE;font-family:'Sarabun'">/apps ↔ /tools ลิงก์หากันสองทาง และลิงก์ลงทุกแอปลูก<br>หน้าแอปลูกทุกหน้าต้องมี breadcrumb กลับมาที่ /apps</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">หมายเหตุ</div>
+      <div style="color:#A9B0BE;font-family:'Sarabun'">แยกเจตนาให้ชัดจาก /tools — /tools = ใช้สดในคาบ, /apps = เก็บข้อมูลต่อเนื่อง เลี่ยงคีย์เวิร์ดทับกัน ห้ามใส่คำว่า “สุ่มชื่อ/จับเวลา” เป็นหัวข้อหลักในหน้านี้</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = { openM: 0, openD: 0 };
+  faqData() {
+    return [
+      { q: 'แอปช่วยงานครูต่างจากเครื่องมือครูอย่างไร',
+        a: 'เครื่องมือครูใช้แบบครั้งต่อครั้งในคาบเรียน เช่น สุ่มชื่อหรือจับเวลา ส่วนแอปกลุ่มนี้เก็บข้อมูลต่อเนื่องรายห้องรายคน เช่น การมาเรียน เงินออม และบันทึกโฮมรูม เปิดกลับมาดูย้อนหลังและสรุปเป็นรายงานได้' },
+      { q: 'ต้องสมัครสมาชิกไหม',
+        a: 'ใช้งานได้เลยโดยไม่ต้องสมัคร ข้อมูลจะเก็บในเครื่องของคุณ แต่ถ้าล็อกอินข้อมูลจะซิงก์ขึ้นบัญชี ทำให้เปิดต่อจากมือถือหรือคอมเครื่องอื่นได้ และไม่หายเมื่อเปลี่ยนเครื่อง' },
+      { q: 'ส่งออกข้อมูลไปทำรายงานส่งโรงเรียนได้ไหม',
+        a: 'ได้ ทุกแอปมีหน้าสรุปที่พิมพ์เป็นเอกสารหรือบันทึกเป็น PDF ได้ เช่น สรุปการมาเรียนรายเดือน และสรุปยอดเงินออมรายห้อง' },
+      { q: 'ข้อมูลนักเรียนปลอดภัยแค่ไหน',
+        a: 'ข้อมูลผูกกับบัญชีของครูผู้ใช้เท่านั้น ไม่เปิดเผยต่อสาธารณะและไม่ถูกนำไปขาย ครูลบข้อมูลห้องเรียนหรือลบบัญชีได้เองตลอดเวลา' },
+    ];
+  }
+  faqList(openKey) {
+    const open = this.state[openKey];
+    return this.faqData().map((f, i) => ({
+      q: f.q, a: f.a,
+      open: open === i,
+      mark: open === i ? '−' : '+',
+      toggle: () => this.setState({ [openKey]: open === i ? -1 : i }),
+    }));
+  }
+  renderVals() {
+    return {
+      trustChips: ['ใช้ฟรีไม่จำกัด', 'ไม่ต้องติดตั้ง', 'ซิงก์ทุกเครื่องเมื่อล็อกอิน', 'พิมพ์รายงานได้'],
+      nav: [
+        { t: 'บทความ', href: './Khuncool Article Wheel.dc.html' },
+        { t: 'เครื่องมือครู', href: './Khuncool Tools.dc.html' },
+        { t: 'แอปช่วยงานครู', href: './Khuncool Apps.dc.html' },
+        { t: 'แนะนำสินค้า', href: './Khuncool Article Magnetic Frame.dc.html' },
+      ],
+      apps: [
+        { icon: '✅', title: 'เช็กชื่อนักเรียน', slug: '/attendance', bg: '#D0FBEF', href: './Khuncool Attendance.dc.html',
+          sub: 'บันทึกการมาเรียนรายวัน',
+          desc: 'แตะชื่อเพื่อบันทึก มา ขาด ลา สาย ในไม่กี่วินาที ระบบสรุปสถิติรายคนและรายห้องให้อัตโนมัติ พร้อมพิมพ์เป็นรายงานประจำเดือน',
+          feats: ['มา/ขาด/ลา/สาย', 'สรุปรายเดือน', 'พิมพ์รายงาน'] },
+        { icon: '💰', title: 'ออมเงินนักเรียน', slug: '/savings', bg: '#FFEAD5', href: './Khuncool Savings.dc.html',
+          sub: 'บันทึกเงินฝากถอนรายคน',
+          desc: 'บันทึกยอดฝากถอนของนักเรียนแต่ละคน เห็นยอดคงเหลือทันที และดูสรุปยอดรวมทั้งห้องเพื่อรายงานผู้ปกครองได้',
+          feats: ['ยอดคงเหลือรายคน', 'ประวัติรายการ', 'สรุปทั้งห้อง'] },
+        { icon: '📋', title: 'บันทึกโฮมรูม', slug: '/homeroom', bg: '#E1E3FD', href: './Khuncool Homeroom.dc.html',
+          sub: 'บันทึกกิจกรรมและพฤติกรรม',
+          desc: 'ตั้งหัวข้อบันทึกเองตามแบบฟอร์มของโรงเรียน เก็บบันทึกรายวันของครูประจำชั้น และพิมพ์ออกมาเป็นเอกสารส่งได้เลย',
+          feats: ['ตั้งหัวข้อเอง', 'บันทึกรายวัน', 'พิมพ์แบบฟอร์ม'] },
+        { icon: '🏆', title: 'กระดานคะแนนกลุ่ม', slug: '/group-scoreboard', bg: '#E1E3FD', href: './Khuncool Scoreboard.dc.html',
+          sub: 'สะสมคะแนนข้ามคาบเรียน',
+          desc: 'ให้คะแนนกลุ่มระหว่างเรียนและเก็บสะสมต่อเนื่องทั้งเทอม ฉายขึ้นจอหน้าชั้นเพื่อกระตุ้นการมีส่วนร่วมได้ทุกคาบ',
+          feats: ['สะสมทั้งเทอม', 'ฉายเต็มจอ', 'จัดอันดับสด'] },
+      ],
+      cases: [
+        { q: 'เช้านี้ต้องเช็กชื่อก่อนเข้าคาบแรก', a: 'เช็กชื่อ', href: './Khuncool Attendance.dc.html' },
+        { q: 'นักเรียนมาฝากเงินออมตอนพักกลางวัน', a: 'ออมเงิน', href: './Khuncool Savings.dc.html' },
+        { q: 'ต้องส่งบันทึกโฮมรูมให้ฝ่ายวิชาการ', a: 'โฮมรูม', href: './Khuncool Homeroom.dc.html' },
+        { q: 'อยากเก็บคะแนนกลุ่มสะสมทั้งเทอม', a: 'กระดานคะแนน', href: './Khuncool Scoreboard.dc.html' },
+      ],
+      related: [
+        { t: 'เครื่องมือครูใช้สดในคาบเรียน — สุ่มชื่อ แบ่งกลุ่ม จับเวลา', href: './Khuncool Tools.dc.html' },
+        { t: '10 กิจกรรมสุ่มชื่อนักเรียนที่ใช้ได้จริงในห้องเรียน', href: './Khuncool Article 10 Random Name Activities.dc.html' },
+        { t: 'รีวิวกรอบป้ายแม่เหล็กติดผนัง จัดบอร์ดห้องเรียนให้เรียบร้อย', href: './Khuncool Article Magnetic Frame.dc.html' },
+      ],
+      faqsM: this.faqList('openM'),
+      faqsD: this.faqList('openD'),
+    };
+  }
+}
+</script>
+</body>
+</html>

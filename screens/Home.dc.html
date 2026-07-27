@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี</title>
+<meta name="description" content="ขุนคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง">
+<link rel="canonical" href="https://www.khuncool.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี">
+<meta property="og:description" content="ขุนคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง">
+<meta property="og:url" content="https://www.khuncool.com/">
+<meta property="og:image" content="https://www.khuncool.com/assets/wheel-cover.png">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"khuncool","url":"https://www.khuncool.com/","logo":"https://www.khuncool.com/assets/khuncool-logo.png"},{"@type":"WebSite","name":"khuncool","url":"https://www.khuncool.com/","inLanguage":"th-TH","potentialAction":{"@type":"SearchAction","target":"https://www.khuncool.com/articles?q={search_term_string}","query-input":"required name=search_term_string"}}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ================= MOBILE ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · โครงใหม่ตามแผนงาน 4 เสาหลัก · ครูเปิดจากมือถือ 70%</span>
+    </div>
+    <div style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- announcement -->
+      <div style="background:linear-gradient(90deg,#2A2775,#0A9380);color:#fff;padding:9px 14px;display:flex;align-items:center;gap:8px;font-size:12.5px">
+        <span style="background:rgba(255,255,255,.22);font-weight:600;padding:2px 7px;border-radius:5px;font-size:10.5px;flex:none">อบรมฟรี</span>
+        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · สมัครวันนี้</span>
+        <span style="opacity:.7;flex:none">›</span>
+      </div>
+
+      <!-- header -->
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onClick="{{ toggleDrawer }}" style="width:38px;height:38px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">☰</button>
+          <div style="display:flex;align-items:center;gap:7px;flex:1">
+            <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+            <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-.02em">khuncool</span>
+          </div>
+          <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="44px,40px"></x-import>
+        </div>
+      </div>
+
+      <!-- drawer -->
+      <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 14px;background:#F8F9FB;border-bottom:1px solid #E5E8EE;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:11px;padding:10px;border-radius:11px;background:#fff;border:1px solid #E5E8EE;cursor:pointer" style-hover="border-color:#C6C9FB">
+              <span style="font-size:18px">{{ p.icon }}</span>
+              <div style="flex:1"><div style="font-size:13.5px;font-weight:600">{{ p.title }}</div><div style="font-size:11px;color:#A9B0BE">{{ p.path }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- hero -->
+      <div style="padding:22px 16px 20px;background:radial-gradient(120% 90% at 100% 0%,#EFF0FE,#fff)">
+        <h1 style="font-size:25px;font-weight:700;line-height:1.28;letter-spacing:-.01em;margin:0 0 10px">แหล่งรวมความรู้<br>และเครื่องมือ<span style="color:#5C5EE6">สำหรับครูไทย</span></h1>
+        <p style="font-size:14.5px;color:#5A6273;margin:0 0 16px;line-height:1.6">บทความครู · สื่อการสอนออนไลน์ที่เล่นบนเว็บได้เลย · แอปช่วยงานครู — เปิดใช้ฟรี ไม่ต้องติดตั้ง</p>
+        <div style="display:flex;gap:9px">
+          <a href="#tools-m" style="flex:1;text-align:center;font-size:14px;font-weight:600;padding:12px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer;box-shadow:0 8px 20px -6px rgba(92,94,230,.5);white-space:nowrap" style-hover="background:#4A46D6">ลองเครื่องมือ</a>
+          <a href="#articles-m" style="flex:1;text-align:center;font-size:14px;font-weight:600;padding:12px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">อ่านบทความ</a>
+        </div>
+      </div>
+
+      <!-- latest articles -->
+      <div id="articles-m" style="padding:24px 16px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px"><h2 style="font-size:17px;font-weight:700;margin:0;flex:none;white-space:nowrap">ข่าวสารครู</h2><span style="font-size:12.5px;color:#5C5EE6;cursor:pointer">ดูทั้งหมด ›</span></div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ skel3 }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex;gap:11px">
+                <div style="width:132px;aspect-ratio:16/9;flex:none;border-radius:10px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px">
+                  <div style="height:10px;width:34%;border-radius:5px;background:#F1F3F6"></div>
+                  <div style="height:12px;width:96%;border-radius:6px;background:#F1F3F6"></div>
+                  <div style="height:12px;width:70%;border-radius:6px;background:#F1F3F6"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:14px;padding:24px 18px;text-align:center">
+            <div style="font-size:26px;margin-bottom:8px">⚠️</div>
+            <div style="font-size:14px;font-weight:700;color:#B91C1C">โหลดบทความไม่สำเร็จ</div>
+            <div style="font-size:12.5px;color:#8A3A3A;margin-top:5px">ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+            <button onClick="{{ retry }}" style="margin-top:13px;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 22px;border:none;border-radius:10px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ articles }}" as="a" hint-placeholder-count="3">
+            <a href="{{ a.href }}" style="display:block;cursor:pointer;color:inherit">
+              <div style="display:flex;gap:11px;align-items:flex-start">
+                <div style="width:132px;aspect-ratio:16/9;flex:none;border-radius:10px;background:{{ a.cover }};background-size:cover;background-position:center"></div>
+                <div style="flex:1;min-width:0">
+                  <span style="font-size:10.5px;font-weight:600;color:{{ a.catColor }}">{{ a.cat }}</span>
+                  <div style="font-size:13px;font-weight:600;line-height:1.4;margin:2px 0 3px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ a.title }}</div>
+                  <div style="font-size:10.5px;color:#A9B0BE">{{ a.date }} · {{ a.read }}</div>
+                </div>
+              </div>
+              <sc-if value="{{ a.linksTool }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:6px 0 0 143px;font-size:11.5px;color:#5C5EE6">→ เกี่ยวข้อง: <span style="font-weight:600">{{ a.linksTool }}</span></div>
+              </sc-if>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- 4 pillar hubs -->
+      <div style="padding:8px 16px 4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+          <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:10px;border:1px solid #E5E8EE;border-radius:13px;padding:11px 12px;background:#fff;cursor:pointer" style-hover="border-color:#C6C9FB">
+              <div style="width:34px;height:34px;flex:none;border-radius:10px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:17px">{{ p.icon }}</div>
+              <div style="font-size:13.5px;font-weight:700;line-height:1.2">{{ p.title }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- featured tool: wheel -->
+      <div id="tools-m" style="margin:22px 14px 0;border-radius:20px;padding:22px 18px;background:linear-gradient(150deg,#2A2775,#0A9380);color:#fff;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08)"></div>
+        <span style="font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap">⭐ เครื่องมือแนะนำ</span>
+        <h2 style="font-size:21px;font-weight:700;margin:12px 0 6px;color:#fff">วงล้อสุ่มชื่อนักเรียน</h2>
+        <p style="font-size:13px;color:#C6C9FB;margin:0 0 16px;line-height:1.6">สุ่มเลือกคน แบ่งกลุ่ม สุ่มคำถาม — ใส่รายชื่อแล้วหมุนได้เลยบนเว็บ ไม่ต้องติดตั้ง</p>
+        <a href="./Khuncool Wheel.dc.html" style="display:block;text-align:center;font-size:14px;font-weight:600;padding:12px;border:none;border-radius:11px;background:#fff;color:#2A2775;cursor:pointer;white-space:nowrap" style-hover="background:#EFF0FE">เปิดวงล้อสุ่ม →</a>
+      </div>
+
+      <!-- online tools grid -->
+      <div style="padding:22px 16px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px"><h2 style="font-size:17px;font-weight:700;margin:0;flex:none;white-space:nowrap">สื่อการสอนออนไลน์</h2><span style="font-size:12.5px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+          <sc-for list="{{ tools }}" as="t" hint-placeholder-count="4">
+            <a href="{{ t.href }}" style="border:1px solid #E5E8EE;border-radius:14px;padding:14px;background:#fff;cursor:pointer;display:block;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 8px 20px -10px rgba(26,29,38,.16)">
+              <div style="width:40px;height:40px;border-radius:11px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:9px">{{ t.icon }}</div>
+              <div style="font-size:13.5px;font-weight:600;line-height:1.3;margin-bottom:3px">{{ t.title }}</div>
+              <div style="font-size:11px;color:#A9B0BE">{{ t.tag }}</div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- AD in-feed -->
+      <div style="margin:20px 16px 0;height:100px;border:1.5px dashed #D3D8E1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB">
+        <span style="font-family:'IBM Plex Mono';font-size:10px;color:#A9B0BE;letter-spacing:.08em">ADVERTISEMENT · 336×100</span>
+        <span style="font-size:11px;color:#A9B0BE;margin-top:3px">Google AdSense — in-feed</span>
+      </div>
+
+      <!-- affiliate products -->
+      <div style="padding:24px 16px 4px">
+        <div style="margin-bottom:10px"><h2 style="font-size:17px;font-weight:700;margin:0;flex:none;white-space:nowrap">รีวิว & แนะนำสินค้า</h2></div>
+        <div style="display:flex;gap:8px;align-items:flex-start;background:#FFF6ED;border:1px solid #FCE4CC;border-radius:11px;padding:10px 12px;margin-bottom:14px">
+          <span style="font-size:13px;flex:none;line-height:1.4">ⓘ</span>
+          <p style="font-size:11.5px;color:#8A5A28;margin:0;line-height:1.5">ลิงก์ในหน้านี้เป็น <b>ลิงก์แนะนำ (Affiliate)</b> หากซื้อผ่านลิงก์ khuncool อาจได้ค่าคอมมิชชันโดยราคาที่คุณจ่ายไม่เปลี่ยนแปลง</p>
+        </div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+            <sc-for list="{{ skel2 }}" as="s" hint-placeholder-count="2">
+              <div style="border:1px solid #E5E8EE;border-radius:14px;overflow:hidden;background:#fff">
+                <div style="height:92px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:7px">
+                  <div style="height:11px;width:94%;border-radius:5px;background:#F1F3F6"></div>
+                  <div style="height:11px;width:60%;border-radius:5px;background:#F1F3F6"></div>
+                  <div style="height:28px;border-radius:9px;background:#F1F3F6;margin-top:3px"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+          <sc-for list="{{ products }}" as="p" hint-placeholder-count="2">
+            <a href="{{ p.href }}" target="_blank" rel="noopener sponsored" style="display:block;color:inherit;background:#fff;border:1px solid #E5E8EE;border-radius:14px;overflow:hidden" style-hover="color:inherit;box-shadow:0 10px 24px -10px rgba(26,29,38,.16)">
+              <div style="aspect-ratio:1/1;background:{{ p.cover }};display:flex;align-items:center;justify-content:center"><sc-if value="{{ p.ph }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono';font-size:10px;color:#9a6a3a">[ สินค้า ]</span></sc-if></div>
+              <div style="padding:11px">
+                <div style="font-size:12px;font-weight:600;line-height:1.35;margin-bottom:5px;height:33px;overflow:hidden">{{ p.name }}</div>
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:7px"><span style="color:#F59E0B;font-size:11px">★</span><span style="font-size:11px;color:#7C8494">{{ p.rating }}</span></div>
+                <div style="font-weight:700;font-size:15px;color:#C2500B;margin-bottom:8px">{{ p.price }}</div>
+                <span style="display:block;text-align:center;width:100%;font-size:11px;font-weight:600;padding:8px 5px;border-radius:9px;background:#F97316;color:#fff">เช็กราคา</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- apps -->
+      <div style="padding:24px 16px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px"><h2 style="font-size:17px;font-weight:700;margin:0;flex:none;white-space:nowrap">แอปช่วยงานครู</h2><span style="font-size:12.5px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ apps }}" as="ap" hint-placeholder-count="3">
+            <a href="{{ ap.href }}" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #E5E8EE;border-radius:14px;padding:12px;cursor:pointer;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 8px 20px -10px rgba(26,29,38,.14)">
+              <div style="width:44px;height:44px;flex:none;border-radius:12px;background:{{ ap.bg }};display:flex;align-items:center;justify-content:center;font-size:21px">{{ ap.icon }}</div>
+              <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">{{ ap.title }}</div><div style="font-size:11.5px;color:#A9B0BE">{{ ap.sub }}</div></div>
+              <span style="font-size:11px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:4px 9px;border-radius:999px;flex:none;white-space:nowrap">เปิดใช้</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:24px 16px 30px;margin-top:22px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><img src="./assets/khuncool-logo.png" alt="khuncool" style="width:26px;height:26px;flex:none;object-fit:contain"><span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:15px">khuncool</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:14px">
+          <sc-for list="{{ footerLinks }}" as="f" hint-placeholder-count="6">
+            <a href="{{ f.href }}" style="font-size:12.5px;color:#5A6273;text-decoration:none;cursor:pointer" style-hover="color:#5C5EE6">{{ f.t }}</a>
+          </sc-for>
+        </div>
+        <div style="font-size:11px;color:#A9B0BE">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+      </div>
+
+      <!-- cookie consent (PDPA) -->
+      <sc-if value="{{ cookieShowM }}" hint-placeholder-val="{{ true }}">
+        <div style="position:sticky;bottom:0;z-index:25;margin:0 10px 10px;background:#1A1D26;color:#fff;border-radius:14px;padding:14px 15px;box-shadow:0 14px 34px -10px rgba(26,29,38,.5)">
+          <p style="font-size:12px;line-height:1.55;margin:0 0 11px;color:#D8DBE2">เราใช้คุกกี้เพื่อให้เว็บใช้งานได้ดีขึ้น วิเคราะห์ทราฟฟิก และแสดงโฆษณาตามความสนใจ ตาม <span style="text-decoration:underline;cursor:pointer">นโยบายความเป็นส่วนตัว (PDPA)</span></p>
+          <div style="display:flex;gap:8px">
+            <button onClick="{{ acceptCookie }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px;border:none;border-radius:9px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">ยอมรับทั้งหมด</button>
+            <button onClick="{{ acceptCookie }}" style="flex:1;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px;border:1px solid rgba(255,255,255,.3);border-radius:9px;background:transparent;color:#fff;cursor:pointer" style-hover="background:rgba(255,255,255,.1)">เฉพาะที่จำเป็น</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ================= TABLET ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">TABLET</span>
+      <span style="font-size:13px;color:#5A6273">768 · breakpoint กลาง (≥768 &lt;1024) · 2 คอลัมน์ · sidebar ยุบลงล่าง</span>
+    </div>
+    <div style="width:768px;height:900px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:20px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- announcement -->
+      <div style="background:linear-gradient(90deg,#2A2775,#0A9380);color:#fff;padding:9px 24px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:12.5px">
+        <span style="background:rgba(255,255,255,.22);font-weight:600;padding:2px 8px;border-radius:5px;font-size:10.5px">อบรมฟรี</span>
+        <span>อบรมออนไลน์ได้เกียรติบัตร 20 ชั่วโมง · เปิดรับสมัครแล้ว</span>
+        <span style="text-decoration:underline;cursor:pointer;opacity:.9">สมัคร ›</span>
+      </div>
+
+      <!-- header -->
+      <div style="position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 24px">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="display:flex;align-items:center;gap:8px;flex:none">
+            <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:32px;height:32px;flex:none;object-fit:contain">
+            <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:-.02em">khuncool</span>
+          </div>
+          <nav style="display:flex;gap:2px;flex:1;justify-content:center">
+            <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+              <a href="{{ p.href }}" style="font-size:13px;color:#434A58;text-decoration:none;padding:8px 10px;border-radius:8px;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB;color:#5C5EE6">{{ p.title }}</a>
+            </sc-for>
+          </nav>
+          <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="240px,44px"></x-import>
+        </div>
+      </div>
+
+      <!-- hero -->
+      <div style="padding:34px 24px 28px;background:radial-gradient(90% 120% at 100% 0%,#EFF0FE,#fff)">
+        <div style="max-width:560px">
+          <h1 style="font-size:34px;font-weight:700;line-height:1.18;letter-spacing:-.02em;margin:0 0 14px">แหล่งรวมความรู้และเครื่องมือ<br><span style="background:linear-gradient(135deg,#5C5EE6,#14B79A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">สำหรับครูไทย</span></h1>
+          <p style="font-size:16px;color:#5A6273;margin:0 0 22px;line-height:1.6">บทความครู · สื่อการสอนออนไลน์ที่เล่นบนเว็บได้ทันที · แอปช่วยงานครู — เปิดใช้ฟรี ไม่ต้องติดตั้ง</p>
+          <div style="display:flex;gap:11px">
+            <a href="#tools-t" style="font-size:14.5px;font-weight:600;padding:13px 22px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer;box-shadow:0 10px 24px -6px rgba(92,94,230,.5);white-space:nowrap" style-hover="background:#4A46D6">ลองเครื่องมือออนไลน์</a>
+            <a href="#articles-t" style="font-size:14.5px;font-weight:600;padding:13px 22px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">อ่านบทความครู</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- articles -->
+      <div id="articles-t" style="padding:34px 24px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:19px;font-weight:700;margin:0;flex:none;white-space:nowrap">ข่าวสารครู</h2><span style="font-size:13.5px;color:#5C5EE6;cursor:pointer">ดูทั้งหมด ›</span></div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <sc-for list="{{ skel4 }}" as="s" hint-placeholder-count="6">
+              <div>
+                <div style="aspect-ratio:16/9;border-radius:14px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite;margin-bottom:10px"></div>
+                <div style="height:10px;width:30%;border-radius:5px;background:#F1F3F6;margin-bottom:8px"></div>
+                <div style="height:13px;width:92%;border-radius:6px;background:#F1F3F6;margin-bottom:7px"></div>
+                <div style="height:13px;width:64%;border-radius:6px;background:#F1F3F6"></div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:16px;padding:36px 24px;text-align:center">
+            <div style="font-size:30px;margin-bottom:9px">⚠️</div>
+            <div style="font-size:15.5px;font-weight:700;color:#B91C1C">โหลดบทความไม่สำเร็จ</div>
+            <div style="font-size:13px;color:#8A3A3A;margin-top:6px">ตรวจสอบการเชื่อมต่อแล้วลองใหม่อีกครั้ง</div>
+            <button onClick="{{ retry }}" style="margin-top:15px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <sc-for list="{{ articles }}" as="a" hint-placeholder-count="4">
+            <a href="{{ a.href }}" style="display:block;cursor:pointer;color:inherit">
+              <div style="aspect-ratio:16/9;border-radius:14px;background:{{ a.cover }};background-size:cover;background-position:center;margin-bottom:10px"></div>
+              <span style="font-size:11px;font-weight:600;color:{{ a.catColor }}">{{ a.cat }}</span>
+              <div style="font-size:15px;font-weight:600;line-height:1.4;margin:4px 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ a.title }}</div>
+              <div style="font-size:11.5px;color:#A9B0BE">{{ a.date }} · {{ a.read }}</div>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- ad + popular (sidebar collapsed below) -->
+      <div style="padding:28px 24px 4px;display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+        <div style="height:180px;border:1.5px dashed #D3D8E1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB">
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:#A9B0BE;letter-spacing:.08em">AD · 336×280</span>
+          <span style="font-size:11.5px;color:#A9B0BE;margin-top:4px">AdSense — in-content</span>
+        </div>
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:16px 16px 6px;background:#fff">
+          <h3 style="font-size:14px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:7px">🔥 อ่านมากสัปดาห์นี้</h3>
+          <sc-for list="{{ articles }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;gap:10px;padding:8px 0;border-top:1px solid #F1F3F6;cursor:pointer" style-hover="opacity:.7">
+              <span style="font-size:15px;font-weight:800;color:#C6CAD3;font-family:'IBM Plex Mono';flex:none;width:18px">{{ a.rank }}</span>
+              <div style="font-size:12px;font-weight:600;line-height:1.4">{{ a.title }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 4 pillar hubs -->
+      <div style="padding:22px 24px 4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:12px;border:1px solid #E5E8EE;border-radius:14px;padding:14px 16px;background:#fff;cursor:pointer" style-hover="border-color:#C6C9FB;box-shadow:0 10px 22px -14px rgba(26,29,38,.18)">
+              <div style="width:40px;height:40px;flex:none;border-radius:11px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:20px">{{ p.icon }}</div>
+              <div style="flex:1"><div style="font-size:15px;font-weight:700;line-height:1.2">{{ p.title }}</div><div style="font-size:11px;color:#A9B0BE;font-family:'IBM Plex Mono';margin-top:2px">{{ p.path }}</div></div>
+              <span style="color:#C6CAD3;font-size:16px">›</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- featured wheel -->
+      <div id="tools-t" style="margin:28px 24px 0;border-radius:20px;padding:30px;background:linear-gradient(135deg,#2A2775,#0A9380);color:#fff;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+        <div style="position:relative;max-width:440px">
+          <span style="font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap">⭐ เครื่องมือแนะนำ</span>
+          <h2 style="font-size:26px;font-weight:700;margin:13px 0 7px;color:#fff">วงล้อสุ่มชื่อนักเรียน</h2>
+          <p style="font-size:14px;color:#C6C9FB;margin:0 0 20px;line-height:1.6">สุ่มเลือกคน แบ่งกลุ่ม หรือสุ่มคำถาม — พิมพ์รายชื่อแล้วกดหมุนได้ทันทีบนเว็บ</p>
+          <a href="./Khuncool Wheel.dc.html" style="display:inline-block;font-size:14.5px;font-weight:600;padding:12px 24px;border:none;border-radius:12px;background:#fff;color:#2A2775;cursor:pointer;white-space:nowrap" style-hover="background:#EFF0FE">เปิดวงล้อสุ่ม →</a>
+        </div>
+      </div>
+
+      <!-- tools grid -->
+      <div style="padding:28px 24px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px"><h2 style="font-size:19px;font-weight:700;margin:0;flex:none;white-space:nowrap">สื่อการสอนออนไลน์</h2><span style="font-size:13.5px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <sc-for list="{{ tools }}" as="t" hint-placeholder-count="6">
+            <a href="{{ t.href }}" style="border:1px solid #E5E8EE;border-radius:15px;padding:15px;background:#fff;cursor:pointer;display:block;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 12px 28px -12px rgba(26,29,38,.16);transform:translateY(-2px)">
+              <div style="width:42px;height:42px;border-radius:12px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:10px">{{ t.icon }}</div>
+              <div style="font-size:14px;font-weight:600;line-height:1.3;margin-bottom:3px">{{ t.title }}</div>
+              <div style="font-size:11.5px;color:#A9B0BE">{{ t.tag }}</div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- ad leaderboard -->
+      <div style="margin:28px 24px 0;height:100px;border:1.5px dashed #D3D8E1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB">
+        <span style="font-family:'IBM Plex Mono';font-size:11px;color:#A9B0BE;letter-spacing:.08em">ADVERTISEMENT · 728×90 LEADERBOARD</span>
+        <span style="font-size:11.5px;color:#A9B0BE;margin-top:4px">Google AdSense — คั่นระหว่างคอนเทนต์</span>
+      </div>
+
+      <!-- affiliate -->
+      <div style="padding:34px 24px 4px">
+        <div style="margin-bottom:11px"><h2 style="font-size:19px;font-weight:700;margin:0;flex:none;white-space:nowrap">รีวิว & แนะนำสินค้าสำหรับครู</h2></div>
+        <div style="display:flex;gap:9px;align-items:flex-start;background:#FFF6ED;border:1px solid #FCE4CC;border-radius:12px;padding:11px 14px;margin-bottom:16px">
+          <span style="font-size:14px;flex:none;line-height:1.4">ⓘ</span>
+          <p style="font-size:12px;color:#8A5A28;margin:0;line-height:1.55"><b>การเปิดเผย:</b> ลิงก์สินค้าเป็นลิงก์แนะนำ (Affiliate) — khuncool อาจได้ค่าคอมมิชชันเมื่อซื้อผ่านลิงก์ โดยราคาไม่เปลี่ยนแปลง</p>
+        </div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+            <sc-for list="{{ skel3 }}" as="s" hint-placeholder-count="3">
+              <div style="border:1px solid #E5E8EE;border-radius:15px;overflow:hidden;background:#fff">
+                <div style="height:120px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+                <div style="padding:12px;display:flex;flex-direction:column;gap:8px">
+                  <div style="height:12px;width:94%;border-radius:6px;background:#F1F3F6"></div>
+                  <div style="height:12px;width:58%;border-radius:6px;background:#F1F3F6"></div>
+                  <div style="height:32px;border-radius:9px;background:#F1F3F6;margin-top:3px"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+            <a href="{{ p.href }}" target="_blank" rel="noopener sponsored" style="display:block;color:inherit;background:#fff;border:1px solid #E5E8EE;border-radius:15px;overflow:hidden" style-hover="color:inherit;box-shadow:0 12px 28px -12px rgba(26,29,38,.16);transform:translateY(-3px)">
+              <div style="aspect-ratio:1/1;background:{{ p.cover }};display:flex;align-items:center;justify-content:center"><sc-if value="{{ p.ph }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono';font-size:10px;color:#9a6a3a">[ สินค้า ]</span></sc-if></div>
+              <div style="padding:13px">
+                <div style="font-size:12.5px;font-weight:600;line-height:1.4;margin-bottom:6px;height:35px;overflow:hidden">{{ p.name }}</div>
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px"><span style="color:#F59E0B;font-size:11px">★</span><span style="font-size:11px;color:#7C8494">{{ p.rating }}</span></div>
+                <div style="font-weight:700;font-size:16px;color:#C2500B;margin-bottom:10px">{{ p.price }}</div>
+                <span style="display:block;text-align:center;width:100%;font-size:11.5px;font-weight:600;padding:9px;border-radius:9px;background:#F97316;color:#fff">เช็กราคา Shopee</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- apps -->
+      <div style="padding:34px 24px 4px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:19px;font-weight:700;margin:0;flex:none;white-space:nowrap">แอปช่วยงานครู</h2><span style="font-size:13.5px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ apps }}" as="ap" hint-placeholder-count="3">
+            <a href="{{ ap.href }}" style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #E5E8EE;border-radius:15px;padding:15px;cursor:pointer;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 12px 28px -12px rgba(26,29,38,.14)">
+              <div style="width:48px;height:48px;flex:none;border-radius:13px;background:{{ ap.bg }};display:flex;align-items:center;justify-content:center;font-size:23px">{{ ap.icon }}</div>
+              <div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600">{{ ap.title }}</div><div style="font-size:12px;color:#A9B0BE">{{ ap.sub }}</div></div>
+              <span style="font-size:11.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:5px 10px;border-radius:999px;flex:none;white-space:nowrap">เปิดใช้</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:32px 24px 26px;margin-top:34px">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px;margin-bottom:24px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain"><span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:16px">khuncool</span></div>
+            <p style="font-size:12.5px;color:#7C8494;line-height:1.6;margin:0 0 12px">แหล่งรวมบทความ สื่อการสอนออนไลน์ และแอปช่วยงานเพื่อครูไทย</p>
+            <div style="display:flex;flex-wrap:wrap;gap:7px">
+              <span style="font-size:10.5px;font-weight:500;padding:5px 9px;border-radius:8px;background:#fff;border:1px solid #E5E8EE;color:#5A6273">🔒 SSL</span>
+              <span style="font-size:10.5px;font-weight:500;padding:5px 9px;border-radius:8px;background:#fff;border:1px solid #E5E8EE;color:#5A6273">PDPA compliant</span>
+            </div>
+          </div>
+          <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+            <div>
+              <div style="font-size:12.5px;font-weight:700;margin-bottom:10px">{{ col.head }}</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+                  <a href="{{ l.href }}" style="font-size:12.5px;color:#5A6273;text-decoration:none;cursor:pointer" style-hover="color:#5C5EE6">{{ l.t }}</a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border-top:1px solid #E5E8EE;padding-top:16px;font-size:12px;color:#A9B0BE">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+      </div>
+
+      <!-- cookie consent (PDPA) -->
+      <sc-if value="{{ cookieShowD }}" hint-placeholder-val="{{ true }}">
+        <div style="position:sticky;bottom:0;z-index:25;margin:0 16px 16px;background:#1A1D26;color:#fff;border-radius:15px;padding:15px 20px;box-shadow:0 16px 38px -12px rgba(26,29,38,.5);display:flex;align-items:center;gap:16px">
+          <span style="font-size:20px;flex:none">🍪</span>
+          <p style="flex:1;font-size:12.5px;line-height:1.55;margin:0;color:#D8DBE2">เราใช้คุกกี้เพื่อการใช้งานที่ดีขึ้น วิเคราะห์ทราฟฟิก และแสดงโฆษณาตามความสนใจ ตาม <span style="text-decoration:underline;cursor:pointer">นโยบายความเป็นส่วนตัว (PDPA)</span></p>
+          <div style="display:flex;gap:9px;flex:none">
+            <button onClick="{{ acceptCookie }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 15px;border:1px solid rgba(255,255,255,.3);border-radius:10px;background:transparent;color:#fff;cursor:pointer" style-hover="background:rgba(255,255,255,.1)">เฉพาะที่จำเป็น</button>
+            <button onClick="{{ acceptCookie }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">ยอมรับทั้งหมด</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ================= DESKTOP ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1280 · เนื้อหาเดียวกัน จัดเต็ม · โครง hub-and-spoke ให้เห็นการลิงก์ข้าม</span>
+    </div>
+    <div style="width:1280px;height:920px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- announcement -->
+      <div style="background:linear-gradient(90deg,#2A2775,#0A9380);color:#fff;padding:9px 32px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px">
+        <span style="background:rgba(255,255,255,.22);font-weight:600;padding:2px 8px;border-radius:5px;font-size:11px">อบรมฟรี</span>
+        <span>อบรมออนไลน์ได้เกียรติบัตร 20 ชั่วโมง · เปิดรับสมัครแล้ววันนี้</span>
+        <span style="text-decoration:underline;cursor:pointer;opacity:.9">สมัคร ›</span>
+      </div>
+
+      <!-- header (no login, no search) -->
+      <div style="position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 32px">
+        <div style="display:flex;align-items:center;gap:24px">
+          <div style="display:flex;align-items:center;gap:9px;flex:none">
+            <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:34px;height:34px;flex:none;object-fit:contain">
+            <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em">khuncool</span>
+          </div>
+          <nav style="display:flex;gap:4px;flex:1">
+            <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+              <a href="{{ p.href }}" style="font-size:15px;color:#434A58;text-decoration:none;padding:9px 14px;border-radius:9px;cursor:pointer" style-hover="background:#F8F9FB;color:#5C5EE6">{{ p.title }}</a>
+            </sc-for>
+          </nav>
+          <a href="./Khuncool Wheel.dc.html" style="font-family:inherit;font-size:14px;font-weight:600;padding:10px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เปิดวงล้อสุ่ม</a>
+          <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+        </div>
+      </div>
+
+      <!-- hero -->
+      <div style="padding:48px 32px 36px;background:radial-gradient(80% 120% at 100% 0%,#EFF0FE,#fff)">
+        <div style="max-width:680px">
+          <h1 style="font-size:44px;font-weight:700;line-height:1.16;letter-spacing:-.02em;margin:0 0 16px">แหล่งรวมความรู้และเครื่องมือ<br><span style="background:linear-gradient(135deg,#5C5EE6,#14B79A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">สำหรับครูไทย</span></h1>
+          <p style="font-size:18px;color:#5A6273;margin:0 0 26px;line-height:1.6">บทความครู · สื่อการสอนออนไลน์ที่เล่นบนเว็บได้ทันที · แอปช่วยงานครู — ทุกอย่างเปิดใช้ฟรี ไม่ต้องติดตั้ง</p>
+          <div style="display:flex;gap:12px">
+            <a href="#tools-d" style="font-size:15.5px;font-weight:600;padding:14px 26px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer;box-shadow:0 10px 24px -6px rgba(92,94,230,.5);white-space:nowrap" style-hover="background:#4A46D6">ลองเครื่องมือออนไลน์</a>
+            <a href="#articles-d" style="font-size:15.5px;font-weight:600;padding:14px 26px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">อ่านบทความครู</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- articles + sidebar (hub-and-spoke) -->
+      <div id="articles-d" style="padding:44px 32px 8px;display:grid;grid-template-columns:1fr 320px;gap:32px">
+        <div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px"><h2 style="font-size:20px;font-weight:700;margin:0">ข่าวสารครู</h2><span style="font-size:14px;color:#5C5EE6;cursor:pointer">ดูทั้งหมด ›</span></div>
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <sc-for list="{{ skel4 }}" as="s" hint-placeholder-count="6">
+                <div>
+                  <div style="aspect-ratio:16/9;border-radius:14px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite;margin-bottom:11px"></div>
+                  <div style="height:10px;width:30%;border-radius:5px;background:#F1F3F6;margin-bottom:9px"></div>
+                  <div style="height:14px;width:92%;border-radius:6px;background:#F1F3F6;margin-bottom:8px"></div>
+                  <div style="height:14px;width:62%;border-radius:6px;background:#F1F3F6"></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:16px;padding:44px 24px;text-align:center">
+              <div style="font-size:32px;margin-bottom:10px">⚠️</div>
+              <div style="font-size:16.5px;font-weight:700;color:#B91C1C">โหลดบทความไม่สำเร็จ</div>
+              <div style="font-size:13.5px;color:#8A3A3A;margin-top:6px">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองใหม่อีกครั้ง</div>
+              <button onClick="{{ retry }}" style="margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+            <sc-for list="{{ articles }}" as="a" hint-placeholder-count="4">
+              <a href="{{ a.href }}" style="display:block;cursor:pointer;color:inherit">
+                <div style="aspect-ratio:16/9;border-radius:14px;background:{{ a.cover }};background-size:cover;background-position:center;margin-bottom:11px"></div>
+                <span style="font-size:11px;font-weight:600;color:{{ a.catColor }}">{{ a.cat }}</span>
+                <div style="font-size:16px;font-weight:600;line-height:1.4;margin:5px 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ a.title }}</div>
+                <div style="font-size:12px;color:#A9B0BE;margin-bottom:6px">{{ a.date }} · {{ a.read }}</div>
+                <sc-if value="{{ a.linksTool }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:12.5px;color:#5C5EE6">→ เกี่ยวข้อง: <span style="font-weight:600">{{ a.linksTool }}</span></div>
+                </sc-if>
+              </a>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+        <div>
+          <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px">
+            <div style="height:280px;border:1.5px dashed #D3D8E1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB">
+              <span style="font-family:'IBM Plex Mono';font-size:11px;color:#A9B0BE;letter-spacing:.08em">AD · 300×250</span>
+              <span style="font-size:11.5px;color:#A9B0BE;margin-top:4px">AdSense — sticky sidebar</span>
+            </div>
+            <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px 18px 8px;background:#fff">
+              <h3 style="font-size:14px;font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:7px">🔥 อ่านมากสัปดาห์นี้</h3>
+              <sc-for list="{{ articles }}" as="a" hint-placeholder-count="4">
+                <div style="display:flex;gap:11px;padding:10px 0;border-top:1px solid #F1F3F6;cursor:pointer" style-hover="opacity:.7">
+                  <span style="font-size:17px;font-weight:800;color:#C6CAD3;font-family:'IBM Plex Mono';line-height:1.3;flex:none;width:20px">{{ a.rank }}</span>
+                  <div><div style="font-size:11px;font-weight:600;color:{{ a.catColor }};margin-bottom:2px">{{ a.cat }}</div><div style="font-size:12.5px;font-weight:600;line-height:1.4">{{ a.title }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 pillar hubs -->
+      <div style="padding:8px 32px 4px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+          <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:13px;border:1px solid #E5E8EE;border-radius:15px;padding:15px 18px;background:#fff;cursor:pointer" style-hover="border-color:#C6C9FB;box-shadow:0 10px 22px -14px rgba(26,29,38,.18)">
+              <div style="width:42px;height:42px;flex:none;border-radius:12px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-size:21px">{{ p.icon }}</div>
+              <div style="flex:1"><div style="font-size:15.5px;font-weight:700;line-height:1.2">{{ p.title }}</div><div style="font-size:11px;color:#A9B0BE;font-family:'IBM Plex Mono';margin-top:2px">{{ p.path }}</div></div>
+              <span style="color:#C6CAD3;font-size:17px">›</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- featured wheel + tools -->
+      <div id="tools-d" style="padding:44px 32px 8px">
+        <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:stretch">
+          <div style="border-radius:22px;padding:36px;background:linear-gradient(135deg,#2A2775,#0A9380);color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center">
+            <div style="position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.07)"></div>
+            <div style="position:relative">
+              <span style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap">⭐ เครื่องมือแนะนำ</span>
+              <h2 style="font-size:30px;font-weight:700;margin:14px 0 8px;color:#fff">วงล้อสุ่มชื่อนักเรียน</h2>
+              <p style="font-size:15px;color:#C6C9FB;margin:0 0 22px;line-height:1.6;max-width:420px">สุ่มเลือกคน แบ่งกลุ่ม หรือสุ่มคำถาม — พิมพ์รายชื่อแล้วกดหมุนได้ทันทีบนเว็บ เหมาะกับกิจกรรมในห้องเรียน</p>
+              <a href="./Khuncool Wheel.dc.html" style="align-self:flex-start;font-size:15px;font-weight:600;padding:13px 26px;border:none;border-radius:12px;background:#fff;color:#2A2775;cursor:pointer;white-space:nowrap" style-hover="background:#EFF0FE">เปิดวงล้อสุ่ม →</a>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px"><h2 style="font-size:20px;font-weight:700;margin:0">สื่อการสอนออนไลน์</h2><span style="font-size:14px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <sc-for list="{{ tools }}" as="t" hint-placeholder-count="4">
+                <a href="{{ t.href }}" style="border:1px solid #E5E8EE;border-radius:16px;padding:16px;background:#fff;cursor:pointer;display:block;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 12px 28px -12px rgba(26,29,38,.16);transform:translateY(-2px)">
+                  <div style="width:44px;height:44px;border-radius:12px;background:{{ t.bg }};display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:11px">{{ t.icon }}</div>
+                  <div style="font-size:15px;font-weight:600;line-height:1.3;margin-bottom:3px">{{ t.title }}</div>
+                  <div style="font-size:12px;color:#A9B0BE">{{ t.tag }}</div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AD leaderboard -->
+      <div style="margin:36px 32px 0;height:110px;border:1.5px dashed #D3D8E1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB">
+        <span style="font-family:'IBM Plex Mono';font-size:11px;color:#A9B0BE;letter-spacing:.08em">ADVERTISEMENT · 970×110 LEADERBOARD</span>
+        <span style="font-size:12px;color:#A9B0BE;margin-top:4px">Google AdSense — คั่นระหว่างคอนเทนต์ ไม่แทรกกลางการอ่าน</span>
+      </div>
+
+      <!-- affiliate products -->
+      <div style="padding:44px 32px 8px">
+        <div style="margin-bottom:12px"><h2 style="font-size:20px;font-weight:700;margin:0">รีวิว & แนะนำสินค้าสำหรับครู</h2></div>
+        <div style="display:flex;gap:9px;align-items:flex-start;background:#FFF6ED;border:1px solid #FCE4CC;border-radius:12px;padding:12px 15px;margin-bottom:18px;max-width:760px">
+          <span style="font-size:15px;flex:none;line-height:1.4">ⓘ</span>
+          <p style="font-size:12.5px;color:#8A5A28;margin:0;line-height:1.55"><b>การเปิดเผย:</b> ลิงก์สินค้าในหน้านี้เป็นลิงก์แนะนำ (Affiliate) — เมื่อคุณซื้อผ่านลิงก์ Shopee/Lazada ทาง khuncool อาจได้รับค่าคอมมิชชันเล็กน้อย โดยราคาที่คุณจ่ายไม่เปลี่ยนแปลง · เราคัดสินค้าจากการใช้งานจริงของครู</p>
+        </div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
+            <sc-for list="{{ skel4 }}" as="s" hint-placeholder-count="6">
+              <div style="border:1px solid #E5E8EE;border-radius:16px;overflow:hidden;background:#fff">
+                <div style="height:150px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+                <div style="padding:14px;display:flex;flex-direction:column;gap:9px">
+                  <div style="height:13px;width:94%;border-radius:6px;background:#F1F3F6"></div>
+                  <div style="height:13px;width:56%;border-radius:6px;background:#F1F3F6"></div>
+                  <div style="height:38px;border-radius:10px;background:#F1F3F6;margin-top:4px"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px">
+          <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+            <a href="{{ p.href }}" target="_blank" rel="noopener sponsored" style="display:block;color:inherit;background:#fff;border:1px solid #E5E8EE;border-radius:16px;overflow:hidden" style-hover="color:inherit;box-shadow:0 12px 28px -12px rgba(26,29,38,.16);transform:translateY(-3px)">
+              <div style="aspect-ratio:1/1;background:{{ p.cover }};display:flex;align-items:center;justify-content:center"><sc-if value="{{ p.ph }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono';font-size:11px;color:#9a6a3a">[ สินค้า ]</span></sc-if></div>
+              <div style="padding:12px">
+                <div style="font-size:12.5px;font-weight:600;line-height:1.4;margin-bottom:6px;height:35px;overflow:hidden">{{ p.name }}</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-bottom:10px"><span style="color:#F59E0B;font-size:13px">★★★★★</span><span style="font-size:12px;color:#7C8494">{{ p.rating }}</span></div>
+                <div style="font-weight:700;font-size:17px;color:#C2500B;margin-bottom:10px">{{ p.price }}</div>
+                <span style="display:block;text-align:center;width:100%;font-size:12px;font-weight:600;padding:9px 4px;border-radius:10px;background:#F97316;color:#fff;white-space:nowrap">เช็กราคา Shopee</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- apps -->
+      <div style="padding:44px 32px 8px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px"><h2 style="font-size:20px;font-weight:700;margin:0">แอปช่วยงานครู · ใช้ผ่านเว็บได้เลย</h2><span style="font-size:14px;color:#5C5EE6;cursor:pointer">ทั้งหมด ›</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+          <sc-for list="{{ apps }}" as="ap" hint-placeholder-count="3">
+            <a href="{{ ap.href }}" style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #E5E8EE;border-radius:16px;padding:18px;cursor:pointer;color:inherit" style-hover="border-color:#C6C9FB;box-shadow:0 12px 28px -12px rgba(26,29,38,.14)">
+              <div style="width:52px;height:52px;flex:none;border-radius:14px;background:{{ ap.bg }};display:flex;align-items:center;justify-content:center;font-size:25px">{{ ap.icon }}</div>
+              <div style="flex:1;min-width:0"><div style="font-size:15.5px;font-weight:600">{{ ap.title }}</div><div style="font-size:12.5px;color:#A9B0BE">{{ ap.sub }}</div></div>
+              <span style="font-size:12px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:5px 11px;border-radius:999px;flex:none;white-space:nowrap">เปิดใช้</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- footer -->
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:44px 32px 32px;margin-top:44px">
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px">
+          <div>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain"><span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:18px">khuncool</span></div>
+            <p style="font-size:13.5px;color:#7C8494;line-height:1.6;margin:0 0 16px;max-width:280px">แหล่งรวมบทความ สื่อการสอนออนไลน์ และแอปช่วยงานเพื่อครูไทยทุกคน</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span style="font-size:11px;font-weight:500;padding:5px 10px;border-radius:8px;background:#fff;border:1px solid #E5E8EE;color:#5A6273">🔒 เข้ารหัส SSL</span>
+              <span style="font-size:11px;font-weight:500;padding:5px 10px;border-radius:8px;background:#fff;border:1px solid #E5E8EE;color:#5A6273">PDPA compliant</span>
+            </div>
+          </div>
+          <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+            <div>
+              <div style="font-size:13px;font-weight:700;margin-bottom:12px">{{ col.head }}</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+                  <a href="{{ l.href }}" style="font-size:13.5px;color:#5A6273;text-decoration:none;cursor:pointer" style-hover="color:#5C5EE6">{{ l.t }}</a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border-top:1px solid #E5E8EE;padding-top:18px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#A9B0BE">
+          <span>© 2568 khuncool.com · เพื่อครูไทยทุกคน</span>
+          <div style="display:flex;gap:16px"><span style="cursor:pointer">นโยบายความเป็นส่วนตัว</span><span style="cursor:pointer">เงื่อนไขการใช้งาน</span></div>
+        </div>
+      </div>
+
+      <!-- cookie consent (PDPA) -->
+      <sc-if value="{{ cookieShowD }}" hint-placeholder-val="{{ true }}">
+        <div style="position:sticky;bottom:0;z-index:25;margin:0 20px 18px;background:#1A1D26;color:#fff;border-radius:16px;padding:18px 24px;box-shadow:0 18px 40px -12px rgba(26,29,38,.5);display:flex;align-items:center;gap:20px">
+          <span style="font-size:24px;flex:none">🍪</span>
+          <p style="flex:1;font-size:13px;line-height:1.55;margin:0;color:#D8DBE2">เราใช้คุกกี้เพื่อให้เว็บใช้งานได้ดีขึ้น วิเคราะห์ทราฟฟิก และแสดงโฆษณา/คอนเทนต์ตามความสนใจ เราเคารพข้อมูลส่วนบุคคลตาม <span style="text-decoration:underline;cursor:pointer">นโยบายความเป็นส่วนตัว (PDPA)</span></p>
+          <div style="display:flex;gap:10px;flex:none">
+            <button onClick="{{ acceptCookie }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:10px 18px;border:1px solid rgba(255,255,255,.3);border-radius:10px;background:transparent;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:rgba(255,255,255,.1)">เฉพาะที่จำเป็น</button>
+            <button onClick="{{ acceptCookie }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:10px 22px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ยอมรับทั้งหมด</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:9px;background:#FFFBEB;border:1px solid #FDE68A;color:#92600A;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(26,29,38,.35)">📶 ออฟไลน์อยู่ · เนื้อหาบางส่วนอาจไม่อัปเดต</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dataState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'loading'|'error'&quot;,&quot;section&quot;:&quot;สถานะข้อมูล&quot;}}">
+class Component extends DCLogic {
+  state = { drawerOpen:false, cookieDone:false, offline:false };
+  retry=()=>{};
+  syncOnline=()=>this.setState({ offline: typeof navigator!=='undefined' && navigator.onLine===false });
+  componentDidMount(){ this.syncOnline(); window.addEventListener('online',this.syncOnline); window.addEventListener('offline',this.syncOnline); }
+  componentWillUnmount(){ window.removeEventListener('online',this.syncOnline); window.removeEventListener('offline',this.syncOnline); }
+  renderVals(){
+    const ds=this.props.dataState||'ready';
+    return {
+      loading:ds==='loading', errored:ds==='error', ready:ds==='ready',
+      skel2:[1,2], skel3:[1,2,3], skel4:[1,2,3,4], retry:this.retry,
+      offline:this.state.offline,
+      drawerOpen:this.state.drawerOpen,
+      toggleDrawer:()=>this.setState(s=>({drawerOpen:!s.drawerOpen})),
+      cookieDone:this.state.cookieDone,
+      cookieShowM:!this.state.cookieDone,
+      cookieShowD:!this.state.cookieDone,
+      acceptCookie:()=>this.setState({cookieDone:true}),
+      pillars:[
+        {icon:'📰',title:'บทความ',path:'/articles',href:'./Khuncool Article Wheel.dc.html',bg:'#E1E3FD',
+         desc:'ข่าวครู รีวิวสินค้า ข่าวอบรมได้เกียรติบัตร และวิธีทำสื่อการสอน',
+         children:['ข่าวครู','รีวิวสินค้า','อบรมฟรี','วิธีทำสื่อ']},
+        {icon:'🎡',title:'สื่อการสอนออนไลน์',path:'/tools',href:'./Khuncool Tools.dc.html',bg:'#D0FBEF',
+         desc:'เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง',
+         children:['วงล้อสุ่ม','เกมช่วยสอน','จับเวลา']},
+        {icon:'🛒',title:'แนะนำสินค้า',path:'/shop',href:'./Khuncool Article Magnetic Frame.dc.html',bg:'#FFEAD5',
+         desc:'คัดของใช้ในห้องเรียนพร้อมลิงก์ซื้อ (Affiliate) จากครูจริง',
+         children:['อุปกรณ์','หนังสือ','ของแต่งห้อง']},
+        {icon:'📱',title:'แอป',path:'/apps',href:'./Khuncool Homeroom.dc.html',bg:'#E1E3FD',
+         desc:'แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม',
+         children:['เช็กชื่อ','ออมเงิน','สุ่มกลุ่ม']},
+      ],
+      tools:[
+        {icon:'🎡',title:'วงล้อสุ่มชื่อ',tag:'ยอดนิยม',bg:'#E1E3FD',href:'./Khuncool Wheel.dc.html'},
+        {icon:'🏆',title:'กระดานคะแนนกลุ่ม',tag:'ใหม่',bg:'#E1E3FD',href:'./Khuncool Scoreboard.dc.html'},
+        {icon:'🎤',title:'เครื่องวัดเสียงในห้อง',tag:'ใหม่',bg:'#D0FBEF',href:'./Khuncool Noise Meter.dc.html'},
+        {icon:'🦆',title:'เกมแข่งเป็ด',tag:'สนุก สุ่มชื่อ',bg:'#D0FBEF',href:'./Khuncool Duck Race.dc.html'},
+        {icon:'⏱️',title:'จับเวลา / นับถอยหลัง',tag:'กิจกรรม',bg:'#D0FBEF',href:'./Khuncool Timer.dc.html'},
+        {icon:'🎯',title:'สุ่มคำถามหน้าชั้น',tag:'เกมช่วยสอน',bg:'#FFEAD5',href:'./Khuncool Question.dc.html'},
+        {icon:'🔀',title:'สุ่มแบ่งกลุ่ม',tag:'จัดกลุ่ม',bg:'#E1E3FD',href:'./Khuncool Groups.dc.html'},
+      ],
+      articles:[
+        {rank:'1',cat:'อบรมฟรี',catColor:'#0A9380',title:'เรียนภาษาอังกฤษฟรี มีใบเซอร์! คอร์ส Intermediate Conversational English จาก PSU MOOC',date:'25 ก.ค. 2568',read:'อ่าน 4 นาที',cover:'url("assets/psu-english-cover.webp") center/cover',linksTool:'',href:'./Khuncool Article PSU English.dc.html'},
+        {rank:'2',cat:'สื่อการสอน',catColor:'#3D38B4',title:'วงล้อสุ่ม สื่อการสอนที่ครูควรมี ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น',date:'27 ก.ค. 2569',read:'อ่าน 5 นาที',cover:'url("assets/wheel-cover.png") center/cover',linksTool:'วงล้อสุ่ม /tools/wheel',href:'./Khuncool Article Wheel.dc.html'},
+        {rank:'3',cat:'รีวิวสินค้า',catColor:'#C2500B',title:'รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง ตัวช่วยทำบอร์ดผลงานเด็ก',date:'26 ก.ค. 2568',read:'อ่าน 4 นาที',cover:'url("assets/magnet-frame-detail.jpg") center/cover',linksTool:'',href:'./Khuncool Article Magnetic Frame.dc.html'},
+        {rank:'4',cat:'สื่อการสอน',catColor:'#3D38B4',title:'10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที',date:'27 ก.ค. 2569',read:'อ่าน 6 นาที',cover:'url("assets/random-name-cover.png") center/cover',linksTool:'วงล้อสุ่ม /tools/wheel',href:'./Khuncool Article 10 Random Name Activities.dc.html'},
+        {rank:'5',cat:'ข่าวครู',catColor:'#8A6206',title:'รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.',date:'27 ก.ค. 2569',read:'อ่าน 4 นาที',cover:'url("assets/royal-award-cover.png") center/cover',linksTool:'',href:'./Khuncool Article Royal Award 2569.dc.html'},
+      ],
+      articleCats:[
+        {name:'ข่าวครู',count:'128'},
+        {name:'รีวิวสินค้า (Affiliate)',count:'64'},
+        {name:'อบรมฟรี · เกียรติบัตร',count:'52'},
+        {name:'วิธีทำสื่อการสอน',count:'96'},
+      ],
+      products:[
+        {name:'กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง มีกาวในตัว',rating:'4.9 (320)',price:'฿16',cover:'url("assets/magnet-frame-product.webp") center/cover',ph:false,href:'https://s.shopee.co.th/7KvhYc7TtI'},
+        {name:'เครื่องเคลือบบัตร A4 พร้อมฟิล์ม 50 แผ่น',rating:'4.8 (156)',price:'฿469',cover:'url("assets/laminator-product.jpg") center/cover',ph:false,href:'https://s.shopee.co.th/9ANLl4nOwr'},
+        {name:'แท่นวางแล็ปท็อป iPad ปรับสูงต่ำ หมุนได้ 360°',rating:'5.0 (892)',price:'฿399',cover:'url("assets/laptop-stand-product.webp") center/cover',ph:false,href:'https://s.shopee.co.th/3Viz1JMJ8g'},
+        {name:'ไมค์ช่วยสอน K500 ลำโพงพกพา สำหรับครู',rating:'4.7 (241)',price:'฿436',cover:'url("assets/mic-speaker-product.webp") center/cover',ph:false,href:'https://s.shopee.co.th/50XmnMcQXy'},
+        {name:'แก้วเก็บความเย็น Bottle Bottle เซรามิก มีหลอด',rating:'4.8 (410)',price:'฿599',cover:'url("assets/tumbler-1.webp") center/cover',ph:false,href:'https://s.shopee.co.th/1gHKqEUGWH'},
+        {name:'แก้วเก็บความเย็น CIVAGO เซรามิก เย็น 24 ชม.',rating:'4.9 (275)',price:'฿324',cover:'url("assets/tumbler-2.webp") center/cover',ph:false,href:'https://s.shopee.co.th/20uBElffiQ'},
+      ],
+      apps:[
+        {icon:'📋',title:'บันทึกโฮมรูม',sub:'ตั้งหัวข้อเอง พิมพ์แบบฟอร์มได้',bg:'#E1E3FD',href:'./Khuncool Homeroom.dc.html'},
+        {icon:'✅',title:'เช็กชื่อนักเรียน',sub:'บันทึกการมาเรียน สรุปสถิติ',bg:'#D0FBEF',href:'./Khuncool Attendance.dc.html'},
+        {icon:'💰',title:'ออมเงินนักเรียน',sub:'บันทึกเงินออมรายคน รายห้อง',bg:'#FFEAD5',href:'./Khuncool Savings.dc.html'},
+        {icon:'🔀',title:'สุ่มแบ่งกลุ่ม',sub:'แบ่งกลุ่มเท่า ๆ กันอัตโนมัติ',bg:'#E1E3FD',href:'./Khuncool Groups.dc.html'},
+      ],
+      footerLinks:[
+        {t:'บทความ',href:'./Khuncool Article Wheel.dc.html'},
+        {t:'เครื่องมือครู',href:'./Khuncool Tools.dc.html'},
+        {t:'แอปช่วยงานครู',href:'./Khuncool Homeroom.dc.html'},
+        {t:'บัญชีของฉัน',href:'./Khuncool Account.dc.html'},
+      ],
+      footerCols:[
+        {head:'สำรวจ',links:[
+          {t:'บทความ',href:'./Khuncool Article Wheel.dc.html'},
+          {t:'เครื่องมือครู',href:'./Khuncool Tools.dc.html'},
+          {t:'กระดานคะแนนกลุ่ม',href:'./Khuncool Scoreboard.dc.html'},
+          {t:'แอปช่วยงานครู',href:'./Khuncool Homeroom.dc.html'},
+        ]},
+        {head:'บัญชี',links:[
+          {t:'บัญชีของฉัน',href:'./Khuncool Account.dc.html'},
+          {t:'เช็กชื่อนักเรียน',href:'./Khuncool Attendance.dc.html'},
+          {t:'ออมเงินนักเรียน',href:'./Khuncool Savings.dc.html'},
+          {t:'บันทึกโฮมรูม',href:'./Khuncool Homeroom.dc.html'},
+        ]},
+        {head:'ช่วยเหลือ',links:[
+          {t:'ศูนย์ช่วยเหลือ',href:'./Khuncool Account.dc.html'},
+          {t:'คำถามที่พบบ่อย',href:'./Khuncool Account.dc.html'},
+          {t:'แจ้งปัญหา',href:'./Khuncool Account.dc.html'},
+          {t:'ชุมชนครู',href:'./Khuncool Account.dc.html'},
+        ]},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="รวมเครื่องมือครูออนไลน์ใช้ฟรีในเว็บเดียว วงล้อสุ่มชื่อนักเรียน สุ่มแบ่งกลุ่ม จับเวลา เครื่องวัดเสียงในห้องเรียน และกระดานคะแนนกลุ่ม เปิดใช้ได้ทันทีบนมือถือและคอมพิวเตอร์ ไม่ต้องสมัครสมาชิก">
+<link rel="canonical" href="https://www.khuncool.com/tools">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+</style>
+<script src="./khuncool-cloud.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"BreadcrumbList","itemListElement":[
+   {"@type":"ListItem","position":1,"name":"หน้าแรก","item":"https://www.khuncool.com/"},
+   {"@type":"ListItem","position":2,"name":"เครื่องมือครู","item":"https://www.khuncool.com/tools"}]},
+ {"@type":"CollectionPage","name":"เครื่องมือครูออนไลน์","url":"https://www.khuncool.com/tools",
+  "inLanguage":"th-TH","description":"รวมเครื่องมือช่วยสอนใช้ฟรีผ่านเว็บ ไม่ต้องติดตั้ง"},
+ {"@type":"ItemList","itemListOrder":"https://schema.org/ItemListOrderAscending","numberOfItems":7,
+  "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"วงล้อสุ่มชื่อนักเรียน","url":"https://www.khuncool.com/random-name-picker"},
+   {"@type":"ListItem","position":2,"name":"สุ่มแบ่งกลุ่มนักเรียน","url":"https://www.khuncool.com/group-maker"},
+   {"@type":"ListItem","position":3,"name":"จับเวลาและนับถอยหลัง","url":"https://www.khuncool.com/timer"},
+   {"@type":"ListItem","position":4,"name":"เครื่องวัดเสียงในห้องเรียน","url":"https://www.khuncool.com/classroom-noise-meter"},
+   {"@type":"ListItem","position":5,"name":"กระดานคะแนนกลุ่ม","url":"https://www.khuncool.com/group-scoreboard"},
+   {"@type":"ListItem","position":6,"name":"สุ่มคำถามหน้าชั้น","url":"https://www.khuncool.com/random-question"},
+   {"@type":"ListItem","position":7,"name":"เกมแข่งเป็ดสุ่มชื่อ","url":"https://www.khuncool.com/duck-race"}]},
+ {"@type":"FAQPage","mainEntity":[
+   {"@type":"Question","name":"เครื่องมือครูของ khuncool ใช้ฟรีจริงไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้ฟรีทุกตัว ไม่จำกัดจำนวนครั้ง ไม่ต้องสมัครสมาชิกก็เปิดใช้ได้ทันที การสมัครมีไว้เพื่อให้รายชื่อนักเรียนและคะแนนตามไปทุกเครื่องเท่านั้น"}},
+   {"@type":"Question","name":"ต้องติดตั้งโปรแกรมหรือแอปเพิ่มไหม","acceptedAnswer":{"@type":"Answer","text":"ไม่ต้องติดตั้งอะไรเลย ทุกเครื่องมือทำงานในเว็บเบราว์เซอร์ เปิดผ่านมือถือ แท็บเล็ต คอมพิวเตอร์ หรือฉายขึ้นทีวีและโปรเจกเตอร์ในห้องเรียนได้ทันที"}},
+   {"@type":"Question","name":"ใช้กับกระดานอัจฉริยะหรือโปรเจกเตอร์ในห้องเรียนได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ ทุกเครื่องมือมีปุ่มเต็มจอ ตัวอักษรใหญ่อ่านออกจากหลังห้อง เหมาะกับการฉายขึ้นจอหน้าชั้นเรียน"}},
+   {"@type":"Question","name":"ข้อมูลรายชื่อนักเรียนถูกเก็บไว้ที่ไหน","acceptedAnswer":{"@type":"Answer","text":"ถ้าไม่ได้ล็อกอิน ข้อมูลจะเก็บไว้ในเครื่องของคุณเท่านั้น ถ้าล็อกอินจะซิงก์ขึ้นบัญชีของคุณเพื่อให้ใช้ต่อได้จากเครื่องอื่น และลบได้ตลอดเวลา"}}]}]}
+</script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ================= MOBILE ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · /tools · หน้ารวมเครื่องมือครู</span>
+    </div>
+    <div style="width:390px;height:900px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">เครื่องมือครู</span>
+        </div>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:14px 16px 0;display:flex;align-items:center;gap:6px;font-size:11.5px;color:#8A93A3">
+        <a href="./Khuncool Home v2.dc.html" style="color:#8A93A3">หน้าแรก</a><span>›</span><span style="color:#434A58;font-weight:600">เครื่องมือครู</span>
+      </div>
+
+      <div style="padding:12px 16px 22px">
+        <h1 style="font-size:26px;line-height:1.32;margin:0 0 10px">เครื่องมือครูออนไลน์<br>ใช้ฟรี ไม่ต้องติดตั้ง</h1>
+        <p style="font-size:14px;color:#434A58;margin:0 0 14px;line-height:1.7;text-wrap:pretty">รวมเครื่องมือช่วยสอนที่ครูไทยใช้บ่อยที่สุดไว้ในที่เดียว — สุ่มชื่อนักเรียน แบ่งกลุ่ม จับเวลา คุมเสียงในห้อง และให้คะแนนกลุ่ม เปิดจากมือถือหรือฉายขึ้นจอหน้าชั้นได้ทันที ไม่ต้องสมัครสมาชิก</p>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          <sc-for list="{{ trustChips }}" as="c" hint-placeholder-count="3">
+            <span style="font-size:11.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:5px 10px;border-radius:20px">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 24px;display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <sc-for list="{{ tools }}" as="t" hint-placeholder-count="7">
+          <a href="{{ t.href }}" style="display:flex;flex-direction:column;gap:8px;padding:12px 12px 13px;border:1px solid #E5E8EE;border-radius:15px;background:#fff;color:inherit;min-height:118px" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+            <div style="width:36px;height:36px;flex:none;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;background:{{ t.bg }}">{{ t.icon }}</div>
+            <h2 style="font-size:14px;line-height:1.35;margin:0">{{ t.title }}</h2>
+            <p style="font-size:11.5px;color:#5A6273;margin:auto 0 0;line-height:1.5">{{ t.short }}</p>
+          </a>
+        </sc-for>
+      </div>
+
+      <div style="padding:0 16px 24px">
+        <h2 style="font-size:18px;margin:0 0 4px">เลือกเครื่องมือตามสถานการณ์ในห้องเรียน</h2>
+        <p style="font-size:13px;color:#5A6273;margin:0 0 12px;line-height:1.65">ไม่แน่ใจว่าจะใช้ตัวไหน ลองดูจากสิ่งที่กำลังจะทำในคาบนี้</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ cases }}" as="c" hint-placeholder-count="5">
+            <a href="{{ c.href }}" style="display:flex;gap:10px;align-items:center;padding:12px 13px;border-radius:13px;background:#F8F9FB;border:1px solid #EEF0F4;color:inherit" style-hover="background:#F1F2FC">
+              <span style="flex:1;font-size:13px;color:#434A58;line-height:1.55">{{ c.q }}</span>
+              <span style="font-size:12px;font-weight:600;color:#4A46D6;flex:none;white-space:nowrap">{{ c.a }} ›</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 24px">
+        <h2 style="font-size:18px;margin:0 0 4px"><a href="./Khuncool Apps.dc.html" style="color:inherit">แอปช่วยงานครู ›</a></h2>
+        <p style="font-size:13px;color:#5A6273;margin:0 0 12px;line-height:1.65">งานเอกสารประจำวันที่ต้องเก็บข้อมูลต่อเนื่อง เช็กชื่อ ออมเงิน และบันทึกโฮมรูม</p>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ apps }}" as="a" hint-placeholder-count="3">
+            <a href="{{ a.href }}" style="display:flex;gap:11px;align-items:center;padding:13px;border:1px solid #E5E8EE;border-radius:15px;background:#fff;color:inherit" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+              <div style="width:40px;height:40px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;background:{{ a.bg }}">{{ a.icon }}</div>
+              <div style="flex:1;min-width:0">
+                <h3 style="font-size:15px;margin:0 0 2px">{{ a.title }}</h3>
+                <p style="font-size:12px;color:#5A6273;margin:0">{{ a.sub }}</p>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 26px">
+        <h2 style="font-size:18px;margin:0 0 12px">คำถามที่ครูถามบ่อย</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ faqsM }}" as="f" hint-placeholder-count="4">
+            <div style="border:1px solid #E5E8EE;border-radius:14px;overflow:hidden;background:#fff">
+              <button onClick="{{ f.toggle }}" style="width:100%;font-family:inherit;text-align:left;display:flex;gap:10px;align-items:center;padding:13px;border:none;background:none;cursor:pointer" style-hover="background:#F8F9FB">
+                <span style="flex:1;font-size:13.5px;font-weight:600;line-height:1.5">{{ f.q }}</span>
+                <span style="font-size:15px;color:#8A93A3;flex:none">{{ f.mark }}</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:13px;color:#5A6273;line-height:1.7;margin:0;padding:0 13px 14px">{{ f.a }}</p>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:22px 16px 28px">
+        <h2 style="font-size:15px;margin:0 0 8px">อ่านเพิ่มเติมเรื่องการใช้เครื่องมือในห้องเรียน</h2>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+            <a href="{{ r.href }}" style="font-size:13px;color:#4A46D6;line-height:1.6">{{ r.t }}</a>
+          </sc-for>
+        </div>
+        <div style="font-size:11px;color:#A9B0BE;margin-top:16px">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DESKTOP ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1280 · hub page ที่มีเนื้อหาจริง เพื่อให้ติดอันดับคำกว้าง</span>
+    </div>
+    <div style="width:1280px;height:900px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:18px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:13px 32px">
+        <div style="display:flex;align-items:center;gap:22px">
+          <a href="./Khuncool Home v2.dc.html" style="display:flex;align-items:center;gap:8px;color:inherit">
+            <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:32px;height:32px;flex:none;object-fit:contain">
+            <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:19px;letter-spacing:-.02em">khuncool</span>
+          </a>
+          <nav style="display:flex;gap:4px;flex:1">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+              <a href="{{ n.href }}" style="font-size:15px;color:#434A58;text-decoration:none;padding:9px 14px;border-radius:9px" style-hover="background:#F8F9FB;color:#5C5EE6">{{ n.t }}</a>
+            </sc-for>
+          </nav>
+          <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+        </div>
+      </div>
+
+      <div style="padding:18px 32px 0;display:flex;align-items:center;gap:7px;font-size:12.5px;color:#8A93A3">
+        <a href="./Khuncool Home v2.dc.html" style="color:#8A93A3">หน้าแรก</a><span>›</span><span style="color:#434A58;font-weight:600">เครื่องมือครู</span>
+      </div>
+
+      <div style="padding:16px 32px 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start">
+        <div>
+          <h1 style="font-size:42px;line-height:1.25;margin:0 0 14px;max-width:15ch">เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง</h1>
+          <p style="font-size:16px;color:#434A58;margin:0 0 16px;line-height:1.8;max-width:56ch;text-wrap:pretty">khuncool รวมเครื่องมือช่วยสอนที่ครูไทยใช้บ่อยที่สุดไว้ในเว็บเดียว ตั้งแต่วงล้อสุ่มชื่อนักเรียน สุ่มแบ่งกลุ่ม จับเวลากิจกรรม เครื่องวัดเสียงในห้องเรียน ไปจนถึงกระดานคะแนนกลุ่ม ทุกตัวเปิดใช้งานผ่านเบราว์เซอร์ได้ทันที ฉายขึ้นโปรเจกเตอร์หรือกระดานอัจฉริยะหน้าชั้นได้ และใช้ได้ฟรีโดยไม่ต้องสมัครสมาชิก</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ trustChips }}" as="c" hint-placeholder-count="3">
+              <span style="font-size:12.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:6px 12px;border-radius:20px">{{ c }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#F8F9FB;border:1px solid #EEF0F4;border-radius:18px;padding:20px 22px">
+          <h2 style="font-size:15px;margin:0 0 12px">เลือกจากสิ่งที่จะทำในคาบนี้</h2>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ cases }}" as="c" hint-placeholder-count="5">
+              <a href="{{ c.href }}" style="display:flex;gap:10px;align-items:center;padding:11px 13px;border-radius:12px;background:#fff;border:1px solid #EEF0F4;color:inherit" style-hover="border-color:#C6C9FB">
+                <span style="flex:1;font-size:13.5px;color:#434A58">{{ c.q }}</span>
+                <span style="font-size:12.5px;font-weight:600;color:#4A46D6;flex:none;white-space:nowrap">{{ c.a }} ›</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 32px 34px">
+        <h2 style="font-size:24px;margin:0 0 6px">เครื่องมือทั้งหมด</h2>
+        <p style="font-size:14.5px;color:#5A6273;margin:0 0 18px;line-height:1.7;max-width:62ch">แต่ละตัวมีหน้าของตัวเองที่เปิดใช้ได้เลย ไม่มีขั้นตอนติดตั้งและไม่มีโฆษณาคั่นระหว่างใช้งาน</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ tools }}" as="t" hint-placeholder-count="7">
+            <a href="{{ t.href }}" style="display:flex;flex-direction:column;padding:20px;border:1px solid #E5E8EE;border-radius:18px;background:#fff;color:inherit;height:100%" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+              <div style="width:50px;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:13px;background:{{ t.bg }}">{{ t.icon }}</div>
+              <h3 style="font-size:18px;margin:0 0 6px">{{ t.title }}</h3>
+              <p style="font-size:13.5px;color:#5A6273;margin:0 0 12px;line-height:1.65;flex:1">{{ t.desc }}</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                <span style="font-family:'IBM Plex Mono';font-size:11px;color:#8A93A3">{{ t.slug }}</span>
+                <span style="font-size:13px;font-weight:600;color:#4A46D6">เปิดใช้งาน ›</span>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 32px 34px">
+        <h2 style="font-size:24px;margin:0 0 6px"><a href="./Khuncool Apps.dc.html" style="color:inherit">แอปช่วยงานครู ›</a></h2>
+        <p style="font-size:14.5px;color:#5A6273;margin:0 0 18px;line-height:1.7;max-width:62ch">ต่างจากเครื่องมือด้านบนตรงที่แอปกลุ่มนี้เก็บข้อมูลต่อเนื่องรายห้องรายคน ล็อกอินแล้วข้อมูลจะตามไปทุกเครื่อง</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ apps }}" as="a" hint-placeholder-count="3">
+            <a href="{{ a.href }}" style="display:flex;gap:13px;align-items:center;padding:18px;border:1px solid #E5E8EE;border-radius:18px;background:#fff;color:inherit" style-hover="border-color:#C6C9FB;background:#FBFBFE">
+              <div style="width:46px;height:46px;flex:none;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:{{ a.bg }}">{{ a.icon }}</div>
+              <div style="flex:1;min-width:0">
+                <h3 style="font-size:16.5px;margin:0 0 3px">{{ a.title }}</h3>
+                <p style="font-size:13px;color:#5A6273;margin:0">{{ a.sub }}</p>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:0 32px 36px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start">
+        <div>
+          <h2 style="font-size:24px;margin:0 0 16px">คำถามที่ครูถามบ่อย</h2>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ faqsD }}" as="f" hint-placeholder-count="4">
+              <div style="border:1px solid #E5E8EE;border-radius:15px;overflow:hidden;background:#fff">
+                <button onClick="{{ f.toggle }}" style="width:100%;font-family:inherit;text-align:left;display:flex;gap:12px;align-items:center;padding:15px 17px;border:none;background:none;cursor:pointer" style-hover="background:#F8F9FB">
+                  <span style="flex:1;font-size:15px;font-weight:600;line-height:1.5">{{ f.q }}</span>
+                  <span style="font-size:16px;color:#8A93A3;flex:none">{{ f.mark }}</span>
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <p style="font-size:14px;color:#5A6273;line-height:1.75;margin:0;padding:0 17px 16px">{{ f.a }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <h2 style="font-size:24px;margin:0 0 16px">ใช้เครื่องมือให้ได้ผลจริงในห้องเรียน</h2>
+          <p style="font-size:14.5px;color:#434A58;line-height:1.85;margin:0 0 14px;text-wrap:pretty">เครื่องมือสุ่มชื่อไม่ได้มีไว้แค่เรียกคนตอบคำถาม ครูหลายคนใช้เปิดคาบเพื่อดึงความสนใจ ใช้จับคู่เพื่อนทำงาน หรือใช้สุ่มลำดับการนำเสนอเพื่อให้ทุกคนเตรียมตัวมาเท่ากัน เช่นเดียวกับเครื่องวัดเสียงที่ใช้เป็นสัญญาณเตือนแทนการดุ ทำให้บรรยากาศในห้องดีขึ้นโดยครูไม่ต้องขึ้นเสียง</p>
+          <p style="font-size:14.5px;color:#434A58;line-height:1.85;margin:0 0 18px;text-wrap:pretty">เราเขียนบทความแนะนำวิธีใช้แต่ละตัวจากประสบการณ์ครูจริง พร้อมตัวอย่างกิจกรรมที่นำไปใช้ได้ทันทีในคาบถัดไป</p>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+              <a href="{{ r.href }}" style="display:flex;gap:10px;align-items:center;padding:13px 15px;border-radius:13px;background:#F8F9FB;border:1px solid #EEF0F4;color:inherit" style-hover="background:#F1F2FC">
+                <span style="flex:1;font-size:14px;color:#434A58">{{ r.t }}</span>
+                <span style="font-size:13px;color:#4A46D6;flex:none">อ่าน ›</span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E5E8EE;padding:26px 32px 32px;display:flex;align-items:center;gap:16px">
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;margin-bottom:3px">ยังไม่เจอเครื่องมือที่ต้องการ</div>
+          <div style="font-size:13px;color:#5A6273">บอกเราได้ว่าอยากให้ทำอะไรเพิ่ม เราสร้างจากคำขอของครูจริง</div>
+        </div>
+        <a href="./Khuncool Account.dc.html" style="font-size:14px;font-weight:600;padding:11px 20px;border-radius:11px;background:#5C5EE6;color:#fff;flex:none" style-hover="background:#4A46D6;color:#fff">ส่งคำขอเครื่องมือ</a>
+      </div>
+      <div style="padding:16px 32px 26px;font-size:11.5px;color:#A9B0BE">© 2568 khuncool.com · เพื่อครูไทยทุกคน</div>
+    </div>
+  </div>
+
+  <!-- ================= SEO SPEC ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#0A9380;color:#fff;padding:4px 9px;border-radius:6px">SEO SPEC</span>
+      <span style="font-size:13px;color:#5A6273">สำหรับ Claude Code</span>
+    </div>
+    <div style="width:420px;background:#1A1D26;color:#D8DBE2;border-radius:18px;padding:24px;font-family:'IBM Plex Mono';font-size:11.5px;line-height:1.85">
+      <div style="color:#7BE8CE;margin-bottom:4px">URL</div>
+      <div style="margin-bottom:16px">https://www.khuncool.com/tools</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">TITLE (58 ตัวอักษร)</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun'">เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">META DESCRIPTION</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun';color:#A9B0BE">รวมเครื่องมือครูออนไลน์ใช้ฟรีในเว็บเดียว วงล้อสุ่มชื่อนักเรียน สุ่มแบ่งกลุ่ม จับเวลา เครื่องวัดเสียงในห้องเรียน และกระดานคะแนนกลุ่ม เปิดใช้ได้ทันทีบนมือถือและคอมพิวเตอร์ ไม่ต้องสมัครสมาชิก</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">H1 — มีหนึ่งเดียวในหน้า</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun'">เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">คีย์เวิร์ดเป้าหมาย</div>
+      <div style="margin-bottom:16px;font-family:'Sarabun';color:#A9B0BE">หลัก: เครื่องมือครู, สื่อการสอนออนไลน์<br>รอง: เว็บช่วยสอน, เครื่องมือช่วยสอนฟรี, สื่อการสอน interactive</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">STRUCTURED DATA ที่ฝังไว้แล้ว</div>
+      <div style="margin-bottom:16px;color:#A9B0BE">BreadcrumbList · CollectionPage<br>ItemList (7 เครื่องมือ) · FAQPage</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">คำสงวน ห้ามใช้เป็น slug เครื่องมือ</div>
+      <div style="margin-bottom:16px;color:#A9B0BE">tools apps articles blog shop account login signup logout api admin help about contact privacy terms search sitemap assets static</div>
+      <div style="color:#7BE8CE;margin-bottom:4px">หมายเหตุ</div>
+      <div style="color:#A9B0BE;font-family:'Sarabun'">หน้านี้เป็น hub ที่ต้องมีเนื้อหาจริง ไม่ใช่กริดไอคอนเปล่า เพราะ slug ของเครื่องมืออยู่ที่ root จึงไม่มีสัญญาณหมวดจาก URL ต้องชดเชยด้วย breadcrumb schema + internal link จากหน้านี้ไปทุกเครื่องมือ</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = { openM: 0, openD: 0 };
+  faqData() {
+    return [
+      { q: 'เครื่องมือครูของ khuncool ใช้ฟรีจริงไหม',
+        a: 'ใช้ฟรีทุกตัว ไม่จำกัดจำนวนครั้ง และไม่ต้องสมัครสมาชิกก็เปิดใช้ได้ทันที การสมัครมีไว้เพื่อให้รายชื่อนักเรียนและคะแนนตามไปทุกเครื่องเท่านั้น' },
+      { q: 'ต้องติดตั้งโปรแกรมหรือแอปเพิ่มไหม',
+        a: 'ไม่ต้องติดตั้งอะไรเลย ทุกเครื่องมือทำงานในเว็บเบราว์เซอร์ เปิดผ่านมือถือ แท็บเล็ต คอมพิวเตอร์ หรือฉายขึ้นทีวีและโปรเจกเตอร์ในห้องเรียนได้ทันที' },
+      { q: 'ใช้กับกระดานอัจฉริยะหรือโปรเจกเตอร์ได้ไหม',
+        a: 'ได้ ทุกเครื่องมือมีปุ่มเต็มจอ ตัวอักษรใหญ่พอให้นักเรียนอ่านออกจากหลังห้อง เหมาะกับการฉายขึ้นจอหน้าชั้นเรียน' },
+      { q: 'ข้อมูลรายชื่อนักเรียนถูกเก็บไว้ที่ไหน',
+        a: 'ถ้าไม่ได้ล็อกอิน ข้อมูลจะเก็บไว้ในเครื่องของคุณเท่านั้น ถ้าล็อกอินจะซิงก์ขึ้นบัญชีของคุณเพื่อให้ใช้ต่อได้จากเครื่องอื่น และลบได้ตลอดเวลา' },
+    ];
+  }
+  faqList(openKey) {
+    const open = this.state[openKey];
+    return this.faqData().map((f, i) => ({
+      q: f.q, a: f.a,
+      open: open === i,
+      mark: open === i ? '−' : '+',
+      toggle: () => this.setState({ [openKey]: open === i ? -1 : i }),
+    }));
+  }
+  renderVals() {
+    return {
+      trustChips: ['ใช้ฟรีไม่จำกัด', 'ไม่ต้องติดตั้ง', 'ใช้ได้ทั้งมือถือและคอม', 'ฉายขึ้นจอหน้าชั้นได้'],
+      nav: [
+        { t: 'บทความ', href: './Khuncool Article Wheel.dc.html' },
+        { t: 'เครื่องมือครู', href: './Khuncool Tools.dc.html' },
+        { t: 'แนะนำสินค้า', href: './Khuncool Article Magnetic Frame.dc.html' },
+        { t: 'แอปช่วยงานครู', href: './Khuncool Apps.dc.html' },
+      ],
+      tools: [
+        { icon: '🎡', title: 'วงล้อสุ่มชื่อนักเรียน', slug: '/random-name-picker', bg: '#E1E3FD', href: './Khuncool Wheel.dc.html',
+          short: 'หมุนเลือกคนตอบ กันชื่อซ้ำ',
+          desc: 'ใส่รายชื่อทั้งห้องแล้วหมุนเลือกคนตอบคำถาม กันชื่อซ้ำได้ บันทึกรายชื่อไว้ใช้คาบหน้า' },
+        { icon: '🔀', title: 'สุ่มแบ่งกลุ่มนักเรียน', slug: '/group-maker', bg: '#E1E3FD', href: './Khuncool Groups.dc.html',
+          short: 'แบ่งกลุ่มเท่า ๆ กันอัตโนมัติ',
+          desc: 'แบ่งกลุ่มเท่า ๆ กันอัตโนมัติ กำหนดจำนวนกลุ่มหรือจำนวนคนต่อกลุ่มก็ได้' },
+        { icon: '⏱️', title: 'จับเวลาและนับถอยหลัง', slug: '/timer', bg: '#D0FBEF', href: './Khuncool Timer.dc.html',
+          short: 'ตัวเลขใหญ่ มีเสียงเตือน',
+          desc: 'ตั้งเวลาทำกิจกรรม ตัวเลขใหญ่เห็นจากหลังห้อง มีเสียงเตือนเมื่อหมดเวลา' },
+        { icon: '🎤', title: 'เครื่องวัดเสียงในห้องเรียน', slug: '/classroom-noise-meter', bg: '#D0FBEF', href: './Khuncool Noise Meter.dc.html',
+          short: 'เตือนเมื่อห้องดังเกินกำหนด',
+          desc: 'วัดระดับเสียงจากไมค์แบบเรียลไทม์ เตือนอัตโนมัติเมื่อห้องดังเกินระดับที่ตั้งไว้' },
+        { icon: '🏆', title: 'กระดานคะแนนกลุ่ม', slug: '/group-scoreboard', bg: '#E1E3FD', href: './Khuncool Scoreboard.dc.html',
+          short: 'ให้คะแนนสด เห็นอันดับทันที',
+          desc: 'ให้คะแนนกลุ่มระหว่างเรียน เห็นอันดับทันที ใช้กระตุ้นการมีส่วนร่วมทั้งคาบ' },
+        { icon: '🎯', title: 'สุ่มคำถามหน้าชั้น', slug: '/random-question', bg: '#FFEAD5', href: './Khuncool Question.dc.html',
+          short: 'ใส่คำถามเอง สุ่มขึ้นจอ',
+          desc: 'ใส่ชุดคำถามของคุณเองแล้วสุ่มขึ้นจอ ใช้ทบทวนบทเรียนท้ายคาบได้ดี' },
+        { icon: '🦆', title: 'เกมแข่งเป็ดสุ่มชื่อ', slug: '/duck-race', bg: '#D0FBEF', href: './Khuncool Duck Race.dc.html',
+          short: 'สุ่มชื่อแบบเกม เด็กเล็กชอบ',
+          desc: 'สุ่มชื่อในรูปแบบเกมแข่ง เรียกความสนใจได้ดีกับนักเรียนชั้นประถม' },
+      ],
+      apps: [
+        { icon: '📋', title: 'บันทึกโฮมรูม', sub: 'ตั้งหัวข้อเอง พิมพ์แบบฟอร์มได้', bg: '#E1E3FD', href: './Khuncool Homeroom.dc.html' },
+        { icon: '✅', title: 'เช็กชื่อนักเรียน', sub: 'บันทึกการมาเรียน สรุปสถิติ', bg: '#D0FBEF', href: './Khuncool Attendance.dc.html' },
+        { icon: '💰', title: 'ออมเงินนักเรียน', sub: 'บันทึกเงินออมรายคน รายห้อง', bg: '#FFEAD5', href: './Khuncool Savings.dc.html' },
+      ],
+      cases: [
+        { q: 'อยากเรียกนักเรียนตอบคำถามแบบไม่ลำเอียง', a: 'วงล้อสุ่มชื่อ', href: './Khuncool Wheel.dc.html' },
+        { q: 'จะให้ทำงานกลุ่ม แต่ไม่อยากให้จับกลุ่มเพื่อนสนิท', a: 'สุ่มแบ่งกลุ่ม', href: './Khuncool Groups.dc.html' },
+        { q: 'ห้องเสียงดังจนคุมไม่อยู่', a: 'วัดเสียง', href: './Khuncool Noise Meter.dc.html' },
+        { q: 'ต้องคุมเวลากิจกรรมให้จบในคาบ', a: 'จับเวลา', href: './Khuncool Timer.dc.html' },
+        { q: 'อยากให้เด็กแข่งกันมีส่วนร่วมทั้งคาบ', a: 'กระดานคะแนน', href: './Khuncool Scoreboard.dc.html' },
+      ],
+      related: [
+        { t: '10 กิจกรรมสุ่มชื่อนักเรียนที่ใช้ได้จริงในห้องเรียน', href: './Khuncool Article 10 Random Name Activities.dc.html' },
+        { t: 'วิธีใช้วงล้อสุ่มชื่อให้ห้องเรียนคึกคักตั้งแต่ต้นคาบ', href: './Khuncool Article Wheel.dc.html' },
+        { t: 'รีวิวกรอบป้ายแม่เหล็กติดผนัง จัดบอร์ดห้องเรียนให้เรียบร้อย', href: './Khuncool Article Magnetic Frame.dc.html' },
+      ],
+      faqsM: this.faqList('openM'),
+      faqsD: this.faqList('openD'),
+    };
+  }
+}
+</script>
+</body>
+</html>

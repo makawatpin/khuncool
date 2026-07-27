@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>บันทึกออมเงินนักเรียน ออนไลน์ ใช้ฟรี ส่งออก Excel | khuncool</title>
+<meta name="description" content="บันทึกเงินออมนักเรียนรายห้องรายคน พิมพ์ใบบันทึกออมเงินและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี ล็อกอินแล้วซิงก์ทุกเครื่อง">
+<link rel="canonical" href="https://www.khuncool.com/tools/savings">
+<meta property="og:type" content="website">
+<meta property="og:title" content="บันทึกออมเงินนักเรียน ออนไลน์ ใช้ฟรี ส่งออก Excel | khuncool">
+<meta property="og:description" content="บันทึกเงินออมนักเรียนรายห้องรายคน พิมพ์ใบบันทึกออมเงินและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี">
+<meta property="og:url" content="https://www.khuncool.com/tools/savings">
+<meta property="og:image" content="https://www.khuncool.com/assets/savings-cover.png">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"บันทึกออมเงินนักเรียน Khuncool","url":"https://www.khuncool.com/tools/savings","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"th","description":"บันทึกเงินออมนักเรียนรายห้องรายคน ส่งออกไฟล์ Excel ใช้ฟรี","offers":{"@type":"Offer","price":"0","priceCurrency":"THB"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"บันทึกออมเงินใช้ฟรีไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง"}},{"@type":"Question","name":"พิมพ์ใบบันทึกออมเงินได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ พิมพ์เป็นเอกสารรายห้องได้ทันที"}}]}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#F6D8A8}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- MOBILE -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · ออมเงินนักเรียน</span>
+    </div>
+    <div data-frame="1" style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- HELP modal -->
+      <sc-if value="{{ showHelp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;max-height:800px;overflow-y:auto;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)" class="frame-scroll">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                <div style="width:38px;height:38px;flex:none;border-radius:11px;background:#FCE9CC;display:flex;align-items:center;justify-content:center;font-size:19px">💡</div>
+                <div style="font-size:17px;font-weight:700;flex:1">วิธีใช้ออมเงิน</div>
+                <span onClick="{{ closeHelp }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ helpSteps }}" as="h" hint-placeholder-count="6">
+                  <div style="display:flex;gap:11px">
+                    <div style="width:24px;height:24px;flex:none;border-radius:999px;background:#C2500B;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;white-space:nowrap">{{ h.n }}</div>
+                    <div style="font-size:13px;color:#434A58;line-height:1.5;flex:1">{{ h.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px;border-radius:12px;background:#FFF6ED;border:1px solid #FCD9B6;padding:12px 13px;display:flex;gap:9px">
+                <span style="font-size:16px;flex:none">🔒</span>
+                <div style="font-size:12px;color:#8A5A1A;line-height:1.55">{{ deviceNote }}</div>
+              </div>
+              <button onClick="{{ closeHelp }}" style="width:100%;margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#C2500B;color:#fff;cursor:pointer" style-hover="background:#A5430A">เข้าใจแล้ว</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- HISTORY modal -->
+      <sc-if value="{{ showHistory }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;animation:fadein .2s ease">
+            <div style="width:100%;height:640px;display:flex;flex-direction:column;animation:pop .3s ease;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px 0;box-shadow:0 -20px 60px -20px rgba(0,0,0,.4)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                <div style="font-size:17px;font-weight:700;flex:1">ประวัติการออม</div>
+                <span onClick="{{ closeHistory }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <sc-if value="{{ noTxns }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#A9B0BE;gap:8px"><span style="font-size:34px">🪙</span><span style="font-size:13px">ยังไม่มีรายการฝาก/ถอน</span></div>
+              </sc-if>
+              <sc-if value="{{ hasTxns }}" hint-placeholder-val="{{ true }}">
+                <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding-bottom:18px" class="frame-scroll">
+                  <sc-for list="{{ txnRows }}" as="t" hint-placeholder-count="6">
+                    <div style="display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid #E5E8EE;border-radius:12px;background:#fff">
+                      <div style="width:30px;height:30px;flex:none;border-radius:9px;background:{{ t.bg }};color:{{ t.color }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">{{ t.icon }}</div>
+                      <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</div><div style="font-size:11px;color:#A9B0BE">{{ t.timeText }}</div></div>
+                      <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:600;color:{{ t.color }};flex:none">{{ t.amtText }}</span>
+                      <span onClick="{{ t.undo }}" title="เลิกทำ" style="flex:none;cursor:pointer;color:#A9B0BE;font-size:15px;padding:2px 4px" style-hover="color:#DC2626">↺</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- IMPORT modal -->
+      <sc-if value="{{ showImport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:17px;font-weight:700;flex:1">นำเข้ารายชื่อ</div>
+                <span onClick="{{ closeImport }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:12.5px;color:#7C8494;margin:0 0 16px;line-height:1.55">อัปโหลดไฟล์ Excel (.xlsx) หรือวางรายชื่อ · ถ้าไฟล์มีคอลัมน์ “ยอดคงเหลือ” ระบบจะกู้ยอดเงินเดิมให้ด้วย</p>
+              <label style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px;border:1.5px dashed #F2C079;border-radius:14px;background:#FFF8EE;cursor:pointer;margin-bottom:14px" style-hover="border-color:#C2500B">
+                <span style="font-size:26px">📄</span>
+                <span style="font-size:13.5px;font-weight:600;color:#A5430A">เลือกไฟล์ Excel</span>
+                <span style="font-size:11px;color:#A9B0BE">.xlsx / .xls</span>
+                <input type="file" accept=".xlsx,.xls" onChange="{{ onFile }}" style="display:none">
+              </label>
+              <div style="font-size:12px;font-weight:600;color:#7C8494;margin-bottom:7px">หรือวางรายชื่อ (ทีละบรรทัด)</div>
+              <textarea value="{{ importText }}" onChange="{{ onImportText }}" placeholder="สมชาย ใจดี&#10;สมหญิง รักเรียน…" style="width:100%;height:110px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#C2500B"></textarea>
+              <button onClick="{{ importPaste }}" style="width:100%;margin-top:12px;font-family:inherit;font-size:14px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#C2500B;color:#fff;cursor:pointer" style-hover="background:#A5430A">นำเข้ารายชื่อที่วาง</button>
+              <sc-if value="{{ importMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px;font-size:12px;color:#0A9380;text-align:center">{{ importMsg }}</div></sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- EXPORT modal -->
+      <sc-if value="{{ showExport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:17px;font-weight:700;flex:1">ส่งออกสมุดบัญชี</div>
+                <span onClick="{{ closeExport }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:12.5px;color:#7C8494;margin:0 0 16px;line-height:1.55">{{ exportSubtitle }}</p>
+              <button onClick="{{ exportExcel }}" style="width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-family:inherit;padding:14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff;cursor:pointer;margin-bottom:10px" style-hover="border-color:#0A9380;background:#F2FBF8">
+                <span style="font-size:22px">📊</span>
+                <span style="flex:1"><span style="display:block;font-size:14px;font-weight:600">ไฟล์ Excel (.xlsx)</span><span style="font-size:11.5px;color:#A9B0BE">ยอดคงเหลือ + รายการฝากถอน · ย้ายเครื่องได้</span></span>
+              </button>
+              <button onClick="{{ exportPDF }}" style="width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-family:inherit;padding:14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff;cursor:pointer" style-hover="border-color:#C2500B;background:#FFF8EE">
+                <span style="font-size:22px">🖨️</span>
+                <span style="flex:1"><span style="display:block;font-size:14px;font-weight:600">พิมพ์ / บันทึก PDF</span><span style="font-size:11.5px;color:#A9B0BE">สรุปยอดออมรายคน สำหรับแนบรายงาน</span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">ออมเงิน</span>
+        </div>
+        <button onClick="{{ openHistory }}" title="ประวัติ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">🕑</button>
+        <button onClick="{{ openHelp }}" title="วิธีใช้" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;font-weight:700;color:#C2500B;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">?</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:16px 16px 30px">
+        <!-- room + toolbar -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="flex:1">
+            <div style="font-size:11px;color:#A9B0BE">ห้อง</div>
+            <input value="{{ room }}" onChange="{{ onRoom }}" placeholder="ห้อง" style="width:100%;padding:8px 11px;font-family:inherit;font-size:14px;font-weight:600;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;margin-top:2px" style-focus="border-color:#C2500B">
+          </div>
+          <div style="text-align:right"><div style="font-size:11px;color:#A9B0BE">อัปเดตล่าสุด</div><div style="font-size:13px;font-weight:600">{{ lastText }}</div></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px">
+            <span style="font-size:12px;font-weight:600;color:#7C8494">🗓️ วันที่บันทึก</span>
+            <sc-if value="{{ backdating }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px;font-weight:700;color:#fff;background:#C2500B;padding:3px 8px;border-radius:999px;white-space:nowrap">ย้อนหลัง</span></sc-if>
+          </div>
+          <div style="display:flex;gap:7px;overflow-x:auto;padding:2px 0 6px" class="frame-scroll">
+            <sc-for list="{{ dateChips }}" as="d" hint-placeholder-count="8">
+              <button onClick="{{ d.onClick }}" style="{{ d.style }}">
+                <span style="font-size:10px;font-weight:500">{{ d.dow }}</span>
+                <span style="font-size:17px;font-weight:700">{{ d.day }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ backdating }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:#8A5A1A;margin-top:2px">กำลังบันทึกของ <b>{{ entryLongText }}</b></div></sc-if>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button onClick="{{ openImport }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap" style-hover="background:#F8F9FB;border-color:#F2C079">📥 นำเข้า</button>
+          <button onClick="{{ openExport }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap" style-hover="background:#F8F9FB;border-color:#F2C079">📤 ส่งออก</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px;padding:9px 11px;border-radius:10px;background:#FFF6ED;border:1px solid #FCD9B6">
+          <span style="font-size:13px;flex:none">🔒</span>
+          <span style="font-size:11px;color:#8A5A1A;line-height:1.45;flex:1">{{ saveNote }}</span>
+        </div>
+
+        <!-- summary -->
+        <div style="border-radius:16px;padding:16px;background:linear-gradient(135deg,#7A3D0B,#E0A400);color:#fff;margin-bottom:14px">
+          <div style="font-size:12.5px;color:#FBE7C6">ยอดออมรวมทั้งห้อง</div>
+          <div style="font-family:'IBM Plex Mono';font-size:30px;font-weight:600;margin:2px 0 12px">{{ totalBal }}</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+              <div style="background:rgba(255,255,255,.14);border-radius:10px;padding:9px 6px;text-align:center">
+                <div style="font-family:'IBM Plex Mono';font-size:15px;font-weight:600">{{ s.n }}</div>
+                <div style="font-size:10.5px;color:#FBE7C6;margin-top:1px">{{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- quick deposit all -->
+        <div style="border:1px solid #FCD9B6;border-radius:14px;padding:13px;background:#FFF8EE;margin-bottom:14px">
+          <div style="font-size:12.5px;font-weight:700;color:#8A5A1A;margin-bottom:9px">ฝากพร้อมกันทั้งห้อง</div>
+          <div style="display:flex;gap:7px;margin-bottom:9px">
+            <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+              <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input value="{{ quickAmt }}" onChange="{{ onQuick }}" inputmode="numeric" placeholder="จำนวนบาท" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:14px;font-weight:600;border:1.5px solid #E4C79A;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#C2500B">
+            <button onClick="{{ depositAll }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 15px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;flex:none" style-hover="background:#A5430A">ฝากทุกคน</button>
+          </div>
+        </div>
+
+        <!-- student rows -->
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+            <sc-for list="{{ skel }}" as="s" hint-placeholder-count="6">
+              <div style="height:76px;border-radius:12px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:14px;padding:24px 18px;text-align:center;margin-bottom:16px">
+            <div style="font-size:28px;margin-bottom:8px">⚠️</div>
+            <div style="font-size:14px;font-weight:700;color:#B91C1C">โหลดข้อมูลการออมไม่สำเร็จ</div>
+            <div style="font-size:12.5px;color:#8A3A3A;margin-top:5px;line-height:1.65">ยอดเงินอาจไม่เป็นปัจจุบัน<br>ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+            <button onClick="{{ retry }}" style="margin-top:13px;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 22px;border:none;border-radius:10px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed #E4C79A;border-radius:14px;background:#FFF8EE;padding:30px 20px;text-align:center;margin-bottom:16px">
+            <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:14px;background:#FBE7C6;display:flex;align-items:center;justify-content:center;font-size:24px">🐷</div>
+            <div style="font-size:14.5px;font-weight:700;color:#1A1D26">ยังไม่มีรายชื่อนักเรียน</div>
+            <div style="font-size:12.5px;color:#8A5A1A;margin-top:6px;line-height:1.65">เพิ่มชื่อ หรือวางรายชื่อทั้งห้องด้านล่าง<br>แล้วเริ่มบันทึกการออมได้เลย</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showRows }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+            <div style="border:1px solid #E5E8EE;border-radius:12px;background:#fff;padding:10px 11px">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+                <span style="width:22px;font-size:11px;color:#A9B0BE;font-family:'IBM Plex Mono';flex:none">{{ r.no }}</span>
+                <span style="flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                <span style="font-family:'IBM Plex Mono';font-size:14px;font-weight:600;color:#0A7A66;flex:none">{{ r.balText }}</span>
+              </div>
+              <div style="display:flex;gap:6px">
+                <input value="{{ r.amt }}" onChange="{{ r.onAmt }}" onKeyDown="{{ r.onKey }}" inputmode="numeric" placeholder="บาท" style="flex:1;min-width:0;padding:8px 10px;font-family:inherit;font-size:13px;border:1.5px solid #E5E8EE;border-radius:9px;outline:none;background:#F8F9FB" style-focus="border-color:#C2500B;background:#fff">
+                <button onClick="{{ r.deposit }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 12px;border:none;border-radius:9px;background:#0A9380;color:#fff;cursor:pointer;flex:none" style-hover="filter:brightness(1.06)">ฝาก</button>
+                <button onClick="{{ r.withdraw }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 11px;border:1px solid #F1C0C0;border-radius:9px;background:#fff;color:#DC2626;cursor:pointer;flex:none" style-hover="background:#FEF4F4">ถอน</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <!-- manage names -->
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">รายชื่อนักเรียน ({{ total }})</span>
+            <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#C2500B;cursor:pointer">{{ bulkLabel }}</span>
+          </div>
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:130px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#C2500B"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#A5430A">ใช้รายชื่อนี้</button>
+              <p style="font-size:11px;color:#A9B0BE;margin:9px 0 0;line-height:1.5">ยอดเงินของชื่อเดิมจะถูกเก็บไว้ ชื่อใหม่เริ่มที่ ฿0</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:8px">
+              <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKeyName }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#C2500B">
+              <button onClick="{{ addName }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#A5430A">เพิ่ม</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · ออมเงินนักเรียน</span>
+    </div>
+    <div data-frame="desktop" style="width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- HELP modal -->
+      <sc-if value="{{ showHelp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:520px;max-height:640px;overflow-y:auto;animation:pop .3s ease;background:#fff;border-radius:24px;padding:34px 32px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)" class="frame-scroll">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+                <div style="width:44px;height:44px;flex:none;border-radius:13px;background:#FCE9CC;display:flex;align-items:center;justify-content:center;font-size:23px">💡</div>
+                <div style="font-size:21px;font-weight:700;flex:1">วิธีใช้ออมเงินนักเรียน</div>
+                <span onClick="{{ closeHelp }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <sc-for list="{{ helpSteps }}" as="h" hint-placeholder-count="6">
+                  <div style="display:flex;gap:13px">
+                    <div style="width:28px;height:28px;flex:none;border-radius:999px;background:#C2500B;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;white-space:nowrap">{{ h.n }}</div>
+                    <div style="font-size:14.5px;color:#434A58;line-height:1.55;flex:1;padding-top:2px">{{ h.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:20px;border-radius:13px;background:#FFF6ED;border:1px solid #FCD9B6;padding:14px 16px;display:flex;gap:11px">
+                <span style="font-size:19px;flex:none">🔒</span>
+                <div style="font-size:13.5px;color:#8A5A1A;line-height:1.55">{{ deviceNote }}</div>
+              </div>
+              <button onClick="{{ closeHelp }}" style="width:100%;margin-top:22px;font-family:inherit;font-size:15px;font-weight:700;padding:15px;border:none;border-radius:13px;background:#C2500B;color:#fff;cursor:pointer" style-hover="background:#A5430A">เข้าใจแล้ว</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- HISTORY modal -->
+      <sc-if value="{{ showHistory }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:560px;height:600px;display:flex;flex-direction:column;animation:pop .3s ease;background:#fff;border-radius:24px;padding:28px 28px 0;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+                <div style="font-size:20px;font-weight:700;flex:1">ประวัติการออม</div>
+                <span onClick="{{ closeHistory }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <sc-if value="{{ noTxns }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#A9B0BE;gap:10px"><span style="font-size:42px">🪙</span><span style="font-size:14px">ยังไม่มีรายการฝาก/ถอน</span></div>
+              </sc-if>
+              <sc-if value="{{ hasTxns }}" hint-placeholder-val="{{ true }}">
+                <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:24px" class="frame-scroll">
+                  <sc-for list="{{ txnRows }}" as="t" hint-placeholder-count="8">
+                    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff">
+                      <div style="width:34px;height:34px;flex:none;border-radius:10px;background:{{ t.bg }};color:{{ t.color }};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700">{{ t.icon }}</div>
+                      <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">{{ t.name }}</div><div style="font-size:12px;color:#A9B0BE">{{ t.typeText }} · {{ t.timeText }}</div></div>
+                      <span style="font-family:'IBM Plex Mono';font-size:16px;font-weight:600;color:{{ t.color }};flex:none">{{ t.amtText }}</span>
+                      <button onClick="{{ t.undo }}" style="flex:none;font-family:inherit;font-size:12px;font-weight:600;padding:6px 11px;border:1px solid #E5E8EE;border-radius:9px;background:#fff;color:#7C8494;cursor:pointer" style-hover="border-color:#DC2626;color:#DC2626">↺ เลิกทำ</button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- IMPORT modal -->
+      <sc-if value="{{ showImport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:480px;animation:pop .3s ease;background:#fff;border-radius:24px;padding:30px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:20px;font-weight:700;flex:1">นำเข้ารายชื่อ</div>
+                <span onClick="{{ closeImport }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:13.5px;color:#7C8494;margin:0 0 18px;line-height:1.55">อัปโหลดไฟล์ Excel (.xlsx) หรือวางรายชื่อ · ถ้าไฟล์มีคอลัมน์ “ยอดคงเหลือ” ระบบจะกู้ยอดเงินเดิมให้ (ใช้ย้ายข้อมูลข้ามเครื่องได้)</p>
+              <label style="display:flex;flex-direction:column;align-items:center;gap:9px;padding:28px;border:1.5px dashed #F2C079;border-radius:16px;background:#FFF8EE;cursor:pointer;margin-bottom:16px" style-hover="border-color:#C2500B">
+                <span style="font-size:30px">📄</span>
+                <span style="font-size:15px;font-weight:600;color:#A5430A">เลือกไฟล์ Excel</span>
+                <span style="font-size:12px;color:#A9B0BE">.xlsx / .xls</span>
+                <input type="file" accept=".xlsx,.xls" onChange="{{ onFile }}" style="display:none">
+              </label>
+              <div style="font-size:13px;font-weight:600;color:#7C8494;margin-bottom:8px">หรือวางรายชื่อ (ทีละบรรทัด)</div>
+              <textarea value="{{ importText }}" onChange="{{ onImportText }}" placeholder="สมชาย ใจดี&#10;สมหญิง รักเรียน…" style="width:100%;height:120px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#C2500B"></textarea>
+              <button onClick="{{ importPaste }}" style="width:100%;margin-top:14px;font-family:inherit;font-size:15px;font-weight:700;padding:14px;border:none;border-radius:13px;background:#C2500B;color:#fff;cursor:pointer" style-hover="background:#A5430A">นำเข้ารายชื่อที่วาง</button>
+              <sc-if value="{{ importMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px;font-size:13px;color:#0A9380;text-align:center">{{ importMsg }}</div></sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- EXPORT modal -->
+      <sc-if value="{{ showExport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:460px;animation:pop .3s ease;background:#fff;border-radius:24px;padding:30px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:20px;font-weight:700;flex:1">ส่งออกสมุดบัญชี</div>
+                <span onClick="{{ closeExport }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:13.5px;color:#7C8494;margin:0 0 18px;line-height:1.55">{{ exportSubtitle }}</p>
+              <button onClick="{{ exportExcel }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;font-family:inherit;padding:16px;border:1px solid #E5E8EE;border-radius:14px;background:#fff;cursor:pointer;margin-bottom:12px" style-hover="border-color:#0A9380;background:#F2FBF8">
+                <span style="font-size:26px">📊</span>
+                <span style="flex:1"><span style="display:block;font-size:15px;font-weight:600">ไฟล์ Excel (.xlsx)</span><span style="font-size:12.5px;color:#A9B0BE">ยอดคงเหลือ + ประวัติรายการ · นำเข้าเครื่องอื่นเพื่อใช้ต่อได้</span></span>
+              </button>
+              <button onClick="{{ exportPDF }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;font-family:inherit;padding:16px;border:1px solid #E5E8EE;border-radius:14px;background:#fff;cursor:pointer" style-hover="border-color:#C2500B;background:#FFF8EE">
+                <span style="font-size:26px">🖨️</span>
+                <span style="flex:1"><span style="display:block;font-size:15px;font-weight:600">พิมพ์ / บันทึก PDF</span><span style="font-size:12.5px;color:#A9B0BE">สรุปยอดออมรายคน สำหรับแนบรายงาน</span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:12px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px" style-hover="color:#C2500B">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">ออมเงินนักเรียน</span>
+        </div>
+        <button onClick="{{ openHistory }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB;border-color:#F2C079">🕑 ประวัติ</button>
+        <button onClick="{{ openImport }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB;border-color:#F2C079">📥 นำเข้า</button>
+        <button onClick="{{ openExport }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB;border-color:#F2C079">📤 ส่งออก</button>
+        <button onClick="{{ openHelp }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#C2500B;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">💡 วิธีใช้</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 12px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start">
+        <!-- list -->
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <h2 style="font-size:18px;font-weight:700;margin:0;flex:1">รายชื่อ · ห้อง {{ room }}</h2>
+            <sc-if value="{{ backdating }}" hint-placeholder-val="{{ false }}"><span style="flex:none;font-size:11px;font-weight:700;color:#fff;background:#C2500B;padding:4px 10px;border-radius:999px;white-space:nowrap">● บันทึกย้อนหลัง</span></sc-if>
+            <div style="display:flex;align-items:center;gap:8px;flex:none;padding:7px 11px;border-radius:10px;border:1px solid {{ dateBorder }};background:{{ dateBg }}">
+              <span style="font-size:12.5px;font-weight:600;color:#7C8494">🗓️ วันที่บันทึก</span>
+              <input type="date" value="{{ entryDate }}" onChange="{{ onEntryDate }}" style="padding:6px 9px;font-family:inherit;font-size:13px;font-weight:600;border:1px solid #D3D8E1;border-radius:8px;outline:none;background:#fff;color:#1A1D26" style-focus="border-color:#C2500B">
+            </div>
+          </div>
+          <!-- quick deposit all -->
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid #FCD9B6;border-radius:13px;padding:12px 14px;background:#FFF8EE;margin-bottom:14px">
+            <span style="font-size:13px;font-weight:700;color:#8A5A1A;flex:none">ฝากทั้งห้อง</span>
+            <div style="display:flex;gap:6px;flex:none">
+              <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</button>
+              </sc-for>
+            </div>
+            <input value="{{ quickAmt }}" onChange="{{ onQuick }}" inputmode="numeric" placeholder="จำนวนบาท" style="flex:1;min-width:0;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:600;border:1.5px solid #E4C79A;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#C2500B">
+            <button onClick="{{ depositAll }}" style="font-family:inherit;font-size:13.5px;font-weight:700;padding:9px 16px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;flex:none" style-hover="background:#A5430A">ฝากทุกคน</button>
+          </div>
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ skel }}" as="s" hint-placeholder-count="8">
+                <div style="height:54px;border-radius:13px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:18px;padding:52px 24px;text-align:center">
+              <div style="font-size:34px;margin-bottom:10px">⚠️</div>
+              <div style="font-size:16.5px;font-weight:700;color:#B91C1C">โหลดข้อมูลการออมไม่สำเร็จ</div>
+              <div style="font-size:13.5px;color:#8A3A3A;margin-top:6px;line-height:1.65">ยอดเงินอาจไม่เป็นปัจจุบัน ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+              <button onClick="{{ retry }}" style="margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1.5px dashed #E4C79A;border-radius:18px;background:#FFF8EE;padding:56px 24px;text-align:center">
+              <div style="width:58px;height:58px;margin:0 auto 14px;border-radius:16px;background:#FBE7C6;display:flex;align-items:center;justify-content:center;font-size:28px">🐷</div>
+              <div style="font-size:16.5px;font-weight:700;color:#1A1D26">ยังไม่มีรายชื่อนักเรียน</div>
+              <div style="font-size:13.5px;color:#8A5A1A;margin-top:7px;line-height:1.65">เพิ่มชื่อ หรือวางรายชื่อทั้งห้องที่กล่องทางขวา<br>แล้วเริ่มบันทึกการออมได้เลย</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showRows }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff">
+                <span style="width:26px;font-size:12px;color:#A9B0BE;font-family:'IBM Plex Mono';flex:none">{{ r.no }}</span>
+                <span style="flex:1;min-width:0;font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                <span style="font-family:'IBM Plex Mono';font-size:15.5px;font-weight:600;color:#0A7A66;flex:none;min-width:104px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.balText }}</span>
+                <input value="{{ r.amt }}" onChange="{{ r.onAmt }}" onKeyDown="{{ r.onKey }}" inputmode="numeric" placeholder="บาท" style="width:78px;flex:none;padding:8px 10px;font-family:inherit;font-size:13.5px;border:1.5px solid #E5E8EE;border-radius:9px;outline:none;background:#F8F9FB" style-focus="border-color:#C2500B;background:#fff">
+                <button onClick="{{ r.deposit }}" style="font-family:inherit;font-size:13px;font-weight:700;padding:8px 14px;border:none;border-radius:9px;background:#0A9380;color:#fff;cursor:pointer;flex:none" style-hover="filter:brightness(1.06)">ฝาก</button>
+                <button onClick="{{ r.withdraw }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #F1C0C0;border-radius:9px;background:#fff;color:#DC2626;cursor:pointer;flex:none" style-hover="background:#FEF4F4">ถอน</button>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+
+        <!-- sidebar -->
+        <div>
+          <div style="border-radius:18px;padding:22px;background:linear-gradient(135deg,#7A3D0B,#E0A400);color:#fff;margin-bottom:14px">
+            <div style="font-size:12.5px;color:#FBE7C6">ยอดออมรวมทั้งห้อง</div>
+            <div style="font-family:'IBM Plex Mono';font-size:34px;font-weight:600;margin:2px 0 16px">{{ totalBal }}</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+                <div style="background:rgba(255,255,255,.14);border-radius:11px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:13px;color:#FBE7C6">{{ s.label }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:18px;font-weight:600">{{ s.n }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:11px 13px;border-radius:12px;background:#FFF6ED;border:1px solid #FCD9B6">
+            <span style="font-size:15px;flex:none">🔒</span>
+            <span style="font-size:11.5px;color:#8A5A1A;line-height:1.5;flex:1">{{ saveNote }}</span>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+              <span style="font-size:15px;font-weight:700">รายชื่อ ({{ total }})</span>
+              <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#C2500B;cursor:pointer">{{ bulkLabel }}</span>
+            </div>
+            <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:180px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#C2500B"></textarea>
+                <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#A5430A">ใช้รายชื่อนี้</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px">
+                <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKeyName }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#C2500B">
+                <button onClick="{{ addName }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 16px;border:none;border-radius:10px;background:#C2500B;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#A5430A">เพิ่ม</button>
+              </div>
+            </sc-if>
+            <p style="font-size:11.5px;color:#A9B0BE;margin:12px 0 0;line-height:1.6">ใส่จำนวนเงินในช่องของแต่ละคนแล้วกด “ฝาก” · บันทึกอัตโนมัติในเครื่องนี้ · ส่งออก Excel เพื่อใช้ต่อบนเครื่องอื่น</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ retry }}" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99;background:{{ toastBg }};color:#fff;font-size:13.5px;font-weight:600;padding:11px 22px;border-radius:999px;box-shadow:0 14px 34px -12px rgba(26,29,38,.6);animation:fadein .2s ease;cursor:pointer">{{ toast }}</div>
+</sc-if>
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99;background:#FFFBEB;border:1px solid #FDE68A;color:#92600A;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(26,29,38,.35)">📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1560,&quot;height&quot;:940},&quot;dataState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'loading'|'error'&quot;,&quot;section&quot;:&quot;สถานะข้อมูล&quot;}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.LS_KEY='khuncool_savings_v1';
+    this.presetVals=[5,10,20,50];
+    const students=['เด็กชายกิตติ ใจดี','เด็กหญิงชนากานต์ สุขใจ','เด็กชายณัฐพงษ์ ทองมา','เด็กหญิงปาริชาต แก้วใส','เด็กชายภูริ เจริญสุข','เด็กหญิงมนัสนันท์ ศรีทอง','เด็กชายวรเมธ พูนผล','เด็กหญิงอริสา บุญมี'];
+    const balances=[320,150,80,210,45,175,60,130];
+    this.state={ students, balances, txns:[], room:'ป.5/2', lastTs:0,
+      entryDate:this.todayISO(),
+      quickAmt:'', rowAmts:{},
+      newName:'', bulkMode:false, bulkText:'',
+      showHelp:false, showHistory:false, showImport:false, showExport:false, importText:'', importMsg:'' };
+  }
+  syncOnline=()=>this.setState({ offline: typeof navigator!=='undefined' && navigator.onLine===false });
+  componentWillUnmount(){ window.removeEventListener('online',this.syncOnline); window.removeEventListener('offline',this.syncOnline); clearTimeout(this._tt); }
+  componentDidMount(){
+    this.syncOnline();
+    window.addEventListener('online',this.syncOnline); window.addEventListener('offline',this.syncOnline);
+    try{
+      const raw=localStorage.getItem(this.LS_KEY);
+      if(raw){ const d=JSON.parse(raw);
+        if(Array.isArray(d.students)&&d.students.length){
+          this.setState({ students:d.students, balances:d.balances||d.students.map(()=>0), txns:d.txns||[], room:d.room||this.state.room, lastTs:d.lastTs||0 }); return; }
+      }
+      const r=JSON.parse(localStorage.getItem('khuncool.roster')||'null');
+      if(Array.isArray(r)&&r.length){ this.setState({ students:r, balances:r.map(()=>0), txns:[] }); }
+    }catch(e){}
+  }
+  save(next){
+    try{
+      const s={...this.state,...next};
+      localStorage.setItem(this.LS_KEY, JSON.stringify({ students:s.students, balances:s.balances, txns:s.txns, room:s.room, lastTs:s.lastTs, savedAt:Date.now() }));
+      localStorage.setItem('khuncool.roster', JSON.stringify(s.students));
+    }catch(e){}
+  }
+  set(next){ this.setState(next); this.save(next); this.flashToast(); }
+  flashToast(){
+    const err=(this.props.dataState||'ready')==='error';
+    this.setState({ toast: err?'บันทึกไม่สำเร็จ · แตะเพื่อลองใหม่':'บันทึกแล้ว ✓', toastErr:err });
+    clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({ toast:'' }), err?3200:1600);
+  }
+  retry=()=>{
+    this.setState({ toast:'กำลังลองใหม่…', toastErr:false });
+    clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({ toast:'' }),1400);
+  };
+
+  money(n){
+    const v=Math.round(n||0);
+    if(Math.abs(v)>=1e6) return '฿'+(v/1e6).toFixed(Math.abs(v)>=1e7?0:1)+' ล้าน';
+    return '฿'+v.toLocaleString('en-US');
+  }
+  isToday(ts){ const d=new Date(ts), n=new Date(); return d.toDateString()===n.toDateString(); }
+  todayISO(){ const d=new Date(), p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+  entryTs(){ if(!this.state.entryDate || this.state.entryDate===this.todayISO()) return Date.now(); const base=new Date(this.state.entryDate+'T12:00:00').getTime(); return base + (this.state.txns.length+1); }
+  onEntryDate=(e)=>this.setState({ entryDate:e.target.value||this.todayISO() });
+  entryLongText(){ try{ return new Date(this.state.entryDate+'T12:00:00').toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+  buildDateChips(){
+    const todayISO=this.todayISO(), out=[], p=n=>String(n).padStart(2,'0');
+    const base='display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;width:54px;height:54px;border-radius:13px;cursor:pointer;font-family:inherit;line-height:1.25';
+    for(let k=0;k<21;k++){
+      const dt=new Date(); dt.setHours(12,0,0,0); dt.setDate(dt.getDate()-k);
+      const iso=`${dt.getFullYear()}-${p(dt.getMonth()+1)}-${p(dt.getDate())}`;
+      const sel=iso===this.state.entryDate, isToday=iso===todayISO;
+      const style=sel
+        ? base+';border:1.5px solid #C2500B;background:#C2500B;color:#fff'
+        : base+';border:'+(isToday?'1.5px solid #F2C079':'1px solid #E5E8EE')+';background:#fff;color:#434A58';
+      out.push({ iso, dow:isToday?'วันนี้':dt.toLocaleDateString('th-TH',{weekday:'short'}), day:dt.getDate(), style, onClick:()=>this.setState({ entryDate:iso }) });
+    }
+    return out;
+  }
+  parseAmt(v){ const n=parseInt(String(v==null?'':v).replace(/[^0-9]/g,''),10); return isNaN(n)?0:n; }
+
+  onRoom=(e)=>this.set({ room:e.target.value });
+  onQuick=(e)=>this.setState({ quickAmt:e.target.value.replace(/[^0-9]/g,'') });
+  setPreset=(v)=>this.setState({ quickAmt:String(v) });
+  onRowAmt=(i,e)=>{ const v=e.target.value.replace(/[^0-9]/g,''); this.setState(s=>({ rowAmts:{...s.rowAmts, [i]:v} })); };
+  onRowKey=(i,e)=>{ if(e.key==='Enter') this.deposit(i); };
+
+  apply(i,amt,type){
+    const bal=[...this.state.balances];
+    const cur=bal[i]||0;
+    if(type==='withdraw'){ amt=Math.min(amt,cur); if(amt<=0) return; bal[i]=cur-amt; }
+    else { bal[i]=cur+amt; }
+    const ts=this.entryTs();
+    const txns=[...this.state.txns, { name:this.state.students[i], amt, type, ts }];
+    const rowAmts={...this.state.rowAmts}; delete rowAmts[i];
+    this.set({ balances:bal, txns, lastTs:ts });
+    this.setState({ rowAmts });
+  }
+  deposit=(i)=>{ const amt=this.parseAmt(this.state.rowAmts[i]); if(!amt) return; this.apply(i,amt,'deposit'); };
+  withdraw=(i)=>{ const amt=this.parseAmt(this.state.rowAmts[i]); if(!amt) return; this.apply(i,amt,'withdraw'); };
+  depositAll=()=>{
+    const amt=this.parseAmt(this.state.quickAmt); if(!amt) return;
+    const bal=this.state.balances.map(b=>(b||0)+amt);
+    const ts=this.entryTs();
+    const newTxns=this.state.students.map((name,idx)=>({ name, amt, type:'deposit', ts:ts+idx }));
+    this.set({ balances:bal, txns:[...this.state.txns, ...newTxns], lastTs:ts });
+    this.setState({ quickAmt:'' });
+  };
+  undoTxn=(ts)=>{
+    const t=this.state.txns.find(x=>x.ts===ts); if(!t) return;
+    const i=this.state.students.indexOf(t.name);
+    const bal=[...this.state.balances];
+    if(i>=0){ bal[i]=(bal[i]||0) + (t.type==='deposit' ? -t.amt : t.amt); if(bal[i]<0) bal[i]=0; }
+    this.set({ balances:bal, txns:this.state.txns.filter(x=>x.ts!==ts) });
+  };
+
+  onNewName=(e)=>this.setState({ newName:e.target.value });
+  onKeyName=(e)=>{ if(e.key==='Enter') this.addName(); };
+  addName=()=>{ const v=(this.state.newName||'').trim(); if(!v)return; this.set({ students:[...this.state.students,v], balances:[...this.state.balances,0] }); this.setState({ newName:'' }); };
+  toggleBulk=()=>this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.students.join('\n') }));
+  onBulk=(e)=>this.setState({ bulkText:e.target.value });
+  applyBulk=()=>{
+    const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    const prev={}; this.state.students.forEach((n,i)=>{ prev[n]=this.state.balances[i]||0; });
+    const balances=list.map(n=>prev[n]||0);
+    this.set({ students:list, balances }); this.setState({ bulkMode:false, rowAmts:{} });
+  };
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  openHelp=()=>this.setState({ showHelp:true });
+  closeHelp=()=>this.setState({ showHelp:false });
+  openHistory=()=>this.setState({ showHistory:true });
+  closeHistory=()=>this.setState({ showHistory:false });
+  openImport=()=>this.setState({ showImport:true, importMsg:'', importText:'' });
+  closeImport=()=>this.setState({ showImport:false });
+  openExport=()=>this.setState({ showExport:true });
+  closeExport=()=>this.setState({ showExport:false });
+  onImportText=(e)=>this.setState({ importText:e.target.value });
+
+  importPaste=()=>{
+    const list=(this.state.importText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    if(!list.length){ this.setState({ importMsg:'ยังไม่มีรายชื่อให้นำเข้า' }); return; }
+    const prev={}; this.state.students.forEach((n,i)=>{ prev[n]=this.state.balances[i]||0; });
+    this.set({ students:list, balances:list.map(n=>prev[n]||0) });
+    this.setState({ showImport:false, importText:'', rowAmts:{} });
+  };
+  onFile=(e)=>{
+    const file=e.target.files && e.target.files[0]; if(!file) return;
+    if(typeof XLSX==='undefined'){ this.setState({ importMsg:'ไลบรารี Excel ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง' }); return; }
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      try{
+        const wb=XLSX.read(ev.target.result,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const aoa=XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false});
+        if(!aoa.length){ this.setState({ importMsg:'ไฟล์ว่างเปล่า' }); return; }
+        let header=null, start=0;
+        const first=aoa[0].map(c=>String(c==null?'':c).trim());
+        if(first.some(c=>c.includes('ชื่อ')||c.toLowerCase().includes('name'))){ header=first; start=1; }
+        let nameCol=1, balCol=-1;
+        if(header){
+          const ni=header.findIndex(c=>c.includes('ชื่อ')||c.toLowerCase().includes('name')); if(ni>=0) nameCol=ni;
+          const bi=header.findIndex(c=>c.includes('คงเหลือ')||c.includes('ยอด')||c.toLowerCase().includes('balance')); if(bi>=0) balCol=bi;
+        } else { nameCol = aoa[0].length>=2 ? 1 : 0; }
+        const students=[], balances=[];
+        for(let i=start;i<aoa.length;i++){
+          const row=aoa[i]||[]; let name=String(row[nameCol]==null?'':row[nameCol]).trim();
+          if(!name && nameCol!==0) name=String(row[0]==null?'':row[0]).trim();
+          if(!name) continue;
+          students.push(name);
+          balances.push(balCol>=0 ? this.parseAmt(row[balCol]) : 0);
+        }
+        if(!students.length){ this.setState({ importMsg:'ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)' }); return; }
+        this.set({ students, balances });
+        this.setState({ showImport:false, importMsg:'', rowAmts:{} });
+      }catch(err){ this.setState({ importMsg:'อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls' }); }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  fileStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
+  exportExcel=()=>{
+    if(typeof XLSX==='undefined') return;
+    const rows=[['เลขที่','ชื่อ-สกุล','ยอดคงเหลือ']];
+    this.state.students.forEach((n,i)=>rows.push([i+1,n,Math.round(this.state.balances[i]||0)]));
+    rows.push([]); rows.push(['รวมทั้งห้อง', '', Math.round(this.state.balances.reduce((a,b)=>a+(b||0),0))]);
+    rows.push(['ห้อง',this.state.room]); rows.push(['วันที่',new Date().toLocaleDateString('th-TH')]);
+    const ws=XLSX.utils.aoa_to_sheet(rows); ws['!cols']=[{wch:8},{wch:30},{wch:14}];
+    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'ยอดออม');
+    const trows=[['วันที่-เวลา','ชื่อ-สกุล','ประเภท','จำนวน']];
+    [...this.state.txns].reverse().forEach(t=>trows.push([ new Date(t.ts).toLocaleString('th-TH'), t.name, t.type==='deposit'?'ฝาก':'ถอน', Math.round(t.amt) ]));
+    const tws=XLSX.utils.aoa_to_sheet(trows); tws['!cols']=[{wch:22},{wch:30},{wch:10},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,tws,'รายการ');
+    XLSX.writeFile(wb,`ออมเงิน_${this.state.room||'ห้อง'}_${this.fileStamp()}.xlsx`);
+    this.setState({ showExport:false });
+  };
+  exportPDF=()=>{
+    const dateText=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const body=this.state.students.map((n,i)=>`<tr><td class="c">${i+1}</td><td>${n}</td><td class="r">${Math.round(this.state.balances[i]||0).toLocaleString('en-US')}</td></tr>`).join('');
+    const total=Math.round(this.state.balances.reduce((a,b)=>a+(b||0),0)).toLocaleString('en-US');
+    const closeTag='<'+'/script>';
+    const runner='<'+'script>window.onload=function(){setTimeout(function(){window.print();},350);};'+closeTag;
+    const html=`<!doctype html><html><head><meta charset="utf-8"><title>ออมเงิน ${this.state.room}</title>`+
+      `<style>@page{margin:18mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}`+
+      `h1{font-size:22px;margin:0 0 4px}.meta{font-size:14px;color:#555;margin-bottom:14px}`+
+      `table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid #999;padding:7px 10px;text-align:left}`+
+      `th{background:#eee}.c{text-align:center;width:70px}.r{text-align:right;width:130px}.sum{margin-top:14px;font-size:16px;font-weight:bold;text-align:right}</style></head>`+
+      `<body><h1>สมุดบัญชีเงินออมนักเรียน · ห้อง ${this.state.room||'-'}</h1>`+
+      `<div class="meta">ณ วันที่ ${dateText} · จำนวน ${this.state.students.length} คน</div>`+
+      `<table><thead><tr><th class="c">เลขที่</th><th>ชื่อ-สกุล</th><th class="r">ยอดคงเหลือ (บาท)</th></tr></thead><tbody>${body}</tbody></table>`+
+      `<div class="sum">รวมเงินออมทั้งห้อง: ${total} บาท</div>`+
+      runner+`</body></html>`;
+    const w=window.open('','_blank'); if(!w){ this.setState({ showExport:false }); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+    this.setState({ showExport:false });
+  };
+
+  renderVals(){
+    const bal=this.state.balances;
+    const rows=this.state.students.map((name,i)=>({
+      no:String(i+1).padStart(2,'0'), name, balText:this.money(bal[i]),
+      amt:this.state.rowAmts[i]||'',
+      onAmt:(e)=>this.onRowAmt(i,e), onKey:(e)=>this.onRowKey(i,e),
+      deposit:()=>this.deposit(i), withdraw:()=>this.withdraw(i),
+    }));
+    const total=bal.reduce((a,b)=>a+(b||0),0);
+    const cnt=this.state.students.length;
+    const ds=this.props.dataState||'ready';
+    const todayDep=this.state.txns.filter(t=>t.type==='deposit'&&this.isToday(t.ts)).reduce((a,t)=>a+t.amt,0);
+    const avg=cnt?total/cnt:0;
+    const txnRows=[...this.state.txns].reverse().slice(0,80).map(t=>{
+      const dep=t.type==='deposit';
+      return { name:t.name, typeText:dep?'ฝากเงิน':'ถอนเงิน',
+        icon:dep?'↑':'↓', color:dep?'#0A7A66':'#DC2626', bg:dep?'#DFF5EF':'#FCE9E9',
+        amtText:(dep?'+':'−')+this.money(t.amt).slice(1),
+        timeText:new Date(t.ts).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
+        undo:()=>this.undoTxn(t.ts) };
+    });
+    const presetStyle='font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 12px;border:1px solid #E4C79A;border-radius:8px;background:#fff;color:#8A5A1A;cursor:pointer';
+    return {
+      loading:ds==='loading', errored:ds==='error',
+      showEmpty:ds==='ready'&&cnt===0, showRows:ds==='ready'&&cnt>0,
+      skel:[1,2,3,4,5,6,7,8], retry:this.retry,
+      offline:this.state.offline,
+      toast:this.state.toast||'', toastBg:this.state.toastErr?'#B91C1C':'#1A1D26',
+      rows, total:cnt, totalBal:this.money(total),
+      stats:[ {label:'นักเรียน',n:cnt+' คน'}, {label:'ฝากวันนี้',n:this.money(todayDep)}, {label:'เฉลี่ย/คน',n:this.money(avg)} ],
+      entryDate:this.state.entryDate, onEntryDate:this.onEntryDate,
+      dateChips:this.buildDateChips(), entryLongText:this.entryLongText(),
+      backdating:this.state.entryDate!==this.todayISO(),
+      dateBorder:this.state.entryDate!==this.todayISO()?'#F2C079':'#E5E8EE',
+      dateBg:this.state.entryDate!==this.todayISO()?'#FFF8EE':'#F8F9FB',
+      quickAmt:this.state.quickAmt, onQuick:this.onQuick, depositAll:this.depositAll,
+      presets:this.presetVals.map(v=>({ label:'+'+v, onClick:()=>this.setPreset(v), style:presetStyle })),
+      room:this.state.room, onRoom:this.onRoom,
+      lastText:this.state.lastTs?new Date(this.state.lastTs).toLocaleDateString('th-TH',{day:'numeric',month:'short'}):'—',
+      newName:this.state.newName, bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText,
+      bulkLabel:this.state.bulkMode?'✎ ทีละชื่อ':'✎ วางหลายชื่อ',
+      onNewName:this.onNewName, onKeyName:this.onKeyName, addName:this.addName,
+      toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk, toggleFull:this.toggleFull,
+      showHelp:this.state.showHelp, openHelp:this.openHelp, closeHelp:this.closeHelp,
+      showHistory:this.state.showHistory, openHistory:this.openHistory, closeHistory:this.closeHistory,
+      txnRows, hasTxns:txnRows.length>0, noTxns:txnRows.length===0,
+      showImport:this.state.showImport, openImport:this.openImport, closeImport:this.closeImport,
+      showExport:this.state.showExport, openExport:this.openExport, closeExport:this.closeExport,
+      importText:this.state.importText, onImportText:this.onImportText, importPaste:this.importPaste, onFile:this.onFile, importMsg:this.state.importMsg,
+      exportExcel:this.exportExcel, exportPDF:this.exportPDF,
+      exportSubtitle:`ห้อง ${this.state.room||'-'} · ${cnt} คน · ยอดรวม ${this.money(total)}`,
+      saveNote:'บันทึกอัตโนมัติเฉพาะเครื่องนี้ — ย้ายเครื่องต้องส่งออก Excel แล้วนำเข้า',
+      deviceNote:'ยอดเงินและประวัติถูกบันทึกในเครื่อง/เบราว์เซอร์นี้เท่านั้น ไม่ได้ซิงก์ขึ้นคลาวด์ หากต้องการใช้ต่อบนเครื่องอื่น ให้ “ส่งออก Excel” จากเครื่องเดิม แล้ว “นำเข้า Excel” ที่อีกเครื่อง ระบบจะกู้รายชื่อและยอดคงเหลือให้',
+      helpSteps:[
+        {n:1,text:'ใส่จำนวนเงินในช่องของนักเรียนแต่ละคน แล้วกด “ฝาก” (สีเขียว) หรือ “ถอน”'},
+        {n:2,text:'อยากให้ทุกคนฝากเท่ากัน กดปุ่มลัด +5 +10 +20 หรือพิมพ์เอง แล้วกด “ฝากทุกคน”'},
+        {n:3,text:'ยอดคงเหลือรายคนและยอดรวมทั้งห้องอัปเดตให้อัตโนมัติ'},
+        {n:4,text:'กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด'},
+        {n:5,text:'“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้'},
+        {n:6,text:'“ส่งออก” เป็น Excel (มีประวัติครบ) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)'},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

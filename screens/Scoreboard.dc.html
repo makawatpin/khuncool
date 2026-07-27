@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>กระดานคะแนนกลุ่ม ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="กระดานคะแนนกลุ่มสำหรับห้องเรียน เพิ่ม-ลดคะแนนแต่ละกลุ่มแบบเรียลไทม์ ใช้ฟรีบนเว็บ ไม่ต้องติดตั้ง เหมาะกับกิจกรรมแข่งขันในชั้นเรียน">
+<link rel="canonical" href="https://www.khuncool.com/tools/scoreboard">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  input:focus{border-color:#5C5EE6!important}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  @keyframes kcfadein{from{opacity:0}to{opacity:1}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ============ MOBILE ============ -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · กระดานคะแนนกลุ่ม</span>
+    </div>
+    <div data-screen-label="Scoreboard mobile" style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="1" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700;white-space:nowrap">กระดานคะแนน</span>
+        </div>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:16px 14px 30px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <input value="{{ title }}" onChange="{{ onTitle }}" placeholder="ชื่อกิจกรรม" style="flex:1;min-width:0;font-family:inherit;font-size:14px;font-weight:600;padding:10px 12px;border:1px solid #E5E8EE;border-radius:11px;outline:none;background:#F8F9FB"/>
+          <div style="flex:none;display:flex;align-items:center;gap:6px;border:1px solid #E5E8EE;border-radius:11px;padding:6px 9px;background:#fff">
+            <span style="font-size:11.5px;color:#7C8494;white-space:nowrap">แต้ม/ครั้ง</span>
+            <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+              <button onClick="{{ st.onClick }}" style="{{ st.style }}">{{ st.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ skel }}" as="k" hint-placeholder-count="4">
+              <div style="height:72px;border-radius:14px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:14px;padding:24px 18px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">⚠️</div>
+            <div style="font-size:14px;font-weight:700;color:#B91C1C">โหลดกระดานคะแนนไม่สำเร็จ</div>
+            <div style="font-size:12.5px;color:#8A3A3A;margin-top:5px;line-height:1.65">คะแนนล่าสุดอาจยังไม่ซิงก์<br>ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+            <button onClick="{{ retry }}" style="margin-top:13px;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 22px;border:none;border-radius:10px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed #D3D8E1;border-radius:16px;background:#F8F9FB;padding:32px 20px;text-align:center">
+            <div style="width:52px;height:52px;margin:0 auto 12px;border-radius:15px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:26px">🏆</div>
+            <div style="font-size:15px;font-weight:700">ยังไม่มีทีม</div>
+            <div style="font-size:12.5px;color:#7C8494;margin-top:6px;line-height:1.65">เพิ่มทีมเอง หรือดึงกลุ่มที่สุ่มไว้<br>จากเครื่องมือสุ่มแบ่งกลุ่ม</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+              <button onClick="{{ addTeam }}" style="font-family:inherit;font-size:14px;font-weight:700;padding:12px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">+ เพิ่มทีม</button>
+              <button onClick="{{ importRoster }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;cursor:pointer" style-hover="background:#F8F9FB">👥 ดึงรายชื่อจากห้องเรียน</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showTeams }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">
+            <sc-for list="{{ teams }}" as="t" hint-placeholder-count="4">
+              <div style="border:1.5px solid {{ t.border }};border-radius:14px;background:{{ t.cardBg }};padding:11px 12px;animation:pop .25s ease">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px">
+                  <div style="width:30px;height:30px;flex:none;border-radius:9px;background:{{ t.color }};color:#fff;font-family:'Anuphan';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center">{{ t.rankLabel }}</div>
+                  <input value="{{ t.name }}" onChange="{{ t.onName }}" style="flex:1;min-width:0;font-family:inherit;font-size:14px;font-weight:700;padding:5px 7px;border:1px solid transparent;border-radius:8px;outline:none;background:transparent"/>
+                  <span style="flex:none;font-family:'IBM Plex Mono';font-size:24px;font-weight:600;color:{{ t.color }};font-variant-numeric:tabular-nums">{{ t.score }}</span>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <button onClick="{{ t.plus }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:700;padding:9px;border:none;border-radius:10px;background:#0A9380;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">+{{ step }}</button>
+                  <button onClick="{{ t.minus }}" style="flex:none;font-family:inherit;font-size:14px;font-weight:600;padding:9px 14px;border:1px solid #F1C0C0;border-radius:10px;background:#fff;color:#DC2626;cursor:pointer" style-hover="background:#FEF4F4">−{{ step }}</button>
+                  <button onClick="{{ t.remove }}" title="ลบทีม" style="flex:none;font-family:inherit;font-size:13px;padding:9px 11px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#7C8494;cursor:pointer" style-hover="background:#F8F9FB">✕</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <button onClick="{{ addTeam }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px;border:1px solid #C6C9FB;border-radius:11px;background:#F5F6FF;color:#3D38B4;cursor:pointer;white-space:nowrap" style-hover="background:#E1E3FD">+ เพิ่มทีม</button>
+            <button onClick="{{ resetScores }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">ล้างคะแนน</button>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:14px;background:#F8F9FB;padding:13px">
+            <div style="font-size:12.5px;font-weight:700;color:#5A6273;margin-bottom:9px">ผู้นำตอนนี้</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:24px">{{ leaderIcon }}</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ leaderName }}</div>
+                <div style="font-size:11.5px;color:#7C8494">{{ leaderSub }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DESKTOP ============ -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · ฉายขึ้นจอหน้าห้อง · ตัวเลขใหญ่เห็นทั้งห้อง</span>
+    </div>
+    <div data-screen-label="Scoreboard desktop" style="width:1024px;height:760px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="2" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:13px 24px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:13.5px;color:#5A6273;flex:none">← กลับหน้าแรก</a>
+        <div style="display:flex;align-items:center;gap:9px;flex:none">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:16px;font-weight:700">กระดานคะแนนกลุ่ม</span>
+        </div>
+        <span style="flex:1"></span>
+        <button onClick="{{ toggleFull }}" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:600;padding:9px 15px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">⛶ ฉายเต็มจอ</button>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:22px 24px 34px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+          <input value="{{ title }}" onChange="{{ onTitle }}" placeholder="ชื่อกิจกรรม เช่น แข่งตอบคำถามบทที่ 3" style="flex:1;min-width:260px;font-family:'Anuphan';font-size:20px;font-weight:700;padding:11px 14px;border:1px solid #E5E8EE;border-radius:12px;outline:none;background:#F8F9FB"/>
+          <div style="flex:none;display:flex;align-items:center;gap:8px;border:1px solid #E5E8EE;border-radius:12px;padding:7px 12px;background:#fff">
+            <span style="font-size:12.5px;color:#7C8494;white-space:nowrap">แต้มต่อครั้ง</span>
+            <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+              <button onClick="{{ st.onClick }}" style="{{ st.styleLg }}">{{ st.label }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ importRoster }}" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 16px;border:1px solid #A7F0DF;border-radius:11px;background:#D0FBEF;color:#0A6B5C;cursor:pointer;white-space:nowrap" style-hover="filter:brightness(.98)">👥 ดึงรายชื่อจากห้องเรียน</button>
+        </div>
+
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+            <sc-for list="{{ skel }}" as="k" hint-placeholder-count="4">
+              <div style="height:220px;border-radius:18px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:18px;padding:56px 24px;text-align:center">
+            <div style="font-size:34px;margin-bottom:10px">⚠️</div>
+            <div style="font-size:17px;font-weight:700;color:#B91C1C">โหลดกระดานคะแนนไม่สำเร็จ</div>
+            <div style="font-size:13.5px;color:#8A3A3A;margin-top:6px">คะแนนล่าสุดอาจยังไม่ซิงก์ · ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+            <button onClick="{{ retry }}" style="margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed #D3D8E1;border-radius:20px;background:#F8F9FB;padding:70px 24px;text-align:center">
+            <div style="width:64px;height:64px;margin:0 auto 14px;border-radius:18px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:32px">🏆</div>
+            <div style="font-size:19px;font-weight:700">ยังไม่มีทีมบนกระดาน</div>
+            <div style="font-size:14px;color:#7C8494;margin-top:7px;line-height:1.7">เพิ่มทีมเอง หรือดึงรายชื่อห้องที่บันทึกไว้ในเครื่องมืออื่นของขุนคูล<br>สุ่มแบ่งกลุ่มก่อนแล้วค่อยมาให้คะแนนก็ได้</div>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+              <button onClick="{{ addTeam }}" style="font-family:inherit;font-size:14.5px;font-weight:700;padding:13px 26px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">+ เพิ่มทีม</button>
+              <a href="./Khuncool Groups.dc.html" style="font-family:inherit;font-size:14.5px;font-weight:600;padding:13px 26px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26">🔀 ไปสุ่มแบ่งกลุ่มก่อน</a>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showTeams }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:20px">
+            <sc-for list="{{ teams }}" as="t" hint-placeholder-count="4">
+              <div style="border:2px solid {{ t.border }};border-radius:18px;background:{{ t.cardBg }};padding:18px;text-align:center;animation:pop .25s ease">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                  <div style="width:30px;height:30px;flex:none;border-radius:9px;background:{{ t.color }};color:#fff;font-family:'Anuphan';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center">{{ t.rankLabel }}</div>
+                  <input value="{{ t.name }}" onChange="{{ t.onName }}" style="flex:1;min-width:0;font-family:'Anuphan';font-size:16px;font-weight:700;padding:5px 7px;border:1px solid transparent;border-radius:8px;outline:none;background:transparent;text-align:left"/>
+                  <button onClick="{{ t.remove }}" title="ลบทีม" style="flex:none;font-size:12px;padding:5px 8px;border:1px solid #E5E8EE;border-radius:8px;background:#fff;color:#A9B0BE;cursor:pointer" style-hover="color:#DC2626;border-color:#F1C0C0">✕</button>
+                </div>
+                <div style="font-family:'IBM Plex Mono';font-size:56px;font-weight:600;line-height:1.1;color:{{ t.color }};font-variant-numeric:tabular-nums;margin-bottom:12px">{{ t.score }}</div>
+                <div style="display:flex;gap:8px">
+                  <button onClick="{{ t.plus }}" style="flex:1;font-family:inherit;font-size:16px;font-weight:700;padding:12px;border:none;border-radius:11px;background:#0A9380;color:#fff;cursor:pointer" style-hover="filter:brightness(1.06)">+{{ step }}</button>
+                  <button onClick="{{ t.minus }}" style="flex:none;font-family:inherit;font-size:16px;font-weight:600;padding:12px 16px;border:1px solid #F1C0C0;border-radius:11px;background:#fff;color:#DC2626;cursor:pointer" style-hover="background:#FEF4F4">−</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid #E5E8EE;border-radius:16px;background:#F8F9FB;padding:16px 20px">
+            <span style="font-size:30px;flex:none">{{ leaderIcon }}</span>
+            <div style="flex:1;min-width:200px">
+              <div style="font-size:12.5px;font-weight:700;color:#7C8494">ผู้นำตอนนี้</div>
+              <div style="font-size:19px;font-weight:700">{{ leaderName }}</div>
+              <div style="font-size:13px;color:#7C8494">{{ leaderSub }}</div>
+            </div>
+            <button onClick="{{ addTeam }}" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 18px;border:1px solid #C6C9FB;border-radius:11px;background:#F5F6FF;color:#3D38B4;cursor:pointer;white-space:nowrap" style-hover="background:#E1E3FD">+ เพิ่มทีม</button>
+            <button onClick="{{ resetScores }}" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 18px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">ล้างคะแนนทั้งหมด</button>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99;background:#FFFBEB;border:1px solid #FDE68A;color:#92600A;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(26,29,38,.35)">📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1560,&quot;height&quot;:940},&quot;dataState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'loading'|'error'&quot;,&quot;section&quot;:&quot;สถานะข้อมูล&quot;}}">
+const LS = 'khuncool.scoreboard';
+const COLORS = ['#5C5EE6','#14B79A','#F97316','#3D38B4','#0A9380','#C2500B','#8B7BF0','#22B8A0'];
+
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.state = {
+      title:'แข่งตอบคำถามประจำสัปดาห์',
+      step:1,
+      offline:false,
+      teams:[
+        {id:1,name:'กลุ่มที่ 1',score:0},
+        {id:2,name:'กลุ่มที่ 2',score:0},
+        {id:3,name:'กลุ่มที่ 3',score:0},
+        {id:4,name:'กลุ่มที่ 4',score:0},
+      ],
+    };
+    this.nextId = 5;
+  }
+
+  retry=()=>{};
+  syncOnline=()=>this.setState({ offline: typeof navigator!=='undefined' && navigator.onLine===false });
+  componentWillUnmount(){ window.removeEventListener('online',this.syncOnline); window.removeEventListener('offline',this.syncOnline); }
+  componentDidMount(){
+    this.syncOnline();
+    window.addEventListener('online',this.syncOnline);
+    window.addEventListener('offline',this.syncOnline);
+    try{
+      const d = JSON.parse(localStorage.getItem(LS)||'null');
+      if(d && Array.isArray(d.teams)){
+        this.nextId = d.teams.reduce((m,t)=>Math.max(m,t.id||0),0)+1;
+        this.setState({ teams:d.teams, title:d.title||this.state.title, step:d.step||1 });
+      }
+    }catch(e){}
+  }
+  save(next){
+    const s={...this.state,...next};
+    try{ localStorage.setItem(LS, JSON.stringify({ teams:s.teams, title:s.title, step:s.step, savedAt:Date.now() })); }catch(e){}
+  }
+  set(next){ this.setState(next); this.save(next); }
+
+  onTitle=(e)=>this.set({ title:e.target.value });
+  setStep=(n)=>this.set({ step:n });
+  bump=(id,d)=>this.set({ teams:this.state.teams.map(t=>t.id===id?{...t,score:t.score+d}:t) });
+  rename=(id,e)=>{ const v=e.target.value; this.set({ teams:this.state.teams.map(t=>t.id===id?{...t,name:v}:t) }); };
+  remove=(id)=>this.set({ teams:this.state.teams.filter(t=>t.id!==id) });
+  addTeam=()=>{
+    const n=this.state.teams.length+1;
+    this.set({ teams:[...this.state.teams,{id:this.nextId++,name:'กลุ่มที่ '+n,score:0}] });
+  };
+  resetScores=()=>this.set({ teams:this.state.teams.map(t=>({...t,score:0})) });
+  importRoster=()=>{
+    let r=null; try{ r=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    if(!Array.isArray(r)||!r.length) return;
+    this.set({ teams:r.slice(0,12).map(name=>({ id:this.nextId++, name, score:0 })) });
+  };
+  toggleFull=(e)=>{
+    const el=e.currentTarget.closest('[data-frame]'); if(!el) return;
+    if(document.fullscreenElement){ if(document.exitFullscreen) document.exitFullscreen(); }
+    else if(el.requestFullscreen) el.requestFullscreen();
+  };
+
+  renderVals(){
+    const ds = this.props.dataState || 'ready';
+    const s = this.state;
+    const sorted = [...s.teams].sort((a,b)=>b.score-a.score);
+    const top = sorted.length ? sorted[0].score : 0;
+    const tied = sorted.filter(t=>t.score===top);
+    const stepStyle=(n)=>{
+      const on=s.step===n;
+      return 'font-family:inherit;font-size:12.5px;font-weight:700;padding:5px 9px;border:1px solid '+(on?'#5C5EE6':'#E5E8EE')+';border-radius:8px;background:'+(on?'#5C5EE6':'#fff')+';color:'+(on?'#fff':'#5A6273')+';cursor:pointer';
+    };
+    const stepStyleLg=(n)=>{
+      const on=s.step===n;
+      return 'font-family:inherit;font-size:14px;font-weight:700;padding:8px 14px;border:1px solid '+(on?'#5C5EE6':'#E5E8EE')+';border-radius:9px;background:'+(on?'#5C5EE6':'#fff')+';color:'+(on?'#fff':'#5A6273')+';cursor:pointer';
+    };
+    const rankOf=(t)=>sorted.findIndex(x=>x.id===t.id)+1;
+    return {
+      loading: ds==='loading', errored: ds==='error',
+      showEmpty: ds==='ready' && s.teams.length===0,
+      showTeams: ds==='ready' && s.teams.length>0,
+      skel:[1,2,3,4], retry:this.retry, offline:s.offline,
+      title:s.title, onTitle:this.onTitle, step:s.step,
+      steps:[1,2,5].map(n=>({ label:'+'+n, onClick:()=>this.setStep(n), style:stepStyle(n), styleLg:stepStyleLg(n) })),
+      teams: (ds==='ready'?s.teams:[]).map((t,i)=>{
+        const rank=rankOf(t);
+        const lead = t.score===top && top>0;
+        return {
+          name:t.name, score:t.score,
+          rankLabel: rank===1&&top>0 ? '🥇' : String(rank),
+          color: COLORS[i%COLORS.length],
+          border: lead ? COLORS[i%COLORS.length] : '#E5E8EE',
+          cardBg: lead ? '#F5F6FF' : '#fff',
+          onName:(e)=>this.rename(t.id,e),
+          plus:()=>this.bump(t.id, s.step),
+          minus:()=>this.bump(t.id, -s.step),
+          remove:()=>this.remove(t.id),
+        };
+      }),
+      leaderIcon: top>0 ? '🥇' : '⏳',
+      leaderName: top<=0 ? 'ยังไม่มีใครได้แต้ม' : (tied.length>1 ? 'เสมอกัน '+tied.length+' ทีม' : tied[0].name),
+      leaderSub: top<=0 ? 'กด + เพื่อเริ่มให้คะแนน' : top+' แต้ม · จาก '+s.teams.length+' ทีม',
+      addTeam:this.addTeam, resetScores:this.resetScores, importRoster:this.importRoster, toggleFull:this.toggleFull,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

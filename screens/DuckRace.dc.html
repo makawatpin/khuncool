@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>เกมแข่งเป็ดสุ่มชื่อ ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="เกมแข่งเป็ดสุ่มชื่อนักเรียน สนุกกว่าวงล้อสุ่มแบบเดิม ใส่รายชื่อแล้วแข่งได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องติดตั้ง">
+<link rel="canonical" href="https://www.khuncool.com/tools/duck-race">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.4);opacity:0}55%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  @keyframes dbob{0%{transform:translateY(0) rotate(-3deg)}100%{transform:translateY(-6px) rotate(3deg)}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ================= MOBILE ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · เกมแข่งเป็ดสเก็ต — กล้องวิ่งตามฝูงเป็ดไปเส้นชัย ตัวถึงก่อนชนะ</span>
+    </div>
+    <div style="position:relative;width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="1" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">แข่งเป็ดสเก็ต 🦆</span>
+        </div>
+        <button onClick="{{ toggleSound }}" title="เสียง" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">{{ soundIcon }}</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:16px 16px 30px">
+        <div style="position:relative;border-radius:16px;overflow:hidden;box-shadow:0 12px 26px -12px rgba(11,74,120,.4);margin-bottom:14px">
+          <div ref="{{ setView }}" style="position:relative;width:326px;height:300px;overflow:hidden;background:#8fd0e8;cursor:pointer" onClick="{{ startRace }}">
+            <div data-world style="position:absolute;top:0;left:0;height:100%;background-image:url('./assets/duck-race/world.jpg');background-repeat:repeat-x;background-size:auto 100%;will-change:transform"></div>
+            <div data-speed style="position:absolute;inset:0;pointer-events:none;opacity:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 2px,transparent 2px 40px);transition:opacity .3s;z-index:6"></div>
+            <div data-count style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(74,70,214,.4);z-index:8">
+              <span data-countnum style="font-family:'Anuphan','Sarabun';font-weight:700;color:#fff;font-size:110px;line-height:1;text-shadow:0 8px 30px rgba(0,0,0,.35)">3</span>
+            </div>
+          </div>
+        </div>
+
+        <button onClick="{{ startRace }}" disabled="{{ startDisabled }}" style="width:100%;font-family:inherit;font-size:16px;font-weight:700;padding:15px;border:none;border-radius:13px;background:{{ startBg }};color:#fff;cursor:{{ startCursor }};box-shadow:0 10px 24px -8px rgba(20,183,154,.5);margin-bottom:16px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ startLabel }}</button>
+
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid #E5E8EE">
+            <span style="font-size:13px;font-weight:600;white-space:nowrap">ความยาวสนาม</span>
+            <input type="range" min="1" max="5" step="1" value="{{ trackLen }}" onChange="{{ onTrackLen }}" style="flex:1;min-width:0;accent-color:#5C5EE6;cursor:pointer">
+            <span style="font-size:12px;color:#5C5EE6;font-weight:600;white-space:nowrap;min-width:58px;text-align:right">{{ trackLabel }}</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">รายชื่อเป็ด ({{ count }})</span>
+            <div style="display:flex;gap:10px">
+              <span onClick="{{ importFromGroups }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">📥 ทะเบียน</span>
+              <span onClick="{{ shuffle }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">🔀 สลับเลน</span>
+              <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+            </div>
+          </div>
+          <sc-if value="{{ importMsgShow }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:11.5px;color:#0A9380;background:#E4F6F1;border-radius:8px;padding:7px 10px;margin-bottom:11px">{{ importMsg }}</div>
+          </sc-if>
+
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:120px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… แล้วกด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                <button onClick="{{ addName }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px">
+                <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:4px 8px 4px 5px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                    <img ref="{{ c.imgRef }}" alt="" style="width:22px;height:22px;object-fit:contain;flex:none">
+                    {{ c.name }}
+                    <span onClick="{{ removeName }}" data-i="{{ c.i }}" style="cursor:pointer;color:#A9B0BE;font-size:14px;line-height:1" style-hover="color:#DC2626">×</span>
+                  </span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #E5E8EE">
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#434A58">
+              <input type="checkbox" checked="{{ removeWinner }}" onChange="{{ toggleRemove }}" style="width:17px;height:17px;accent-color:#5C5EE6;cursor:pointer">
+              เอาตัวชนะออกจากรอบหน้า
+            </label>
+            <span onClick="{{ clearAll }}" style="font-size:12px;color:#DC2626;cursor:pointer">ล้างทั้งหมด</span>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:40;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadein .2s ease">
+          <div style="width:100%;animation:pop .35s ease;border-radius:22px;padding:24px 20px;background:#fff;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)">
+            <div style="font-size:42px;line-height:1;margin-bottom:4px">🏆</div>
+            <div style="font-size:13px;color:#0A9380;font-weight:600;margin-bottom:6px">เป็ดที่ชนะคือ…</div>
+            <div style="font-size:28px;font-weight:700;color:#1A1D26;margin-bottom:16px;word-break:break-word">{{ winner }}</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+              <sc-for list="{{ podium }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 11px;border-radius:12px;background:{{ r.bg }}">
+                  <span style="font-size:17px;width:24px;text-align:center">{{ r.medal }}</span>
+                  <img ref="{{ r.imgRef }}" alt="" style="width:32px;height:32px;object-fit:contain">
+                  <span style="flex:1;text-align:left;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.name }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12px;color:#7C8494">{{ r.time }} วิ</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button onClick="{{ raceAgain }}" style="font-family:inherit;font-size:15px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#14B79A;color:#fff;cursor:pointer" style-hover="filter:brightness(1.05)">🦆 แข่งอีกครั้ง</button>
+              <button onClick="{{ removeAndRace }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:12px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">เอาตัวนี้ออก แล้วแข่งต่อ</button>
+              <button onClick="{{ closeResult }}" style="font-family:inherit;font-size:13.5px;font-weight:500;padding:8px;border:none;border-radius:10px;background:transparent;color:#7C8494;cursor:pointer">ปิด</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ================= DESKTOP ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · เกมแข่งเป็ดสเก็ต — คลิกสนามหรือปุ่มเพื่อเริ่มแข่ง</span>
+    </div>
+    <div style="position:relative;width:1024px;height:760px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="desktop" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">เกมแข่งเป็ดสเก็ตสุ่มชื่อนักเรียน 🦆</span>
+        </div>
+        <button onClick="{{ toggleSound }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">{{ soundIcon }} เสียง</button>
+        <button onClick="{{ toggleFull }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">⛶ เต็มจอ</button>
+        <span style="font-size:12.5px;color:#A9B0BE;font-family:'IBM Plex Mono'">/tools/duck-race</span>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:26px 28px 32px">
+        <div style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 16px 34px -14px rgba(11,74,120,.45);margin-bottom:20px">
+          <div ref="{{ setView }}" style="position:relative;width:968px;height:400px;overflow:hidden;background:#8fd0e8;cursor:pointer" onClick="{{ startRace }}">
+            <div data-world style="position:absolute;top:0;left:0;height:100%;background-image:url('./assets/duck-race/world.jpg');background-repeat:repeat-x;background-size:auto 100%;will-change:transform"></div>
+            <div data-speed style="position:absolute;inset:0;pointer-events:none;opacity:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 2px,transparent 2px 40px);transition:opacity .3s;z-index:6"></div>
+            <div data-count style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(74,70,214,.4);z-index:8">
+              <span data-countnum style="font-family:'Anuphan','Sarabun';font-weight:700;color:#fff;font-size:150px;line-height:1;text-shadow:0 8px 34px rgba(0,0,0,.35)">3</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 400px;gap:28px;align-items:start">
+          <div>
+            <button onClick="{{ startRace }}" disabled="{{ startDisabled }}" style="width:100%;font-family:inherit;font-size:18px;font-weight:700;padding:17px;border:none;border-radius:14px;background:{{ startBg }};color:#fff;cursor:{{ startCursor }};box-shadow:0 12px 28px -8px rgba(20,183,154,.5)" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ startLabel }}</button>
+            <p style="font-size:12.5px;color:#A9B0BE;margin:16px 2px 0;line-height:1.6">เป็ดทุกตัวออกสเก็ตพร้อมกัน กล้องวิ่งตามตัวที่นำ สลับกันแซงได้ตลอดทาง ตัวที่แตะเส้นชัยก่อนคือผู้ชนะแบบสุ่มยุติธรรม เหมาะกับสุ่มเลือกคนตอบ ให้รางวัล หรือเรียกความสนใจก่อนเข้าบทเรียน · ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง</p>
+          </div>
+
+          <div>
+            <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid #E5E8EE">
+                <span style="font-size:13.5px;font-weight:600;white-space:nowrap">ความยาวสนาม</span>
+                <input type="range" min="1" max="5" step="1" value="{{ trackLen }}" onChange="{{ onTrackLen }}" style="flex:1;min-width:0;accent-color:#5C5EE6;cursor:pointer">
+                <span style="font-size:12.5px;color:#5C5EE6;font-weight:600;white-space:nowrap;min-width:62px;text-align:right">{{ trackLabel }}</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+                <span style="font-size:15px;font-weight:700">รายชื่อเป็ด ({{ count }})</span>
+                <div style="display:flex;gap:12px">
+                  <span onClick="{{ importFromGroups }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">📥 ทะเบียน</span>
+                  <span onClick="{{ shuffle }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">🔀 สลับเลน</span>
+                  <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+                </div>
+              </div>
+              <sc-if value="{{ importMsgShow }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12px;color:#0A9380;background:#E4F6F1;border-radius:9px;padding:8px 12px;margin-bottom:13px">{{ importMsg }}</div>
+              </sc-if>
+
+              <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:150px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+                  <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <div style="display:flex;gap:8px;margin-bottom:14px">
+                    <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… แล้วกด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                    <button onClick="{{ addName }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;max-height:230px;overflow-y:auto" class="frame-scroll">
+                    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+                      <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;padding:4px 9px 4px 5px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                        <img ref="{{ c.imgRef }}" alt="" style="width:24px;height:24px;object-fit:contain;flex:none">
+                        {{ c.name }}
+                        <span onClick="{{ removeName }}" data-i="{{ c.i }}" style="cursor:pointer;color:#A9B0BE;font-size:15px;line-height:1" style-hover="color:#DC2626">×</span>
+                      </span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid #E5E8EE">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px;color:#434A58">
+                  <input type="checkbox" checked="{{ removeWinner }}" onChange="{{ toggleRemove }}" style="width:18px;height:18px;accent-color:#5C5EE6;cursor:pointer">
+                  เอาตัวชนะออกจากรอบหน้า
+                </label>
+                <span onClick="{{ clearAll }}" style="font-size:12.5px;color:#DC2626;cursor:pointer">ล้างทั้งหมด</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:40;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+          <div style="width:460px;animation:pop .35s ease;border-radius:24px;padding:32px 30px;background:#fff;text-align:center;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+            <div style="font-size:54px;line-height:1;margin-bottom:4px">🏆</div>
+            <div style="font-size:14px;color:#0A9380;font-weight:600;margin-bottom:8px">เป็ดที่ชนะคือ…</div>
+            <div style="font-size:38px;font-weight:700;color:#1A1D26;margin-bottom:22px;word-break:break-word;line-height:1.2">{{ winner }}</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+              <sc-for list="{{ podium }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:14px;padding:9px 14px;border-radius:14px;background:{{ r.bg }}">
+                  <span style="font-size:22px;width:30px;text-align:center">{{ r.medal }}</span>
+                  <img ref="{{ r.imgRef }}" alt="" style="width:40px;height:40px;object-fit:contain">
+                  <span style="flex:1;text-align:left;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.name }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:13px;color:#7C8494">{{ r.time }} วิ</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button onClick="{{ raceAgain }}" style="font-family:inherit;font-size:16px;font-weight:700;padding:14px;border:none;border-radius:13px;background:#14B79A;color:#fff;cursor:pointer" style-hover="filter:brightness(1.05)">🦆 แข่งอีกครั้ง</button>
+              <button onClick="{{ removeAndRace }}" style="font-family:inherit;font-size:15px;font-weight:600;padding:13px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">เอาตัวนี้ออก แล้วแข่งต่อ</button>
+              <button onClick="{{ closeResult }}" style="font-family:inherit;font-size:14px;font-weight:500;padding:9px;border:none;border-radius:11px;background:transparent;color:#7C8494;cursor:pointer">ปิด</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:940}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.sample = ['น้องปลา','น้องบอล','น้องมิ้นท์','น้องเก่ง','น้องแอน','น้องต้น','น้องพลอย','น้องเจมส์'];
+    let _saved=null, _roster=null;
+    try{ _saved=JSON.parse(localStorage.getItem('khuncool.duckrace.names')||'null'); }catch(e){}
+    try{ _roster=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    let _tl=parseInt(localStorage.getItem('khuncool.duckrace.trackLen')||'3',10); if(!(_tl>=1&&_tl<=5)) _tl=3;
+    this.state = {
+      names:(Array.isArray(_saved)&&_saved.length)?_saved:((Array.isArray(_roster)&&_roster.length)?_roster:[...this.sample]),
+      newName:'', racing:false, countdown:null, winner:'', showResult:false, podium:[],
+      removeWinner:false, soundOn:true, bulkMode:false, bulkText:'', importMsg:'', trackLen:_tl,
+    };
+    this.palette = ['#F2B01E','#F97316','#E0567C','#8B7BF0','#5C5EE6','#22A6D8','#14B79A','#2BA84A','#C2500B','#9B59B6','#E0A400','#0A9380'];
+    this.views = [];
+    this.ducks = [];
+    this.finishOrder = [];
+    this.raceStart = 0;
+    this.baseDur = 7200;
+    this.winnerIdx = -1;
+    this._resultShown = false;
+    this.setView = (el)=>{
+      if(el && !this.views.some(v=>v.vp===el)){
+        this.views.push({ vp:el, world:el.querySelector('[data-world]'), speed:el.querySelector('[data-speed]'),
+          count:el.querySelector('[data-count]'), countNum:el.querySelector('[data-countnum]'), runners:[], geo:null });
+        this.buildView(this.views[this.views.length-1]);
+      }
+    };
+  }
+  duckSrc(i){ return `./assets/duck-race/duck${(i%6)+1}.png`; }
+  esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  componentDidMount(){
+    if(!this.ducks.length) this.makeDucks();
+    this._raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount(){ if(this._raf) cancelAnimationFrame(this._raf); this.stopAmbience(); }
+  componentDidUpdate(prev){
+    if(prev && prev.names !== this.state.names){
+      try{ localStorage.setItem('khuncool.duckrace.names', JSON.stringify(this.state.names)); }catch(e){}
+      if(!this.state.racing && this.state.countdown===null) this.rebuild();
+    }
+    if(prev && prev.trackLen !== this.state.trackLen){
+      try{ localStorage.setItem('khuncool.duckrace.trackLen', String(this.state.trackLen)); }catch(e){}
+      if(!this.state.racing && this.state.countdown===null) this.rebuild();
+    }
+  }
+  worldMul(){ return 2.2 + (this.state.trackLen-1)*0.7; }
+  onTrackLen=(e)=>{ const v=parseInt(e.target.value,10)||3; this.setState({ trackLen:v }); };
+  importFromGroups=()=>{
+    let r=null; try{ r=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    if(Array.isArray(r) && r.length){
+      this.setState({ names:r, showResult:false, importMsg:`นำเข้า ${r.length} ชื่อจากทะเบียนแล้ว` });
+      this.beep(660,.14,'sine',.06);
+    } else {
+      this.setState({ importMsg:'ยังไม่มีทะเบียนรายชื่อ — เพิ่มที่หน้า “แบ่งกลุ่ม” หรือ “เช็กชื่อ” ก่อน' });
+    }
+    clearTimeout(this._impT); this._impT=setTimeout(()=>this.setState({ importMsg:'' }), 2600);
+  };
+
+  makeDucks(){
+    this.ducks = this.state.names.map((name,i)=>({
+      name, idx:i, spriteI:i, p:0, finished:false, finishTime:null, plannedFinish:0,
+      wobbleSeed:Math.random()*1000, wob:Math.random()*0.10+0.04, phase:Math.random()*6.28,
+    }));
+    this.finishOrder = [];
+  }
+  rebuild(){ this.makeDucks(); for(const v of this.views) this.buildView(v); }
+
+  buildView(v){
+    const world = v.world; if(!world) return;
+    world.querySelectorAll('.rnode').forEach(e=>e.remove());
+    const W = v.vp.clientWidth, H = v.vp.clientHeight;
+    if(!W || !H) return;
+    const worldLen = Math.round(W*this.worldMul());
+    const startX = Math.round(W*0.16), finishX = worldLen - Math.round(W*0.16);
+    world.style.width = worldLen+'px';
+    world.style.transform = 'translateX(0px)';
+    const duckSize = Math.round(H*0.32);
+    const roadTop = H*0.60, roadBottom = H*0.94;
+    const bandH = roadBottom - roadTop;
+
+    const startH = Math.round(bandH*0.86), finishH = Math.round(bandH*0.96);
+    const startW = Math.round(startH*718/554), finishW = Math.round(finishH*679/455);
+    const mk = (src,w,h,cx)=>{
+      const img = document.createElement('img'); img.className='rnode'; img.src=src;
+      img.style.cssText = `position:absolute;z-index:2;width:${w}px;height:${h}px;top:${Math.round(roadBottom-h-bandH*0.08)}px;left:${Math.round(cx-w/2)}px;object-fit:contain;filter:drop-shadow(2px 6px 5px rgba(0,0,0,.3))`;
+      world.appendChild(img);
+    };
+    mk('./assets/duck-race/start.png', startW, startH, startX);
+    mk('./assets/duck-race/finish.png', finishW, finishH, finishX);
+
+    const bandTop = roadTop - duckSize*0.5;
+    const bandBottom = roadTop + bandH*0.5 - duckSize*0.5;
+    const bandRange = Math.max(10, bandBottom - bandTop);
+    const n = this.ducks.length;
+    const slots = []; for(let i=0;i<n;i++) slots.push(n<=1?0.5:i/(n-1));
+    for(let i=slots.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [slots[i],slots[j]]=[slots[j],slots[i]]; }
+
+    v.runners = [];
+    v.geo = { W, H, worldLen, startX, finishX, duckSize };
+    this.ducks.forEach((d,i)=>{
+      const baseTop = bandTop + slots[i]*bandRange + (Math.random()*20-10);
+      const runner = document.createElement('div'); runner.className='rnode';
+      runner.style.cssText = `position:absolute;z-index:${4+i};width:${duckSize}px;height:${duckSize}px;transform:translate(${startX-duckSize/2}px,${baseTop}px);will-change:transform`;
+      runner.innerHTML =
+        `<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:rgba(26,29,38,.8);color:#fff;font-size:11px;font-weight:600;font-family:'Anuphan','Sarabun';padding:2px 8px;border-radius:8px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;z-index:5">${this.esc(d.name)}</div>`+
+        `<div class="rbadge" style="position:absolute;top:-12px;left:-4px;width:24px;height:24px;border-radius:50%;background:#F2B01E;color:#1A1D26;font-weight:700;font-size:13px;font-family:'Anuphan';display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);z-index:6"></div>`+
+        `<img src="${this.duckSrc(i)}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.3));animation:dbob .5s ease-in-out ${(i*0.09).toFixed(2)}s infinite alternate">`;
+      world.appendChild(runner);
+      v.runners.push({ el:runner, badge:runner.querySelector('.rbadge'), img:runner.querySelector('img'), baseTop });
+    });
+  }
+
+  // ---- audio ----
+  ac(){ if(!this._ac){ try{ this._ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this._ac=null; } } return this._ac; }
+  beep(freq,dur,type,vol){ if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return;
+    const o=ac.createOscillator(), g=ac.createGain(); o.type=type||'square'; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol||.08,ac.currentTime); g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dur);
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+dur); }
+  quack(){ if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return;
+    const o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime; o.type='sawtooth';
+    o.frequency.setValueAtTime(680,t); o.frequency.exponentialRampToValueAtTime(360,t+0.14);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.09,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.18);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+.2); }
+  chime(){ if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return;
+    [523,659,784,1047].forEach((f,i)=>{ const o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+i*.09;
+      o.type='triangle'; o.frequency.value=f; g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.14,t+.03); g.gain.exponentialRampToValueAtTime(.001,t+.4);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+.42); }); }
+
+  // ---- background music + crowd ----
+  noiseBuffer(){ const ac=this.ac(); const len=Math.floor(ac.sampleRate*2); const b=ac.createBuffer(1,len,ac.sampleRate); const d=b.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; return b; }
+  startAmbience(){
+    if(!this.state.soundOn) return; const ac=this.ac(); if(!ac || this._amb) return;
+    const master=ac.createGain(); master.gain.setValueAtTime(0.0001,ac.currentTime); master.gain.exponentialRampToValueAtTime(0.85,ac.currentTime+0.5); master.connect(ac.destination);
+    const src=ac.createBufferSource(); src.buffer=this.noiseBuffer(); src.loop=true;
+    const bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1300; bp.Q.value=0.6;
+    const ng=ac.createGain(); ng.gain.value=0.028; src.connect(bp); bp.connect(ng); ng.connect(master); src.start();
+    const swell=ac.createOscillator(), swg=ac.createGain(); swell.frequency.value=0.5; swg.gain.value=0.014; swell.connect(swg); swg.connect(ng.gain); swell.start();
+    const scale=[523,587,659,784,880,784,659,587], bassNotes=[131,131,196,165];
+    const bpm=140, stepDur=60000/bpm/2; let step=0;
+    this._ambStep=setInterval(()=>{
+      const t=ac.currentTime, f=scale[step%scale.length];
+      const o=ac.createOscillator(), g=ac.createGain(); o.type='triangle'; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.09,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.22);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t+.24);
+      if(step%2===0){ const bo=ac.createOscillator(), bg=ac.createGain(); bo.type='sawtooth'; bo.frequency.value=bassNotes[(step/2)%bassNotes.length];
+        bg.gain.setValueAtTime(.0001,t); bg.gain.exponentialRampToValueAtTime(.07,t+.02); bg.gain.exponentialRampToValueAtTime(.001,t+.3); bo.connect(bg); bg.connect(master); bo.start(t); bo.stop(t+.32); }
+      step++;
+    }, stepDur);
+    this._amb={ master, src, swell };
+  }
+  stopAmbience(){
+    if(!this._amb) return; const ac=this.ac(); const {master,src,swell}=this._amb; this._amb=null;
+    if(this._ambStep){ clearInterval(this._ambStep); this._ambStep=null; }
+    try{ if(ac){ const now=ac.currentTime; master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(Math.max(0.0001,master.gain.value),now); master.gain.exponentialRampToValueAtTime(0.0001,now+0.35); }
+      setTimeout(()=>{ try{src.stop();}catch(e){} try{swell.stop();}catch(e){} try{master.disconnect();}catch(e){} },420); }catch(e){}
+  }
+  cheer(){ if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return; const t=ac.currentTime;
+    const src=ac.createBufferSource(); src.buffer=this.noiseBuffer();
+    const bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1800; bp.Q.value=0.5;
+    const g=ac.createGain(); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.14,t+.08); g.gain.exponentialRampToValueAtTime(.001,t+1.1);
+    src.connect(bp); bp.connect(g); g.connect(ac.destination); src.start(t); src.stop(t+1.2); }
+
+  // ---- loop ----
+  loop = (now)=>{
+    this._raf = requestAnimationFrame(this.loop);
+    if(!this.state.racing){ return; }
+    const elapsed = now - this.raceStart;
+    for(const d of this.ducks){
+      if(d.finished) continue;
+      const t = Math.min(1, elapsed/d.plannedFinish);
+      const eased = 1 - Math.pow(1-t, 1.5);
+      const wob = d.wob*Math.sin(t*Math.PI*3.0 + d.phase)*(t*(1-t))*4;
+      d.p = Math.max(0, Math.min(1, eased + wob));
+      if(t>=1){ d.finished=true; d.finishTime=elapsed; d.p=1; this.finishOrder.push(d);
+        if(this.finishOrder.length===1){ this.chime(); this.burst(); } else this.beep(520,.12,'sine',.05); }
+    }
+    this._qt = (this._qt||0) + 0.016; if(this._qt>0.7+Math.random()*0.7){ this._qt=0; if(Math.random()<0.5) this.quack(); }
+    for(const v of this.views) this.drawView(v, elapsed);
+    if(!this._resultShown && this.ducks.length && this.ducks.every(d=>d.finished)){ this._resultShown=true; this.finish(); }
+  };
+  drawView(v, elapsed){
+    const g = v.geo; if(!g) return;
+    const dist = g.finishX - g.startX;
+    let leaderX = g.startX;
+    this.ducks.forEach((d,i)=>{
+      const r = v.runners[i]; if(!r) return;
+      const x = g.startX + d.p*dist;
+      const wob = d.finished?0:Math.sin(elapsed/200 + d.wobbleSeed)*6;
+      r.el.style.transform = `translate(${x-g.duckSize/2}px, ${r.baseTop+wob}px)`;
+      if(d.finished && r.img.style.animationPlayState!=='paused') r.img.style.animationPlayState='paused';
+      if(x>leaderX) leaderX=x;
+    });
+    const order = this.ducks.map((d,i)=>({i,p:d.p})).sort((a,b)=>b.p-a.p);
+    order.forEach((o,rank)=>{ const r=v.runners[o.i]; if(!r) return;
+      r.badge.textContent = rank+1; r.badge.style.display='flex';
+      r.badge.style.background = rank===0?'#F2B01E':'#fff'; r.badge.style.color = rank===0?'#1A1D26':'#434A58';
+      r.el.style.zIndex = 100 - rank; });
+    const camX = Math.max(0, Math.min(g.worldLen - g.W, leaderX - g.W*0.32));
+    v.world.style.transform = `translateX(${-camX}px)`;
+  }
+
+  burst(){ const cols=this.palette;
+    for(const v of this.views){ const vp=v.vp; const hh=vp.clientHeight;
+      for(let i=0;i<34;i++){ const c=document.createElement('div'); c.className='rnode'; const s=5+Math.random()*6;
+        c.style.cssText=`position:absolute;top:-14px;left:${(Math.random()*100).toFixed(1)}%;width:${s}px;height:${(s*0.5).toFixed(1)}px;background:${cols[i%cols.length]};border-radius:2px;z-index:20;pointer-events:none`;
+        vp.appendChild(c); const dur=1800+Math.random()*1300;
+        c.animate([{transform:'translateY(0) rotate(0)',opacity:1},{transform:`translateY(${hh+50}px) rotate(${Math.random()*720}deg)`,opacity:.9}],{duration:dur,easing:'cubic-bezier(.2,.6,.4,1)'});
+        setTimeout(()=>c.remove(), dur+60); } } }
+
+  showCount(val){ for(const v of this.views){ if(v.count){ v.count.style.display='flex'; v.countNum.textContent=val; v.countNum.style.animation='none'; void v.countNum.offsetWidth; v.countNum.style.animation='pop .7s ease-out'; } } }
+  hideCount(){ for(const v of this.views) if(v.count) v.count.style.display='none'; }
+  showSpeed(on){ for(const v of this.views) if(v.speed) v.speed.style.opacity='0'; }
+
+  // ---- race flow ----
+  startRace = ()=>{
+    if(this.state.racing || this.state.countdown!==null || this.state.names.length<2) return;
+    const ac=this.ac(); if(ac && ac.state==='suspended') ac.resume();
+    this.rebuild();
+    this.baseDur = 4500 + (this.state.trackLen-1)*2000;
+    this.ducks.forEach(d=>{ d.plannedFinish = this.baseDur*(0.82 + Math.random()*0.34); });
+    this._resultShown = false; this._qt = 0;
+    this.setState({ showResult:false, winner:'', podium:[], countdown:'3' });
+    this.showCount('3'); this.beep(660,.18,'square',.08);
+    const seq=['2','1','ไป!']; let step=0;
+    const tick=()=>{
+      if(step<seq.length){ const val=seq[step++]; this.setState({ countdown:val }); this.showCount(val); this.beep(val==='ไป!'?990:660,.18,'square',.08); setTimeout(tick,750); }
+      else { this.hideCount(); this.setState({ countdown:null, racing:true }); this.raceStart=performance.now(); this.showSpeed(true); this.quack(); this.startAmbience(); }
+    };
+    setTimeout(tick,750);
+  };
+  finish(){
+    this.showSpeed(false); this.stopAmbience(); this.cheer();
+    const podium = this.finishOrder.slice(0,3).map((d,i)=>{
+      const src=this.duckSrc(d.spriteI);
+      return { name:d.name, imgRef:(el)=>{ if(el) el.src=src; }, time:(d.finishTime/1000).toFixed(2),
+        medal:['🥇','🥈','🥉'][i], bg:i===0?'linear-gradient(90deg,#FFF4D6,#FFEAB0)':'#F1F3F7' };
+    });
+    this.winnerIdx = this.finishOrder[0].idx;
+    setTimeout(()=>this.setState({ racing:false, showResult:true, winner:this.finishOrder[0].name, podium }), 480);
+  }
+  raceAgain = ()=>{ this.setState({ showResult:false }); setTimeout(this.startRace, 280); };
+  removeAndRace = ()=>{ const idx=this.winnerIdx; this.setState(s=>({ names:s.names.filter((_,i)=>i!==idx), showResult:false }), ()=>{ this.rebuild(); setTimeout(this.startRace, 340); }); };
+  closeResult = ()=>{
+    if(this.state.removeWinner && this.winnerIdx>=0){ const idx=this.winnerIdx; this.setState(s=>({ names:s.names.filter((_,i)=>i!==idx), showResult:false })); }
+    else this.setState({ showResult:false });
+  };
+
+  // ---- list ops ----
+  onNewName=(e)=>this.setState({ newName:e.target.value });
+  onKey=(e)=>{ if(e.key==='Enter') this.addName(); };
+  addName=()=>{ const v=(this.state.newName||'').trim(); if(!v)return; this.setState(s=>({ names:[...s.names,v], newName:'' })); };
+  removeName=(e)=>{ const i=parseInt(e.currentTarget.getAttribute('data-i'),10); this.setState(s=>({ names:s.names.filter((_,idx)=>idx!==i) })); };
+  clearAll=()=>{ this.setState({ names:[], showResult:false, winner:'' }); };
+  shuffle=()=>{ this.setState(s=>{ const a=[...s.names]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return { names:a }; }); };
+  toggleRemove=(e)=>this.setState({ removeWinner:e.target.checked });
+  toggleSound=()=>this.setState(s=>{ const soundOn=!s.soundOn; if(!soundOn) this.stopAmbience(); else if(s.racing) setTimeout(()=>this.startAmbience(),0); return { soundOn }; });
+  toggleBulk=()=>this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.names.join('\n') }));
+  onBulk=(e)=>this.setState({ bulkText:e.target.value });
+  applyBulk=()=>{ const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean); this.setState({ names:list, bulkMode:false }); };
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+
+  renderVals(){
+    const n=this.state.names.length;
+    const busy=this.state.racing||this.state.countdown!==null;
+    const disabled=busy||n<2;
+    return {
+      setView:this.setView, toggleFull:this.toggleFull, importFromGroups:this.importFromGroups,
+      importMsg:this.state.importMsg, importMsgShow:!!this.state.importMsg,
+      trackLen:this.state.trackLen, onTrackLen:this.onTrackLen,
+      trackLabel:['สั้นมาก','สั้น','กำลังดี','ยาว','ยาวมาก'][this.state.trackLen-1],
+      chips:this.state.names.map((name,i)=>({ name, i, imgRef:(el)=>{ if(el) el.src=this.duckSrc(i); } })),
+      count:n, newName:this.state.newName,
+      winner:this.state.winner, showResult:this.state.showResult, podium:this.state.podium, removeWinner:this.state.removeWinner,
+      bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText,
+      startRace:this.startRace, raceAgain:this.raceAgain, removeAndRace:this.removeAndRace, closeResult:this.closeResult,
+      onNewName:this.onNewName, onKey:this.onKey, addName:this.addName, removeName:this.removeName,
+      clearAll:this.clearAll, shuffle:this.shuffle, toggleRemove:this.toggleRemove, toggleSound:this.toggleSound,
+      toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk,
+      bulkLabel:this.state.bulkMode?'✎ กลับไปทีละชื่อ':'✎ วางหลายชื่อ',
+      soundIcon:this.state.soundOn?'🔊':'🔇',
+      startDisabled:disabled,
+      startLabel:this.state.countdown!==null?String(this.state.countdown):(this.state.racing?'กำลังแข่ง…':'🦆 ปล่อยเป็ดสเก็ต!'),
+      startBg:disabled?'#9DB3AE':'#14B79A',
+      startCursor:disabled?'not-allowed':'pointer',
+    };
+  }
+}
+</script>
+</body>
+</html>

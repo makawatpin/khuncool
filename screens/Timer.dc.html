@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>ตั้งเวลาถอยหลัง ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="นาฬิกาจับเวลาถอยหลังสำหรับห้องเรียน ใช้ฟรี ตั้งเวลาทำกิจกรรม สอบ หรือพักเบรกได้ทันทีบนเว็บ ไม่ต้องสมัครสมาชิก">
+<link rel="canonical" href="https://www.khuncool.com/tools/timer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes flash{0%,100%{background:#fff}50%{background:#FEE2E2}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- MOBILE -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · จับเวลา / นับถอยหลัง</span>
+    </div>
+    <div style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4);animation:{{ flashAnim }}" data-frame="1" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">จับเวลา</span>
+        </div>
+        <button onClick="{{ toggleSound }}" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">{{ soundIcon }}</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:22px 16px 30px">
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:20px">
+          <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:210px;height:32px;background:radial-gradient(closest-side,rgba(26,29,38,.28),rgba(26,29,38,0));filter:blur(5px)"></div>
+          <canvas ref="{{ setCanvas }}" width="560" height="560" style="width:280px;height:280px;display:block;position:relative;z-index:1;filter:drop-shadow(0 18px 26px rgba(26,29,38,.28))"></canvas>
+          <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+            <div style="font-family:'IBM Plex Mono';font-weight:600;font-size:52px;letter-spacing:-.02em;color:{{ timeColor }}">{{ clock }}</div>
+            <div style="font-size:12px;color:#A9B0BE;margin-top:2px">{{ statusText }}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+          <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+            <button onClick="{{ setPreset }}" data-sec="{{ p.sec }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:11px 4px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#434A58;cursor:pointer;white-space:nowrap" style-hover="border-color:#C6C9FB;background:#F8F9FB">{{ p.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:9px;margin-bottom:14px">
+          <button onClick="{{ toggleRun }}" disabled="{{ startDisabled }}" style="flex:2;font-family:inherit;font-size:16px;font-weight:700;padding:15px;border:none;border-radius:13px;background:{{ startBg }};color:#fff;cursor:{{ startCursor }};box-shadow:0 10px 24px -8px rgba(92,94,230,.5)" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ runLabel }}</button>
+          <button onClick="{{ addMinute }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;padding:15px 6px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">+1:00</button>
+          <button onClick="{{ reset }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;padding:15px 6px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">รีเซ็ต</button>
+        </div>
+
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">ตั้งเวลาเอง</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input value="{{ mm }}" onChange="{{ onMM }}" type="number" min="0" max="99" style="width:70px;padding:10px;font-family:'IBM Plex Mono';font-size:16px;text-align:center;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+            <span style="font-weight:700;font-size:18px;color:#A9B0BE">:</span>
+            <input value="{{ ss }}" onChange="{{ onSS }}" type="number" min="0" max="59" style="width:70px;padding:10px;font-family:'IBM Plex Mono';font-size:16px;text-align:center;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+            <button onClick="{{ applyCustom }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ตั้งเวลา</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · จับเวลา / นับถอยหลัง</span>
+    </div>
+    <div style="width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4);animation:{{ flashAnim }}" data-frame="desktop" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">จับเวลา / นับถอยหลัง</span>
+        </div>
+        <button onClick="{{ toggleSound }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">{{ soundIcon }} เสียง</button>
+        <button onClick="{{ toggleFull }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">⛶ เต็มจอ</button>
+        <span style="font-size:12.5px;color:#A9B0BE;font-family:'IBM Plex Mono'">/tools/timer</span>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:36px;display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:center">
+        <div style="display:flex;justify-content:center">
+          <div style="position:relative;display:flex;justify-content:center">
+            <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:300px;height:44px;background:radial-gradient(closest-side,rgba(26,29,38,.3),rgba(26,29,38,0));filter:blur(6px)"></div>
+            <canvas ref="{{ setCanvas }}" width="760" height="760" style="width:380px;height:380px;display:block;position:relative;z-index:1;filter:drop-shadow(0 24px 34px rgba(26,29,38,.3))"></canvas>
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+              <div style="font-family:'IBM Plex Mono';font-weight:600;font-size:76px;letter-spacing:-.02em;color:{{ timeColor }}">{{ clock }}</div>
+              <div style="font-size:14px;color:#A9B0BE;margin-top:4px">{{ statusText }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px">
+            <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+              <button onClick="{{ setPreset }}" data-sec="{{ p.sec }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:13px 4px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#434A58;cursor:pointer;white-space:nowrap" style-hover="border-color:#C6C9FB;background:#F8F9FB">{{ p.label }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ toggleRun }}" disabled="{{ startDisabled }}" style="width:100%;font-family:inherit;font-size:18px;font-weight:700;padding:17px;border:none;border-radius:14px;background:{{ startBg }};color:#fff;cursor:{{ startCursor }};box-shadow:0 12px 28px -8px rgba(92,94,230,.5);margin-bottom:12px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ runLabel }}</button>
+          <div style="display:flex;gap:10px;margin-bottom:20px">
+            <button onClick="{{ addMinute }}" style="flex:1;font-family:inherit;font-size:15px;font-weight:600;padding:13px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">+1:00</button>
+            <button onClick="{{ reset }}" style="flex:1;font-family:inherit;font-size:15px;font-weight:600;padding:13px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">รีเซ็ต</button>
+          </div>
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px;background:#F8F9FB">
+            <div style="font-size:13.5px;font-weight:600;margin-bottom:11px">ตั้งเวลาเอง (นาที : วินาที)</div>
+            <div style="display:flex;align-items:center;gap:9px">
+              <input value="{{ mm }}" onChange="{{ onMM }}" type="number" min="0" max="99" style="width:76px;padding:11px;font-family:'IBM Plex Mono';font-size:17px;text-align:center;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+              <span style="font-weight:700;font-size:20px;color:#A9B0BE">:</span>
+              <input value="{{ ss }}" onChange="{{ onSS }}" type="number" min="0" max="59" style="width:76px;padding:11px;font-family:'IBM Plex Mono';font-size:17px;text-align:center;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+              <button onClick="{{ applyCustom }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;padding:12px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ตั้งเวลา</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.state = { total:300, remaining:300, running:false, soundOn:true, flashing:false, mm:'05', ss:'00' };
+    this.canvases = [];
+    this.setCanvas = (el)=>{ if(el && !this.canvases.includes(el)){ this.canvases.push(el); this.drawAll(); } };
+    this._raf=null; this._end=0;
+  }
+  componentDidMount(){ this.drawAll(); }
+  componentDidUpdate(){ if(!this.state.running) this.drawAll(); }
+
+  ac(){ if(!this._ac){ try{ this._ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this._ac=null; } } return this._ac; }
+  beep(f,t0,dur){ const ac=this.ac(); if(!ac)return; const o=ac.createOscillator(),g=ac.createGain(); o.type='sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,t0); g.gain.exponentialRampToValueAtTime(.2,t0+.02); g.gain.exponentialRampToValueAtTime(.001,t0+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0+dur); }
+  alarm(){ if(!this.state.soundOn)return; const ac=this.ac(); if(!ac)return; const t=ac.currentTime; for(let i=0;i<4;i++){ this.beep(880,t+i*.35,.18); this.beep(1320,t+i*.35+.08,.14);} }
+
+  drawAll(){ this.canvases.forEach(c=>this.draw(c)); }
+  draw(canvas){
+    if(!canvas)return; const ctx=canvas.getContext('2d'); const size=canvas.width,cx=size/2,cy=size/2;
+    const rim=size*0.05, r=size/2-rim-4;
+    ctx.clearRect(0,0,size,size);
+    const rg=ctx.createLinearGradient(0,0,0,size); rg.addColorStop(0,'#3A3768'); rg.addColorStop(.5,'#1A1D26'); rg.addColorStop(1,'#0A0C12');
+    ctx.beginPath(); ctx.arc(cx,cy,r+rim,0,2*Math.PI); ctx.fillStyle=rg; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.fillStyle='#F4F5FA'; ctx.fill();
+    const frac = this.state.total>0 ? this.state.remaining/this.state.total : 0;
+    const track=size*0.055;
+    ctx.beginPath(); ctx.arc(cx,cy,r-track,0,2*Math.PI); ctx.lineWidth=track; ctx.strokeStyle='#E1E4EC'; ctx.stroke();
+    const low=this.state.remaining<=10 && this.state.remaining>0;
+    const grad=ctx.createLinearGradient(0,0,size,size);
+    if(low){ grad.addColorStop(0,'#F97316'); grad.addColorStop(1,'#DC2626'); } else { grad.addColorStop(0,'#5C5EE6'); grad.addColorStop(1,'#14B79A'); }
+    const a0=-Math.PI/2, a1=a0+2*Math.PI*frac;
+    ctx.beginPath(); ctx.arc(cx,cy,r-track,a0,a1); ctx.lineWidth=track; ctx.lineCap='round'; ctx.strokeStyle=grad; ctx.stroke();
+    // sheen
+    const sh=ctx.createRadialGradient(cx-r*0.35,cy-r*0.4,r*0.1,cx,cy,r); sh.addColorStop(0,'rgba(255,255,255,.5)'); sh.addColorStop(.5,'rgba(255,255,255,0)'); sh.addColorStop(1,'rgba(0,0,0,.05)');
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.fillStyle=sh; ctx.fill();
+  }
+
+  tick=()=>{
+    const rem=Math.max(0,(this._end-performance.now())/1000);
+    const r=Math.ceil(rem);
+    if(r!==this.state.remaining) this.setState({ remaining:r });
+    this.drawAll();
+    if(rem<=0){ this.finish(); return; }
+    this._raf=requestAnimationFrame(this.tick);
+  };
+  finish(){ cancelAnimationFrame(this._raf); this.setState({ running:false, remaining:0, flashing:true }); this.alarm(); this.drawAll();
+    setTimeout(()=>this.setState({ flashing:false }), 2400); }
+
+  toggleRun=()=>{
+    if(this.state.total<=0) return;
+    const ac=this.ac(); if(ac&&ac.state==='suspended') ac.resume();
+    if(this.state.running){ cancelAnimationFrame(this._raf); this.setState({ running:false }); }
+    else {
+      let rem=this.state.remaining; if(rem<=0) rem=this.state.total;
+      this._end=performance.now()+rem*1000;
+      this.setState({ running:true, remaining:Math.ceil(rem), flashing:false });
+      this._raf=requestAnimationFrame(this.tick);
+    }
+  };
+  reset=()=>{ cancelAnimationFrame(this._raf); this.setState({ running:false, remaining:this.state.total, flashing:false }); };
+  addMinute=()=>{ const t=this.state.total+60; const add=60; this.setState(s=>({ total:t, remaining:s.remaining+add })); if(this.state.running) this._end+=60000; };
+  setPreset=(e)=>{ const sec=parseInt(e.currentTarget.getAttribute('data-sec'),10); cancelAnimationFrame(this._raf);
+    this.setState({ total:sec, remaining:sec, running:false, flashing:false, mm:String(Math.floor(sec/60)).padStart(2,'0'), ss:String(sec%60).padStart(2,'0') }); };
+  onMM=(e)=>this.setState({ mm:e.target.value });
+  onSS=(e)=>this.setState({ ss:e.target.value });
+  applyCustom=()=>{ const m=Math.max(0,Math.min(99,parseInt(this.state.mm||'0',10)||0)); const s=Math.max(0,Math.min(59,parseInt(this.state.ss||'0',10)||0));
+    const sec=m*60+s; cancelAnimationFrame(this._raf); this.setState({ total:sec, remaining:sec, running:false, flashing:false, mm:String(m).padStart(2,'0'), ss:String(s).padStart(2,'0') }); };
+  toggleSound=()=>this.setState(s=>({ soundOn:!s.soundOn }));
+
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  renderVals(){
+    const r=this.state.remaining; const mm=String(Math.floor(r/60)).padStart(2,'0'); const ss=String(r%60).padStart(2,'0');
+    const low=r<=10; const done=r===0;
+    return {
+      toggleFull:this.toggleFull,
+      clock:`${mm}:${ss}`,
+      statusText:this.state.running?'กำลังนับถอยหลัง':(done?'หมดเวลา!':'พร้อมเริ่ม'),
+      timeColor:done?'#DC2626':(low&&this.state.running?'#F97316':'#1A1D26'),
+      presets:[{label:'1 นาที',sec:60},{label:'3 นาที',sec:180},{label:'5 นาที',sec:300},{label:'10 นาที',sec:600}],
+      setCanvas:this.setCanvas, setPreset:this.setPreset, toggleRun:this.toggleRun, reset:this.reset, addMinute:this.addMinute,
+      onMM:this.onMM, onSS:this.onSS, applyCustom:this.applyCustom, toggleSound:this.toggleSound,
+      mm:this.state.mm, ss:this.state.ss,
+      runLabel:this.state.running?'หยุดชั่วคราว':(r>0&&r<this.state.total?'เล่นต่อ':'▶ เริ่มจับเวลา'),
+      startDisabled:this.state.total<=0, startBg:this.state.total<=0?'#B9BCC7':(this.state.running?'#F97316':'#5C5EE6'),
+      startCursor:this.state.total<=0?'not-allowed':'pointer',
+      soundIcon:this.state.soundOn?'🔊':'🔇',
+      flashAnim:this.state.flashing?'flash .5s ease 4':'none',
+    };
+  }
+}
+</script>
+</body>
+</html>

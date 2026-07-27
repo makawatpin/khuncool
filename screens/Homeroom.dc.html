@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>บันทึกโฮมรูม ออนไลน์ ใช้ฟรี พิมพ์เอกสารสิ้นเทอมได้ | khuncool</title>
+<meta name="description" content="บันทึกโฮมรูมรายห้องต่อเนื่อง พิมพ์เอกสารสิ้นเทอมและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี ล็อกอินแล้วซิงก์ทุกเครื่อง">
+<link rel="canonical" href="https://www.khuncool.com/tools/homeroom">
+<meta property="og:type" content="website">
+<meta property="og:title" content="บันทึกโฮมรูม ออนไลน์ ใช้ฟรี พิมพ์เอกสารสิ้นเทอมได้ | khuncool">
+<meta property="og:description" content="บันทึกโฮมรูมรายห้องต่อเนื่อง พิมพ์เอกสารสิ้นเทอมและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี">
+<meta property="og:url" content="https://www.khuncool.com/tools/homeroom">
+<meta property="og:image" content="https://www.khuncool.com/assets/homeroom-cover.png">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"บันทึกโฮมรูม Khuncool","url":"https://www.khuncool.com/tools/homeroom","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"th","description":"บันทึกโฮมรูมรายห้องต่อเนื่อง พิมพ์เอกสารสิ้นเทอมได้ ใช้ฟรี","offers":{"@type":"Offer","price":"0","priceCurrency":"THB"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"บันทึกโฮมรูมใช้ฟรีไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง"}},{"@type":"Question","name":"พิมพ์เอกสารสิ้นเทอมได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ พิมพ์เอกสารสิ้นเทอมจากข้อมูลที่บันทึกไว้ได้ทันที"}}]}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  @keyframes kcfadein{from{opacity:0}to{opacity:1}}
+  input:focus,textarea:focus,select:focus{border-color:#5C5EE6!important;box-shadow:0 0 0 3px #E1E3FD}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+</style>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ============ MOBILE ============ -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px;white-space:nowrap">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · บันทึกโฮมรูมหน้าเสาธง ใช้จากมือถือได้ทันที</span>
+    </div>
+    <div style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0">
+          <div style="width:28px;height:28px;flex:none;border-radius:8px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:15px">📋</div>
+          <div style="min-width:0"><div style="font-size:14.5px;font-weight:600;white-space:nowrap">บันทึกโฮมรูม</div><div style="font-size:11px;color:#A9B0BE;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ headerSub }}</div></div>
+        </div>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+            <div style="background:{{ s.bg }};border-radius:13px;padding:11px 12px">
+              <div style="font-size:20px;font-weight:700;font-family:'Anuphan';line-height:1.1">{{ s.value }}</div>
+              <div style="font-size:11px;color:#5A6273;white-space:nowrap">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button onClick="{{ addSession }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:12px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">+ บันทึกวันนี้</button>
+          <button onClick="{{ addWeek }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:12px 13px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">+ จ–ศ</button>
+          <button onClick="{{ doPrint }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:12px 13px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">🖨</button>
+        </div>
+
+        <sc-if value="{{ hasCurrent }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px solid #C6C9FB;border-radius:16px;padding:14px;background:#F8F9FB;margin-bottom:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+              <div style="font-size:13.5px;font-weight:700">สัปดาห์ที่ {{ curWeekTh }} · {{ curDateTh }}</div>
+              <button onClick="{{ removeCurrent }}" style="font-family:inherit;font-size:11.5px;font-weight:600;padding:5px 9px;border:1px solid #F8C9C9;border-radius:8px;background:#fff;color:#D93B3B;cursor:pointer;white-space:nowrap">ลบ</button>
+            </div>
+            <label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">วันที่</label>
+            <input onChange="{{ onDate }}" type="date" value="{{ curDate }}" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none;margin-bottom:11px"/>
+            <label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:6px">เรื่อง/รายการที่อบรม</label>
+            <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:11px">
+              <sc-for list="{{ topicRows }}" as="t" hint-placeholder-count="9">
+                <button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:9px;width:100%;text-align:left;font-family:inherit;font-size:13px;padding:8px;border:none;border-radius:9px;background:{{ t.bg }};color:#1A1D26;cursor:pointer">
+                  <span style="width:18px;height:18px;flex:none;border:1.5px solid {{ t.border }};border-radius:5px;background:{{ t.box }};color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">{{ t.mark }}</span>
+                  <span>{{ t.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:11px">
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#5A6273;margin-bottom:4px">ทั้งหมด</label><input onChange="{{ onTotal }}" type="number" value="{{ curTotal }}" style="width:100%;font-family:inherit;font-size:14px;padding:9px 10px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#5A6273;margin-bottom:4px">มา</label><input onChange="{{ onPresent }}" type="number" value="{{ curPresent }}" style="width:100%;font-family:inherit;font-size:14px;padding:9px 10px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#5A6273;margin-bottom:4px">ขาด</label><div style="font-size:14px;font-weight:700;padding:9px 10px;border:1px solid #E5E8EE;border-radius:10px;background:#F1F3F6;text-align:center">{{ curAbsentCount }}</div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px">
+              <label style="font-size:11.5px;font-weight:600;color:#5A6273">รายชื่อนักเรียนที่ขาด</label>
+              <button onClick="{{ pullAttendanceCurrent }}" style="font-family:inherit;font-size:11px;font-weight:600;padding:5px 9px;border:1px solid #A7F0DF;border-radius:8px;background:#D0FBEF;color:#0A6B5C;cursor:pointer;white-space:nowrap">✅ ดึงจากเช็กชื่อ</button>
+            </div>
+            <textarea onChange="{{ onAbsent }}" value="{{ curAbsent }}" rows="2" placeholder="คนละบรรทัด หรือคั่นด้วยจุลภาค" style="width:100%;font-family:inherit;font-size:13.5px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none;resize:vertical"></textarea>
+          </div>
+        </sc-if>
+
+        <div style="font-size:13.5px;font-weight:700;margin-bottom:9px">รายการที่บันทึกไว้</div>
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ skel3 }}" as="k" hint-placeholder-count="3">
+              <div style="height:58px;border-radius:12px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:14px;padding:22px 16px;text-align:center">
+            <div style="font-size:26px;margin-bottom:8px">⚠️</div>
+            <div style="font-size:13.5px;font-weight:700;color:#B91C1C">โหลดบันทึกโฮมรูมไม่สำเร็จ</div>
+            <div style="font-size:12.5px;color:#8A3A3A;margin-top:5px;line-height:1.6">ตรวจสอบการเชื่อมต่อแล้วลองใหม่</div>
+            <button onClick="{{ retry }}" style="margin-top:12px;font-family:inherit;font-size:13px;font-weight:700;padding:9px 20px;border:none;border-radius:10px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ sessionRows }}" as="s" hint-placeholder-count="3">
+            <button onClick="{{ s.select }}" style="display:flex;align-items:center;gap:11px;width:100%;text-align:left;font-family:inherit;padding:11px;border:1px solid {{ s.border }};border-radius:13px;background:{{ s.bg }};cursor:pointer;color:#1A1D26">
+              <div style="width:34px;height:34px;flex:none;border-radius:9px;background:#E1E3FD;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Anuphan';font-weight:700;font-size:13px;line-height:1">{{ s.weekTh }}</div>
+              <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600;white-space:nowrap">{{ s.dateTh }}</div><div style="font-size:11.5px;color:#7C8494;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.summary }}</div></div>
+              <span style="font-size:11px;font-weight:600;color:{{ s.badgeColor }};background:{{ s.badgeBg }};padding:4px 8px;border-radius:999px;flex:none;white-space:nowrap">{{ s.badge }}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1.5px dashed #D3D8E1;border-radius:13px;background:#F8F9FB;padding:26px 18px;text-align:center">
+              <div style="font-size:30px;margin-bottom:9px">📋</div>
+              <div style="font-size:13.5px;font-weight:700">ยังไม่มีบันทึกโฮมรูม</div>
+              <div style="font-size:12px;color:#7C8494;margin-top:5px;line-height:1.6">กด “+ เพิ่มรายการ” เพื่อเริ่มบันทึก<br>ครั้งแรกของสัปดาห์นี้</div>
+            </div>
+          </sc-if>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DESKTOP ============ -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px;white-space:nowrap">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · ตั้งหัวข้อโฮมรูมเอง · พิมพ์/ส่งออกเป็นแบบฟอร์มราชการได้</span>
+    </div>
+    <div data-frame="desktop" style="width:1024px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px;white-space:nowrap" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:9px;flex:1;min-width:0">
+          <div style="width:32px;height:32px;flex:none;border-radius:9px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:17px">📋</div>
+          <div style="min-width:0"><div style="font-size:16px;font-weight:600;white-space:nowrap">บันทึกกิจกรรมโฮมรูม</div><div style="font-size:11.5px;color:#A9B0BE;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ headerSub }}</div></div>
+        </div>
+        <button onClick="{{ doPrint }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 16px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">🖨 พิมพ์ / บันทึก PDF</button>
+        <button onClick="{{ doExcel }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 16px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">⬇ Excel</button>
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:24px 28px 40px;display:grid;grid-template-columns:296px minmax(0,1fr);gap:20px;align-items:start">
+
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px">
+            <h3 style="font-size:15px;margin:0 0 4px">หัวแบบฟอร์ม</h3>
+            <p style="font-size:12px;color:#7C8494;margin:0 0 14px;line-height:1.5">ข้อมูลนี้จะขึ้นหัวกระดาษเวลาพิมพ์</p>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div><label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">โรงเรียน</label><input onChange="{{ onSchool }}" value="{{ school }}" placeholder="โรงเรียนบ้านหนองคูล" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div><label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">ชั้น</label><input onChange="{{ onLevel }}" value="{{ level }}" placeholder="ป.4/1" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+                <div><label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">ภาคเรียน</label><input onChange="{{ onTerm }}" value="{{ term }}" placeholder="1" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div><label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">ปีการศึกษา</label><input onChange="{{ onYear }}" value="{{ year }}" placeholder="2569" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+                <div><label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">ครูที่ปรึกษา</label><input onChange="{{ onTeacher }}" value="{{ teacher }}" placeholder="ครูสมชาย" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px">
+              <h3 style="font-size:15px;margin:0;white-space:nowrap">หัวข้อโฮมรูมของคุณ</h3>
+              <span style="font-size:11.5px;color:#A9B0BE;white-space:nowrap">{{ topicCount }} หัวข้อ</span>
+            </div>
+            <p style="font-size:12px;color:#7C8494;margin:0 0 13px;line-height:1.5">แก้ชื่อได้เลย · ลบที่ไม่ใช้ · เพิ่มหัวข้อของโรงเรียนเอง</p>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
+              <sc-for list="{{ topicEdits }}" as="t" hint-placeholder-count="9">
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span style="font-family:'IBM Plex Mono';font-size:11px;color:#A9B0BE;width:16px;flex:none;text-align:right">{{ t.no }}</span>
+                  <input onChange="{{ t.rename }}" value="{{ t.label }}" style="flex:1;min-width:0;font-family:inherit;font-size:13.5px;padding:9px 11px;border:1px solid #E5E8EE;border-radius:9px;outline:none"/>
+                  <button onClick="{{ t.remove }}" title="ลบหัวข้อ" style="width:32px;height:32px;flex:none;font-family:inherit;font-size:13px;border:1px solid #E5E8EE;border-radius:9px;background:#fff;color:#A9B0BE;cursor:pointer" style-hover="border-color:#F8C9C9;color:#D93B3B">✕</button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px">
+              <input onChange="{{ onNewTopic }}" onKeyDown="{{ onNewTopicKey }}" value="{{ newTopic }}" placeholder="เพิ่มหัวข้อใหม่…" style="flex:1;min-width:0;font-family:inherit;font-size:13.5px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/>
+              <button onClick="{{ addTopic }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 14px;border:none;border-radius:10px;background:#1A1D26;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#2A2E3A">เพิ่ม</button>
+            </div>
+            <button onClick="{{ resetTopics }}" style="width:100%;margin-top:10px;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px;border:1px dashed #D3D8E1;border-radius:10px;background:#fff;color:#5A6273;cursor:pointer" style-hover="background:#F8F9FB">คืนค่าชุดหัวข้อคุณลักษณะอันพึงประสงค์ 8 ข้อ</button>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px">
+              <h3 style="font-size:15px;margin:0;white-space:nowrap">แผนหัวข้อรายสัปดาห์</h3>
+              <span style="font-size:11.5px;color:#A9B0BE;white-space:nowrap">วางล่วงหน้าได้</span>
+            </div>
+            <p style="font-size:12px;color:#7C8494;margin:0 0 12px;line-height:1.5">ล็อกหัวข้อของสัปดาห์ไว้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กให้เอง</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+              <sc-for list="{{ planWeeks }}" as="w" hint-placeholder-count="10">
+                <button onClick="{{ w.select }}" style="font-family:inherit;font-size:12.5px;font-weight:600;min-width:34px;padding:6px 9px;border:1px solid {{ w.border }};border-radius:9px;background:{{ w.bg }};color:{{ w.color }};cursor:pointer;white-space:nowrap">{{ w.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:10px">
+              <sc-for list="{{ planTopics }}" as="t" hint-placeholder-count="8">
+                <button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:9px;width:100%;text-align:left;font-family:inherit;font-size:12.5px;padding:7px 8px;border:none;border-radius:9px;background:{{ t.bg }};color:#1A1D26;cursor:pointer;min-width:0">
+                  <span style="width:17px;height:17px;flex:none;border:1.5px solid {{ t.border }};border-radius:5px;background:{{ t.box }};color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">{{ t.mark }}</span>
+                  <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <button onClick="{{ applyPlanToWeek }}" style="width:100%;font-family:inherit;font-size:12.5px;font-weight:600;padding:9px;border:1px solid #C6C9FB;border-radius:10px;background:#EFF0FE;color:#3D38B4;cursor:pointer;white-space:nowrap" style-hover="background:#E1E3FD">ใช้แผนนี้กับวันที่บันทึกไว้แล้ว</button>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px">
+            <h3 style="font-size:15px;margin:0 0 12px">ตัวเลือกการพิมพ์</h3>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button onClick="{{ toggleSign }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;padding:10px;border:1px solid #E5E8EE;border-radius:11px;background:{{ signBg }};cursor:pointer;color:#1A1D26;min-width:0">
+                <span style="width:18px;height:18px;flex:none;border:1.5px solid {{ signBorder }};border-radius:5px;background:{{ signBox }};color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">{{ signMark }}</span>
+                <span style="min-width:0">ใส่ช่องลงชื่อครูที่ปรึกษา</span>
+              </button>
+              <button onClick="{{ togglePrincipal }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;padding:10px;border:1px solid #E5E8EE;border-radius:11px;background:{{ prinBg }};cursor:pointer;color:#1A1D26;min-width:0">
+                <span style="width:18px;height:18px;flex:none;border:1.5px solid {{ prinBorder }};border-radius:5px;background:{{ prinBox }};color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">{{ prinMark }}</span>
+                <span style="min-width:0">ใส่ช่องลงชื่อผู้บริหาร</span>
+              </button>
+              <sc-if value="{{ showPrincipal }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">ชื่อผู้บริหาร / ตำแหน่ง</label>
+                  <input onChange="{{ onPrincipal }}" value="{{ principal }}" placeholder="นายสมศักดิ์ ดีเลิศ" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none;margin-bottom:8px"/>
+                  <input onChange="{{ onPrincipalRole }}" value="{{ principalRole }}" placeholder="ผู้อำนวยการโรงเรียน" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/>
+                </div>
+              </sc-if>
+              <div>
+                <label style="display:block;font-size:11.5px;font-weight:600;color:#5A6273;margin-bottom:5px">แถวเปล่าท้ายตาราง (ไว้เขียนมือ)</label>
+                <input onChange="{{ onBlank }}" type="number" min="0" max="20" value="{{ blankRows }}" style="width:100%;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid #D3D8E1;border-radius:10px;outline:none"/>
+              </div>
+            </div>
+            <p style="font-size:11.5px;color:#A9B0BE;margin:12px 0 0;line-height:1.55">แบบฟอร์มพิมพ์เป็น A4 ตั้ง 1 สัปดาห์ต่อกลุ่มแถว เหมือนแบบบันทึกที่ส่งฝ่ายวิชาการ</p>
+          </div>
+
+          <div style="border:1px solid #C6C9FB;border-radius:16px;padding:18px;background:linear-gradient(160deg,#EFF0FE,#fff)">
+            <h3 style="font-size:15px;margin:0 0 6px">ส่งออกเอกสารสิ้นเทอม</h3>
+            <p style="font-size:12px;color:#5A6273;margin:0 0 13px;line-height:1.55">รวมบันทึกโฮมรูม + สรุปการมาเรียน + สรุปเงินออม เป็นชุดเดียว พิมพ์ทีเดียวจบ</p>
+            <button onClick="{{ printTermPack }}" style="width:100%;font-family:inherit;font-size:13.5px;font-weight:600;padding:12px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">🗂 พิมพ์ชุดเอกสารสิ้นเทอม</button>
+            <div style="font-size:11.5px;color:#7C8494;margin-top:10px;line-height:1.55">{{ packStatus }}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ statsWide }}" as="s" hint-placeholder-count="4">
+              <div style="background:{{ s.bg }};border-radius:14px;padding:14px 16px">
+                <div style="font-size:26px;font-weight:700;font-family:'Anuphan';line-height:1.1">{{ s.value }}</div>
+                <div style="font-size:12px;color:#5A6273;white-space:nowrap">{{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:16px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #E5E8EE;background:#F8F9FB">
+              <h3 style="font-size:15px;margin:0;flex:1;white-space:nowrap">รายการบันทึกโฮมรูม</h3>
+              <button onClick="{{ pullAttendance }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border:1px solid #A7F0DF;border-radius:9px;background:#D0FBEF;color:#0A6B5C;cursor:pointer;white-space:nowrap" style-hover="background:#BEF7E8">✅ ดึงคนขาดจากเช็กชื่อ</button>
+              <button onClick="{{ addWeek }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border:1px solid #D3D8E1;border-radius:9px;background:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">+ เพิ่มทั้งสัปดาห์ (จ–ศ)</button>
+              <button onClick="{{ addSession }}" style="font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 14px;border:none;border-radius:9px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">+ เพิ่มวัน</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:62px 128px minmax(0,1fr) 186px;font-size:12px;font-weight:600;color:#5A6273;background:#FDF6E8;border-bottom:1px solid #E5E8EE">
+              <div style="padding:10px 8px;border-right:1px solid #E5E8EE;white-space:nowrap">สัปดาห์</div>
+              <div style="padding:10px 12px;border-right:1px solid #E5E8EE;white-space:nowrap">วัน/เดือน/ปี</div>
+              <div style="padding:10px 12px;border-right:1px solid #E5E8EE;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">เรื่อง/รายการที่อบรม</div>
+              <div style="padding:10px 12px;white-space:nowrap">หมายเหตุ</div>
+            </div>
+
+            <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:2px;padding:12px">
+                <sc-for list="{{ skel3 }}" as="k" hint-placeholder-count="3">
+                  <div style="height:96px;border-radius:10px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite;margin-bottom:6px"></div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+              <div style="margin:16px;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:16px;padding:44px 24px;text-align:center">
+                <div style="font-size:32px;margin-bottom:10px">⚠️</div>
+                <div style="font-size:16px;font-weight:700;color:#B91C1C">โหลดบันทึกโฮมรูมไม่สำเร็จ</div>
+                <div style="font-size:13.5px;color:#8A3A3A;margin-top:6px">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองใหม่อีกครั้ง</div>
+                <button onClick="{{ retry }}" style="margin-top:15px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+              </div>
+            </sc-if>
+            <sc-for list="{{ sessionRows }}" as="s" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:62px 128px minmax(0,1fr) 186px;border-bottom:1px solid #F1F3F6;background:{{ s.bg }}">
+                <div style="padding:12px 7px;border-right:1px solid #F1F3F6;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
+                  <input onChange="{{ s.onWeek }}" type="number" min="1" value="{{ s.week }}" style="width:100%;font-family:inherit;font-size:13.5px;text-align:center;padding:7px 4px;border:1px solid #E5E8EE;border-radius:8px;outline:none"/>
+                  <button onClick="{{ s.remove }}" style="font-family:inherit;font-size:11px;font-weight:600;padding:4px 8px;border:1px solid #F1F3F6;border-radius:7px;background:#fff;color:#A9B0BE;cursor:pointer;white-space:nowrap" style-hover="border-color:#F8C9C9;color:#D93B3B">ลบ</button>
+                </div>
+                <div style="padding:12px 9px;border-right:1px solid #F1F3F6;min-width:0">
+                  <input onChange="{{ s.onDate }}" type="date" value="{{ s.date }}" style="width:100%;font-family:inherit;font-size:13px;padding:8px 9px;border:1px solid #E5E8EE;border-radius:8px;outline:none;margin-bottom:7px"/>
+                  <input onChange="{{ s.onNote }}" value="{{ s.dayNote }}" placeholder="(วันพืชมงคล)" style="width:100%;font-family:inherit;font-size:12.5px;padding:7px 9px;border:1px solid #E5E8EE;border-radius:8px;outline:none"/>
+                  <div style="font-size:11.5px;color:#A9B0BE;margin-top:6px;text-align:center">{{ s.dateTh }}</div>
+                </div>
+                <div style="padding:12px 10px;border-right:1px solid #F1F3F6;min-width:0">
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;min-width:0">
+                    <sc-for list="{{ s.topics }}" as="t" hint-placeholder-count="9">
+                      <button onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:8px;width:100%;text-align:left;font-family:inherit;font-size:12.5px;padding:6px 7px;border:none;border-radius:8px;background:{{ t.bg }};color:#1A1D26;cursor:pointer;min-width:0;overflow:hidden">
+                        <span style="width:16px;height:16px;flex:none;border:1.5px solid {{ t.border }};border-radius:4px;background:{{ t.box }};color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">{{ t.mark }}</span>
+                        <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.label }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                  <input onChange="{{ s.onOther }}" value="{{ s.other }}" placeholder="อื่นๆ …" style="width:100%;margin-top:7px;font-family:inherit;font-size:12.5px;padding:7px 9px;border:1px dashed #D3D8E1;border-radius:8px;outline:none"/>
+                </div>
+                <div style="padding:12px 10px;min-width:0">
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:7px">
+                    <div><label style="display:block;font-size:10.5px;font-weight:600;color:#A9B0BE;margin-bottom:3px">ทั้งหมด</label><input onChange="{{ s.onTotal }}" type="number" value="{{ s.total }}" style="width:100%;font-family:inherit;font-size:13px;padding:7px 8px;border:1px solid #E5E8EE;border-radius:8px;outline:none"/></div>
+                    <div><label style="display:block;font-size:10.5px;font-weight:600;color:#A9B0BE;margin-bottom:3px">มา</label><input onChange="{{ s.onPresent }}" type="number" value="{{ s.present }}" style="width:100%;font-family:inherit;font-size:13px;padding:7px 8px;border:1px solid #E5E8EE;border-radius:8px;outline:none"/></div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+                    <span style="font-size:12px;color:{{ s.absentColor }};font-weight:600;white-space:nowrap">ขาด {{ s.absentCount }} คน</span>
+                    <button onClick="{{ s.pullAttendance }}" title="ดึงรายชื่อคนขาดจากแอปเช็กชื่อ" style="font-family:inherit;font-size:11px;font-weight:600;padding:4px 8px;border:1px solid #A7F0DF;border-radius:7px;background:#D0FBEF;color:#0A6B5C;cursor:pointer;white-space:nowrap">✅ ดึงคนขาด</button>
+                  </div>
+                  <textarea onChange="{{ s.onAbsent }}" value="{{ s.absent }}" rows="2" placeholder="รายชื่อนักเรียนที่ขาด" style="width:100%;font-family:inherit;font-size:12.5px;padding:8px 9px;border:1px solid #E5E8EE;border-radius:8px;outline:none;resize:vertical"></textarea>
+                </div>
+              </div>
+            </sc-for>
+
+            <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:44px 24px;text-align:center">
+                <div style="font-size:34px;margin-bottom:10px">📋</div>
+                <div style="font-size:15px;font-weight:600;margin-bottom:5px">ยังไม่มีบันทึกโฮมรูม</div>
+                <p style="font-size:13px;color:#7C8494;margin:0 0 16px;line-height:1.6">กด “เพิ่มวันบันทึก” เพื่อเริ่มวันแรก ระบบจะนับสัปดาห์ให้อัตโนมัติ<br>หรือพิมพ์แบบฟอร์มเปล่าไปเขียนมือก่อนก็ได้</p>
+                <button onClick="{{ addSession }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:12px 22px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">+ เพิ่มวันบันทึก</button>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:16px;padding:18px;background:#F8F9FB">
+            <h3 style="font-size:15px;margin:0 0 10px">สรุปหัวข้อที่อบรมไปแล้ว</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ topicTally }}" as="t" hint-placeholder-count="9">
+                <span style="font-size:12.5px;font-weight:500;padding:7px 12px;border-radius:999px;background:{{ t.bg }};color:{{ t.color }};border:1px solid {{ t.border }};white-space:nowrap">{{ t.label }} · {{ t.count }}</span>
+              </sc-for>
+            </div>
+            <p style="font-size:11.5px;color:#A9B0BE;margin:12px 0 0;line-height:1.55">ใช้เช็กว่าคุณลักษณะอันพึงประสงค์ครบทุกข้อในภาคเรียนนี้หรือยัง</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99;background:#FFFBEB;border:1px solid #FDE68A;color:#92600A;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(26,29,38,.35)">📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์</div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1520,&quot;height&quot;:960},&quot;dataState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'loading'|'error'&quot;,&quot;section&quot;:&quot;สถานะข้อมูล&quot;}}">
+const DEFAULT_TOPICS = [
+  'รักชาติ ศาสน์ กษัตริย์','ซื่อสัตย์สุจริต','มีวินัย','ใฝ่เรียนรู้',
+  'อยู่อย่างพอเพียง','มุ่งมั่นในการทำงาน','รักความเป็นไทย','มีจิตสาธารณะ',
+];
+const LS = 'khuncool.homeroom';
+
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.state = {
+      school:'', level:'', term:'1', year:String(new Date().getFullYear()+543), teacher:'',
+      topics: DEFAULT_TOPICS.map((label,i)=>({ id:'t'+i, label })),
+      sessions: [],
+      currentId: null,
+      newTopic:'',
+      thaiDigits: false,
+      blankRows: 4,
+      plan: {},
+      planWeek: 1,
+      showSign: true,
+      showPrincipal: false,
+      principal: '',
+      principalRole: 'ผู้อำนวยการโรงเรียน',
+      packStatus: '',
+    };
+  }
+
+  /* ---- ดึงข้อมูลจากแอปเช็กชื่อ / ออมเงิน ---- */
+  readApp(key){ try{ return JSON.parse(localStorage.getItem(key)||'null'); }catch(e){ return null; } }
+  attendanceSnapshot(){
+    const d = this.readApp('khuncool_attendance_v1');
+    if(!d || !Array.isArray(d.students) || !d.students.length) return null;
+    const st = Array.isArray(d.statuses) ? d.statuses : [];
+    const absent = [], late = [], leave = [];
+    d.students.forEach((n,i)=>{
+      const k = st[i];
+      if(k==='absent') absent.push(n);
+      else if(k==='late') late.push(n);
+      else if(k==='leave') leave.push(n);
+    });
+    const present = d.students.length - absent.length - leave.length;
+    return { room:d.room||'', students:d.students, total:d.students.length, present, absent, late, leave, savedAt:d.savedAt||0 };
+  }
+  applyAttendance(id){
+    const a = this.attendanceSnapshot();
+    if(!a){ this.setState({ packStatus:'ยังไม่มีข้อมูลจากแอปเช็กชื่อ — เปิดแอปเช็กชื่อและบันทึกก่อน' }); return; }
+    const names = [...a.absent, ...a.leave.map(n=>n+' (ลา)')];
+    this.patch(id, { total:String(a.total), present:String(a.present), absent:names.join('\n') });
+    this.setState({ packStatus:'ดึงจากเช็กชื่อแล้ว: มา '+a.present+' ขาด '+a.absent.length+(a.leave.length?' ลา '+a.leave.length:'')+' คน' });
+  }
+  pullAttendance = () => {
+    const cur = this.state.sessions.find(x=>x.id===this.state.currentId) || this.state.sessions[this.state.sessions.length-1];
+    if(cur) this.applyAttendance(cur.id);
+  };
+
+  /* ---- เพิ่มทั้งสัปดาห์ จ–ศ ---- */
+  addWeek = () => {
+    const s = this.state;
+    let base;
+    if(s.sessions.length){
+      const last = [...s.sessions].map(x=>x.date).filter(Boolean).sort().pop();
+      base = new Date(last+'T00:00:00');
+      base.setDate(base.getDate() - ((base.getDay()+6)%7) + 7);
+    } else {
+      base = new Date();
+      base.setDate(base.getDate() - ((base.getDay()+6)%7));
+    }
+    const exist = new Set(s.sessions.map(x=>x.date));
+    const adds = [];
+    for(let i=0;i<5;i++){
+      const d = new Date(base); d.setDate(base.getDate()+i);
+      const iso = d.toISOString().slice(0,10);
+      if(exist.has(iso)) continue;
+      adds.push({ id:'h'+Date.now()+'_'+i, date:iso, dayNote:'', checked:[], other:'', total:(s.sessions[s.sessions.length-1]||{}).total||'', present:'', absent:'' });
+    }
+    if(!adds.length){ this.setState({ packStatus:'สัปดาห์นั้นมีครบแล้ว' }); return; }
+    const sessions = [...s.sessions, ...adds];
+    sessions.forEach(x=>{ x.week = this.weekOf(x.date, sessions); });
+    adds.forEach(x=>{ const plan = s.plan[x.week]; if(Array.isArray(plan)) x.checked = [...plan]; });
+    this.setState({ sessions, currentId: adds[adds.length-1].id, packStatus:'เพิ่ม '+adds.length+' วันในสัปดาห์แล้ว' });
+  };
+
+  /* ---- ชุดเอกสารสิ้นเทอม ---- */
+  printTermPack = () => {
+    const s = this.state, t = this.formTitle();
+    const esc = v => String(v==null?'':v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const att = this.attendanceSnapshot();
+    const sav = this.readApp('khuncool_savings_v1');
+    const close = '</'+'script>';
+    const runner = '<'+'script>window.onload=function(){setTimeout(function(){window.print();},500);};'+close;
+
+    const cover = '<section class="pg cov">'+
+      '<div class="ct">รายงานสรุปงานที่ปรึกษาประจำชั้น</div>'+
+      '<div class="cs">'+esc(s.school||'โรงเรียน......................')+'</div>'+
+      '<div class="cm">ชั้น '+esc(s.level||'..........')+' &nbsp;·&nbsp; ภาคเรียนที่ '+esc(s.term)+' &nbsp;·&nbsp; ปีการศึกษา '+esc(s.year)+'</div>'+
+      '<ol class="toc"><li>แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม</li><li>สรุปการมาเรียน (ข้อมูลล่าสุดจากแอปเช็กชื่อ)</li><li>สรุปเงินออมนักเรียน</li></ol>'+
+      (s.teacher?'<div class="cby">ครูที่ปรึกษา: '+esc(s.teacher)+'</div>':'')+
+      '</section>';
+
+    const homeroom = '<section class="pg"><h2>๑. แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม</h2>'+
+      this.tableHtml()+this.signHtml()+'</section>';
+
+    const attSec = '<section class="pg"><h2>๒. สรุปการมาเรียน</h2>'+
+      (att
+        ? '<p class="note">ข้อมูลจากแอปเช็กชื่อ ห้อง '+esc(att.room||s.level||'-')+' · นักเรียน '+att.total+' คน</p>'+
+          '<table class="sum"><thead><tr><th>รายการ</th><th>จำนวน (คน)</th><th>รายชื่อ</th></tr></thead><tbody>'+
+          '<tr><td>มาเรียน</td><td class="c">'+att.present+'</td><td>—</td></tr>'+
+          '<tr><td>มาสาย</td><td class="c">'+att.late.length+'</td><td>'+esc(att.late.join(', ')||'—')+'</td></tr>'+
+          '<tr><td>ลา</td><td class="c">'+att.leave.length+'</td><td>'+esc(att.leave.join(', ')||'—')+'</td></tr>'+
+          '<tr><td>ขาดเรียน</td><td class="c">'+att.absent.length+'</td><td>'+esc(att.absent.join(', ')||'—')+'</td></tr>'+
+          '</tbody></table>'+
+          '<p class="note">ยอดขาดรวมจากบันทึกโฮมรูมทั้งภาคเรียน: '+s.sessions.reduce((n,x)=>n+this.absentCount(x),0)+' คน-ครั้ง</p>'
+        : '<p class="note">ยังไม่มีข้อมูลจากแอปเช็กชื่อ</p>')+
+      '</section>';
+
+    let savSec = '<section class="pg"><h2>๓. สรุปเงินออมนักเรียน</h2>';
+    if(sav && Array.isArray(sav.students) && sav.students.length){
+      const bal = Array.isArray(sav.balances)?sav.balances:[];
+      const total = bal.reduce((n,v)=>n+(+v||0),0);
+      const rows = sav.students.map((n,i)=>'<tr><td class="c">'+(i+1)+'</td><td>'+esc(n)+'</td><td class="r">'+(+bal[i]||0).toLocaleString('th-TH')+'</td></tr>').join('');
+      savSec += '<p class="note">ห้อง '+esc(sav.room||s.level||'-')+' · ยอดออมรวม '+total.toLocaleString('th-TH')+' บาท · รายการทั้งหมด '+((sav.txns||[]).length)+' รายการ</p>'+
+        '<table class="sum"><thead><tr><th style="width:60px">ที่</th><th>ชื่อ-สกุล</th><th style="width:130px">ยอดออม (บาท)</th></tr></thead><tbody>'+rows+
+        '<tr class="tot"><td></td><td>รวม</td><td class="r">'+total.toLocaleString('th-TH')+'</td></tr></tbody></table>';
+    } else savSec += '<p class="note">ยังไม่มีข้อมูลจากแอปออมเงิน</p>';
+    savSec += this.signHtml()+'</section>';
+
+    const html = '<!doctype html><html><head><meta charset="utf-8"><title>เอกสารสิ้นเทอม '+esc(s.level||'')+'</title>'+
+      '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">'+
+      '<style>@page{size:A4 portrait;margin:14mm}'+
+      "*{font-family:'Sarabun','TH Sarabun New',sans-serif;box-sizing:border-box}"+
+      'body{margin:0;color:#000;font-size:13px}'+
+      '.pg{page-break-after:always}.pg:last-child{page-break-after:auto}'+
+      'h2{font-size:17px;margin:0 0 12px}'+
+      '.cov{display:flex;flex-direction:column;justify-content:center;min-height:250mm;text-align:center}'+
+      '.ct{font-size:26px;font-weight:700;margin-bottom:10px}.cs{font-size:20px;margin-bottom:6px}.cm{font-size:16px;color:#333}'+
+      '.toc{text-align:left;max-width:340px;margin:34px auto 0;font-size:15px;line-height:2.1}'+
+      '.cby{margin-top:40px;font-size:15px}'+
+      '.note{font-size:13px;color:#333;margin:0 0 12px}'+
+      'table{width:100%;border-collapse:collapse}'+
+      'th{background:#FBEAC8;border:1px solid #000;padding:6px;font-size:13.5px;font-weight:700}'+
+      'td{border:1px solid #000;padding:7px 9px;vertical-align:middle;font-size:12.5px}'+
+      'td.c{text-align:center}td.r{text-align:right}td.wk{width:82px}'+
+      '.tot td{font-weight:700;background:#F4F4F4}'+
+      '.ck{display:block;line-height:2.05;white-space:nowrap}'+
+      '.ck i{display:inline-block;width:12px;height:12px;border:1.3px solid #000;margin-right:7px;font-style:normal;font-size:10px;line-height:11px;text-align:center;vertical-align:-1px}'+
+      '.nm{border-bottom:1px dotted #555;min-height:16px;margin-top:4px;font-size:12px}'+
+      '.dots{letter-spacing:1px;color:#666}'+
+      '.signs{margin-top:30px;display:flex;justify-content:space-around;gap:30px;text-align:center;font-size:13px;line-height:2}'+
+      'tr{page-break-inside:avoid}'+
+      '</style></head><body>'+cover+homeroom+attSec+savSec+runner+'</body></html>';
+    const w = window.open('', '_blank');
+    if(!w){ this.setState({ packStatus:'เบราว์เซอร์บล็อกหน้าต่างใหม่ — อนุญาต pop-up แล้วลองอีกครั้ง' }); return; }
+    w.document.write(html); w.document.close();
+    this.setState({ packStatus:'เปิดหน้าพิมพ์ชุดเอกสารแล้ว' });
+  };
+
+  retry=()=>{};
+  syncOnline=()=>this.setState({ offline: typeof navigator!=='undefined' && navigator.onLine===false });
+  componentWillUnmount(){ window.removeEventListener('online',this.syncOnline); window.removeEventListener('offline',this.syncOnline); }
+  componentDidMount(){
+    this.syncOnline();
+    window.addEventListener('online',this.syncOnline); window.addEventListener('offline',this.syncOnline);
+    try{
+      const d = JSON.parse(localStorage.getItem(LS)||'null');
+      if(d && Array.isArray(d.topics) && d.topics.length){
+        this.setState({
+          school:d.school||'', level:d.level||'', term:d.term||'1', year:d.year||this.state.year, teacher:d.teacher||'',
+          topics:d.topics, sessions:Array.isArray(d.sessions)?d.sessions:[],
+          currentId:(d.sessions&&d.sessions.length)?d.sessions[d.sessions.length-1].id:null,
+          thaiDigits: false, blankRows: typeof d.blankRows==='number'?d.blankRows:4,
+          plan: d.plan||{}, showSign: d.showSign!==false, showPrincipal: !!d.showPrincipal,
+          principal: d.principal||'', principalRole: d.principalRole||'ผู้อำนวยการโรงเรียน',
+        });
+        return;
+      }
+    }catch(e){}
+    this.setState({ level:'', school:'' });
+  }
+  componentDidUpdate(){ this.save(); }
+  save(){
+    const s=this.state;
+    try{ localStorage.setItem(LS, JSON.stringify({
+      school:s.school, level:s.level, term:s.term, year:s.year, teacher:s.teacher,
+      topics:s.topics, sessions:s.sessions, thaiDigits:s.thaiDigits, blankRows:s.blankRows,
+      plan:s.plan, showSign:s.showSign, showPrincipal:s.showPrincipal, principal:s.principal, principalRole:s.principalRole, savedAt:Date.now(),
+    })); }catch(e){}
+  }
+
+  /* helpers */
+  th(v){
+    return String(v==null?'':v);
+  }
+  thaiDate(iso){
+    if(!iso) return '';
+    const d = new Date(iso+'T00:00:00');
+    if(isNaN(d)) return '';
+    const M=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    return this.th(d.getDate())+' '+M[d.getMonth()]+' '+this.th(d.getFullYear()+543);
+  }
+  absentCount(s){
+    const t=parseInt(s.total,10), p=parseInt(s.present,10);
+    if(isFinite(t)&&isFinite(p)) return Math.max(0,t-p);
+    return this.absentList(s).length;
+  }
+  absentList(s){ return String(s.absent||'').split(/[\n,]/).map(x=>x.trim()).filter(Boolean); }
+  weekOf(iso, sessions){
+    if(!iso) return 1;
+    const dates = sessions.map(x=>x.date).filter(Boolean).sort();
+    if(!dates.length) return 1;
+    const first = new Date(dates[0]+'T00:00:00');
+    const d = new Date(iso+'T00:00:00');
+    const monday = new Date(first); monday.setDate(first.getDate() - ((first.getDay()+6)%7));
+    return Math.max(1, Math.floor((d-monday)/(7*864e5))+1);
+  }
+  patch(id, patch){
+    this.setState(s=>({ sessions: s.sessions.map(x=> x.id===id ? {...x, ...patch} : x) }));
+  }
+
+  addSession = () => {
+    const iso = new Date().toISOString().slice(0,10);
+    const id = 'h'+Date.now();
+    const last = this.state.sessions[this.state.sessions.length-1];
+    const next = { id, date:iso, dayNote:'', checked:[], other:'', total:(last&&last.total)||'', present:'', absent:'' };
+    const sessions = [...this.state.sessions, next];
+    next.week = this.weekOf(iso, sessions);
+    const plan = this.state.plan[next.week];
+    if(Array.isArray(plan)) next.checked = [...plan];
+    this.setState({ sessions, currentId:id });
+  };
+  removeSession = (id) => this.setState(s=>{
+    const sessions = s.sessions.filter(x=>x.id!==id);
+    return { sessions, currentId: s.currentId===id ? (sessions.length?sessions[sessions.length-1].id:null) : s.currentId };
+  });
+
+  importRoster = () => {
+    let r=null; try{ r=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    if(!Array.isArray(r)||!r.length) return;
+    this.setState(s=>({ sessions: s.sessions.map(x=> x.total ? x : {...x, total:String(r.length)} ) }));
+  };
+
+  addTopic = () => {
+    const label = this.state.newTopic.trim();
+    if(!label) return;
+    this.setState(s=>({ topics:[...s.topics,{ id:'t'+Date.now(), label }], newTopic:'' }));
+  };
+
+  /* export */
+  formTitle(){
+    const s=this.state;
+    return {
+      line1:'แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม (Homeroom)  โรงเรียน'+(s.school||'......................'),
+      line2:'ชั้น'+(s.level?' '+s.level:'..........')+'   ภาคเรียนที่ '+this.th(s.term||'')+'   ปีการศึกษา '+this.th(s.year||''),
+    };
+  }
+  buildRows(){
+    const s=this.state;
+    const rows = [...s.sessions].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    return rows;
+  }
+  signHtml(){
+    const s=this.state;
+    const esc = v => String(v==null?'':v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const box = (name,role) => '<div>ลงชื่อ ...................................................<br><span>( '+(name?esc(name):'..............................................')+' )</span><br>'+esc(role)+'</div>';
+    const parts=[];
+    if(s.showSign) parts.push(box(s.teacher,'ครูที่ปรึกษา'));
+    if(s.showPrincipal) parts.push(box(s.principal, s.principalRole||'ผู้บริหารสถานศึกษา'));
+    return parts.length ? '<div class="signs">'+parts.join('')+'</div>' : '';
+  }
+  tableHtml(){
+    const s=this.state;
+    const esc = v => String(v==null?'':v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const cb = (on,label) => '<span class="ck"><i>'+(on?'✓':'')+'</i>'+esc(label)+'</span>';
+    const dots = n => '<span class="dots">'+'.'.repeat(n)+'</span>';
+    const rows = this.buildRows();
+    const body = rows.map(r=>{
+      const topics = s.topics.map(tp=>cb((r.checked||[]).includes(tp.id), tp.label)).join('');
+      const other = '<span class="ck"><i>'+(r.other?'✓':'')+'</i>อื่นๆ '+(r.other?esc(r.other):dots(30))+'</span>';
+      const names = this.absentList(r);
+      const nameLines = names.length
+        ? names.map(n=>'<div class="nm">'+esc(n)+'</div>').join('')
+        : '<div class="nm">'+dots(46)+'</div><div class="nm">'+dots(46)+'</div>';
+      return '<tr>'+
+        '<td class="c wk">'+this.th(r.week||'')+(r.dayNote?'<div class="sm">'+esc(r.dayNote)+'</div>':'')+'</td>'+
+        '<td class="c">'+this.thaiDate(r.date)+'</td>'+
+        '<td class="tp">'+topics+other+'</td>'+
+        '<td class="rm">นักเรียนทั้งหมด '+(r.total?this.th(r.total):dots(10))+' คน<br>'+
+          'มา '+(r.present?this.th(r.present):dots(8))+' คน&nbsp;&nbsp;ขาด '+this.th(this.absentCount(r))+' คน<br>'+
+          'รายชื่อนักเรียนที่ขาด'+nameLines+'</td></tr>';
+    }).join('');
+    const blank = Array.from({length:Math.max(0,parseInt(s.blankRows,10)||0)}).map(()=>{
+      const topics = s.topics.map(tp=>cb(false,tp.label)).join('')+'<span class="ck"><i></i>อื่นๆ '+dots(30)+'</span>';
+      return '<tr><td class="c wk"></td><td class="c"></td><td class="tp">'+topics+'</td>'+
+        '<td class="rm">นักเรียนทั้งหมด '+dots(10)+' คน<br>มา '+dots(8)+' คน&nbsp;&nbsp;ขาด '+dots(8)+' คน<br>'+
+        'รายชื่อนักเรียนที่ขาด<div class="nm">'+dots(46)+'</div><div class="nm">'+dots(46)+'</div></td></tr>';
+    }).join('');
+    return '<table><thead><tr><th>สัปดาห์ที่</th><th>วัน/เดือน/ปี</th><th>เรื่อง/รายการที่อบรม</th><th>หมายเหตุ</th></tr></thead><tbody>'+body+blank+'</tbody></table>';
+  }
+  printHtml(){
+    const s=this.state, t=this.formTitle();
+    const esc = v => String(v==null?'':v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+    const close='</'+'script>';
+    const runner='<'+'script>window.onload=function(){setTimeout(function(){window.print();},400);};'+close;
+    return '<!doctype html><html><head><meta charset="utf-8"><title>บันทึกโฮมรูม</title>'+
+      '<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">'+
+      '<style>@page{size:A4 portrait;margin:14mm}'+
+      "*{font-family:'Sarabun','TH Sarabun New',sans-serif;box-sizing:border-box}"+
+      'body{margin:0;color:#000;font-size:13px}'+
+      '.hd{border:2.5px solid #E0A80A;padding:10px 14px;margin-bottom:12px;text-align:center;box-shadow:inset 0 0 0 2px #fff}'+
+      '.hd b{display:block;font-size:16px;font-weight:700;line-height:1.6}'+
+      '.hd span{display:block;font-size:15px;line-height:1.6}'+
+      'table{width:100%;border-collapse:collapse}'+
+      'th{background:#FBEAC8;border:1px solid #000;padding:6px;font-size:13.5px;font-weight:700}'+
+      'td{border:1px solid #000;padding:8px 9px;vertical-align:middle;font-size:12.5px}'+
+      'td.c{text-align:center}td.wk{width:82px;font-size:14px}td.c+td.c,td.c:nth-child(2){width:118px;font-size:13.5px}'+
+      'td.tp{width:auto}td.rm{width:230px;vertical-align:top;line-height:1.9}'+
+      '.sm{font-size:11.5px;margin-top:3px}'+
+      '.ck{display:block;line-height:2.05;white-space:nowrap}'+
+      '.ck i{display:inline-block;width:12px;height:12px;border:1.3px solid #000;margin-right:7px;font-style:normal;font-size:10px;line-height:11px;text-align:center;vertical-align:-1px}'+
+      '.nm{border-bottom:1px dotted #555;min-height:16px;margin-top:4px;font-size:12px}'+
+      '.dots{letter-spacing:1px;color:#666}'+
+      '.signs{margin-top:28px;display:flex;justify-content:space-around;gap:30px;text-align:center;line-height:2;font-size:13px}'+
+      'tr{page-break-inside:avoid}'+
+      '</style></head><body>'+
+      '<div class="hd"><b>'+esc(t.line1)+'</b><span>'+esc(t.line2)+'</span></div>'+
+      this.tableHtml()+this.signHtml()+runner+'</body></html>';
+  }
+  doPrint = () => {
+    const w = window.open('', '_blank');
+    if(!w) return;
+    w.document.write(this.printHtml());
+    w.document.close();
+  };
+  doExcel = () => {
+    if(!window.XLSX) return;
+    const s=this.state;
+    const head = ['สัปดาห์ที่','วัน/เดือน/ปี','หมายเหตุวัน', ...s.topics.map(t=>t.label), 'อื่นๆ','นักเรียนทั้งหมด','มา','ขาด','รายชื่อที่ขาด'];
+    const rows = this.buildRows().map(r=>[
+      r.week||'', this.thaiDate(r.date), r.dayNote||'',
+      ...s.topics.map(t=>(r.checked||[]).includes(t.id)?'✓':''),
+      r.other||'', r.total||'', r.present||'', this.absentCount(r), this.absentList(r).join(', '),
+    ]);
+    const ws = XLSX.utils.aoa_to_sheet([
+      [this.formTitle().line1],[this.formTitle().line2],[],head,...rows,
+    ]);
+    ws['!cols'] = head.map((h,i)=>({ wch: i<3?16:(i===head.length-1?34:12) }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'โฮมรูม');
+    XLSX.writeFile(wb, 'homeroom-'+(s.level||'class')+'.xlsx');
+  };
+
+  renderVals(){
+    const s = this.state;
+    const ds = this.props.dataState||'ready';
+    const cur = s.sessions.find(x=>x.id===s.currentId) || null;
+    const doneCount = s.sessions.length;
+    const weeks = new Set(s.sessions.map(x=>x.week||1)).size;
+    const absentTotal = s.sessions.reduce((n,x)=>n+this.absentCount(x),0);
+    const usedTopics = new Set();
+    s.sessions.forEach(x=>(x.checked||[]).forEach(id=>usedTopics.add(id)));
+
+    const topicCells = (sess) => s.topics.map(t=>{
+      const on = (sess.checked||[]).includes(t.id);
+      return {
+        label:t.label, mark:on?'✓':'', bg:on?'#E1E3FD':'transparent',
+        border:on?'#5C5EE6':'#C6CAD3', box:on?'#5C5EE6':'#fff',
+        toggle:()=>this.patch(sess.id,{ checked: on ? (sess.checked||[]).filter(x=>x!==t.id) : [...(sess.checked||[]), t.id] }),
+      };
+    });
+
+    return {
+      headerSub: [s.school||'ยังไม่ระบุโรงเรียน', s.level&&('ชั้น '+s.level), 'ภาคเรียนที่ '+this.th(s.term), 'ปีการศึกษา '+this.th(s.year)].filter(Boolean).join(' · '),
+      school:s.school, level:s.level, term:s.term, year:s.year, teacher:s.teacher,
+      onSchool:e=>this.setState({school:e.target.value}),
+      onLevel:e=>this.setState({level:e.target.value}),
+      onTerm:e=>this.setState({term:e.target.value}),
+      onYear:e=>this.setState({year:e.target.value}),
+      onTeacher:e=>this.setState({teacher:e.target.value}),
+
+      topicCount:this.th(s.topics.length),
+      newTopic:s.newTopic,
+      onNewTopic:e=>this.setState({newTopic:e.target.value}),
+      onNewTopicKey:e=>{ if(e.key==='Enter') this.addTopic(); },
+      addTopic:this.addTopic,
+      resetTopics:()=>this.setState({ topics: DEFAULT_TOPICS.map((label,i)=>({ id:'t'+i, label })) }),
+      topicEdits: s.topics.map((t,i)=>({
+        no:this.th(i+1), label:t.label,
+        rename:e=>{ const v=e.target.value; this.setState(st=>({ topics: st.topics.map(x=>x.id===t.id?{...x,label:v}:x) })); },
+        remove:()=>this.setState(st=>({ topics: st.topics.filter(x=>x.id!==t.id) })),
+      })),
+      topicTally: s.topics.map(t=>{
+        const count = s.sessions.filter(x=>(x.checked||[]).includes(t.id)).length;
+        return { label:t.label, count:this.th(count),
+          bg: count?'#D0FBEF':'#fff', color: count?'#0A6B5C':'#A9B0BE', border: count?'#A7F0DF':'#E5E8EE' };
+      }),
+
+      stats:[
+        { value:this.th(doneCount), label:'ครั้งที่บันทึก', bg:'#E1E3FD' },
+        { value:this.th(weeks), label:'สัปดาห์', bg:'#D0FBEF' },
+        { value:this.th(usedTopics.size)+'/'+this.th(s.topics.length), label:'หัวข้อที่อบรม', bg:'#FFEAD5' },
+      ],
+      statsWide:[
+        { value:this.th(doneCount), label:'ครั้งที่บันทึก', bg:'#E1E3FD' },
+        { value:this.th(weeks), label:'สัปดาห์', bg:'#D0FBEF' },
+        { value:this.th(usedTopics.size)+'/'+this.th(s.topics.length), label:'หัวข้อที่อบรมแล้ว', bg:'#FFEAD5' },
+        { value:this.th(absentTotal), label:'ยอดขาดรวม (คน-ครั้ง)', bg:'#F1F3F6' },
+      ],
+
+      planWeekLabel: String(s.planWeek),
+      planWeeks: Array.from({length:Math.max(10, weeks+2)},(_,i)=>i+1).map(w=>({
+        label:String(w),
+        bg: w===s.planWeek ? '#5C5EE6' : ((s.plan[w]||[]).length ? '#E1E3FD' : '#fff'),
+        color: w===s.planWeek ? '#fff' : ((s.plan[w]||[]).length ? '#3D38B4' : '#5A6273'),
+        border: w===s.planWeek ? '#5C5EE6' : '#E5E8EE',
+        select:()=>this.setState({ planWeek:w }),
+      })),
+      planTopics: s.topics.map(t=>{
+        const on = (s.plan[s.planWeek]||[]).includes(t.id);
+        return { label:t.label, mark:on?'✓':'', bg:on?'#E1E3FD':'transparent',
+          border:on?'#5C5EE6':'#C6CAD3', box:on?'#5C5EE6':'#fff',
+          toggle:()=>this.setState(st=>{
+            const cur = st.plan[st.planWeek]||[];
+            return { plan: {...st.plan, [st.planWeek]: on ? cur.filter(x=>x!==t.id) : [...cur, t.id]} };
+          }),
+        };
+      }),
+      applyPlanToWeek: ()=>this.setState(st=>{
+        const plan = st.plan[st.planWeek]||[];
+        return { sessions: st.sessions.map(x=> (x.week||1)===st.planWeek ? {...x, checked:[...plan]} : x),
+          packStatus:'ใช้แผนสัปดาห์ '+st.planWeek+' กับ '+st.sessions.filter(x=>(x.week||1)===st.planWeek).length+' วันแล้ว' };
+      }),
+
+      showPrincipal: s.showPrincipal,
+      principal: s.principal,
+      principalRole: s.principalRole,
+      onPrincipal: e=>this.setState({ principal:e.target.value }),
+      onPrincipalRole: e=>this.setState({ principalRole:e.target.value }),
+      signMark: s.showSign?'✓':'', signBg: s.showSign?'#E1E3FD':'#fff',
+      signBorder: s.showSign?'#5C5EE6':'#C6CAD3', signBox: s.showSign?'#5C5EE6':'#fff',
+      toggleSign: ()=>this.setState(st=>({ showSign:!st.showSign })),
+      prinMark: s.showPrincipal?'✓':'', prinBg: s.showPrincipal?'#E1E3FD':'#fff',
+      prinBorder: s.showPrincipal?'#5C5EE6':'#C6CAD3', prinBox: s.showPrincipal?'#5C5EE6':'#fff',
+      togglePrincipal: ()=>this.setState(st=>({ showPrincipal:!st.showPrincipal })),
+
+      packStatus: s.packStatus || 'ต้องมีข้อมูลในแอปเช็กชื่อ/ออมเงินก่อน ระบบจะดึงมาเองตอนพิมพ์',
+      printTermPack: this.printTermPack,
+      addWeek: this.addWeek,
+      pullAttendance: this.pullAttendance,
+      pullAttendanceCurrent: this.pullAttendance,
+
+      isEmpty: ds==='ready' && s.sessions.length===0,
+      addSession:this.addSession,
+      importRoster:this.importRoster,
+      doPrint:this.doPrint,
+      doExcel:this.doExcel,
+      blankRows:s.blankRows,
+      onBlank:e=>this.setState({ blankRows: Math.max(0, Math.min(20, parseInt(e.target.value,10)||0)) }),
+
+      hasCurrent: !!cur,
+      curWeekTh: cur?this.th(cur.week||1):'',
+      curDate: cur?cur.date:'',
+      curDateTh: cur?this.thaiDate(cur.date):'',
+      curTotal: cur?cur.total:'',
+      curPresent: cur?cur.present:'',
+      curAbsent: cur?cur.absent:'',
+      curAbsentCount: cur?this.th(this.absentCount(cur)):'',
+      topicRows: cur?topicCells(cur):[],
+      onDate: e=>cur&&this.patch(cur.id,{ date:e.target.value, week:this.weekOf(e.target.value, this.state.sessions) }),
+      onTotal: e=>cur&&this.patch(cur.id,{ total:e.target.value }),
+      onPresent: e=>cur&&this.patch(cur.id,{ present:e.target.value }),
+      onAbsent: e=>cur&&this.patch(cur.id,{ absent:e.target.value }),
+      removeCurrent: ()=>cur&&this.removeSession(cur.id),
+
+      loading: ds==='loading', errored: ds==='error', ready: ds==='ready',
+      skel3:[1,2,3], retry:this.retry, offline:this.state.offline,
+      sessionRows: ds!=='ready' ? [] : [...s.sessions].sort((a,b)=>String(a.date).localeCompare(String(b.date))).map(r=>{
+        const n=(r.checked||[]).length;
+        const active = r.id===s.currentId;
+        return {
+          week:r.week||1, weekTh:this.th(r.week||1), date:r.date, dayNote:r.dayNote||'',
+          dateTh:this.thaiDate(r.date)||'ยังไม่เลือกวัน',
+          summary: n? s.topics.filter(t=>(r.checked||[]).includes(t.id)).map(t=>t.label).join(', ') : (r.other||'ยังไม่เลือกหัวข้อ'),
+          badge: this.th(n)+' หัวข้อ',
+          badgeColor: n?'#0A6B5C':'#A9B0BE', badgeBg: n?'#D0FBEF':'#F1F3F6',
+          bg: active?'#F8F9FF':'#fff', border: active?'#C6C9FB':'#E5E8EE',
+          total:r.total||'', present:r.present||'', absent:r.absent||'', other:r.other||'',
+          absentCount:this.th(this.absentCount(r)),
+          absentColor: this.absentCount(r)?'#C2500B':'#A9B0BE',
+          topics: topicCells(r),
+          select:()=>this.setState({ currentId:r.id }),
+          remove:()=>this.removeSession(r.id),
+          onWeek:e=>this.patch(r.id,{ week:parseInt(e.target.value,10)||1 }),
+          onDate:e=>this.patch(r.id,{ date:e.target.value, week:this.weekOf(e.target.value, this.state.sessions) }),
+          onNote:e=>this.patch(r.id,{ dayNote:e.target.value }),
+          onOther:e=>this.patch(r.id,{ other:e.target.value }),
+          onTotal:e=>this.patch(r.id,{ total:e.target.value }),
+          onPresent:e=>this.patch(r.id,{ present:e.target.value }),
+          onAbsent:e=>this.patch(r.id,{ absent:e.target.value }),
+          pullAttendance:()=>this.applyAttendance(r.id),
+        };
+      }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

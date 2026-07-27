@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>วงล้อสุ่มชื่อ ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | Khuncool</title>
+<meta name="description" content="วงล้อสุ่มชื่อนักเรียนออนไลน์ ใช้ฟรี ไม่ต้องสมัครสมาชิก ใส่รายชื่อแล้วหมุนได้ทันที เหมาะกับการสุ่มชื่อตอบคำถาม สุ่มเวรประจำวัน และสุ่มรางวัลในห้องเรียน">
+<meta name="keywords" content="วงล้อสุ่ม, วงล้อสุ่มชื่อ, สุ่มชื่อนักเรียน, สุ่มชื่อออนไลน์, วงล้อสุ่มรางวัล, สื่อการสอน, เครื่องมือครู">
+<link rel="canonical" href="https://www.khuncool.com/random-name-picker">
+<meta property="og:type" content="website">
+<meta property="og:title" content="วงล้อสุ่มชื่อ ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | Khuncool">
+<meta property="og:description" content="ใส่รายชื่อนักเรียนแล้วหมุนได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ">
+<meta property="og:url" content="https://www.khuncool.com/random-name-picker">
+<meta property="og:image" content="https://www.khuncool.com/assets/wheel-cover.png">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"วงล้อสุ่มชื่อ Khuncool","url":"https://www.khuncool.com/random-name-picker","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"th","description":"วงล้อสุ่มชื่อนักเรียนออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง","offers":{"@type":"Offer","price":"0","priceCurrency":"THB"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"วงล้อสุ่มชื่อใช้ฟรีไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้ฟรีทั้งหมด ไม่ต้องสมัครสมาชิกและไม่ต้องติดตั้งโปรแกรม เปิดผ่านเบราว์เซอร์ได้ทันที"}},{"@type":"Question","name":"ใส่รายชื่อนักเรียนได้กี่คน","acceptedAnswer":{"@type":"Answer","text":"ใส่ได้ทั้งห้อง สามารถวางรายชื่อทีละหลายบรรทัดจาก Excel หรือ Google Sheets ได้"}},{"@type":"Question","name":"ใช้บนมือถือหรือแท็บเล็ตได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ รองรับทั้งคอมพิวเตอร์ แท็บเล็ต และมือถือ เหมาะกับการฉายขึ้นจอโปรเจกเตอร์ในห้องเรียน"}}]}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- ================= MOBILE ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · วงล้อสุ่ม — ใส่รายชื่อแล้วกดหมุน ใช้ได้จริง</span>
+    </div>
+    <div style="position:relative;width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="1" class="frame-scroll">
+
+      <!-- header -->
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">วงล้อสุ่ม</span>
+        </div>
+        <button onClick="{{ toggleSound }}" title="เสียง" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">{{ soundIcon }}</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:18px 16px 30px">
+        <!-- wheel -->
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:8px">
+          <div style="position:absolute;top:-2px;left:50%;transform:translateX(-50%);z-index:3;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:22px solid #1A1D26;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))"></div>
+          <div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:230px;height:34px;background:radial-gradient(closest-side,rgba(26,29,38,.32),rgba(26,29,38,0));filter:blur(4px);z-index:0"></div>
+          <canvas ref="{{ setCanvas }}" width="620" height="620" style="width:310px;height:310px;display:block;cursor:pointer;position:relative;z-index:1;filter:drop-shadow(0 18px 26px rgba(26,29,38,.32))" onClick="{{ spin }}"></canvas>
+        </div>
+
+        <button onClick="{{ spin }}" disabled="{{ spinDisabled }}" style="width:100%;font-family:inherit;font-size:16px;font-weight:700;padding:15px;border:none;border-radius:13px;background:{{ spinBg }};color:#fff;cursor:{{ spinCursor }};box-shadow:0 10px 24px -8px rgba(92,94,230,.5);margin-bottom:16px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ spinLabel }}</button>
+
+        <!-- controls -->
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">รายชื่อ ({{ count }})</span>
+            <div style="display:flex;gap:10px">
+              <span onClick="{{ importFromRoster }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">📥 ทะเบียน</span>
+              <span onClick="{{ shuffle }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">🔀 สลับ</span>
+              <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+            </div>
+          </div>
+          <sc-if value="{{ importMsgShow }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:11.5px;color:#0A9380;background:#E4F6F1;border-radius:8px;padding:7px 10px;margin-bottom:11px">{{ importMsg }}</div>
+          </sc-if>
+
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:120px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… แล้วกด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                <button onClick="{{ addName }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px">
+                <sc-for list="{{ names }}" as="nm" hint-placeholder-count="6">
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:6px 8px 6px 11px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                    {{ nm }}
+                    <span onClick="{{ removeName }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:14px;line-height:1" style-hover="color:#DC2626">×</span>
+                  </span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #E5E8EE">
+            <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:12.5px;color:#434A58">
+              <input type="checkbox" checked="{{ removeWinner }}" onChange="{{ toggleRemove }}" style="width:17px;height:17px;accent-color:#5C5EE6;cursor:pointer">
+              เอาชื่อที่สุ่มได้ออก
+            </label>
+            <span onClick="{{ clearAll }}" style="font-size:12px;color:#DC2626;cursor:pointer">ล้างทั้งหมด</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- winner modal (mobile) -->
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:40;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadein .2s ease">
+          <div style="width:100%;animation:pop .35s ease;border-radius:22px;padding:26px 22px;background:#fff;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)">
+            <div style="font-size:13px;color:#5C5EE6;font-weight:600;margin-bottom:8px">🎉 ผลการสุ่ม</div>
+            <div style="font-size:30px;font-weight:700;color:#1A1D26;margin-bottom:20px;word-break:break-word">{{ winner }}</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <button onClick="{{ spinAgain }}" style="font-family:inherit;font-size:15px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">🎡 หมุนอีกครั้ง</button>
+              <button onClick="{{ removeAndSpin }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:12px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">เอาชื่อนี้ออก แล้วหมุนต่อ</button>
+              <button onClick="{{ closeResult }}" style="font-family:inherit;font-size:13.5px;font-weight:500;padding:8px;border:none;border-radius:10px;background:transparent;color:#7C8494;cursor:pointer">ปิด</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ================= DESKTOP ================= -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · วงล้อสุ่ม — คลิกวงล้อหรือปุ่มเพื่อหมุน</span>
+    </div>
+    <div style="position:relative;width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="desktop" class="frame-scroll">
+
+      <!-- header -->
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">วงล้อสุ่มชื่อนักเรียน</span>
+        </div>
+        <button onClick="{{ toggleSound }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">{{ soundIcon }} เสียง</button>
+        <button onClick="{{ toggleFull }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">⛶ เต็มจอ</button>
+        <span style="font-size:12.5px;color:#A9B0BE;font-family:'IBM Plex Mono'">/random-name-picker</span>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:32px;display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:start">
+        <!-- wheel column -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="position:relative;display:flex;justify-content:center;margin-bottom:22px">
+            <div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);z-index:3;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:28px solid #1A1D26;filter:drop-shadow(0 2px 4px rgba(0,0,0,.22))"></div>
+            <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:320px;height:46px;background:radial-gradient(closest-side,rgba(26,29,38,.34),rgba(26,29,38,0));filter:blur(6px);z-index:0"></div>
+            <canvas ref="{{ setCanvas }}" width="840" height="840" style="width:420px;height:420px;display:block;cursor:pointer;position:relative;z-index:1;filter:drop-shadow(0 24px 34px rgba(26,29,38,.34))" onClick="{{ spin }}"></canvas>
+          </div>
+          <button onClick="{{ spin }}" disabled="{{ spinDisabled }}" style="min-width:260px;font-family:inherit;font-size:17px;font-weight:700;padding:16px 40px;border:none;border-radius:14px;background:{{ spinBg }};color:#fff;cursor:{{ spinCursor }};box-shadow:0 12px 28px -8px rgba(92,94,230,.5)" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">{{ spinLabel }}</button>
+        </div>
+
+        <!-- controls column -->
+        <div>
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+              <span style="font-size:15px;font-weight:700">รายชื่อ ({{ count }})</span>
+              <div style="display:flex;gap:12px">
+                <span onClick="{{ importFromRoster }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">📥 ทะเบียน</span>
+                <span onClick="{{ shuffle }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">🔀 สลับ</span>
+                <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+              </div>
+            </div>
+            <sc-if value="{{ importMsgShow }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px;color:#0A9380;background:#E4F6F1;border-radius:9px;padding:8px 12px;margin-bottom:13px">{{ importMsg }}</div>
+            </sc-if>
+
+            <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:150px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+                <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;gap:8px;margin-bottom:14px">
+                  <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… แล้วกด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                  <button onClick="{{ addName }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;max-height:220px;overflow-y:auto" class="frame-scroll">
+                  <sc-for list="{{ names }}" as="nm" hint-placeholder-count="6">
+                    <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;padding:7px 9px 7px 12px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                      {{ nm }}
+                      <span onClick="{{ removeName }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:15px;line-height:1" style-hover="color:#DC2626">×</span>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid #E5E8EE">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px;color:#434A58">
+                <input type="checkbox" checked="{{ removeWinner }}" onChange="{{ toggleRemove }}" style="width:18px;height:18px;accent-color:#5C5EE6;cursor:pointer">
+                เอาชื่อที่สุ่มได้ออก
+              </label>
+              <span onClick="{{ clearAll }}" style="font-size:12.5px;color:#DC2626;cursor:pointer">ล้างทั้งหมด</span>
+            </div>
+          </div>
+          <p style="font-size:12px;color:#A9B0BE;margin:14px 2px 0;line-height:1.6">เหมาะกับสุ่มเลือกคนตอบ แบ่งกลุ่ม หรือสุ่มลำดับกิจกรรม · ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง</p>
+        </div>
+      </div>
+
+      <!-- winner modal (desktop) -->
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:40;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+          <div style="width:420px;animation:pop .35s ease;border-radius:24px;padding:34px 30px;background:#fff;text-align:center;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+            <div style="font-size:14px;color:#5C5EE6;font-weight:600;margin-bottom:10px">🎉 ผลการสุ่ม</div>
+            <div style="font-size:40px;font-weight:700;color:#1A1D26;margin-bottom:26px;word-break:break-word;line-height:1.2">{{ winner }}</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button onClick="{{ spinAgain }}" style="font-family:inherit;font-size:16px;font-weight:700;padding:14px;border:none;border-radius:13px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">🎡 หมุนอีกครั้ง</button>
+              <button onClick="{{ removeAndSpin }}" style="font-family:inherit;font-size:15px;font-weight:600;padding:13px;border:1px solid #D3D8E1;border-radius:13px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">เอาชื่อนี้ออก แล้วหมุนต่อ</button>
+              <button onClick="{{ closeResult }}" style="font-family:inherit;font-size:14px;font-weight:500;padding:9px;border:none;border-radius:11px;background:transparent;color:#7C8494;cursor:pointer">ปิด</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.sample = ['น้องปลา','น้องบอล','น้องมิ้นท์','น้องเก่ง','น้องแอน','น้องต้น','น้องพลอย','น้องเจมส์'];
+    let _own=null, _roster=null;
+    try{ _own=JSON.parse(localStorage.getItem('khuncool.wheel.names')||'null'); }catch(e){}
+    try{ _roster=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    const _init = (Array.isArray(_own)&&_own.length)?_own : ((Array.isArray(_roster)&&_roster.length)?_roster : [...this.sample]);
+    this.state = {
+      names:_init,
+      newName:'', spinning:false, winner:'', winnerIdx:-1, showResult:false,
+      removeWinner:false, soundOn:true, bulkMode:false, bulkText:'', importMsg:'',
+    };
+    this.rot = 0;
+    this.canvases = [];
+    this.confetti = [];
+    this.palette = ['#5C5EE6','#14B79A','#F97316','#3D38B4','#0A9380','#E0A400','#8B7BF0','#22B8A0','#C2500B','#6D68E0'];
+    this.setCanvas = (el)=>{ if(el && !this.canvases.includes(el)){ this.canvases.push(el); this.drawAll(); } };
+    this.lastTickSeg = -1;
+  }
+  componentDidMount(){
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=>this.drawAll()); }
+    this.drawAll();
+  }
+  componentDidUpdate(){ if(!this.state.spinning) this.drawAll(); try{ localStorage.setItem('khuncool.wheel.names', JSON.stringify(this.state.names)); }catch(e){} }
+  importFromRoster=()=>{
+    let r=null; try{ r=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    if(Array.isArray(r) && r.length){ this.setState({ names:r, showResult:false, importMsg:`นำเข้า ${r.length} ชื่อจากทะเบียนแล้ว` }); }
+    else this.setState({ importMsg:'ยังไม่มีทะเบียนรายชื่อ — เพิ่มที่หน้า “แบ่งกลุ่ม” หรือ “เช็กชื่อ” ก่อน' });
+    clearTimeout(this._impT); this._impT=setTimeout(()=>this.setState({ importMsg:'' }), 2600);
+  };
+
+  // ---- audio ----
+  ac(){ if(!this._ac){ try{ this._ac = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this._ac=null; } } return this._ac; }
+  tick(){
+    if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return;
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.type='square'; o.frequency.value=1100;
+    g.gain.setValueAtTime(.06,ac.currentTime); g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.05);
+    o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+.05);
+  }
+  chime(){
+    if(!this.state.soundOn) return; const ac=this.ac(); if(!ac) return;
+    [523,659,784,1047].forEach((f,i)=>{
+      const o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+i*.09;
+      o.type='triangle'; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.14,t+.03); g.gain.exponentialRampToValueAtTime(.001,t+.4);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+.42);
+    });
+  }
+
+  // ---- drawing ----
+  drawAll(){ this.canvases.forEach(c=>this.draw(c)); }
+  draw(canvas){
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width, cx=size/2, cy=size/2;
+    const rim = size*0.055;           // metallic rim thickness
+    const r = size/2 - rim - 4;       // face radius
+    const names = this.state.names;
+    ctx.clearRect(0,0,size,size);
+
+    // --- metallic rim ring ---
+    const rimGrad = ctx.createLinearGradient(0,0,0,size);
+    rimGrad.addColorStop(0,'#3A3768'); rimGrad.addColorStop(.5,'#1A1D26'); rimGrad.addColorStop(1,'#0A0C12');
+    ctx.beginPath(); ctx.arc(cx,cy,r+rim,0,2*Math.PI); ctx.fillStyle=rimGrad; ctx.fill();
+    // inner rim highlight
+    ctx.beginPath(); ctx.arc(cx,cy,r+2,0,2*Math.PI); ctx.lineWidth=1.5; ctx.strokeStyle='rgba(255,255,255,.18)'; ctx.stroke();
+
+    const n = names.length;
+    if(n===0){
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.fillStyle='#EEF1FE'; ctx.fill();
+      ctx.fillStyle='#A9B0BE'; ctx.font=`500 ${Math.round(size*0.045)}px 'Sarabun'`;
+      ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('เพิ่มรายชื่อก่อน', cx, cy);
+      this.drawBulbs(ctx,cx,cy,r+rim*0.5,size,n); return;
+    }
+    const seg = 2*Math.PI/n;
+    const fs = Math.max(size*0.026, Math.min(size*0.05, (size*0.9)/n));
+    for(let i=0;i<n;i++){
+      const start=i*seg+this.rot, end=start+seg;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end); ctx.closePath();
+      ctx.fillStyle=this.palette[i%this.palette.length]; ctx.fill();
+      // segment divider
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(start)*r, cy+Math.sin(start)*r);
+      ctx.lineWidth=Math.max(1,size*0.003); ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+seg/2);
+      ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(0,0,0,.28)'; ctx.shadowBlur=size*0.01; ctx.shadowOffsetY=1;
+      ctx.font=`600 ${fs}px 'Anuphan','Sarabun'`;
+      let label=names[i]; if(label.length>12) label=label.slice(0,11)+'…';
+      ctx.fillText(label, r-14, 0); ctx.restore();
+    }
+
+    // --- glossy sheen overlay ---
+    const sheen=ctx.createRadialGradient(cx-r*0.35,cy-r*0.4,r*0.1, cx,cy,r);
+    sheen.addColorStop(0,'rgba(255,255,255,.28)'); sheen.addColorStop(.45,'rgba(255,255,255,.05)'); sheen.addColorStop(.7,'rgba(0,0,0,0)'); sheen.addColorStop(1,'rgba(0,0,0,.16)');
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.fillStyle=sheen; ctx.fill();
+
+    // bulbs on rim
+    this.drawBulbs(ctx,cx,cy,r+rim*0.5,size,n);
+
+    // --- hub ---
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,.3)'; ctx.shadowBlur=size*0.03; ctx.shadowOffsetY=size*0.006;
+    ctx.beginPath(); ctx.arc(cx,cy,size*0.095,0,2*Math.PI); ctx.fillStyle='#fff'; ctx.fill();
+    ctx.restore();
+    ctx.lineWidth=4; ctx.strokeStyle='#E5E8EE'; ctx.stroke();
+    ctx.fillStyle='#5C5EE6'; ctx.font=`700 ${size*0.06}px 'IBM Plex Sans'`;
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('k', cx, cy+size*0.004);
+  }
+  drawBulbs(ctx,cx,cy,radius,size,n){
+    const count=Math.min(24,Math.max(12,n*2));
+    for(let i=0;i<count;i++){
+      const a=(i/count)*2*Math.PI + this.rot*0.5;
+      const bx=cx+Math.cos(a)*radius, by=cy+Math.sin(a)*radius;
+      const on=(i%2===0);
+      ctx.save();
+      if(on){ ctx.shadowColor='rgba(255,214,120,.9)'; ctx.shadowBlur=size*0.018; }
+      ctx.beginPath(); ctx.arc(bx,by,size*0.009,0,2*Math.PI);
+      ctx.fillStyle=on?'#FFE08A':'#8A7A3A'; ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ---- confetti ----
+  burstConfetti(){
+    const cols=this.palette;
+    this.confetti=[];
+    for(let i=0;i<90;i++){
+      this.confetti.push({x:0.5,y:0.35,vx:(Math.random()-0.5)*0.9,vy:-Math.random()*0.9-0.3,
+        c:cols[i%cols.length],s:6+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-0.5)*0.5,life:1});
+    }
+    if(this._confRAF) cancelAnimationFrame(this._confRAF);
+    let last=performance.now();
+    const overlays=this.canvases.map(c=>this.confCanvasFor(c)).filter(Boolean);
+    const step=(now)=>{
+      const dt=Math.min(0.05,(now-last)/1000); last=now;
+      let alive=false;
+      this.confetti.forEach(p=>{ p.vy+=1.4*dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.rot+=p.vr; p.life-=0.45*dt; if(p.life>0)alive=true; });
+      overlays.forEach(oc=>{
+        const ctx=oc.getContext('2d'); const w=oc.width,h=oc.height;
+        ctx.clearRect(0,0,w,h);
+        this.confetti.forEach(p=>{ if(p.life<=0)return; ctx.save(); ctx.globalAlpha=Math.max(0,p.life);
+          ctx.translate(p.x*w,p.y*h); ctx.rotate(p.rot); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); ctx.restore(); });
+      });
+      if(alive){ this._confRAF=requestAnimationFrame(step); }
+      else { overlays.forEach(oc=>oc.getContext('2d').clearRect(0,0,oc.width,oc.height)); }
+    };
+    this._confRAF=requestAnimationFrame(step);
+  }
+  confCanvasFor(wheelCanvas){
+    // create/find an overlay canvas sibling positioned over the wheel
+    const parent=wheelCanvas.parentElement; if(!parent) return null;
+    let oc=parent.querySelector('canvas[data-conf]');
+    if(!oc){
+      oc=document.createElement('canvas'); oc.setAttribute('data-conf','1');
+      oc.width=wheelCanvas.width*1.6; oc.height=wheelCanvas.height*1.6;
+      const rect=wheelCanvas.getBoundingClientRect();
+      oc.style.position='absolute'; oc.style.pointerEvents='none'; oc.style.zIndex='5';
+      oc.style.width=(wheelCanvas.clientWidth*1.6)+'px'; oc.style.height=(wheelCanvas.clientHeight*1.6)+'px';
+      oc.style.left='50%'; oc.style.top='50%'; oc.style.transform='translate(-50%,-50%)';
+      if(getComputedStyle(parent).position==='static') parent.style.position='relative';
+      parent.appendChild(oc);
+    }
+    return oc;
+  }
+
+  // ---- spin ----
+  spin = ()=>{
+    if(this.state.spinning || this.state.names.length<2) return;
+    const ac=this.ac(); if(ac && ac.state==='suspended') ac.resume();
+    this.setState({ spinning:true, showResult:false, winner:'' });
+    const startRot=this.rot;
+    const delta=2*Math.PI*(5+Math.random()*2)+Math.random()*2*Math.PI;
+    const dur=4200, t0=performance.now();
+    const n=this.state.names.length, seg=2*Math.PI/n;
+    this.lastTickSeg=-1;
+    const step=(now)=>{
+      const p=Math.min(1,(now-t0)/dur);
+      const e=1-Math.pow(1-p,3);
+      this.rot=startRot+delta*e;
+      const curSeg=Math.floor((this.rot%(2*Math.PI))/seg);
+      if(curSeg!==this.lastTickSeg){ this.lastTickSeg=curSeg; this.tick(); }
+      this.drawAll();
+      if(p<1){ requestAnimationFrame(step); } else { this.finish(); }
+    };
+    requestAnimationFrame(step);
+  };
+  finish(){
+    const n=this.state.names.length, seg=2*Math.PI/n;
+    const pointer=1.5*Math.PI;
+    const rel=((pointer-this.rot)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+    const idx=Math.floor(rel/seg)%n;
+    this.setState({ spinning:false, winner:this.state.names[idx], winnerIdx:idx, showResult:true });
+    this.chime(); this.burstConfetti();
+  }
+
+  spinAgain = ()=>{ this.setState({ showResult:false }); setTimeout(this.spin, 250); };
+  removeAndSpin = ()=>{
+    const idx=this.state.winnerIdx;
+    this.setState(s=>({ names:s.names.filter((_,i)=>i!==idx), showResult:false, winnerIdx:-1 }));
+    setTimeout(this.spin, 300);
+  };
+  closeResult = ()=>{
+    if(this.state.removeWinner && this.state.winnerIdx>=0){
+      const idx=this.state.winnerIdx;
+      this.setState(s=>({ names:s.names.filter((_,i)=>i!==idx), showResult:false, winnerIdx:-1 }));
+    } else {
+      this.setState({ showResult:false });
+    }
+  };
+
+  // ---- list ops ----
+  onNewName = (e)=> this.setState({ newName:e.target.value });
+  onKey = (e)=>{ if(e.key==='Enter') this.addName(); };
+  addName = ()=>{ const v=(this.state.newName||'').trim(); if(!v)return; this.setState(s=>({ names:[...s.names,v], newName:'' })); };
+  removeName = (e)=>{ const i=parseInt(e.currentTarget.getAttribute('data-i'),10); this.setState(s=>({ names:s.names.filter((_,idx)=>idx!==i) })); };
+  clearAll = ()=> this.setState({ names:[], showResult:false, winner:'' });
+  shuffle = ()=> this.setState(s=>{ const a=[...s.names]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return { names:a }; });
+  toggleRemove = (e)=> this.setState({ removeWinner:e.target.checked });
+  toggleSound = ()=> this.setState(s=>({ soundOn:!s.soundOn }));
+
+  // ---- bulk ----
+  toggleBulk = ()=> this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.names.join('\n') }));
+  onBulk = (e)=> this.setState({ bulkText:e.target.value });
+  applyBulk = ()=>{ const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean); this.setState({ names:list, bulkMode:false }); };
+
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  renderVals(){
+    const n=this.state.names.length;
+    const disabled=this.state.spinning||n<2;
+    return {
+      toggleFull:this.toggleFull, importFromRoster:this.importFromRoster,
+      importMsg:this.state.importMsg, importMsgShow:!!this.state.importMsg,
+      names:this.state.names, count:n, newName:this.state.newName,
+      winner:this.state.winner, showResult:this.state.showResult, removeWinner:this.state.removeWinner,
+      bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText,
+      setCanvas:this.setCanvas, spin:this.spin, spinAgain:this.spinAgain, removeAndSpin:this.removeAndSpin, closeResult:this.closeResult,
+      onNewName:this.onNewName, onKey:this.onKey, addName:this.addName, removeName:this.removeName,
+      clearAll:this.clearAll, shuffle:this.shuffle, toggleRemove:this.toggleRemove, toggleSound:this.toggleSound,
+      toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk,
+      bulkLabel:this.state.bulkMode?'✎ กลับไปทีละชื่อ':'✎ วางหลายชื่อ',
+      soundIcon:this.state.soundOn?'🔊':'🔇',
+      spinDisabled:disabled,
+      spinLabel:this.state.spinning?'กำลังหมุน…':'🎡 หมุนวงล้อ',
+      spinBg:disabled?'#B9BCC7':'#5C5EE6',
+      spinCursor:disabled?'not-allowed':'pointer',
+    };
+  }
+}
+</script>
+</body>
+</html>

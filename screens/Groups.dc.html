@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>สุ่มแบ่งกลุ่มนักเรียน ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool</title>
+<meta name="description" content="สุ่มแบ่งกลุ่มนักเรียนตามจำนวนที่ต้องการ ใส่รายชื่อแล้วแบ่งกลุ่มได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องสมัครสมาชิก">
+<link rel="canonical" href="https://www.khuncool.com/tools/groups">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- MOBILE -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · สุ่มแบ่งกลุ่ม</span>
+    </div>
+    <div style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="1" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">สุ่มแบ่งกลุ่ม</span>
+        </div>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:18px 16px 30px">
+        <!-- mode + count -->
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB;margin-bottom:14px">
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <button onClick="{{ setModeGroups }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1.5px solid {{ byGroupsBorder }};border-radius:11px;background:{{ byGroupsBg }};color:{{ byGroupsColor }};cursor:pointer;white-space:nowrap">กำหนดจำนวนกลุ่ม</button>
+            <button onClick="{{ setModeSize }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1.5px solid {{ bySizeBorder }};border-radius:11px;background:{{ bySizeBg }};color:{{ bySizeColor }};cursor:pointer;white-space:nowrap">กำหนดคน/กลุ่ม</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13.5px;font-weight:600">{{ stepperLabel }}</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <button onClick="{{ dec }}" style="width:36px;height:36px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F1F3F6">−</button>
+              <span style="font-family:'IBM Plex Mono';font-size:22px;font-weight:600;min-width:32px;text-align:center">{{ stepperValue }}</span>
+              <button onClick="{{ inc }}" style="width:36px;height:36px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F1F3F6">+</button>
+            </div>
+          </div>
+        </div>
+
+        <button onClick="{{ divide }}" disabled="{{ divideDisabled }}" style="width:100%;font-family:inherit;font-size:16px;font-weight:700;padding:15px;border:none;border-radius:13px;background:{{ divideBg }};color:#fff;cursor:{{ divideCursor }};box-shadow:0 10px 24px -8px rgba(92,94,230,.5);margin-bottom:16px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">🔀 สุ่มแบ่งกลุ่ม</button>
+
+        <!-- result -->
+        <sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+              <div style="animation:pop .3s ease;border-radius:14px;border:1px solid #E5E8EE;overflow:hidden;background:#fff">
+                <div style="padding:10px 14px;background:{{ g.color }};color:#fff;font-size:13.5px;font-weight:700;display:flex;justify-content:space-between"><span>{{ g.name }}</span><span style="opacity:.85;font-weight:500">{{ g.countLabel }}</span></div>
+                <div style="padding:11px 14px;display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ g.members }}" as="m" hint-placeholder-count="3">
+                    <span style="font-size:12.5px;font-weight:500;padding:5px 10px;border-radius:999px;background:#F1F3F6;color:#434A58;white-space:nowrap">{{ m }}</span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noResult }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1.5px dashed #D3D8E1;border-radius:14px;background:#F8F9FB;padding:30px 20px;text-align:center;margin-bottom:16px">
+            <div style="font-size:34px;margin-bottom:10px">🧩</div>
+            <div style="font-size:14.5px;font-weight:700;color:#1A1D26">ผลการแบ่งกลุ่มจะแสดงที่นี่</div>
+            <div style="font-size:12.5px;color:#7C8494;margin-top:6px;line-height:1.65">ใส่รายชื่อด้านล่าง เลือกจำนวน<br>แล้วกดสุ่มแบ่งกลุ่ม</div>
+          </div>
+        </sc-if>
+
+        <!-- names -->
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">รายชื่อ ({{ count }})</span>
+            <div style="display:flex;gap:10px">
+              <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+              <span onClick="{{ clearAll }}" style="font-size:12px;color:#DC2626;cursor:pointer">ล้าง</span>
+            </div>
+          </div>
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:120px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;gap:8px;margin-bottom:12px">
+                <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                <button onClick="{{ addName }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px">
+                <sc-for list="{{ names }}" as="nm" hint-placeholder-count="6">
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:6px 8px 6px 11px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                    {{ nm }}
+                    <span onClick="{{ removeName }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:14px;line-height:1" style-hover="color:#DC2626">×</span>
+                  </span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · สุ่มแบ่งกลุ่ม</span>
+    </div>
+    <div style="width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" data-frame="desktop" class="frame-scroll">
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:14px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">สุ่มแบ่งกลุ่ม</span>
+        </div>
+        <button onClick="{{ toggleFull }}" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">⛶ เต็มจอ</button>
+        <span style="font-size:12.5px;color:#A9B0BE;font-family:'IBM Plex Mono'">/tools/groups</span>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:32px;display:grid;grid-template-columns:360px 1fr;gap:36px;align-items:start">
+        <!-- left controls -->
+        <div>
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB;margin-bottom:16px">
+            <div style="display:flex;gap:9px;margin-bottom:16px">
+              <button onClick="{{ setModeGroups }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:12px;border:1.5px solid {{ byGroupsBorder }};border-radius:11px;background:{{ byGroupsBg }};color:{{ byGroupsColor }};cursor:pointer;white-space:nowrap">จำนวนกลุ่ม</button>
+              <button onClick="{{ setModeSize }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:12px;border:1.5px solid {{ bySizeBorder }};border-radius:11px;background:{{ bySizeBg }};color:{{ bySizeColor }};cursor:pointer;white-space:nowrap">คน / กลุ่ม</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:14px;font-weight:600">{{ stepperLabel }}</span>
+              <div style="display:flex;align-items:center;gap:14px">
+                <button onClick="{{ dec }}" style="width:40px;height:40px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F1F3F6">−</button>
+                <span style="font-family:'IBM Plex Mono';font-size:26px;font-weight:600;min-width:38px;text-align:center">{{ stepperValue }}</span>
+                <button onClick="{{ inc }}" style="width:40px;height:40px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F1F3F6">+</button>
+              </div>
+            </div>
+            <div style="font-size:12px;color:#A9B0BE;margin-top:10px">{{ previewText }}</div>
+          </div>
+
+          <button onClick="{{ divide }}" disabled="{{ divideDisabled }}" style="width:100%;font-family:inherit;font-size:17px;font-weight:700;padding:16px;border:none;border-radius:14px;background:{{ divideBg }};color:#fff;cursor:{{ divideCursor }};box-shadow:0 12px 28px -8px rgba(92,94,230,.5);margin-bottom:16px" style-hover="filter:brightness(1.05)" style-active="transform:translateY(1px)">🔀 สุ่มแบ่งกลุ่ม</button>
+
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+              <span style="font-size:15px;font-weight:700">รายชื่อ ({{ count }})</span>
+              <div style="display:flex;gap:12px">
+                <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+                <span onClick="{{ clearAll }}" style="font-size:12.5px;color:#DC2626;cursor:pointer">ล้าง</span>
+              </div>
+            </div>
+            <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:150px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+                <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;gap:8px;margin-bottom:14px">
+                  <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                  <button onClick="{{ addName }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 18px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;max-height:200px;overflow-y:auto" class="frame-scroll">
+                  <sc-for list="{{ names }}" as="nm" hint-placeholder-count="6">
+                    <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;padding:7px 9px 7px 12px;border-radius:999px;background:#fff;border:1px solid #E5E8EE;white-space:nowrap">
+                      {{ nm }}
+                      <span onClick="{{ removeName }}" data-i="{{ $index }}" style="cursor:pointer;color:#A9B0BE;font-size:15px;line-height:1" style-hover="color:#DC2626">×</span>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <!-- right result -->
+        <div>
+          <sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+                <div style="animation:pop .3s ease;border-radius:16px;border:1px solid #E5E8EE;overflow:hidden;background:#fff">
+                  <div style="padding:12px 16px;background:{{ g.color }};color:#fff;font-size:15px;font-weight:700;display:flex;justify-content:space-between"><span>{{ g.name }}</span><span style="opacity:.85;font-weight:500;font-size:13px">{{ g.countLabel }}</span></div>
+                  <div style="padding:14px 16px;display:flex;flex-wrap:wrap;gap:7px">
+                    <sc-for list="{{ g.members }}" as="m" hint-placeholder-count="3">
+                      <span style="font-size:13px;font-weight:500;padding:6px 11px;border-radius:999px;background:#F1F3F6;color:#434A58;white-space:nowrap">{{ m }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noResult }}" hint-placeholder-val="{{ true }}">
+            <div style="height:420px;border:1.5px dashed #D3D8E1;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F8F9FB;color:#A9B0BE;text-align:center;padding:24px">
+              <div style="font-size:44px;margin-bottom:12px">🧩</div>
+              <div style="font-size:15px;font-weight:600;color:#7C8494">ผลการแบ่งกลุ่มจะแสดงที่นี่</div>
+              <div style="font-size:13px;margin-top:6px">ใส่รายชื่อ เลือกจำนวน แล้วกดสุ่มแบ่งกลุ่ม</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.sample=['น้องปลา','น้องบอล','น้องมิ้นท์','น้องเก่ง','น้องแอน','น้องต้น','น้องพลอย','น้องเจมส์','น้องฟ้า','น้องกานต์','น้องอาร์ม','น้องแพร'];
+    let _saved=null; try{ _saved=JSON.parse(localStorage.getItem('khuncool.roster')||'null'); }catch(e){}
+    this.state={ names:(Array.isArray(_saved)&&_saved.length)?_saved:[...this.sample], newName:'', bulkMode:false, bulkText:'', mode:'byGroups', groupCount:3, groupSize:4, groups:[] };
+    this.colors=['#5C5EE6','#14B79A','#F97316','#3D38B4','#0A9380','#C2500B','#8B7BF0','#22B8A0'];
+  }
+  componentDidUpdate(prev){
+    if(prev && prev.names !== this.state.names){
+      try{ localStorage.setItem('khuncool.roster', JSON.stringify(this.state.names)); }catch(e){}
+    }
+  }
+  ac(){ if(!this._ac){ try{ this._ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ this._ac=null; } } return this._ac; }
+  ping(){ const ac=this.ac(); if(!ac)return; [523,784].forEach((f,i)=>{ const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+i*.1; o.type='triangle'; o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.13,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.3); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+.32); }); }
+
+  divide=()=>{
+    const names=[...this.state.names]; if(names.length<2) return;
+    const ac=this.ac(); if(ac&&ac.state==='suspended') ac.resume();
+    for(let i=names.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [names[i],names[j]]=[names[j],names[i]]; }
+    let k;
+    if(this.state.mode==='byGroups') k=Math.max(1,Math.min(this.state.groupCount,names.length));
+    else k=Math.max(1,Math.ceil(names.length/Math.max(1,this.state.groupSize)));
+    const buckets=Array.from({length:k},()=>[]);
+    names.forEach((nm,i)=>buckets[i%k].push(nm));
+    const groups=buckets.map((mem,i)=>({ name:`กลุ่ม ${i+1}`, color:this.colors[i%this.colors.length], members:mem, countLabel:`${mem.length} คน` }));
+    this.setState({ groups });
+    this.ping();
+  };
+
+  setModeGroups=()=>this.setState({ mode:'byGroups' });
+  setModeSize=()=>this.setState({ mode:'bySize' });
+  inc=()=>this.setState(s=> s.mode==='byGroups'?{ groupCount:Math.min(20,s.groupCount+1) }:{ groupSize:Math.min(20,s.groupSize+1) });
+  dec=()=>this.setState(s=> s.mode==='byGroups'?{ groupCount:Math.max(1,s.groupCount-1) }:{ groupSize:Math.max(1,s.groupSize-1) });
+
+  onNewName=(e)=>this.setState({ newName:e.target.value });
+  onKey=(e)=>{ if(e.key==='Enter') this.addName(); };
+  addName=()=>{ const v=(this.state.newName||'').trim(); if(!v)return; this.setState(s=>({ names:[...s.names,v], newName:'' })); };
+  removeName=(e)=>{ const i=parseInt(e.currentTarget.getAttribute('data-i'),10); this.setState(s=>({ names:s.names.filter((_,idx)=>idx!==i) })); };
+  clearAll=()=>this.setState({ names:[], groups:[] });
+  toggleBulk=()=>this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.names.join('\n') }));
+  onBulk=(e)=>this.setState({ bulkText:e.target.value });
+  applyBulk=()=>{ const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean); this.setState({ names:list, bulkMode:false }); };
+
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  renderVals(){
+    const n=this.state.names.length; const g=this.state.mode==='byGroups';
+    const val=g?this.state.groupCount:this.state.groupSize;
+    let preview;
+    if(g){ const k=Math.max(1,Math.min(this.state.groupCount,Math.max(1,n))); preview=`${n} คน → ${k} กลุ่ม (~${Math.ceil(n/k)} คน/กลุ่ม)`; }
+    else { const k=Math.max(1,Math.ceil(n/Math.max(1,this.state.groupSize))); preview=`${n} คน → ราว ${k} กลุ่ม (${this.state.groupSize} คน/กลุ่ม)`; }
+    const on='#5C5EE6', onBg='#E1E3FD';
+    return {
+      toggleFull:this.toggleFull,
+      names:this.state.names, count:n, newName:this.state.newName, groups:this.state.groups,
+      hasResult:this.state.groups.length>0, noResult:this.state.groups.length===0,
+      bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText,
+      divide:this.divide, setModeGroups:this.setModeGroups, setModeSize:this.setModeSize, inc:this.inc, dec:this.dec,
+      onNewName:this.onNewName, onKey:this.onKey, addName:this.addName, removeName:this.removeName, clearAll:this.clearAll,
+      toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk,
+      bulkLabel:this.state.bulkMode?'✎ ทีละชื่อ':'✎ วางหลายชื่อ',
+      stepperLabel:g?'จำนวนกลุ่ม':'จำนวนคนต่อกลุ่ม', stepperValue:val, previewText:preview,
+      byGroupsBg:g?onBg:'#fff', byGroupsColor:g?'#3D38B4':'#7C8494', byGroupsBorder:g?on:'#D3D8E1',
+      bySizeBg:!g?onBg:'#fff', bySizeColor:!g?'#3D38B4':'#7C8494', bySizeBorder:!g?on:'#D3D8E1',
+      divideDisabled:n<2, divideBg:n<2?'#B9BCC7':'#5C5EE6', divideCursor:n<2?'not-allowed':'pointer',
+    };
+  }
+}
+</script>
+</body>
+</html>

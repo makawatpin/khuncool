@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<title>เช็กชื่อนักเรียนออนไลน์ ใช้ฟรี ส่งออกไฟล์ Excel | khuncool</title>
+<meta name="description" content="เช็กชื่อนักเรียนออนไลน์ บันทึกรายห้องต่อเนื่อง พิมพ์ใบเช็กชื่อและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี ล็อกอินแล้วซิงก์ทุกเครื่อง">
+<link rel="canonical" href="https://www.khuncool.com/tools/attendance">
+<meta property="og:type" content="website">
+<meta property="og:title" content="เช็กชื่อนักเรียนออนไลน์ ใช้ฟรี ส่งออกไฟล์ Excel | khuncool">
+<meta property="og:description" content="เช็กชื่อนักเรียนออนไลน์ บันทึกรายห้องต่อเนื่อง พิมพ์ใบเช็กชื่อและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี">
+<meta property="og:url" content="https://www.khuncool.com/tools/attendance">
+<meta property="og:image" content="https://www.khuncool.com/assets/attendance-cover.png">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"เช็กชื่อนักเรียน Khuncool","url":"https://www.khuncool.com/tools/attendance","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"th","description":"เช็กชื่อนักเรียนออนไลน์ บันทึกรายห้องต่อเนื่อง ส่งออกไฟล์ Excel ใช้ฟรี","offers":{"@type":"Offer","price":"0","priceCurrency":"THB"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"เช็กชื่อนักเรียนใช้ฟรีไหม","acceptedAnswer":{"@type":"Answer","text":"ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง"}},{"@type":"Question","name":"ส่งออกเป็นไฟล์ Excel ได้ไหม","acceptedAnswer":{"@type":"Answer","text":"ได้ กดพิมพ์หรือส่งออกไฟล์ Excel ได้ทันที"}}]}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EAECF1;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  ::selection{background:#C6C9FB}
+  [data-frame]:-webkit-full-screen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  [data-frame]:fullscreen{width:100vw !important;height:100vh !important;border-radius:0 !important;max-width:none !important}
+  .frame-scroll::-webkit-scrollbar{width:8px;height:8px}
+  .frame-scroll::-webkit-scrollbar-thumb{background:#C6CAD3;border-radius:8px}
+  @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+<script src="./khuncool-cloud.js"></script>
+</helmet>
+<div style="padding:44px;display:flex;gap:56px;align-items:flex-start;min-width:max-content">
+
+  <!-- MOBILE -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">MOBILE</span>
+      <span style="font-size:13px;color:#5A6273">390 · เช็กชื่อนักเรียน</span>
+    </div>
+    <div data-frame="1" style="width:390px;height:860px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:32px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- HELP modal -->
+      <sc-if value="{{ showHelp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;max-height:800px;overflow-y:auto;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)" class="frame-scroll">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                <div style="width:38px;height:38px;flex:none;border-radius:11px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:19px">💡</div>
+                <div style="font-size:17px;font-weight:700;flex:1">วิธีใช้เช็กชื่อ</div>
+                <span onClick="{{ closeHelp }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ helpSteps }}" as="h" hint-placeholder-count="6">
+                  <div style="display:flex;gap:11px">
+                    <div style="width:24px;height:24px;flex:none;border-radius:999px;background:#5C5EE6;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;white-space:nowrap">{{ h.n }}</div>
+                    <div style="font-size:13px;color:#434A58;line-height:1.5;flex:1">{{ h.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px;border-radius:12px;background:#FFF6ED;border:1px solid #FCD9B6;padding:12px 13px;display:flex;gap:9px">
+                <span style="font-size:16px;flex:none">🔒</span>
+                <div style="font-size:12px;color:#8A5A1A;line-height:1.55">{{ deviceNote }}</div>
+              </div>
+              <button onClick="{{ closeHelp }}" style="width:100%;margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">เข้าใจแล้ว</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- IMPORT modal -->
+      <sc-if value="{{ showImport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:17px;font-weight:700;flex:1">นำเข้ารายชื่อ</div>
+                <span onClick="{{ closeImport }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:12.5px;color:#7C8494;margin:0 0 16px;line-height:1.55">อัปโหลดไฟล์ Excel (.xlsx) หรือวางรายชื่อจาก Excel/Sheets ก็ได้ · ถ้าไฟล์มีคอลัมน์ “สถานะ” ระบบจะกู้สถานะเดิมให้ด้วย</p>
+              <label style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px;border:1.5px dashed #C6C9FB;border-radius:14px;background:#F4F5FF;cursor:pointer;margin-bottom:14px" style-hover="border-color:#5C5EE6">
+                <span style="font-size:26px">📄</span>
+                <span style="font-size:13.5px;font-weight:600;color:#3D38B4">เลือกไฟล์ Excel</span>
+                <span style="font-size:11px;color:#A9B0BE">.xlsx / .xls</span>
+                <input type="file" accept=".xlsx,.xls" onChange="{{ onFile }}" style="display:none">
+              </label>
+              <div style="font-size:12px;font-weight:600;color:#7C8494;margin-bottom:7px">หรือวางรายชื่อ (ทีละบรรทัด)</div>
+              <textarea value="{{ importText }}" onChange="{{ onImportText }}" placeholder="สมชาย ใจดี&#10;สมหญิง รักเรียน…" style="width:100%;height:110px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ importPaste }}" style="width:100%;margin-top:12px;font-family:inherit;font-size:14px;font-weight:700;padding:13px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">นำเข้ารายชื่อที่วาง</button>
+              <sc-if value="{{ importMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px;font-size:12px;color:#0A9380;text-align:center">{{ importMsg }}</div></sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- EXPORT modal -->
+      <sc-if value="{{ showExport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:390px;height:860px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:22px;animation:fadein .2s ease">
+            <div style="width:100%;max-width:336px;animation:pop .3s ease;background:#fff;border-radius:22px;padding:24px 22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:17px;font-weight:700;flex:1">ส่งออกรายงาน</div>
+                <span onClick="{{ closeExport }}" style="cursor:pointer;color:#A9B0BE;font-size:22px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:12.5px;color:#7C8494;margin:0 0 16px;line-height:1.55">{{ exportSubtitle }}</p>
+              <button onClick="{{ exportExcel }}" style="width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-family:inherit;padding:14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff;cursor:pointer;margin-bottom:10px" style-hover="border-color:#0A9380;background:#F2FBF8">
+                <span style="font-size:22px">📊</span>
+                <span style="flex:1"><span style="display:block;font-size:14px;font-weight:600">ไฟล์ Excel (.xlsx)</span><span style="font-size:11.5px;color:#A9B0BE">ใช้ทำสถิติต่อ · นำเข้าเครื่องอื่นได้</span></span>
+              </button>
+              <button onClick="{{ exportPDF }}" style="width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-family:inherit;padding:14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff;cursor:pointer" style-hover="border-color:#DC2626;background:#FEF4F4">
+                <span style="font-size:22px">🖨️</span>
+                <span style="flex:1"><span style="display:block;font-size:14px;font-weight:600">พิมพ์ / บันทึก PDF</span><span style="font-size:11.5px;color:#A9B0BE">บัญชีเรียกชื่อรายวัน สำหรับแนบรายงาน</span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <a href="./Khuncool Home v2.dc.html" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;color:#1A1D26" style-hover="background:#F8F9FB">←</a>
+        <div style="display:flex;align-items:center;gap:7px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:28px;height:28px;flex:none;object-fit:contain">
+          <span style="font-size:15px;font-weight:700">เช็กชื่อ</span>
+        </div>
+        <button onClick="{{ openHelp }}" title="วิธีใช้" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;font-weight:700;color:#5C5EE6;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">?</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="width:36px;height:36px;flex:none;border:1px solid #E5E8EE;border-radius:10px;background:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" compact="1" hint-size="46px,42px"></x-import>
+      </div>
+
+      <div style="padding:16px 16px 30px">
+        <!-- date + room -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="flex:1">
+            <div style="font-size:11px;color:#A9B0BE">วันที่เช็ก</div>
+            <div style="font-size:14px;font-weight:600">{{ dateText }}</div>
+          </div>
+          <input value="{{ room }}" onChange="{{ onRoom }}" placeholder="ห้อง" style="width:120px;padding:9px 11px;font-family:inherit;font-size:13px;font-weight:600;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+        </div>
+
+        <!-- import/export toolbar -->
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button onClick="{{ openImport }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap" style-hover="background:#F8F9FB;border-color:#C6C9FB">📥 นำเข้า Excel</button>
+          <button onClick="{{ openExport }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap" style-hover="background:#F8F9FB;border-color:#C6C9FB">📤 ส่งออก</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px;padding:9px 11px;border-radius:10px;background:#FFF6ED;border:1px solid #FCD9B6">
+          <span style="font-size:13px;flex:none">🔒</span>
+          <span style="font-size:11px;color:#8A5A1A;line-height:1.45;flex:1">{{ saveNote }}</span>
+        </div>
+
+        <!-- summary -->
+        <div style="border-radius:16px;padding:15px;background:linear-gradient(135deg,#2A2775,#0A9380);color:#fff;margin-bottom:14px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">
+            <span style="font-size:13px;color:#C6C9FB">เช็กแล้ว</span>
+            <span style="font-family:'IBM Plex Mono';font-size:20px;font-weight:600">{{ checked }}/{{ total }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+              <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:8px 4px;text-align:center">
+                <div style="font-family:'IBM Plex Mono';font-size:18px;font-weight:600">{{ s.n }}</div>
+                <div style="font-size:11px;color:#C6C9FB">{{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- quick actions -->
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button onClick="{{ allPresent }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:none;border-radius:11px;background:#0A9380;color:#fff;cursor:pointer;white-space:nowrap" style-hover="filter:brightness(1.05)">✓ ทั้งหมดมา</button>
+          <button onClick="{{ clearAll }}" style="flex:1;font-family:inherit;font-size:13px;font-weight:600;padding:11px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">ล้างสถานะ</button>
+        </div>
+
+        <!-- roster -->
+        <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+            <sc-for list="{{ skel }}" as="s" hint-placeholder-count="6">
+              <div style="height:46px;border-radius:12px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:14px;padding:24px 18px;text-align:center;margin-bottom:16px">
+            <div style="font-size:28px;margin-bottom:8px">⚠️</div>
+            <div style="font-size:14px;font-weight:700;color:#B91C1C">โหลดรายชื่อไม่สำเร็จ</div>
+            <div style="font-size:12.5px;color:#8A3A3A;margin-top:5px;line-height:1.65">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต<br>แล้วลองใหม่อีกครั้ง</div>
+            <button onClick="{{ retry }}" style="margin-top:13px;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 22px;border:none;border-radius:10px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed #D3D8E1;border-radius:14px;background:#F8F9FB;padding:30px 20px;text-align:center;margin-bottom:16px">
+            <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:14px;background:#EEF1FE;display:flex;align-items:center;justify-content:center;font-size:24px">🧑‍🏫</div>
+            <div style="font-size:14.5px;font-weight:700;color:#1A1D26">ยังไม่มีรายชื่อนักเรียน</div>
+            <div style="font-size:12.5px;color:#7C8494;margin-top:6px;line-height:1.65">เพิ่มชื่อทีละคน หรือวางรายชื่อทั้งห้องพร้อมกัน<br>ที่กล่อง “รายชื่อนักเรียน” ด้านล่าง</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showRows }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid #E5E8EE;border-radius:12px;background:#fff">
+              <span style="width:22px;font-size:11px;color:#A9B0BE;font-family:'IBM Plex Mono';flex:none">{{ r.no }}</span>
+              <span style="flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+              <div style="display:flex;gap:4px;flex:none">
+                <sc-for list="{{ r.btns }}" as="b" hint-placeholder-count="4">
+                  <button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <!-- manage names -->
+        <div style="border:1px solid #E5E8EE;border-radius:16px;padding:15px;background:#F8F9FB">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+            <span style="font-size:14px;font-weight:700">รายชื่อนักเรียน ({{ total }})</span>
+            <span onClick="{{ toggleBulk }}" style="font-size:12px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+          </div>
+          <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:130px;padding:10px 12px;font-family:inherit;font-size:13px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ applyBulk }}" style="width:100%;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:8px">
+              <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+              <button onClick="{{ addName }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 15px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono';font-size:11px;font-weight:600;background:#1A1D26;color:#fff;padding:4px 9px;border-radius:6px">DESKTOP</span>
+      <span style="font-size:13px;color:#5A6273">1024 · เช็กชื่อนักเรียน</span>
+    </div>
+    <div data-frame="desktop" style="width:1024px;height:720px;overflow-y:auto;background:#fff;border:1px solid #D3D8E1;border-radius:16px;box-shadow:0 30px 70px -20px rgba(26,29,38,.4)" class="frame-scroll">
+
+      <!-- HELP modal -->
+      <sc-if value="{{ showHelp }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:520px;max-height:640px;overflow-y:auto;animation:pop .3s ease;background:#fff;border-radius:24px;padding:34px 32px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)" class="frame-scroll">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+                <div style="width:44px;height:44px;flex:none;border-radius:13px;background:#E1E3FD;display:flex;align-items:center;justify-content:center;font-size:23px">💡</div>
+                <div style="font-size:21px;font-weight:700;flex:1">วิธีใช้เช็กชื่อนักเรียน</div>
+                <span onClick="{{ closeHelp }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <sc-for list="{{ helpSteps }}" as="h" hint-placeholder-count="6">
+                  <div style="display:flex;gap:13px">
+                    <div style="width:28px;height:28px;flex:none;border-radius:999px;background:#5C5EE6;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;white-space:nowrap">{{ h.n }}</div>
+                    <div style="font-size:14.5px;color:#434A58;line-height:1.55;flex:1;padding-top:2px">{{ h.text }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:20px;border-radius:13px;background:#FFF6ED;border:1px solid #FCD9B6;padding:14px 16px;display:flex;gap:11px">
+                <span style="font-size:19px;flex:none">🔒</span>
+                <div style="font-size:13.5px;color:#8A5A1A;line-height:1.55">{{ deviceNote }}</div>
+              </div>
+              <button onClick="{{ closeHelp }}" style="width:100%;margin-top:22px;font-family:inherit;font-size:15px;font-weight:700;padding:15px;border:none;border-radius:13px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">เข้าใจแล้ว</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- IMPORT modal -->
+      <sc-if value="{{ showImport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:480px;animation:pop .3s ease;background:#fff;border-radius:24px;padding:30px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:20px;font-weight:700;flex:1">นำเข้ารายชื่อ</div>
+                <span onClick="{{ closeImport }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:13.5px;color:#7C8494;margin:0 0 18px;line-height:1.55">อัปโหลดไฟล์ Excel (.xlsx) หรือวางรายชื่อจาก Excel/Sheets · ถ้าไฟล์มีคอลัมน์ “สถานะ” ระบบจะกู้สถานะเดิมให้ (ใช้ย้ายข้อมูลข้ามเครื่องได้)</p>
+              <label style="display:flex;flex-direction:column;align-items:center;gap:9px;padding:28px;border:1.5px dashed #C6C9FB;border-radius:16px;background:#F4F5FF;cursor:pointer;margin-bottom:16px" style-hover="border-color:#5C5EE6">
+                <span style="font-size:30px">📄</span>
+                <span style="font-size:15px;font-weight:600;color:#3D38B4">เลือกไฟล์ Excel</span>
+                <span style="font-size:12px;color:#A9B0BE">.xlsx / .xls</span>
+                <input type="file" accept=".xlsx,.xls" onChange="{{ onFile }}" style="display:none">
+              </label>
+              <div style="font-size:13px;font-weight:600;color:#7C8494;margin-bottom:8px">หรือวางรายชื่อ (ทีละบรรทัด)</div>
+              <textarea value="{{ importText }}" onChange="{{ onImportText }}" placeholder="สมชาย ใจดี&#10;สมหญิง รักเรียน…" style="width:100%;height:120px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+              <button onClick="{{ importPaste }}" style="width:100%;margin-top:14px;font-family:inherit;font-size:15px;font-weight:700;padding:14px;border:none;border-radius:13px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">นำเข้ารายชื่อที่วาง</button>
+              <sc-if value="{{ importMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px;font-size:13px;color:#0A9380;text-align:center">{{ importMsg }}</div></sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- EXPORT modal -->
+      <sc-if value="{{ showExport }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;height:0;z-index:40">
+          <div style="position:absolute;top:0;left:0;width:1024px;height:720px;background:rgba(26,29,38,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;animation:fadein .2s ease">
+            <div style="width:460px;animation:pop .3s ease;background:#fff;border-radius:24px;padding:30px;box-shadow:0 40px 80px -24px rgba(0,0,0,.45)">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="font-size:20px;font-weight:700;flex:1">ส่งออกรายงาน</div>
+                <span onClick="{{ closeExport }}" style="cursor:pointer;color:#A9B0BE;font-size:26px;line-height:1" style-hover="color:#DC2626">×</span>
+              </div>
+              <p style="font-size:13.5px;color:#7C8494;margin:0 0 18px;line-height:1.55">{{ exportSubtitle }}</p>
+              <button onClick="{{ exportExcel }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;font-family:inherit;padding:16px;border:1px solid #E5E8EE;border-radius:14px;background:#fff;cursor:pointer;margin-bottom:12px" style-hover="border-color:#0A9380;background:#F2FBF8">
+                <span style="font-size:26px">📊</span>
+                <span style="flex:1"><span style="display:block;font-size:15px;font-weight:600">ไฟล์ Excel (.xlsx)</span><span style="font-size:12.5px;color:#A9B0BE">ใช้ทำสถิติต่อ · นำเข้าเครื่องอื่นเพื่อใช้งานต่อได้</span></span>
+              </button>
+              <button onClick="{{ exportPDF }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;font-family:inherit;padding:16px;border:1px solid #E5E8EE;border-radius:14px;background:#fff;cursor:pointer" style-hover="border-color:#DC2626;background:#FEF4F4">
+                <span style="font-size:26px">🖨️</span>
+                <span style="flex:1"><span style="display:block;font-size:15px;font-weight:600">พิมพ์ / บันทึก PDF</span><span style="font-size:12.5px;color:#A9B0BE">บัญชีเรียกชื่อรายวัน สำหรับแนบรายงาน</span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE;padding:14px 28px;display:flex;align-items:center;gap:12px">
+        <a href="./Khuncool Home v2.dc.html" style="font-size:14px;color:#5A6273;display:flex;align-items:center;gap:6px" style-hover="color:#5C5EE6">← กลับหน้าแรก</a>
+        <div style="width:1px;height:20px;background:#E5E8EE"></div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:30px;height:30px;flex:none;object-fit:contain">
+          <span style="font-size:17px;font-weight:700">เช็กชื่อนักเรียน</span>
+        </div>
+        <button onClick="{{ openImport }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB;border-color:#C6C9FB">📥 นำเข้า</button>
+        <button onClick="{{ openExport }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB;border-color:#C6C9FB">📤 ส่งออก</button>
+        <button onClick="{{ openHelp }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;color:#5C5EE6;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:#F8F9FB">💡 วิธีใช้</button>
+        <button onClick="{{ toggleFull }}" title="เต็มจอ" style="font-family:inherit;font-size:13px;font-weight:500;padding:8px 12px;border:1px solid #E5E8EE;border-radius:10px;background:#fff;cursor:pointer" style-hover="background:#F8F9FB">⛶</button>
+      
+        <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="244px,44px"></x-import>
+      </div>
+
+      <div style="padding:28px;display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start">
+        <!-- roster list -->
+        <div>
+          <div style="position:sticky;top:0;z-index:5;background:#fff;display:flex;align-items:center;gap:10px;padding:6px 0 12px;margin-bottom:6px">
+            <h2 style="font-size:18px;font-weight:700;margin:0;flex:1">รายชื่อ · {{ dateText }}</h2>
+            <button onClick="{{ allPresent }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 15px;border:none;border-radius:10px;background:#0A9380;color:#fff;cursor:pointer" style-hover="filter:brightness(1.05)">✓ ทั้งหมดมา</button>
+            <button onClick="{{ clearAll }}" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 15px;border:1px solid #D3D8E1;border-radius:10px;background:#fff;color:#1A1D26;cursor:pointer" style-hover="background:#F8F9FB">ล้างสถานะ</button>
+          </div>
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ skel }}" as="s" hint-placeholder-count="8">
+                <div style="height:52px;border-radius:13px;background:linear-gradient(90deg,#F1F3F6,#E5E8EE,#F1F3F6);background-size:200% 100%;animation:shimmer 1.4s linear infinite"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ errored }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FCA5A5;background:#FEF2F2;border-radius:18px;padding:52px 24px;text-align:center">
+              <div style="font-size:34px;margin-bottom:10px">⚠️</div>
+              <div style="font-size:16.5px;font-weight:700;color:#B91C1C">โหลดรายชื่อไม่สำเร็จ</div>
+              <div style="font-size:13.5px;color:#8A3A3A;margin-top:6px;line-height:1.65">ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองใหม่อีกครั้ง</div>
+              <button onClick="{{ retry }}" style="margin-top:16px;font-family:inherit;font-size:14px;font-weight:700;padding:11px 26px;border:none;border-radius:11px;background:#DC2626;color:#fff;cursor:pointer" style-hover="background:#B91C1C">ลองใหม่</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1.5px dashed #D3D8E1;border-radius:18px;background:#F8F9FB;padding:56px 24px;text-align:center">
+              <div style="width:58px;height:58px;margin:0 auto 14px;border-radius:16px;background:#EEF1FE;display:flex;align-items:center;justify-content:center;font-size:28px">🧑‍🏫</div>
+              <div style="font-size:16.5px;font-weight:700;color:#1A1D26">ยังไม่มีรายชื่อนักเรียน</div>
+              <div style="font-size:13.5px;color:#7C8494;margin-top:7px;line-height:1.65">เพิ่มชื่อทีละคน หรือวางรายชื่อทั้งห้องพร้อมกัน<br>ที่กล่อง “รายชื่อนักเรียน” ทางขวา</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showRows }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid #E5E8EE;border-radius:13px;background:#fff">
+                <span style="width:26px;font-size:12px;color:#A9B0BE;font-family:'IBM Plex Mono';flex:none">{{ r.no }}</span>
+                <span style="flex:1;min-width:0;font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                <div style="display:flex;gap:6px;flex:none">
+                  <sc-for list="{{ r.btns }}" as="b" hint-placeholder-count="4">
+                    <button onClick="{{ b.onClick }}" style="{{ b.styleLg }}">{{ b.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+
+        <!-- sidebar summary + manage -->
+        <div>
+          <div style="border-radius:18px;padding:22px;background:linear-gradient(135deg,#2A2775,#0A9380);color:#fff;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <div style="flex:1"><div style="font-size:12px;color:#C6C9FB">เช็กแล้ว</div><div style="font-family:'IBM Plex Mono';font-size:30px;font-weight:600">{{ checked }}/{{ total }}</div></div>
+              <input value="{{ room }}" onChange="{{ onRoom }}" placeholder="ห้อง" style="width:96px;padding:9px 11px;font-family:inherit;font-size:13px;font-weight:600;border:none;border-radius:10px;outline:none;background:rgba(255,255,255,.16);color:#fff" style-focus="background:rgba(255,255,255,.26)">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px">
+              <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+                <div style="background:rgba(255,255,255,.12);border-radius:11px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:13px;color:#EAEBFF">{{ s.label }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:20px;font-weight:600">{{ s.n }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:11px 13px;border-radius:12px;background:#FFF6ED;border:1px solid #FCD9B6">
+            <span style="font-size:15px;flex:none">🔒</span>
+            <span style="font-size:11.5px;color:#8A5A1A;line-height:1.5;flex:1">{{ saveNote }}</span>
+          </div>
+
+          <div style="border:1px solid #E5E8EE;border-radius:18px;padding:20px;background:#F8F9FB">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+              <span style="font-size:15px;font-weight:700">รายชื่อ ({{ total }})</span>
+              <span onClick="{{ toggleBulk }}" style="font-size:12.5px;color:#5C5EE6;cursor:pointer">{{ bulkLabel }}</span>
+            </div>
+            <sc-if value="{{ bulkMode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <textarea value="{{ bulkText }}" onChange="{{ onBulk }}" placeholder="วางรายชื่อ ทีละบรรทัด…" style="width:100%;height:180px;padding:11px 13px;font-family:inherit;font-size:13.5px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff;resize:vertical" style-focus="border-color:#5C5EE6"></textarea>
+                <button onClick="{{ applyBulk }}" style="width:100%;margin-top:9px;font-family:inherit;font-size:14px;font-weight:600;padding:11px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">ใช้รายชื่อนี้</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ listMode }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px">
+                <input value="{{ newName }}" onChange="{{ onNewName }}" onKeyDown="{{ onKey }}" placeholder="เพิ่มชื่อ… กด Enter" style="flex:1;min-width:0;padding:11px 13px;font-family:inherit;font-size:14px;border:1.5px solid #D3D8E1;border-radius:10px;outline:none;background:#fff" style-focus="border-color:#5C5EE6">
+                <button onClick="{{ addName }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:11px 16px;border:none;border-radius:10px;background:#5C5EE6;color:#fff;cursor:pointer;flex:none;white-space:nowrap" style-hover="background:#4A46D6">เพิ่ม</button>
+              </div>
+            </sc-if>
+            <p style="font-size:11.5px;color:#A9B0BE;margin:12px 0 0;line-height:1.6">แตะสถานะซ้ำเพื่อยกเลิก · บันทึกอัตโนมัติในเครื่องนี้ · ส่งออก Excel เพื่อใช้งานต่อบนเครื่องอื่น</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ retry }}" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99;background:{{ toastBg }};color:#fff;font-size:13.5px;font-weight:600;padding:11px 22px;border-radius:999px;box-shadow:0 14px 34px -12px rgba(26,29,38,.6);animation:fadein .2s ease;cursor:pointer">{{ toast }}</div>
+</sc-if>
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99;background:#FFFBEB;border:1px solid #FDE68A;color:#92600A;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;box-shadow:0 12px 30px -12px rgba(26,29,38,.35)">📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1560,&quot;height&quot;:940},&quot;dataState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'loading'|'error'&quot;,&quot;section&quot;:&quot;สถานะข้อมูล&quot;}}">
+class Component extends DCLogic {
+  constructor(p){
+    super(p);
+    this.LS_KEY='khuncool_attendance_v1';
+    this.defs=[
+      {key:'present',label:'มา',color:'#0A9380'},
+      {key:'late',label:'สาย',color:'#B4820A'},
+      {key:'leave',label:'ลา',color:'#3D38B4'},
+      {key:'absent',label:'ขาด',color:'#DC2626'},
+    ];
+    this.labelToKey={ 'มา':'present','สาย':'late','ลา':'leave','ขาด':'absent' };
+    this.isWeekend=()=>{ const d=new Date().getDay(); return d===0||d===6; };
+    this.defaultStatus=()=>this.isWeekend()?null:'present';
+    const students=['เด็กชายกิตติ ใจดี','เด็กหญิงชนากานต์ สุขใจ','เด็กชายณัฐพงษ์ ทองมา','เด็กหญิงปาริชาต แก้วใส','เด็กชายภูริ เจริญสุข','เด็กหญิงมนัสนันท์ ศรีทอง','เด็กชายวรเมธ พูนผล','เด็กหญิงอริสา บุญมี'];
+    this.state={ students, statuses:students.map(()=>this.defaultStatus()), room:'ป.5/2',
+      newName:'', bulkMode:false, bulkText:'',
+      showHelp:false, showImport:false, showExport:false, importText:'', importMsg:'' };
+  }
+  syncOnline=()=>this.setState({ offline: typeof navigator!=='undefined' && navigator.onLine===false });
+  componentWillUnmount(){ window.removeEventListener('online',this.syncOnline); window.removeEventListener('offline',this.syncOnline); clearTimeout(this._tt); }
+  componentDidMount(){
+    this.syncOnline();
+    window.addEventListener('online',this.syncOnline); window.addEventListener('offline',this.syncOnline);
+    try{
+      const raw=localStorage.getItem(this.LS_KEY);
+      if(raw){ const d=JSON.parse(raw);
+        if(Array.isArray(d.students)&&d.students.length){
+          this.setState({ students:d.students, statuses:d.statuses||d.students.map(()=>this.defaultStatus()), room:d.room||this.state.room }); return; }
+      }
+      const r=JSON.parse(localStorage.getItem('khuncool.roster')||'null');
+      if(Array.isArray(r)&&r.length){ this.setState({ students:r, statuses:r.map(()=>this.defaultStatus()) }); }
+    }catch(e){}
+  }
+  save(next){
+    try{
+      const s={...this.state,...next};
+      localStorage.setItem(this.LS_KEY, JSON.stringify({ students:s.students, statuses:s.statuses, room:s.room, savedAt:Date.now() }));
+      localStorage.setItem('khuncool.roster', JSON.stringify(s.students));
+    }catch(e){}
+  }
+  set(next){ this.setState(next); this.save(next); this.flashToast(); }
+  flashToast(){
+    const err=(this.props.dataState||'ready')==='error';
+    this.setState({ toast: err?'บันทึกไม่สำเร็จ · แตะเพื่อลองใหม่':'บันทึกแล้ว ✓', toastErr:err });
+    clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({ toast:'' }), err?3200:1600);
+  }
+  retry=()=>{
+    this.setState({ toast:'กำลังลองใหม่…', toastErr:false });
+    clearTimeout(this._tt); this._tt=setTimeout(()=>this.setState({ toast:'' }),1400);
+  };
+
+  setStatus=(i,key)=>{ const a=[...this.state.statuses]; a[i]=a[i]===key?null:key; this.set({ statuses:a }); };
+  allPresent=()=>this.set({ statuses:this.state.students.map(()=>'present') });
+  clearAll=()=>this.set({ statuses:this.state.students.map(()=>null) });
+  onRoom=(e)=>this.set({ room:e.target.value });
+  onNewName=(e)=>this.setState({ newName:e.target.value });
+  onKey=(e)=>{ if(e.key==='Enter') this.addName(); };
+  addName=()=>{ const v=(this.state.newName||'').trim(); if(!v)return; this.set({ students:[...this.state.students,v], statuses:[...this.state.statuses,this.defaultStatus()] }); this.setState({ newName:'' }); };
+  toggleBulk=()=>this.setState(s=>({ bulkMode:!s.bulkMode, bulkText:s.students.join('\n') }));
+  onBulk=(e)=>this.setState({ bulkText:e.target.value });
+  applyBulk=()=>{ const list=(this.state.bulkText||'').split('\n').map(x=>x.trim()).filter(Boolean); this.set({ students:list, statuses:list.map(()=>this.defaultStatus()) }); this.setState({ bulkMode:false }); };
+  toggleFull=(e)=>{ const el=e.currentTarget.closest('[data-frame]'); if(!el)return; if(document.fullscreenElement){ if(document.exitFullscreen)document.exitFullscreen(); } else if(el.requestFullscreen){ el.requestFullscreen().catch(()=>{}); } };
+  openHelp=()=>this.setState({ showHelp:true });
+  closeHelp=()=>this.setState({ showHelp:false });
+  openImport=()=>this.setState({ showImport:true, importMsg:'', importText:'' });
+  closeImport=()=>this.setState({ showImport:false });
+  openExport=()=>this.setState({ showExport:true });
+  closeExport=()=>this.setState({ showExport:false });
+  onImportText=(e)=>this.setState({ importText:e.target.value });
+
+  importPaste=()=>{
+    const list=(this.state.importText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    if(!list.length){ this.setState({ importMsg:'ยังไม่มีรายชื่อให้นำเข้า' }); return; }
+    this.set({ students:list, statuses:list.map(()=>this.defaultStatus()) });
+    this.setState({ showImport:false, importText:'' });
+  };
+  onFile=(e)=>{
+    const file=e.target.files && e.target.files[0]; if(!file) return;
+    if(typeof XLSX==='undefined'){ this.setState({ importMsg:'ไลบรารี Excel ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง' }); return; }
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      try{
+        const wb=XLSX.read(ev.target.result,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const aoa=XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false});
+        if(!aoa.length){ this.setState({ importMsg:'ไฟล์ว่างเปล่า' }); return; }
+        let header=null, start=0;
+        const first=aoa[0].map(c=>String(c==null?'':c).trim());
+        if(first.some(c=>c.includes('ชื่อ')||c.toLowerCase().includes('name'))){ header=first; start=1; }
+        let nameCol=1, statusCol=-1;
+        if(header){
+          const ni=header.findIndex(c=>c.includes('ชื่อ')||c.toLowerCase().includes('name')); if(ni>=0) nameCol=ni;
+          const si=header.findIndex(c=>c.includes('สถานะ')||c.toLowerCase().includes('status')); if(si>=0) statusCol=si;
+        } else { nameCol = aoa[0].length>=2 ? 1 : 0; }
+        const students=[], statuses=[];
+        for(let i=start;i<aoa.length;i++){
+          const row=aoa[i]||[]; let name=String(row[nameCol]==null?'':row[nameCol]).trim();
+          if(!name && nameCol!==0) name=String(row[0]==null?'':row[0]).trim();
+          if(!name) continue;
+          students.push(name);
+          let key=this.defaultStatus();
+          if(statusCol>=0){ const lab=String(row[statusCol]==null?'':row[statusCol]).trim(); key=this.labelToKey[lab]!==undefined?this.labelToKey[lab]:(lab===''?this.defaultStatus():'present'); }
+          statuses.push(key);
+        }
+        if(!students.length){ this.setState({ importMsg:'ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)' }); return; }
+        this.set({ students, statuses });
+        this.setState({ showImport:false, importMsg:'' });
+      }catch(err){ this.setState({ importMsg:'อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls' }); }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  fileStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`; }
+  statusLabel(k){ const f=this.defs.find(x=>x.key===k); return f?f.label:'-'; }
+  exportExcel=()=>{
+    if(typeof XLSX==='undefined') return;
+    const rows=[['เลขที่','ชื่อ-สกุล','สถานะ']];
+    this.state.students.forEach((n,i)=>rows.push([i+1,n,this.statusLabel(this.state.statuses[i])]));
+    rows.push([]); rows.push(['ห้อง',this.state.room]); rows.push(['วันที่',new Date().toLocaleDateString('th-TH')]);
+    this.defs.forEach(d=>rows.push([d.label,this.state.statuses.filter(x=>x===d.key).length]));
+    const ws=XLSX.utils.aoa_to_sheet(rows); ws['!cols']=[{wch:8},{wch:30},{wch:12}];
+    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'เช็กชื่อ');
+    XLSX.writeFile(wb,`เช็กชื่อ_${this.state.room||'ห้อง'}_${this.fileStamp()}.xlsx`);
+    this.setState({ showExport:false });
+  };
+  exportPDF=()=>{
+    const dateText=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const body=this.state.students.map((n,i)=>`<tr><td class="c">${i+1}</td><td>${n}</td><td class="c">${this.statusLabel(this.state.statuses[i])}</td></tr>`).join('');
+    const sum=this.defs.map(d=>`${d.label} ${this.state.statuses.filter(x=>x===d.key).length}`).join(' · ');
+    const closeTag='<'+'/script>';
+    const runner='<'+'script>window.onload=function(){setTimeout(function(){window.print();},350);};'+closeTag;
+    const html=`<!doctype html><html><head><meta charset="utf-8"><title>เช็กชื่อ ${this.state.room}</title>`+
+      `<style>@page{margin:18mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}`+
+      `h1{font-size:22px;margin:0 0 4px}.meta{font-size:14px;color:#555;margin-bottom:14px}`+
+      `table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid #999;padding:7px 10px;text-align:left}`+
+      `th{background:#eee}.c{text-align:center;width:70px}.sum{margin-top:14px;font-size:15px}</style></head>`+
+      `<body><h1>บัญชีเรียกชื่อนักเรียน · ห้อง ${this.state.room||'-'}</h1>`+
+      `<div class="meta">วันที่ ${dateText}</div>`+
+      `<table><thead><tr><th class="c">เลขที่</th><th>ชื่อ-สกุล</th><th class="c">สถานะ</th></tr></thead><tbody>${body}</tbody></table>`+
+      `<div class="sum">สรุป: ${sum} · รวม ${this.state.students.length} คน</div>`+
+      runner+`</body></html>`;
+    const w=window.open('','_blank'); if(!w){ this.setState({ showExport:false }); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+    this.setState({ showExport:false });
+  };
+
+  btnStyle(active,color,big){
+    const pad=big?'8px 10px':'7px 6px'; const fs=big?'12.5px':'11.5px';
+    return active
+      ? `font-family:inherit;font-size:${fs};font-weight:600;padding:${pad};border:1px solid ${color};border-radius:9px;background:${color};color:#fff;cursor:pointer`
+      : `font-family:inherit;font-size:${fs};font-weight:600;padding:${pad};border:1px solid #E5E8EE;border-radius:9px;background:#fff;color:#8892A0;cursor:pointer`;
+  }
+  renderVals(){
+    const st=this.state.statuses;
+    const rows=this.state.students.map((name,i)=>({
+      no:String(i+1).padStart(2,'0'), name,
+      btns:this.defs.map(d=>({ label:d.label, onClick:()=>this.setStatus(i,d.key),
+        style:this.btnStyle(st[i]===d.key,d.color,false), styleLg:this.btnStyle(st[i]===d.key,d.color,true) })),
+    }));
+    const count=(k)=>st.filter(x=>x===k).length;
+    const dateText=new Date().toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    const ds=this.props.dataState||'ready';
+    const cnt=this.state.students.length;
+    return {
+      loading:ds==='loading', errored:ds==='error',
+      showEmpty:ds==='ready'&&cnt===0, showRows:ds==='ready'&&cnt>0,
+      skel:[1,2,3,4,5,6,7,8], retry:this.retry,
+      offline:this.state.offline,
+      toast:this.state.toast||'', toastBg:this.state.toastErr?'#B91C1C':'#1A1D26',
+      rows, total:this.state.students.length, checked:st.filter(x=>x!==null).length,
+      stats:this.defs.map(x=>({ label:x.label, n:count(x.key) })),
+      dateText, room:this.state.room, onRoom:this.onRoom,
+      newName:this.state.newName, bulkMode:this.state.bulkMode, listMode:!this.state.bulkMode, bulkText:this.state.bulkText,
+      bulkLabel:this.state.bulkMode?'✎ ทีละชื่อ':'✎ วางหลายชื่อ',
+      allPresent:this.allPresent, clearAll:this.clearAll, onNewName:this.onNewName, onKey:this.onKey, addName:this.addName,
+      toggleBulk:this.toggleBulk, onBulk:this.onBulk, applyBulk:this.applyBulk, toggleFull:this.toggleFull,
+      showHelp:this.state.showHelp, openHelp:this.openHelp, closeHelp:this.closeHelp,
+      showImport:this.state.showImport, openImport:this.openImport, closeImport:this.closeImport,
+      showExport:this.state.showExport, openExport:this.openExport, closeExport:this.closeExport,
+      importText:this.state.importText, onImportText:this.onImportText, importPaste:this.importPaste, onFile:this.onFile, importMsg:this.state.importMsg,
+      exportExcel:this.exportExcel, exportPDF:this.exportPDF,
+      exportSubtitle:`ห้อง ${this.state.room||'-'} · ${this.state.students.length} คน · เช็กแล้ว ${st.filter(x=>x!==null).length} คน`,
+      saveNote:'บันทึกอัตโนมัติเฉพาะเครื่องนี้ — ย้ายเครื่องต้องส่งออก Excel แล้วนำเข้า',
+      deviceNote:'ข้อมูลถูกบันทึกอัตโนมัติในเครื่อง/เบราว์เซอร์นี้เท่านั้น ไม่ได้ซิงก์ขึ้นคลาวด์ ถ้าเช็กในมือถือก็ต้องดูต่อในมือถือ หากต้องการใช้งานต่อบนคอมพิวเตอร์ ให้กด “ส่งออก Excel” จากเครื่องเดิม แล้ว “นำเข้า Excel” ที่อีกเครื่อง ระบบจะกู้รายชื่อและสถานะให้ครบ',
+      helpSteps:[
+        {n:1,text:'ระบบตั้งค่าให้นักเรียนทุกคนเป็น “มา” ไว้ก่อนแล้ว'},
+        {n:2,text:'แตะปุ่ม สาย / ลา / ขาด เฉพาะคนที่ต้องเปลี่ยนสถานะ · แตะซ้ำเพื่อยกเลิก'},
+        {n:3,text:'ปุ่ม “ทั้งหมดมา” ตั้งทุกคนเป็นมา · “ล้างสถานะ” ล้างทั้งหมด'},
+        {n:4,text:'“นำเข้า Excel” เพื่อดึงรายชื่อทั้งห้องจากไฟล์ หรือวางรายชื่อก็ได้'},
+        {n:5,text:'“ส่งออก” เป็น Excel (ทำสถิติต่อ) หรือ PDF (พิมพ์บัญชีเรียกชื่อ)'},
+        {n:6,text:'ยอดสรุป มา/สาย/ลา/ขาด อัปเดตให้อัตโนมัติด้านบน'},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

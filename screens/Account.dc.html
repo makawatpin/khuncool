@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>บัญชีของฉัน | khuncool</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.khuncool.com/account">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./khuncool-cloud.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F8F9FB;font-family:'Sarabun',system-ui,sans-serif;color:#1A1D26;-webkit-font-smoothing:antialiased;line-height:1.5}
+  h1,h2,h3{font-family:'Anuphan',system-ui,sans-serif;font-weight:700;letter-spacing:-.01em}
+  a{color:#4A46D6;text-decoration:none}
+  a:hover{color:#3D38B4}
+  input:focus{border-color:#5C5EE6!important;box-shadow:0 0 0 3px #E1E3FD}
+  ::selection{background:#C6C9FB}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+  <div style="position:sticky;top:0;z-index:40;background:rgba(255,255,255,.93);backdrop-filter:blur(10px);border-bottom:1px solid #E5E8EE">
+    <div style="max-width:1160px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px">
+      <a href="./Khuncool Home v2.dc.html" style="display:flex;align-items:center;gap:9px;color:inherit;flex:none">
+        <img src="./assets/khuncool-logo.png" alt="khuncool" style="width:32px;height:32px;flex:none;object-fit:contain">
+        <span style="font-family:'Anuphan',system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:-.02em">khuncool</span>
+      </a>
+      <span style="flex:1"></span>
+      <span style="font-size:12px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:6px 12px;border-radius:999px;white-space:nowrap">ใช้ฟรีทุกฟีเจอร์</span>
+      <x-import component-from-global-scope="khuncool-account" from="./khuncool-cloud.js" hint-size="230px,44px"></x-import>
+    </div>
+  </div>
+
+  <div style="flex:1;max-width:1160px;width:100%;margin:0 auto;padding:36px 24px 64px">
+
+    <sc-if value="{{ expired }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#FFFBEB;border:1px solid #FDE68A;border-radius:16px;padding:16px 20px;margin-bottom:24px">
+        <span style="font-size:22px;flex:none">⏳</span>
+        <div style="flex:1;min-width:220px">
+          <div style="font-size:15px;font-weight:700;color:#92600A">เซสชันหมดอายุแล้ว</div>
+          <div style="font-size:13px;color:#8A5A1A;line-height:1.6">ข้อมูลในเครื่องนี้ยังอยู่ครบ — เข้าสู่ระบบอีกครั้งเพื่อซิงก์ต่อ</div>
+        </div>
+        <button onClick="{{ goSignin }}" style="flex:none;font-family:inherit;font-size:14px;font-weight:700;padding:11px 22px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer" style-hover="background:#4A46D6">เข้าสู่ระบบอีกครั้ง</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ guest }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:40px;align-items:start">
+
+        <div>
+          <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#0A9380;background:#D0FBEF;padding:6px 13px;border-radius:999px;white-space:nowrap">✓ ฟรีถาวร ไม่มีแพ็กเกจเสียเงิน</span>
+          <h1 style="font-size:40px;font-weight:700;line-height:1.16;letter-spacing:-.02em;margin:18px 0 12px;text-wrap:pretty">ใช้ได้เลยไม่ต้องล็อกอิน<br><span style="background:linear-gradient(135deg,#5C5EE6,#14B79A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">สมัครเมื่ออยากใช้ข้ามเครื่อง</span></h1>
+          <p style="font-size:16.5px;color:#5A6273;margin:0 0 26px;line-height:1.65;max-width:520px;text-wrap:pretty">ทุกเครื่องมือของ khuncool เปิดใช้ได้ทันที ข้อมูลเก็บไว้ในเครื่องนี้ — ถ้าสมัครบัญชี (ฟรี) ห้องเรียน รายชื่อนักเรียน การเช็กชื่อ และเงินออม จะถูกเก็บในบัญชีคุณ เปิดจากเครื่องไหนก็เจอข้อมูลเดิม</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px">
+            <div style="background:#fff;border:1px solid #E5E8EE;border-radius:16px;padding:18px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:17px">◔</span><span style="font-size:14.5px;font-weight:700">ไม่ล็อกอิน</span></div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ guestPerks }}" as="g" hint-placeholder-count="4">
+                  <div style="display:flex;gap:8px;font-size:13px;color:#5A6273;line-height:1.5"><span style="color:{{ g.color }};flex:none">{{ g.mark }}</span><span>{{ g.text }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:linear-gradient(160deg,#EFF0FE,#fff);border:1px solid #C6C9FB;border-radius:16px;padding:18px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:17px">☁️</span><span style="font-size:14.5px;font-weight:700">สมัครฟรี</span></div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <sc-for list="{{ memberPerks }}" as="m" hint-placeholder-count="4">
+                  <div style="display:flex;gap:8px;font-size:13px;color:#434A58;line-height:1.5"><span style="color:#0A9380;flex:none">✓</span><span>{{ m }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E5E8EE;border-radius:16px;padding:20px">
+            <div style="font-size:14.5px;font-weight:700;margin-bottom:12px">ข้อมูลที่จะซิงก์ให้คุณ</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+              <sc-for list="{{ syncItems }}" as="s" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #E5E8EE;border-radius:12px">
+                  <div style="width:32px;height:32px;flex:none;border-radius:9px;background:{{ s.bg }};display:flex;align-items:center;justify-content:center;font-size:16px">{{ s.icon }}</div>
+                  <div><div style="font-size:13px;font-weight:600">{{ s.title }}</div><div style="font-size:11px;color:#A9B0BE">{{ s.sub }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #E5E8EE;border-radius:22px;padding:28px;box-shadow:0 24px 60px -30px rgba(26,29,38,.32);position:sticky;top:92px">
+          <div style="display:flex;gap:4px;background:#F8F9FB;border:1px solid #E5E8EE;border-radius:12px;padding:4px;margin-bottom:20px">
+            <button onClick="{{ goSignup }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:9px;border:none;border-radius:9px;cursor:pointer;background:{{ signupTabBg }};color:{{ signupTabColor }}">สมัคร</button>
+            <button onClick="{{ goSignin }}" style="flex:1;font-family:inherit;font-size:13.5px;font-weight:600;padding:9px;border:none;border-radius:9px;cursor:pointer;background:{{ signinTabBg }};color:{{ signinTabColor }}">เข้าสู่ระบบ</button>
+          </div>
+
+          <h2 style="font-size:22px;font-weight:700;margin:0 0 6px;letter-spacing:-.01em">{{ formTitle }}</h2>
+          <p style="font-size:13.5px;color:#5A6273;margin:0 0 20px;line-height:1.6">{{ formLead }}</p>
+
+          <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px;color:#9B1C1C;background:#FDECEC;border:1px solid #F8C9C9;border-radius:11px;padding:11px 13px;margin-bottom:14px;line-height:1.5">{{ err }}</div>
+          </sc-if>
+          <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:12.5px;color:#0A6B5C;background:#D0FBEF;border:1px solid #A7F0DF;border-radius:11px;padding:11px 13px;margin-bottom:14px;line-height:1.5">{{ note }}</div>
+          </sc-if>
+
+          <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:13px">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">ชื่อ-นามสกุล <span style="color:#A9B0BE;font-weight:400">(ไม่ใส่ก็ได้)</span></label>
+                <input onChange="{{ onName }}" placeholder="เช่น ครูสมชาย ใจดี" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">โรงเรียน <span style="color:#A9B0BE;font-weight:400">(ไม่ใส่ก็ได้)</span></label>
+                <input onChange="{{ onSchool }}" placeholder="เช่น โรงเรียนบ้านหนองคูล" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:13px">
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">อีเมล</label>
+              <input onChange="{{ onEmail }}" type="email" inputMode="email" placeholder="teacher@example.com" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+            </div>
+            <sc-if value="{{ needPassword }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">รหัสผ่าน <span style="color:#A9B0BE;font-weight:400">{{ pwHint }}</span></label>
+                <input onChange="{{ onPw }}" onKeyDown="{{ onKey }}" type="password" placeholder="••••••••" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+              </div>
+            </sc-if>
+          </div>
+
+          <button onClick="{{ submit }}" disabled="{{ busy }}" style="width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:14px;margin-top:18px;border:none;border-radius:12px;background:#5C5EE6;color:#fff;cursor:pointer;box-shadow:0 12px 26px -12px rgba(92,94,230,.7);white-space:nowrap" style-hover="background:#4A46D6">{{ submitLabel }}</button>
+
+          <sc-if value="{{ needPassword }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:12px;margin:18px 0;font-size:11.5px;color:#A9B0BE"><span style="flex:1;height:1px;background:#E5E8EE"></span>หรือ<span style="flex:1;height:1px;background:#E5E8EE"></span></div>
+            <button onClick="{{ google }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:9px;font-family:inherit;font-size:14.5px;font-weight:600;padding:13px;border:1px solid #D3D8E1;border-radius:12px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">ดำเนินการต่อด้วย Google</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap">
+              <button onClick="{{ goReset }}" style="font-family:inherit;background:none;border:none;color:#5C5EE6;font-size:12.5px;font-weight:600;padding:0;cursor:pointer">ลืมรหัสผ่าน?</button>
+              <span style="font-size:11.5px;color:#A9B0BE">ไม่มีบัตรเครดิต ไม่มีค่าบริการ</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:16px"><button onClick="{{ goSignin }}" style="font-family:inherit;background:none;border:none;color:#5C5EE6;font-size:12.5px;font-weight:600;padding:0;cursor:pointer">← กลับไปเข้าสู่ระบบ</button></div>
+          </sc-if>
+
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid #E5E8EE;font-size:11.5px;color:#A9B0BE;line-height:1.6">การสมัครถือว่ายอมรับ <a href="#">เงื่อนไขการใช้งาน</a> และ <a href="#">นโยบายความเป็นส่วนตัว (PDPA)</a> · ข้อมูลของคุณเห็นได้เฉพาะบัญชีคุณเท่านั้น</div>
+          <div style="margin-top:12px;text-align:center"><a href="./Khuncool Home v2.dc.html" style="font-size:13px;font-weight:600;color:#5A6273">ยังไม่สมัคร — ใช้แบบเก็บในเครื่องต่อ →</a></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ member }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #E5E8EE;border-radius:20px;padding:24px;margin-bottom:20px;flex-wrap:wrap">
+          <div style="width:64px;height:64px;flex:none;border-radius:50%;background:linear-gradient(135deg,#5C5EE6,#14B79A);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff">{{ initial }}</div>
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:22px;font-weight:700;letter-spacing:-.01em">{{ displayName }}</div>
+            <div style="font-size:13.5px;color:#5A6273">{{ email }}</div>
+            <div style="font-size:12.5px;color:#A9B0BE;margin-top:2px">{{ schoolLine }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:{{ statusColor }};background:{{ statusBg }};padding:9px 15px;border-radius:999px;white-space:nowrap">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ statusColor }}"></span>{{ statusText }}
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div style="background:#fff;border:1px solid #E5E8EE;border-radius:20px;padding:24px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
+                <h2 style="font-size:18px;font-weight:700;margin:0;flex:none;white-space:nowrap">ข้อมูลของคุณบนคลาวด์</h2>
+                <span style="font-size:12px;color:#A9B0BE">{{ lastSyncText }}</span>
+              </div>
+              <p style="font-size:13.5px;color:#5A6273;margin:0 0 16px;line-height:1.6">ทุกครั้งที่คุณแก้ข้อมูลในแอป ระบบจะบันทึกขึ้นบัญชีนี้ให้อัตโนมัติ เปิดเครื่องอื่นแล้วล็อกอินก็เจอข้อมูลเดิม</p>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:18px">
+                <sc-for list="{{ dataRows }}" as="d" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #E5E8EE;border-radius:13px;background:#F8F9FB">
+                    <div style="width:34px;height:34px;flex:none;border-radius:10px;background:{{ d.bg }};display:flex;align-items:center;justify-content:center;font-size:17px">{{ d.icon }}</div>
+                    <div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:600">{{ d.title }}</div><div style="font-size:11.5px;color:#A9B0BE">{{ d.detail }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button onClick="{{ syncNow }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 18px;border:none;border-radius:11px;background:#5C5EE6;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#4A46D6">🔄 ซิงก์เดี๋ยวนี้</button>
+                <button onClick="{{ pullCloud }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 18px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">☁️ ดึงจากคลาวด์ทับเครื่องนี้</button>
+                <button onClick="{{ pushLocal }}" style="font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 18px;border:1px solid #D3D8E1;border-radius:11px;background:#fff;color:#1A1D26;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FB">⬆️ ส่งข้อมูลเครื่องนี้ขึ้นคลาวด์</button>
+              </div>
+              <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12.5px;color:#0A6B5C;background:#D0FBEF;border:1px solid #A7F0DF;border-radius:11px;padding:11px 13px;margin-top:14px">{{ note }}</div>
+              </sc-if>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E5E8EE;border-radius:20px;padding:24px">
+              <h2 style="font-size:18px;font-weight:700;margin:0 0 4px">โปรไฟล์ครู</h2>
+              <p style="font-size:13.5px;color:#5A6273;margin:0 0 18px;line-height:1.6">ใช้แสดงในหัวรายงานเช็กชื่อและสรุปเงินออม — ไม่กรอกก็ใช้งานได้ปกติ</p>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">ชื่อ-นามสกุล</label>
+                  <input onChange="{{ onName }}" defaultValue="{{ fullName }}" placeholder="ครูสมชาย ใจดี" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;font-weight:600;color:#5A6273;margin-bottom:6px">โรงเรียน</label>
+                  <input onChange="{{ onSchool }}" defaultValue="{{ school }}" placeholder="โรงเรียนบ้านหนองคูล" style="width:100%;font-family:inherit;font-size:14.5px;padding:12px 14px;border:1px solid #D3D8E1;border-radius:11px;outline:none"/>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
+                <button onClick="{{ saveProfile }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:12px 22px;border:none;border-radius:11px;background:#1A1D26;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#2A2E3A">บันทึกโปรไฟล์</button>
+                <span style="font-size:12.5px;color:#0A9380">{{ profileSaved }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div style="background:linear-gradient(150deg,#2A2775,#0A9380);color:#fff;border-radius:20px;padding:24px">
+              <span style="font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.18);white-space:nowrap">🎁 ฟรีถาวร</span>
+              <div style="font-size:19px;font-weight:700;margin:14px 0 8px">ทุกฟีเจอร์ไม่มีค่าใช้จ่าย</div>
+              <p style="font-size:13.5px;color:#C6C9FB;margin:0;line-height:1.65">khuncool ไม่มีแพ็กเกจเสียเงิน ไม่มีการจำกัดจำนวนห้องหรือนักเรียน — สมัครแล้วใช้ได้ครบทุกอย่างตลอดไป</p>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E5E8EE;border-radius:20px;padding:24px">
+              <h3 style="font-size:16px;font-weight:700;margin:0 0 14px">เปิดใช้งานต่อ</h3>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ apps }}" as="ap" hint-placeholder-count="6">
+                  <a href="{{ ap.href }}" style="display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #E5E8EE;border-radius:13px;color:inherit" style-hover="border-color:#C6C9FB;background:#F8F9FB">
+                    <div style="width:34px;height:34px;flex:none;border-radius:10px;background:{{ ap.bg }};display:flex;align-items:center;justify-content:center;font-size:17px">{{ ap.icon }}</div>
+                    <div style="flex:1;font-size:13.5px;font-weight:600">{{ ap.title }}</div>
+                    <span style="color:#C6CAD3">›</span>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E5E8EE;border-radius:20px;padding:24px">
+              <h3 style="font-size:16px;font-weight:700;margin:0 0 10px">บัญชีและความปลอดภัย</h3>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <button onClick="{{ sendReset }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;padding:11px 10px;border:none;border-radius:11px;background:none;color:#1A1D26;cursor:pointer" style-hover="background:#F8F9FB">🔑 ส่งลิงก์เปลี่ยนรหัสผ่านไปที่อีเมล</button>
+                <button onClick="{{ signOutKeep }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;padding:11px 10px;border:none;border-radius:11px;background:none;color:#1A1D26;cursor:pointer" style-hover="background:#F8F9FB">↩︎ ออกจากระบบ (เก็บข้อมูลไว้ในเครื่องนี้)</button>
+                <button onClick="{{ signOutClean }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-family:inherit;font-size:13.5px;padding:11px 10px;border:none;border-radius:11px;background:none;color:#D93B3B;cursor:pointer" style-hover="background:#FDECEC">🚪 ออกจากระบบและล้างข้อมูลในเครื่องนี้</button>
+              </div>
+              <p style="font-size:11.5px;color:#A9B0BE;margin:12px 0 0;line-height:1.6">ใช้เครื่องสาธารณะ (คอมห้องพักครู) ควรเลือกแบบล้างข้อมูล — ข้อมูลบนคลาวด์ยังอยู่ครบ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="border-top:1px solid #E5E8EE;background:#fff;padding:22px 24px">
+    <div style="max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:12.5px;color:#A9B0BE">
+      <span>© 2568 khuncool.com · เพื่อครูไทยทุกคน</span>
+      <div style="display:flex;gap:16px"><a href="#">นโยบายความเป็นส่วนตัว</a><a href="#">เงื่อนไขการใช้งาน</a><a href="./Khuncool Home v2.dc.html">กลับหน้าแรก</a></div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;sessionState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;expired&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;'ready'|'expired'&quot;,&quot;section&quot;:&quot;สถานะเซสชัน&quot;}}">
+class Component extends DCLogic {
+  state = {
+    acc: null, tab: 'signup', email: '', pw: '', name: '', school: '',
+    busy: false, err: '', note: '', profileSaved: '', counts: {},
+  };
+
+  componentDidMount(){
+    this.readCounts();
+    const attach = () => {
+      if (!window.KhuncoolCloud) { setTimeout(attach, 120); return; }
+      this._off = window.KhuncoolCloud.onChange(acc => {
+        this.setState(s => ({
+          acc,
+          name: s.name || acc.fullName || '',
+          school: s.school || acc.school || '',
+        }));
+        this.readCounts();
+      });
+    };
+    attach();
+  }
+  componentWillUnmount(){ if (this._off) this._off(); }
+
+  readCounts(){
+    const get = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } };
+    const roster = get('khuncool.roster') || [];
+    const att = get('khuncool.attendance') || get('khuncool.attendance.v1') || null;
+    const sav = get('khuncool.savings') || get('khuncool.savings.v1') || null;
+    let keys = 0;
+    try { for (let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf('khuncool.')===0) keys++; } } catch(e){}
+    this.setState({ counts: {
+      roster: roster.length,
+      attRoom: att && att.room ? att.room : '',
+      savTxns: sav && Array.isArray(sav.txns) ? sav.txns.length : 0,
+      keys,
+    }});
+  }
+
+  set = (patch) => this.setState(patch);
+  onEmail = e => this.setState({ email: e.target.value });
+  onPw = e => this.setState({ pw: e.target.value });
+  onName = e => this.setState({ name: e.target.value });
+  onSchool = e => this.setState({ school: e.target.value });
+  onKey = e => { if (e.key === 'Enter') this.submit(); };
+
+  submit = async () => {
+    const C = window.KhuncoolCloud; if (!C) return;
+    const { tab, email, pw, name, school } = this.state;
+    if (!email || (tab !== 'reset' && !pw)) { this.setState({ err: 'กรอกอีเมลและรหัสผ่านก่อนนะ', note: '' }); return; }
+    this.setState({ busy: true, err: '', note: '' });
+    let r;
+    if (tab === 'signup') r = await C.signUp(email, pw, { fullName: name, school });
+    else if (tab === 'reset') r = await C.resetPassword(email);
+    else r = await C.signIn(email, pw);
+    if (!r || !r.ok) { this.setState({ busy: false, err: (r && r.error) || 'ไม่สำเร็จ' }); return; }
+    if (r.confirm) { this.setState({ busy: false, note: 'ส่งลิงก์ยืนยันไปที่ ' + email + ' แล้ว — กดยืนยันในอีเมลแล้วกลับมาเข้าสู่ระบบ' }); return; }
+    if (tab === 'reset') { this.setState({ busy: false, note: 'ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว' }); return; }
+    this.setState({ busy: false, pw: '', note: '' });
+  };
+
+  renderVals(){
+    const expired = (this.props.sessionState||'ready')==='expired';
+    const a = this.state.acc || { signedIn:false, status:'local', email:'', fullName:'', school:'', message:'', lastSync:null };
+    const C = window.KhuncoolCloud;
+    const tab = this.state.tab;
+    const st = a.status;
+    const statusColor = !a.signedIn ? '#5A6273' : st === 'error' ? '#D93B3B' : st === 'syncing' ? '#C2500B' : '#0A9380';
+    const statusBg = !a.signedIn ? '#F1F3F6' : st === 'error' ? '#FDECEC' : st === 'syncing' ? '#FFEAD5' : '#D0FBEF';
+    const c = this.state.counts;
+
+    const apps = [
+      { icon:'📋', title:'บันทึกโฮมรูม', bg:'#E1E3FD', href:'./Khuncool Homeroom.dc.html' },
+      { icon:'✅', title:'เช็กชื่อนักเรียน', bg:'#D0FBEF', href:'./Khuncool Attendance.dc.html' },
+      { icon:'💰', title:'ออมเงินนักเรียน', bg:'#FFEAD5', href:'./Khuncool Savings.dc.html' },
+      { icon:'🔀', title:'สุ่มแบ่งกลุ่ม', bg:'#E1E3FD', href:'./Khuncool Groups.dc.html' },
+      { icon:'🎡', title:'วงล้อสุ่มชื่อ', bg:'#E1E3FD', href:'./Khuncool Wheel.dc.html' },
+      { icon:'🎯', title:'สุ่มคำถามหน้าชั้น', bg:'#FFEAD5', href:'./Khuncool Question.dc.html' },
+      { icon:'⏱️', title:'จับเวลา / นับถอยหลัง', bg:'#D0FBEF', href:'./Khuncool Timer.dc.html' },
+      { icon:'🦆', title:'เกมแข่งเป็ด', bg:'#D0FBEF', href:'./Khuncool Duck Race.dc.html' },
+    ];
+
+    return {
+      expired,
+      guest: !a.signedIn,
+      member: a.signedIn,
+      email: a.email,
+      fullName: a.fullName,
+      school: a.school,
+      initial: ((a.fullName || a.email || '?').trim().charAt(0) || '?').toUpperCase(),
+      displayName: a.fullName || 'ครูของ khuncool',
+      schoolLine: a.school ? a.school : 'ยังไม่ได้ระบุโรงเรียน',
+      statusColor, statusBg,
+      statusText: !a.signedIn ? 'เก็บในเครื่องนี้' : st === 'syncing' ? 'กำลังซิงก์…' : st === 'error' ? 'ซิงก์ไม่สำเร็จ' : 'ซิงก์ทุกเครื่องแล้ว',
+      lastSyncText: a.lastSync ? 'ซิงก์ล่าสุด ' + new Date(a.lastSync).toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' }) : 'ยังไม่ได้ซิงก์รอบนี้',
+
+      isSignup: tab === 'signup',
+      isReset: tab === 'reset',
+      needPassword: tab !== 'reset',
+      pwHint: tab === 'signup' ? '(อย่างน้อย 6 ตัว)' : '',
+      formTitle: tab === 'signup' ? 'สมัครฟรี ใช้ได้ทุกเครื่อง' : tab === 'reset' ? 'ตั้งรหัสผ่านใหม่' : 'เข้าสู่ระบบ',
+      formLead: tab === 'signup'
+        ? 'ใช้อีเมลกับรหัสผ่าน หรือสมัครด้วย Google — ไม่มีค่าใช้จ่ายและไม่ต้องใส่บัตร'
+        : tab === 'reset' ? 'กรอกอีเมลที่ใช้สมัคร เราจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้'
+        : 'เข้าสู่ระบบเพื่อดึงข้อมูลห้องเรียนของคุณกลับมาบนเครื่องนี้',
+      submitLabel: this.state.busy ? 'กำลังดำเนินการ…' : tab === 'signup' ? 'สมัคร' : tab === 'reset' ? 'ส่งลิงก์ตั้งรหัสผ่านใหม่' : 'เข้าสู่ระบบ',
+      signupTabBg: tab === 'signup' ? '#fff' : 'transparent',
+      signupTabColor: tab === 'signup' ? '#5C5EE6' : '#5A6273',
+      signinTabBg: tab === 'signin' ? '#fff' : 'transparent',
+      signinTabColor: tab === 'signin' ? '#5C5EE6' : '#5A6273',
+      busy: this.state.busy,
+      err: this.state.err,
+      note: this.state.note,
+      profileSaved: this.state.profileSaved,
+
+      goSignup: () => this.setState({ tab:'signup', err:'', note:'' }),
+      goSignin: () => this.setState({ tab:'signin', err:'', note:'' }),
+      goReset: () => this.setState({ tab:'reset', err:'', note:'' }),
+      onEmail: this.onEmail, onPw: this.onPw, onName: this.onName, onSchool: this.onSchool, onKey: this.onKey,
+      submit: this.submit,
+      google: () => C && C.signInGoogle(),
+      syncNow: () => C && C.syncNow().then(() => { this.readCounts(); this.setState({ note:'ซิงก์เรียบร้อย' }); }),
+      pullCloud: () => C && C.pullCloud().then(() => location.reload()),
+      pushLocal: () => C && C.pushLocal().then(() => this.setState({ note:'ส่งข้อมูลในเครื่องขึ้นคลาวด์แล้ว' })),
+      saveProfile: async () => {
+        if (!C) return;
+        const r = await C.updateProfile({ fullName: this.state.name, school: this.state.school });
+        this.setState({ profileSaved: r.ok ? 'บันทึกแล้ว ✓' : (r.error || 'บันทึกไม่สำเร็จ') });
+        setTimeout(() => this.setState({ profileSaved:'' }), 3000);
+      },
+      sendReset: () => C && C.resetPassword(a.email).then(() => this.setState({ note:'ส่งลิงก์เปลี่ยนรหัสผ่านไปที่ ' + a.email + ' แล้ว' })),
+      signOutKeep: () => C && C.signOut(true).then(() => location.reload()),
+      signOutClean: () => C && C.signOut(false).then(() => location.reload()),
+
+      guestPerks: [
+        { mark:'✓', color:'#0A9380', text:'ใช้ได้ครบทุกเครื่องมือ ไม่จำกัด' },
+        { mark:'✓', color:'#0A9380', text:'ไม่ต้องกรอกอะไรเลย เปิดใช้ทันที' },
+        { mark:'✗', color:'#D93B3B', text:'เปลี่ยนเครื่องแล้วข้อมูลไม่ตามไป' },
+        { mark:'✗', color:'#D93B3B', text:'ล้างเบราว์เซอร์ = ข้อมูลหาย' },
+      ],
+      memberPerks: [
+        'ใช้ได้ครบเหมือนกัน ไม่มีอะไรถูกล็อก',
+        'ข้อมูลตามตัวไปทุกเครื่อง ทุกเบราว์เซอร์',
+        'ล้างเครื่อง/เปลี่ยนมือถือก็กู้คืนได้',
+        'ใช้ได้ทั้งอีเมล+รหัสผ่าน หรือ Google',
+      ],
+      syncItems: [
+        { icon:'🏫', title:'ห้องเรียน + รายชื่อ', sub:'ทะเบียนนักเรียนกลาง', bg:'#E1E3FD' },
+        { icon:'✅', title:'การเช็กชื่อ', sub:'สถานะรายวัน', bg:'#D0FBEF' },
+        { icon:'💰', title:'เงินออม/คะแนน', sub:'ยอดและรายการ', bg:'#FFEAD5' },
+        { icon:'🔀', title:'การแบ่งกลุ่ม', sub:'ค่าที่ตั้งไว้', bg:'#E1E3FD' },
+        { icon:'🎯', title:'คลังคำถาม', sub:'คำถามที่สร้างเอง', bg:'#FFEAD5' },
+        { icon:'⏱️', title:'ตั้งค่าเครื่องมือ', sub:'จับเวลา วงล้อ แข่งเป็ด', bg:'#D0FBEF' },
+      ],
+      dataRows: [
+        { icon:'🏫', title:'รายชื่อนักเรียน', detail: c.roster ? c.roster + ' คนในทะเบียน' : 'ยังไม่มีรายชื่อ', bg:'#E1E3FD' },
+        { icon:'✅', title:'การเช็กชื่อ', detail: c.attRoom ? 'ห้อง ' + c.attRoom : 'ยังไม่มีข้อมูล', bg:'#D0FBEF' },
+        { icon:'💰', title:'เงินออม', detail: c.savTxns ? c.savTxns + ' รายการ' : 'ยังไม่มีรายการ', bg:'#FFEAD5' },
+        { icon:'🎡', title:'วงล้อสุ่ม', detail:'รายชื่อและผลสุ่ม', bg:'#E1E3FD' },
+        { icon:'🎯', title:'คลังคำถาม', detail:'คำถามที่สร้างเอง', bg:'#FFEAD5' },
+        { icon:'☁️', title:'รวมทั้งหมด', detail: (c.keys || 0) + ' ชุดข้อมูลถูกซิงก์', bg:'#F1F3F6' },
+      ],
+      apps,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
