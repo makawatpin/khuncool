@@ -85,9 +85,13 @@
   --shadow-cta: var(--shadow-cta);
   --shadow-device-frame: var(--shadow-device-frame);
 
+  --background-image-brand: var(--gradient-brand);
+
   --font-sarabun: var(--font-sarabun), sans-serif;
   --font-anuphan: var(--font-anuphan), sans-serif;
   --font-fredoka: var(--font-fredoka), var(--font-anuphan), sans-serif;
+  /* maps from IBM_Plex_Mono's --font-plex-mono var; named font-mono
+     (not font-plex-mono) to align with Tailwind's built-in utility name */
   --font-mono: var(--font-plex-mono), monospace;
 }
 
