@@ -128,15 +128,15 @@ export const CASES = [
 export const RELATED = [
   {
     t: "10 กิจกรรมสุ่มชื่อนักเรียนที่ใช้ได้จริงในห้องเรียน",
-    href: "/articles/10-random-name-activities",
+    href: "/blog/random-name-activities",
   },
   {
     t: "วิธีใช้วงล้อสุ่มชื่อให้ห้องเรียนคึกคักตั้งแต่ต้นคาบ",
-    href: "/articles/wheel",
+    href: "/blog/wheel",
   },
   {
     t: "รีวิวกรอบป้ายแม่เหล็กติดผนัง จัดบอร์ดห้องเรียนให้เรียบร้อย",
-    href: "/articles/magnetic-frame",
+    href: "/blog/magnetic-frame",
   },
 ];
 

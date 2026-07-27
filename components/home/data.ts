@@ -6,7 +6,7 @@ export const PILLARS = [
     title: "บทความ",
     path: "/articles",
     bg: "bg-[#E1E3FD]",
-    href: "/articles/wheel",
+    href: "/blog/wheel",
   },
   {
     icon: "🎡",
@@ -49,7 +49,7 @@ export const ARTICLES = [
     read: "อ่าน 4 นาที",
     cover: "/assets/psu-english-cover.webp",
     linksTool: "",
-    href: "/articles/psu-english",
+    href: "/blog/psu-english",
   },
   {
     rank: "2",
@@ -60,7 +60,7 @@ export const ARTICLES = [
     read: "อ่าน 5 นาที",
     cover: "/assets/wheel-cover.png",
     linksTool: "วงล้อสุ่ม /tools/wheel",
-    href: "/articles/wheel",
+    href: "/blog/wheel",
   },
   {
     rank: "3",
@@ -71,7 +71,7 @@ export const ARTICLES = [
     read: "อ่าน 4 นาที",
     cover: "/assets/magnet-frame-detail.jpg",
     linksTool: "",
-    href: "/articles/magnetic-frame",
+    href: "/blog/magnetic-frame",
   },
   {
     rank: "4",
@@ -82,7 +82,7 @@ export const ARTICLES = [
     read: "อ่าน 6 นาที",
     cover: "/assets/random-name-cover.png",
     linksTool: "วงล้อสุ่ม /tools/wheel",
-    href: "/articles/random-name-activities",
+    href: "/blog/random-name-activities",
   },
   {
     rank: "5",
@@ -93,7 +93,7 @@ export const ARTICLES = [
     read: "อ่าน 4 นาที",
     cover: "/assets/royal-award-cover.png",
     linksTool: "",
-    href: "/articles/royal-award-2569",
+    href: "/blog/royal-award-2569",
   },
 ];
 
