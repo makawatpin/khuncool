@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import CookieConsent from "@/components/CookieConsent";
+import OfflineIndicator from "@/components/OfflineIndicator";
 
 export const metadata: Metadata = {
   title: "Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี",
@@ -333,10 +335,12 @@ export default function Home() {
           <div className="flex flex-col gap-4 lg:sticky lg:top-20">
             <div className="flex h-[180px] flex-col items-center justify-center rounded-card border-[1.5px] border-dashed border-border-strong bg-surface-light lg:h-[280px]">
               <span className="font-mono text-[11px] tracking-wider text-ink-faint">
-                AD · 336×280
+                <span className="lg:hidden">AD · 336×280</span>
+                <span className="hidden lg:inline">AD · 300×250</span>
               </span>
               <span className="mt-1 text-[11.5px] text-ink-faint">
-                AdSense — in-content
+                <span className="lg:hidden">AdSense — in-content</span>
+                <span className="hidden lg:inline">AdSense — sticky sidebar</span>
               </span>
             </div>
             <div className="rounded-card border border-border bg-surface-card p-4 pb-1.5 lg:p-[18px] lg:pb-2">
@@ -458,13 +462,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ad in-feed */}
+      {/* ad in-feed / leaderboard */}
       <div className="mx-4 mt-5 flex h-[100px] flex-col items-center justify-center rounded-card border-[1.5px] border-dashed border-border-strong bg-surface-light md:mx-6 md:mt-7 lg:mx-8 lg:mt-9 lg:h-[110px]">
-        <span className="font-mono text-[10px] tracking-wider text-ink-faint">
-          ADVERTISEMENT · 336×100
+        <span className="font-mono text-[10px] tracking-wider text-ink-faint md:text-[11px]">
+          <span className="md:hidden">ADVERTISEMENT · 336×100</span>
+          <span className="hidden md:inline lg:hidden">ADVERTISEMENT · 728×90 LEADERBOARD</span>
+          <span className="hidden lg:inline">ADVERTISEMENT · 970×110 LEADERBOARD</span>
         </span>
-        <span className="mt-0.5 text-[11px] text-ink-faint">
-          Google AdSense — in-feed
+        <span className="mt-0.5 text-[11px] text-ink-faint md:mt-1 md:text-[11.5px] lg:mt-1 lg:text-xs">
+          <span className="md:hidden">Google AdSense — in-feed</span>
+          <span className="hidden md:inline lg:hidden">Google AdSense — คั่นระหว่างคอนเทนต์</span>
+          <span className="hidden lg:inline">Google AdSense — คั่นระหว่างคอนเทนต์ ไม่แทรกกลางการอ่าน</span>
         </span>
       </div>
 
@@ -474,10 +482,22 @@ export default function Home() {
           รีวิว & แนะนำสินค้า<span className="hidden md:inline">สำหรับครู</span>
         </h2>
         <div className="mb-3.5 flex items-start gap-2 rounded-card-sm border border-[#FCE4CC] bg-[#FFF6ED] px-3 py-2.5 md:mb-4 lg:mb-[18px] lg:max-w-[760px]">
-          <span className="flex-none text-[13px] leading-normal">ⓘ</span>
-          <p className="m-0 text-[11.5px] leading-relaxed text-[#8A5A28] md:text-xs">
-            ลิงก์ในหน้านี้เป็น <b>ลิงก์แนะนำ (Affiliate)</b> หากซื้อผ่านลิงก์
-            khuncool อาจได้ค่าคอมมิชชันโดยราคาที่คุณจ่ายไม่เปลี่ยนแปลง
+          <span className="flex-none text-[13px] leading-normal md:text-[14px] lg:text-[15px]">ⓘ</span>
+          <p className="m-0 text-[11.5px] leading-relaxed text-[#8A5A28] md:text-xs lg:text-[12.5px]">
+            <span className="md:hidden">
+              ลิงก์ในหน้านี้เป็น <b>ลิงก์แนะนำ (Affiliate)</b> หากซื้อผ่านลิงก์
+              khuncool อาจได้ค่าคอมมิชชันโดยราคาที่คุณจ่ายไม่เปลี่ยนแปลง
+            </span>
+            <span className="hidden md:inline lg:hidden">
+              <b>การเปิดเผย:</b> ลิงก์สินค้าเป็นลิงก์แนะนำ (Affiliate) — khuncool
+              อาจได้ค่าคอมมิชชันเมื่อซื้อผ่านลิงก์ โดยราคาไม่เปลี่ยนแปลง
+            </span>
+            <span className="hidden lg:inline">
+              <b>การเปิดเผย:</b> ลิงก์สินค้าในหน้านี้เป็นลิงก์แนะนำ (Affiliate) —
+              เมื่อคุณซื้อผ่านลิงก์ Shopee/Lazada ทาง khuncool
+              อาจได้รับค่าคอมมิชชันเล็กน้อย โดยราคาที่คุณจ่ายไม่เปลี่ยนแปลง ·
+              เราคัดสินค้าจากการใช้งานจริงของครู
+            </span>
           </p>
         </div>
         <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 md:gap-3.5 lg:grid-cols-6 lg:gap-3">
@@ -497,14 +517,17 @@ export default function Home() {
                   {p.name}
                 </div>
                 <div className="mb-1.5 flex items-center gap-1 md:mb-2">
-                  <span className="text-[11px] text-[#F59E0B]">★</span>
+                  <span className="text-[11px] text-[#F59E0B] lg:text-[13px]">
+                    <span className="lg:hidden">★</span>
+                    <span className="hidden lg:inline">★★★★★</span>
+                  </span>
                   <span className="text-[11px] text-ink-muted">{p.rating}</span>
                 </div>
                 <div className="mb-2 text-[15px] font-bold text-[#C2500B] md:text-base">
                   {p.price}
                 </div>
                 <span className="block w-full rounded-card-sm bg-[#F97316] py-2 text-center text-[11px] font-semibold text-white md:text-[11.5px]">
-                  เช็กราคา
+                  เช็กราคา<span className="hidden md:inline"> Shopee</span>
                 </span>
               </div>
             </a>
@@ -516,7 +539,7 @@ export default function Home() {
       <section className="px-4 pb-1 pt-6 md:px-6 md:pt-[34px] lg:px-8 lg:pt-11">
         <div className="mb-3 flex items-baseline justify-between md:mb-4 lg:mb-[18px]">
           <h2 className="m-0 whitespace-nowrap text-[17px] font-bold md:text-[19px] lg:text-xl">
-            แอปช่วยงานครู
+            แอปช่วยงานครู<span className="hidden lg:inline"> · ใช้ผ่านเว็บได้เลย</span>
           </h2>
           <Link href="/apps" className="text-[12.5px] text-primary md:text-[13.5px] lg:text-sm">
             ทั้งหมด ›
@@ -549,6 +572,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <CookieConsent />
+      <OfflineIndicator />
     </main>
   );
 }
