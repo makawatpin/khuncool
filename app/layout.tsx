@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Sarabun, Anuphan, Fredoka, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import {
+  AccountSheetProvider,
+  AccountSheetOverlay,
+} from "@/components/AccountSheet";
 
 const sarabun = Sarabun({
   variable: "--font-sarabun",
@@ -41,7 +47,14 @@ export default function RootLayout({
       lang="en"
       className={`${sarabun.variable} ${anuphan.variable} ${fredoka.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AccountSheetProvider>
+          <Header />
+          {children}
+          <Footer />
+          <AccountSheetOverlay />
+        </AccountSheetProvider>
+      </body>
     </html>
   );
 }

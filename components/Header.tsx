@@ -1,0 +1,109 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { useAccountSheet } from "./AccountSheet";
+
+const PILLARS = [
+  { icon: "🛠️", title: "เครื่องมือออนไลน์", path: "/tools" },
+  { icon: "📱", title: "แอปช่วยงานครู", path: "/apps" },
+  { icon: "📰", title: "บทความครู", path: "/articles" },
+  { icon: "🛍️", title: "ร้านค้าแนะนำ", path: "/shop" },
+];
+
+const NAV_LINKS = [
+  { title: "เครื่องมือ", href: "/tools" },
+  { title: "แอป", href: "/apps" },
+  { title: "บทความ", href: "/articles" },
+  { title: "ร้านค้า", href: "/shop" },
+];
+
+export default function Header() {
+  const { openAccountSheet } = useAccountSheet();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  return (
+    <>
+      {/* announcement bar */}
+      <div className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white">
+        <span className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold">
+          อบรมฟรี
+        </span>
+        <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+          อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · สมัครวันนี้
+        </span>
+        <span className="flex-none opacity-70">›</span>
+      </div>
+
+      {/* sticky header */}
+      <header className="sticky top-0 z-20 border-b border-border bg-white/[.92] px-3.5 py-3 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setDrawerOpen((v) => !v)}
+            aria-label="เมนู"
+            aria-expanded={drawerOpen}
+            className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-card-sm border border-border bg-surface-card text-base hover:bg-surface-light md:hidden"
+          >
+            ☰
+          </button>
+          <Link href="/" className="flex flex-1 items-center gap-1.5 md:flex-none">
+            <Image
+              src="/assets/khuncool-logo.png"
+              alt="khuncool"
+              width={30}
+              height={30}
+              className="flex-none object-contain"
+            />
+            <span className="font-anuphan text-base font-bold tracking-tight">
+              khuncool
+            </span>
+          </Link>
+
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 md:flex">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-lg px-2.5 py-2 text-sm text-ink-secondary no-underline hover:bg-surface-light hover:text-primary"
+              >
+                {link.title}
+              </Link>
+            ))}
+          </nav>
+
+          <button
+            type="button"
+            onClick={openAccountSheet}
+            className="rounded-pill bg-primary px-4 py-2 text-[13px] font-semibold text-white hover:bg-primary-hover"
+          >
+            สมัคร
+          </button>
+        </div>
+      </header>
+
+      {/* mobile nav drawer */}
+      {drawerOpen && (
+        <div className="flex flex-col gap-1.5 border-b border-border bg-surface-light p-3.5 md:hidden">
+          {PILLARS.map((p) => (
+            <Link
+              key={p.path}
+              href={p.path}
+              onClick={() => setDrawerOpen(false)}
+              className="flex items-center gap-2.5 rounded-card-sm border border-border bg-surface-card p-2.5 no-underline hover:border-primary/40"
+            >
+              <span className="text-lg">{p.icon}</span>
+              <div className="flex-1">
+                <div className="text-[13.5px] font-semibold text-ink">
+                  {p.title}
+                </div>
+                <div className="text-[11px] text-ink-faint">{p.path}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
