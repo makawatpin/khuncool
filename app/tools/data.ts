@@ -11,7 +11,6 @@ export const TOOLS = [
   {
     icon: "🎡",
     title: "วงล้อสุ่มชื่อนักเรียน",
-    slug: "/random-name-picker",
     href: "/random-name-picker",
     bg: "#E1E3FD",
     short: "หมุนเลือกคนตอบ กันชื่อซ้ำ",
@@ -20,7 +19,6 @@ export const TOOLS = [
   {
     icon: "🔀",
     title: "สุ่มแบ่งกลุ่มนักเรียน",
-    slug: "/group-maker",
     href: "/group-maker",
     bg: "#E1E3FD",
     short: "แบ่งกลุ่มเท่า ๆ กันอัตโนมัติ",
@@ -29,7 +27,6 @@ export const TOOLS = [
   {
     icon: "⏱️",
     title: "จับเวลาและนับถอยหลัง",
-    slug: "/timer",
     href: "/timer",
     bg: "#D0FBEF",
     short: "ตัวเลขใหญ่ มีเสียงเตือน",
@@ -38,7 +35,6 @@ export const TOOLS = [
   {
     icon: "🎤",
     title: "เครื่องวัดเสียงในห้องเรียน",
-    slug: "/classroom-noise-meter",
     href: "/classroom-noise-meter",
     bg: "#D0FBEF",
     short: "เตือนเมื่อห้องดังเกินกำหนด",
@@ -47,7 +43,6 @@ export const TOOLS = [
   {
     icon: "🏆",
     title: "กระดานคะแนนกลุ่ม",
-    slug: "/group-scoreboard",
     href: "/group-scoreboard",
     bg: "#E1E3FD",
     short: "ให้คะแนนสด เห็นอันดับทันที",
@@ -56,7 +51,6 @@ export const TOOLS = [
   {
     icon: "🎯",
     title: "สุ่มคำถามหน้าชั้น",
-    slug: "/random-question",
     href: "/random-question",
     bg: "#FFEAD5",
     short: "ใส่คำถามเอง สุ่มขึ้นจอ",
@@ -65,7 +59,6 @@ export const TOOLS = [
   {
     icon: "🦆",
     title: "เกมแข่งเป็ดสุ่มชื่อ",
-    slug: "/duck-race",
     href: "/duck-race",
     bg: "#D0FBEF",
     short: "สุ่มชื่อแบบเกม เด็กเล็กชอบ",

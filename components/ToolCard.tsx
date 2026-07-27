@@ -9,8 +9,6 @@ type ToolCardProps = {
   short: string;
   /** Longer copy shown on desktop (3-col grid). */
   desc: string;
-  /** Slug shown in mono font on the desktop card only. */
-  slug: string;
 };
 
 /** Repeating tool card used on the /tools hub, mobile-compact and desktop-rich variants in one component. */
@@ -21,7 +19,6 @@ export default function ToolCard({
   bg,
   short,
   desc,
-  slug,
 }: ToolCardProps) {
   return (
     <Link
@@ -42,7 +39,7 @@ export default function ToolCard({
         <span className="hidden md:inline">{desc}</span>
       </p>
       <div className="hidden items-center justify-between gap-2 md:flex">
-        <span className="font-mono text-[11px] text-ink-faint">{slug}</span>
+        <span className="font-mono text-[11px] text-ink-faint">{href}</span>
         <span className="text-[13px] font-semibold text-primary">
           เปิดใช้งาน ›
         </span>

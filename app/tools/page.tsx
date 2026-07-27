@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ToolCard from "@/components/ToolCard";
 import FaqAccordion from "./FaqAccordion";
-import { APPS, CASES, RELATED, TOOLS, TRUST_CHIPS } from "./data";
+import { APPS, CASES, FAQS, RELATED, TOOLS, TRUST_CHIPS } from "./data";
 
 export const metadata: Metadata = {
   title: "เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool",
@@ -54,88 +54,24 @@ const jsonLd = {
     {
       "@type": "ItemList",
       itemListOrder: "https://schema.org/ItemListOrderAscending",
-      numberOfItems: 7,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "วงล้อสุ่มชื่อนักเรียน",
-          url: "https://www.khuncool.com/random-name-picker",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "สุ่มแบ่งกลุ่มนักเรียน",
-          url: "https://www.khuncool.com/group-maker",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "จับเวลาและนับถอยหลัง",
-          url: "https://www.khuncool.com/timer",
-        },
-        {
-          "@type": "ListItem",
-          position: 4,
-          name: "เครื่องวัดเสียงในห้องเรียน",
-          url: "https://www.khuncool.com/classroom-noise-meter",
-        },
-        {
-          "@type": "ListItem",
-          position: 5,
-          name: "กระดานคะแนนกลุ่ม",
-          url: "https://www.khuncool.com/group-scoreboard",
-        },
-        {
-          "@type": "ListItem",
-          position: 6,
-          name: "สุ่มคำถามหน้าชั้น",
-          url: "https://www.khuncool.com/random-question",
-        },
-        {
-          "@type": "ListItem",
-          position: 7,
-          name: "เกมแข่งเป็ดสุ่มชื่อ",
-          url: "https://www.khuncool.com/duck-race",
-        },
-      ],
+      numberOfItems: TOOLS.length,
+      itemListElement: TOOLS.map((t, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: t.title,
+        url: `https://www.khuncool.com${t.href}`,
+      })),
     },
     {
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "เครื่องมือครูของ khuncool ใช้ฟรีจริงไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ใช้ฟรีทุกตัว ไม่จำกัดจำนวนครั้ง ไม่ต้องสมัครสมาชิกก็เปิดใช้ได้ทันที การสมัครมีไว้เพื่อให้รายชื่อนักเรียนและคะแนนตามไปทุกเครื่องเท่านั้น",
-          },
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: f.a,
         },
-        {
-          "@type": "Question",
-          name: "ต้องติดตั้งโปรแกรมหรือแอปเพิ่มไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ไม่ต้องติดตั้งอะไรเลย ทุกเครื่องมือทำงานในเว็บเบราว์เซอร์ เปิดผ่านมือถือ แท็บเล็ต คอมพิวเตอร์ หรือฉายขึ้นทีวีและโปรเจกเตอร์ในห้องเรียนได้ทันที",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "ใช้กับกระดานอัจฉริยะหรือโปรเจกเตอร์ในห้องเรียนได้ไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ได้ ทุกเครื่องมือมีปุ่มเต็มจอ ตัวอักษรใหญ่อ่านออกจากหลังห้อง เหมาะกับการฉายขึ้นจอหน้าชั้นเรียน",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "ข้อมูลรายชื่อนักเรียนถูกเก็บไว้ที่ไหน",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ถ้าไม่ได้ล็อกอิน ข้อมูลจะเก็บไว้ในเครื่องของคุณเท่านั้น ถ้าล็อกอินจะซิงก์ขึ้นบัญชีของคุณเพื่อให้ใช้ต่อได้จากเครื่องอื่น และลบได้ตลอดเวลา",
-          },
-        },
-      ],
+      })),
     },
   ],
 };
@@ -242,7 +178,6 @@ export default function ToolsPage() {
               bg={t.bg}
               short={t.short}
               desc={t.desc}
-              slug={t.slug}
             />
           ))}
         </div>
