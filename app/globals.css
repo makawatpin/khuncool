@@ -11,6 +11,16 @@
   }
 }
 
+@keyframes flash {
+  0%,
+  100% {
+    background: #fff;
+  }
+  50% {
+    background: #fee2e2;
+  }
+}
+
 :root {
   /* Brand */
   --color-primary: #5c5ee6;
