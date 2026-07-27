@@ -186,6 +186,12 @@ function drawBulbs(
   }
 }
 
+/** Backing-store resolution: source uses 620x620 on mobile, 840x840 on desktop (md, 768px+). */
+function canvasSizeForViewport(): number {
+  if (typeof window === "undefined") return 840;
+  return window.matchMedia("(min-width: 768px)").matches ? 840 : 620;
+}
+
 export default function WheelApp() {
   const [names, setNames] = useState<string[]>(SAMPLE_NAMES);
   const [hydrated, setHydrated] = useState(false);
@@ -198,11 +204,32 @@ export default function WheelApp() {
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
   const [importMsg, setImportMsg] = useState("");
+  const [soundOn, setSoundOn] = useState(true);
 
   const canvasRefs = useRef<HTMLCanvasElement[]>([]);
   const rotRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const importTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const soundOnRef = useRef(soundOn);
+  useEffect(() => {
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
+  const acRef = useRef<AudioContext | null>(null);
+  const lastTickSegRef = useRef(-1);
+  const confettiRef = useRef<
+    {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      c: string;
+      s: number;
+      rot: number;
+      vr: number;
+      life: number;
+    }[]
+  >([]);
+  const confRafRef = useRef<number | null>(null);
 
   // Load persisted names on mount.
   useEffect(() => {
@@ -228,15 +255,172 @@ export default function WheelApp() {
     if (!spinning) drawAll();
   }, [drawAll, spinning]);
 
+  // Keep canvas backing-store resolution in sync with the md breakpoint (620 mobile / 840 desktop).
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const applySize = () => {
+      const size = canvasSizeForViewport();
+      canvasRefs.current.forEach((c) => {
+        if (c.width !== size) {
+          c.width = size;
+          c.height = size;
+        }
+      });
+      drawAll();
+    };
+    applySize();
+    mql.addEventListener("change", applySize);
+    return () => mql.removeEventListener("change", applySize);
+  }, [drawAll]);
+
   const registerCanvas = useCallback(
     (el: HTMLCanvasElement | null) => {
       if (el && !canvasRefs.current.includes(el)) {
+        const size = canvasSizeForViewport();
+        el.width = size;
+        el.height = size;
         canvasRefs.current.push(el);
         drawWheel(el, names, rotRef.current);
       }
     },
     [names],
   );
+
+  // ---- audio (ported from Wheel.dc.html's ac()/tick()/chime()) ----
+  const ac = useCallback((): AudioContext | null => {
+    if (!acRef.current) {
+      try {
+        const Ctor =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext })
+            .webkitAudioContext;
+        acRef.current = new Ctor();
+      } catch {
+        acRef.current = null;
+      }
+    }
+    return acRef.current;
+  }, []);
+
+  const tick = useCallback(() => {
+    if (!soundOnRef.current) return;
+    const context = ac();
+    if (!context) return;
+    const o = context.createOscillator();
+    const g = context.createGain();
+    o.type = "square";
+    o.frequency.value = 1100;
+    g.gain.setValueAtTime(0.06, context.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.05);
+    o.connect(g);
+    g.connect(context.destination);
+    o.start();
+    o.stop(context.currentTime + 0.05);
+  }, [ac]);
+
+  const chime = useCallback(() => {
+    if (!soundOnRef.current) return;
+    const context = ac();
+    if (!context) return;
+    [523, 659, 784, 1047].forEach((f, i) => {
+      const o = context.createOscillator();
+      const g = context.createGain();
+      const t = context.currentTime + i * 0.09;
+      o.type = "triangle";
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.14, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      o.connect(g);
+      g.connect(context.destination);
+      o.start(t);
+      o.stop(t + 0.42);
+    });
+  }, [ac]);
+
+  const toggleSound = useCallback(() => setSoundOn((s) => !s), []);
+
+  // ---- confetti (ported from Wheel.dc.html's burstConfetti()/confCanvasFor()) ----
+  const confCanvasFor = useCallback((wheelCanvas: HTMLCanvasElement) => {
+    const parent = wheelCanvas.parentElement;
+    if (!parent) return null;
+    let oc = parent.querySelector<HTMLCanvasElement>("canvas[data-conf]");
+    if (!oc) {
+      oc = document.createElement("canvas");
+      oc.setAttribute("data-conf", "1");
+      oc.width = wheelCanvas.width * 1.6;
+      oc.height = wheelCanvas.height * 1.6;
+      oc.style.position = "absolute";
+      oc.style.pointerEvents = "none";
+      oc.style.zIndex = "5";
+      oc.style.width = `${wheelCanvas.clientWidth * 1.6}px`;
+      oc.style.height = `${wheelCanvas.clientHeight * 1.6}px`;
+      oc.style.left = "50%";
+      oc.style.top = "50%";
+      oc.style.transform = "translate(-50%,-50%)";
+      parent.appendChild(oc);
+    }
+    return oc;
+  }, []);
+
+  const burstConfetti = useCallback(() => {
+    const cols = PALETTE;
+    confettiRef.current = [];
+    for (let i = 0; i < 90; i++) {
+      confettiRef.current.push({
+        x: 0.5,
+        y: 0.35,
+        vx: (Math.random() - 0.5) * 0.9,
+        vy: -Math.random() * 0.9 - 0.3,
+        c: cols[i % cols.length],
+        s: 6 + Math.random() * 7,
+        rot: Math.random() * 6,
+        vr: (Math.random() - 0.5) * 0.5,
+        life: 1,
+      });
+    }
+    if (confRafRef.current) cancelAnimationFrame(confRafRef.current);
+    let last = performance.now();
+    const overlays = canvasRefs.current
+      .map((c) => confCanvasFor(c))
+      .filter((c): c is HTMLCanvasElement => !!c);
+    const step = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      let alive = false;
+      confettiRef.current.forEach((p) => {
+        p.vy += 1.4 * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.rot += p.vr;
+        p.life -= 0.45 * dt;
+        if (p.life > 0) alive = true;
+      });
+      overlays.forEach((oc) => {
+        const ctx = oc.getContext("2d");
+        if (!ctx) return;
+        const w = oc.width;
+        const h = oc.height;
+        ctx.clearRect(0, 0, w, h);
+        confettiRef.current.forEach((p) => {
+          if (p.life <= 0) return;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.translate(p.x * w, p.y * h);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          ctx.restore();
+        });
+      });
+      if (alive) {
+        confRafRef.current = requestAnimationFrame(step);
+      } else {
+        overlays.forEach((oc) => oc.getContext("2d")?.clearRect(0, 0, oc.width, oc.height));
+      }
+    };
+    confRafRef.current = requestAnimationFrame(step);
+  }, [confCanvasFor]);
 
   const finish = useCallback(() => {
     setSpinning(false);
@@ -253,10 +437,14 @@ export default function WheelApp() {
       setShowResult(true);
       return current;
     });
-  }, []);
+    chime();
+    burstConfetti();
+  }, [chime, burstConfetti]);
 
   const spin = useCallback(() => {
     if (spinning || names.length < 2) return;
+    const context = ac();
+    if (context && context.state === "suspended") context.resume();
     setSpinning(true);
     setShowResult(false);
     setWinner("");
@@ -264,10 +452,18 @@ export default function WheelApp() {
     const delta = 2 * Math.PI * (5 + Math.random() * 2) + Math.random() * 2 * Math.PI;
     const dur = 4200;
     const t0 = performance.now();
+    const n = names.length;
+    const seg = (2 * Math.PI) / n;
+    lastTickSegRef.current = -1;
     const step = (now: number) => {
       const p = Math.min(1, (now - t0) / dur);
       const e = 1 - Math.pow(1 - p, 3);
       rotRef.current = startRot + delta * e;
+      const curSeg = Math.floor((rotRef.current % (2 * Math.PI)) / seg);
+      if (curSeg !== lastTickSegRef.current) {
+        lastTickSegRef.current = curSeg;
+        tick();
+      }
       drawAll();
       if (p < 1) {
         rafRef.current = requestAnimationFrame(step);
@@ -276,11 +472,12 @@ export default function WheelApp() {
       }
     };
     rafRef.current = requestAnimationFrame(step);
-  }, [spinning, names.length, drawAll, finish]);
+  }, [spinning, names.length, drawAll, finish, ac, tick]);
 
   useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (confRafRef.current) cancelAnimationFrame(confRafRef.current);
       if (importTimerRef.current) clearTimeout(importTimerRef.current);
     };
   }, []);
@@ -392,23 +589,32 @@ export default function WheelApp() {
           />
           <canvas
             ref={registerCanvas}
-            width={840}
-            height={840}
             onClick={spin}
             className="relative z-[1] block h-[310px] w-[310px] cursor-pointer md:h-[420px] md:w-[420px]"
             style={{ filter: "drop-shadow(0 18px 26px rgba(26,29,38,.32))" }}
           />
         </div>
 
-        <button
-          type="button"
-          onClick={spin}
-          disabled={disabled}
-          className="mb-4 w-full min-w-0 rounded-[13px] border-none px-[15px] py-[15px] font-sans text-base font-bold text-white shadow-[0_10px_24px_-8px_rgba(92,94,230,.5)] hover:brightness-105 active:translate-y-px disabled:cursor-not-allowed md:mb-0 md:min-w-[260px] md:w-auto md:rounded-2xl md:px-10 md:py-4 md:text-[17px]"
-          style={{ background: disabled ? "#B9BCC7" : "#5C5EE6" }}
-        >
-          {spinning ? "กำลังหมุน…" : "🎡 หมุนวงล้อ"}
-        </button>
+        <div className="flex w-full items-center gap-2.5 md:w-auto">
+          <button
+            type="button"
+            onClick={spin}
+            disabled={disabled}
+            className="mb-4 w-full min-w-0 flex-1 rounded-[13px] border-none px-[15px] py-[15px] font-sans text-base font-bold text-white shadow-[0_10px_24px_-8px_rgba(92,94,230,.5)] hover:brightness-105 active:translate-y-px disabled:cursor-not-allowed md:mb-0 md:min-w-[260px] md:flex-none md:w-auto md:rounded-2xl md:px-10 md:py-4 md:text-[17px]"
+            style={{ background: disabled ? "#B9BCC7" : "#5C5EE6" }}
+          >
+            {spinning ? "กำลังหมุน…" : "🎡 หมุนวงล้อ"}
+          </button>
+          <button
+            type="button"
+            onClick={toggleSound}
+            title="เสียง"
+            aria-label="เปิด/ปิดเสียง"
+            className="mb-4 flex h-[52px] w-[52px] flex-none cursor-pointer items-center justify-center rounded-[13px] border border-border bg-surface-card text-lg hover:bg-surface-light md:mb-0 md:h-14 md:w-14 md:rounded-2xl"
+          >
+            {soundOn ? "🔊" : "🔇"}
+          </button>
+        </div>
       </div>
 
       {/* Controls column */}
