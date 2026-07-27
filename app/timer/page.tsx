@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "นาฬิกาจับเวลาถอยหลังสำหรับห้องเรียน ใช้ฟรี ตั้งเวลาทำกิจกรรม สอบ หรือพักเบรกได้ทันทีบนเว็บ ไม่ต้องสมัครสมาชิก",
   alternates: {
-    canonical: "https://www.khuncool.com/tools/timer",
+    canonical: "https://www.khuncool.com/timer",
   },
 };
 
