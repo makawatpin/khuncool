@@ -168,6 +168,29 @@ export default function DuckRaceApp() {
   const ambStepRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const importTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Tracks every setTimeout scheduled by the race flow (countdown ticks,
+  // race-again / remove-and-race restart delays, the post-finish reveal
+  // delay) so they can all be cancelled on unmount — otherwise a pending
+  // tick can fire after cleanup and call startAmbience() with nothing left
+  // to stop it (leaked looping AudioBufferSourceNode + setInterval).
+  const mountedRef = useRef(true);
+  const pendingTimeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(
+    new Set(),
+  );
+  const trackedTimeout = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      pendingTimeoutsRef.current.delete(id);
+      if (!mountedRef.current) return;
+      fn();
+    }, ms);
+    pendingTimeoutsRef.current.add(id);
+    return id;
+  }, []);
+  const clearAllTrackedTimeouts = useCallback(() => {
+    pendingTimeoutsRef.current.forEach((id) => clearTimeout(id));
+    pendingTimeoutsRef.current.clear();
+  }, []);
+
   // ---- persistence ----
   useEffect(() => {
     setNames(loadInitialNames());
@@ -405,10 +428,10 @@ export default function DuckRaceApp() {
     setSoundOn((s) => {
       const next = !s;
       if (!next) stopAmbience();
-      else if (racingRef.current) setTimeout(() => startAmbience(), 0);
+      else if (racingRef.current) trackedTimeout(() => startAmbience(), 0);
       return next;
     });
-  }, [stopAmbience, startAmbience]);
+  }, [stopAmbience, startAmbience, trackedTimeout]);
 
   // ---- confetti burst ----
   const burst = useCallback(() => {
@@ -669,13 +692,13 @@ export default function DuckRaceApp() {
       bg: i === 0 ? "linear-gradient(90deg,#FFF4D6,#FFEAB0)" : "#F1F3F7",
     }));
     winnerIdxRef.current = finishOrderRef.current[0].idx;
-    setTimeout(() => {
+    trackedTimeout(() => {
       setRacing(false);
       setShowResult(true);
       setWinner(finishOrderRef.current[0].name);
       setPodium(podiumList);
     }, 480);
-  }, [showSpeed, stopAmbience, cheer]);
+  }, [showSpeed, stopAmbience, cheer, trackedTimeout]);
 
   useEffect(() => {
     finishRef.current = finish;
@@ -706,7 +729,7 @@ export default function DuckRaceApp() {
         setCountdown(val);
         showCount(val);
         beep(val === "ไป!" ? 990 : 660, 0.18, "square", 0.08);
-        setTimeout(tick, 750);
+        trackedTimeout(tick, 750);
       } else {
         hideCount();
         setCountdown(null);
@@ -717,34 +740,57 @@ export default function DuckRaceApp() {
         startAmbience();
       }
     };
-    setTimeout(tick, 750);
-  }, [countdown, ac, rebuild, beep, showCount, hideCount, showSpeed, quack, startAmbience]);
+    trackedTimeout(tick, 750);
+  }, [
+    countdown,
+    ac,
+    rebuild,
+    beep,
+    showCount,
+    hideCount,
+    showSpeed,
+    quack,
+    startAmbience,
+    trackedTimeout,
+  ]);
 
   useEffect(() => {
+    mountedRef.current = true;
     if (!ducksRef.current.length) makeDucks();
     rafRef.current = requestAnimationFrame(loop);
     return () => {
+      mountedRef.current = false;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       stopAmbience();
       if (importTimerRef.current) clearTimeout(importTimerRef.current);
+      clearAllTrackedTimeouts();
+      // stopAmbience() schedules a ~420ms fade-out before it stops/disconnects
+      // its audio nodes; close the context after that so the fade can finish
+      // cleanly instead of tearing down mid-ramp.
+      setTimeout(() => {
+        if (acRef.current) {
+          acRef.current.close().catch(() => {});
+          acRef.current = null;
+        }
+      }, 450);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const raceAgain = useCallback(() => {
     setShowResult(false);
-    setTimeout(startRace, 280);
-  }, [startRace]);
+    trackedTimeout(startRace, 280);
+  }, [startRace, trackedTimeout]);
 
   const removeAndRace = useCallback(() => {
     const idx = winnerIdxRef.current;
     setNames((cur) => cur.filter((_, i) => i !== idx));
     setShowResult(false);
-    setTimeout(() => {
+    trackedTimeout(() => {
       rebuild();
-      setTimeout(startRace, 340);
+      trackedTimeout(startRace, 340);
     }, 0);
-  }, [rebuild, startRace]);
+  }, [rebuild, startRace, trackedTimeout]);
 
   const closeResult = useCallback(() => {
     if (removeWinner && winnerIdxRef.current >= 0) {
