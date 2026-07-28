@@ -11,6 +11,15 @@
   }
 }
 
+@keyframes dbob {
+  0% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  100% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
 @keyframes flash {
   0%,
   100% {
