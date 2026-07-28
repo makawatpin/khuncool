@@ -43,33 +43,13 @@ const jsonLd = {
     {
       "@type": "ItemList",
       itemListOrder: "https://schema.org/ItemListOrderAscending",
-      numberOfItems: 4,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "เช็กชื่อนักเรียน",
-          url: "https://www.khuncool.com/attendance",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "ออมเงินนักเรียน",
-          url: "https://www.khuncool.com/savings",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "บันทึกโฮมรูม",
-          url: "https://www.khuncool.com/homeroom",
-        },
-        {
-          "@type": "ListItem",
-          position: 4,
-          name: "กระดานคะแนนกลุ่ม",
-          url: "https://www.khuncool.com/group-scoreboard",
-        },
-      ],
+      numberOfItems: APPS.length,
+      itemListElement: APPS.map((a, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: a.title,
+        url: `https://www.khuncool.com${a.href}`,
+      })),
     },
     {
       "@type": "SoftwareApplication",
