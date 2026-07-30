@@ -23,7 +23,33 @@ export const metadata: Metadata = {
   },
 };
 
-const allArticles = [FEATURED, ...ARTICLES];
+const BLOG_POSTS_JSON_LD = [
+  {
+    headline: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง",
+    url: "https://www.khuncool.com/blog/wheel",
+    datePublished: "2026-07-27",
+  },
+  {
+    headline: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
+    url: "https://www.khuncool.com/blog/random-name-activities",
+    datePublished: "2026-07-26",
+  },
+  {
+    headline: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง",
+    url: "https://www.khuncool.com/blog/magnetic-frame",
+    datePublished: "2025-07-26",
+  },
+  {
+    headline: "เรียนภาษาอังกฤษฟรี ออนไลน์ มีใบเซอร์",
+    url: "https://www.khuncool.com/blog/psu-english",
+    datePublished: "2025-07-25",
+  },
+  {
+    headline: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
+    url: "https://www.khuncool.com/blog/royal-award-2569",
+    datePublished: "2026-07-25",
+  },
+];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -57,11 +83,11 @@ const jsonLd = {
       name: "khuncool บทความ",
       url: "https://www.khuncool.com/articles",
       inLanguage: "th-TH",
-      blogPost: allArticles.map((a) => ({
+      blogPost: BLOG_POSTS_JSON_LD.map((p) => ({
         "@type": "BlogPosting",
-        headline: a.title,
-        url: `https://www.khuncool.com${a.href}`,
-        datePublished: a.date,
+        headline: p.headline,
+        url: p.url,
+        datePublished: p.datePublished,
       })),
     },
   ],
