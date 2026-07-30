@@ -72,21 +72,21 @@ export const APPS = [
     title: "บันทึกโฮมรูม",
     sub: "ตั้งหัวข้อเอง พิมพ์แบบฟอร์มได้",
     bg: "#E1E3FD",
-    href: "/apps/homeroom",
+    href: "/tools/homeroom",
   },
   {
     icon: "✅",
     title: "เช็กชื่อนักเรียน",
     sub: "บันทึกการมาเรียน สรุปสถิติ",
     bg: "#D0FBEF",
-    href: "/apps/attendance",
+    href: "/tools/attendance",
   },
   {
     icon: "💰",
     title: "ออมเงินนักเรียน",
     sub: "บันทึกเงินออมรายคน รายห้อง",
     bg: "#FFEAD5",
-    href: "/apps/savings",
+    href: "/tools/savings",
   },
 ];
 
