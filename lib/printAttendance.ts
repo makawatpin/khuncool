@@ -15,7 +15,17 @@ export const ATTENDANCE_STATUS_DEFS: AttendanceStatusDef[] = [
   { key: "absent", label: "ขาด" },
 ];
 
-function statusLabel(key: AttendanceStatusKey | null): string {
+/** Escapes text for safe interpolation into an HTML string. */
+export function escapeHtml(value: string): string {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export function statusLabel(key: AttendanceStatusKey | null): string {
   const found = ATTENDANCE_STATUS_DEFS.find((d) => d.key === key);
   return found ? found.label : "-";
 }
@@ -31,16 +41,17 @@ export function buildAttendancePrintHtml(
     month: "long",
     year: "numeric",
   });
+  const safeRoom = escapeHtml(room);
   const body = students
     .map(
       (n, i) =>
-        `<tr><td class="c">${i + 1}</td><td>${n}</td><td class="c">${statusLabel(
-          statuses[i],
+        `<tr><td class="c">${i + 1}</td><td>${escapeHtml(n)}</td><td class="c">${escapeHtml(
+          statusLabel(statuses[i]),
         )}</td></tr>`,
     )
     .join("");
   const sum = ATTENDANCE_STATUS_DEFS.map(
-    (d) => `${d.label} ${statuses.filter((x) => x === d.key).length}`,
+    (d) => `${escapeHtml(d.label)} ${statuses.filter((x) => x === d.key).length}`,
   ).join(" · ");
   const closeTag = "<" + "/script>";
   const runner =
@@ -48,12 +59,12 @@ export function buildAttendancePrintHtml(
     "script>window.onload=function(){setTimeout(function(){window.print();},350);};" +
     closeTag;
   return (
-    `<!doctype html><html><head><meta charset="utf-8"><title>เช็กชื่อ ${room}</title>` +
+    `<!doctype html><html><head><meta charset="utf-8"><title>เช็กชื่อ ${safeRoom}</title>` +
     `<style>@page{margin:18mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}` +
     `h1{font-size:22px;margin:0 0 4px}.meta{font-size:14px;color:#555;margin-bottom:14px}` +
     `table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid #999;padding:7px 10px;text-align:left}` +
     `th{background:#eee}.c{text-align:center;width:70px}.sum{margin-top:14px;font-size:15px}</style></head>` +
-    `<body><h1>บัญชีเรียกชื่อนักเรียน · ห้อง ${room || "-"}</h1>` +
+    `<body><h1>บัญชีเรียกชื่อนักเรียน · ห้อง ${safeRoom || "-"}</h1>` +
     `<div class="meta">วันที่ ${dateText}</div>` +
     `<table><thead><tr><th class="c">เลขที่</th><th>ชื่อ-สกุล</th><th class="c">สถานะ</th></tr></thead><tbody>${body}</tbody></table>` +
     `<div class="sum">สรุป: ${sum} · รวม ${students.length} คน</div>` +
