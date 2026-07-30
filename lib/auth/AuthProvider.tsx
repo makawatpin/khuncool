@@ -31,7 +31,33 @@ function translate(msg: string | undefined | null): string {
     return "ลองบ่อยเกินไป รอสักครู่แล้วลองใหม่";
   if (m.includes("provider is not enabled"))
     return "ยังไม่ได้เปิด Google login ใน Supabase (ใช้อีเมล+รหัสผ่านได้เลย)";
+  // Network-level failures (Supabase's SDK wraps a rejected fetch — offline,
+  // DNS, CORS, edge outage — into an AuthError with messages like these
+  // rather than throwing) — not in the reference's translate(), but a raw
+  // "Failed to fetch" is not something a non-technical user should see.
+  if (
+    m.includes("failed to fetch") ||
+    m.includes("networkerror") ||
+    m.includes("load failed") ||
+    m.includes("network request failed")
+  )
+    return "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ — เช็กอินเทอร์เน็ตแล้วลองใหม่";
   return msg || "เกิดข้อผิดพลาด";
+}
+
+/** Translates values thrown outside Supabase's structured `{error}`
+ *  responses (network failure, DNS, CORS, offline, unexpected exceptions).
+ *  Falls back to a generic Thai message instead of leaking a raw
+ *  English/technical string when nothing recognizable matches. */
+function translateUnknown(err: unknown): string {
+  const msg =
+    err instanceof Error ? err.message : typeof err === "string" ? err : "";
+  const known = translate(msg);
+  // translate() echoes back an unrecognized-but-truthy message verbatim;
+  // for values we caught outside Supabase's own error shape, prefer a
+  // Thai fallback over surfacing a raw technical string to the user.
+  if (known === msg && msg) return "เกิดข้อผิดพลาด ลองใหม่อีกครั้ง";
+  return known;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -90,70 +116,95 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(
     async (email: string, password: string, meta?: ProfileMeta): Promise<AuthResult> => {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: meta?.fullName || "",
-            school: meta?.school || "",
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: meta?.fullName || "",
+              school: meta?.school || "",
+            },
           },
-        },
-      });
-      if (error) return { ok: false, error: translate(error.message) };
-      if (data.session) {
-        setSession(data.session);
-        setUser(data.session.user);
-        return { ok: true };
+        });
+        if (error) return { ok: false, error: translate(error.message) };
+        if (data.session) {
+          setSession(data.session);
+          setUser(data.session.user);
+          return { ok: true };
+        }
+        return { ok: true, confirm: true };
+      } catch (err) {
+        return { ok: false, error: translateUnknown(err) };
       }
-      return { ok: true, confirm: true };
     },
     []
   );
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<AuthResult> => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) return { ok: false, error: translate(error.message) };
-      setSession(data.session);
-      setUser(data.user);
-      return { ok: true };
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) return { ok: false, error: translate(error.message) };
+        setSession(data.session);
+        setUser(data.user);
+        return { ok: true };
+      } catch (err) {
+        return { ok: false, error: translateUnknown(err) };
+      }
     },
     []
   );
 
   const signInGoogle = useCallback(async (): Promise<AuthResult | void> => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: typeof window !== "undefined" ? window.location.href : undefined },
-    });
-    if (error) return { ok: false, error: translate(error.message) };
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: typeof window !== "undefined" ? window.location.href : undefined },
+      });
+      if (error) return { ok: false, error: translate(error.message) };
+    } catch (err) {
+      return { ok: false, error: translateUnknown(err) };
+    }
   }, []);
 
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: typeof window !== "undefined" ? window.location.href : undefined,
-    });
-    if (error) return { ok: false, error: translate(error.message) };
-    return { ok: true };
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: typeof window !== "undefined" ? window.location.href : undefined,
+      });
+      if (error) return { ok: false, error: translate(error.message) };
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: translateUnknown(err) };
+    }
   }, []);
 
   const updateProfile = useCallback(async (meta: ProfileMeta): Promise<AuthResult> => {
-    const { data, error } = await supabase.auth.updateUser({
-      data: { full_name: meta.fullName || "", school: meta.school || "" },
-    });
-    if (error) return { ok: false, error: translate(error.message) };
-    setUser(data.user);
-    return { ok: true };
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: { full_name: meta.fullName || "", school: meta.school || "" },
+      });
+      if (error) return { ok: false, error: translate(error.message) };
+      setUser(data.user);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: translateUnknown(err) };
+    }
   }, []);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
-    setSession(null);
-    setUser(null);
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // best-effort: clear local state regardless of network failure
+    } finally {
+      setSession(null);
+      setUser(null);
+    }
   }, []);
 
   const value = useMemo(

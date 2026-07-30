@@ -84,42 +84,54 @@ export function AccountForm({
     setErr("");
     setNote("");
 
-    const result =
-      tab === "signup"
-        ? await signUp(email, password, { fullName: name, school })
-        : tab === "reset"
-          ? await resetPassword(email)
-          : await signIn(email, password);
+    try {
+      const result =
+        tab === "signup"
+          ? await signUp(email, password, { fullName: name, school })
+          : tab === "reset"
+            ? await resetPassword(email)
+            : await signIn(email, password);
 
-    if (!result.ok) {
+      if (!result.ok) {
+        setBusy(false);
+        setErr(result.error || "ไม่สำเร็จ");
+        return;
+      }
+
+      if (result.confirm) {
+        setBusy(false);
+        setNote(`ส่งลิงก์ยืนยันไปที่ ${email} แล้ว — กดยืนยันในอีเมลแล้วกลับมาเข้าสู่ระบบ`);
+        return;
+      }
+
+      if (tab === "reset") {
+        setBusy(false);
+        setNote("ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว");
+        return;
+      }
+
       setBusy(false);
-      setErr(result.error || "ไม่สำเร็จ");
-      return;
-    }
-
-    if (result.confirm) {
+      setPassword("");
+      onSkip?.();
+    } catch {
+      // Defensive fallback: AuthProvider already catches Supabase/network
+      // failures internally, but guard here too so a stuck "busy" state
+      // and a silent failure can never happen even if that changes.
       setBusy(false);
-      setNote(`ส่งลิงก์ยืนยันไปที่ ${email} แล้ว — กดยืนยันในอีเมลแล้วกลับมาเข้าสู่ระบบ`);
-      return;
+      setErr("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
     }
-
-    if (tab === "reset") {
-      setBusy(false);
-      setNote("ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว");
-      return;
-    }
-
-    setBusy(false);
-    setPassword("");
-    onSkip?.();
   };
 
   const handleGoogle = async () => {
     setErr("");
     setNote("");
-    const result = await signInGoogle();
-    if (result && !result.ok) {
-      setErr(result.error || "ไม่สำเร็จ");
+    try {
+      const result = await signInGoogle();
+      if (result && !result.ok) {
+        setErr(result.error || "ไม่สำเร็จ");
+      }
+    } catch {
+      setErr("เกิดข้อผิดพลาด ลองใหม่อีกครั้ง");
     }
   };
 
