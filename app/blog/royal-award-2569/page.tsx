@@ -88,7 +88,7 @@ export default function BlogRoyalAward2569Page() {
       <div className="px-4 pb-9 pt-4 md:grid md:grid-cols-[1fr_300px] md:gap-10 md:px-8 md:pt-6">
         <article className="min-w-0 md:max-w-[720px]">
           <div className="mb-3.5 flex flex-wrap items-center gap-2 md:mb-4">
-            <span className="rounded-pill bg-[#E1E3FD] px-2.5 py-1 text-[12px] font-bold text-[#3D38B4] md:px-[11px] md:py-[5px]">ข่าวการศึกษา</span>
+            <span className="rounded-pill bg-[#FBF1D8] px-2.5 py-1 text-[12px] font-bold text-[#8A6206] md:px-[11px] md:py-[5px]">ข่าวการศึกษา</span>
             <span className="rounded-pill bg-[#FDEAE8] px-2.5 py-1 text-[12px] font-semibold text-[#B3261E] md:px-[11px] md:py-[5px]">มีกำหนดเวลา</span>
             <span className="text-[12px] text-ink-faint">27 ก.ค. 2569 · อ่าน 4 นาที · โดย ทีมคุณคูล</span>
           </div>
