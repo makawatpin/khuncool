@@ -117,9 +117,10 @@ export default function AccountPage() {
         </div>
 
         <div className="sticky top-[92px] rounded-card-lg border border-border bg-surface-card p-7 shadow-cta">
-          <AccountForm
-            onSkip={undefined}
-          />
+          {/* onSkip intentionally omitted: this page renders its own
+              "ยังไม่สมัคร" skip link below, so passing onSkip here would
+              render a second, duplicate skip affordance inside the form. */}
+          <AccountForm />
           <div className="mt-5 border-t border-border pt-4 text-[11.5px] leading-[1.6] text-ink-faint">
             การสมัครถือว่ายอมรับ <a href="#" className="text-primary hover:text-primary-hover">เงื่อนไขการใช้งาน</a>{" "}
             และ{" "}
