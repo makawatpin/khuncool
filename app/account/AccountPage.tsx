@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { AccountForm } from "@/components/AccountSheet";
+import { getKhuncoolLocalStorageKeys } from "@/lib/khuncoolLocalKeys";
 
 const GUEST_PERKS = [
   { mark: "✓", color: "text-success", text: "ใช้ได้ครบทุกเครื่องมือ ไม่จำกัด" },
@@ -160,28 +161,18 @@ function MemberAccount() {
   const { user, updateProfile, resetPassword, signOut } = useAuth();
   const meta = (user?.user_metadata || {}) as { full_name?: string; school?: string };
   const email = user?.email || "";
-  const [name, setName] = useState(meta.full_name || "");
-  const [school, setSchool] = useState(meta.school || "");
+  // Lazy-initialized from `user_metadata`/localStorage on first render
+  // instead of synced via a `useEffect`+`setState` — this component only
+  // mounts once `user` is already populated (see `AccountPage` above),
+  // so there's no later async arrival to react to. `saveProfile` below
+  // keeps these in sync with the server after a save.
+  const [name, setName] = useState(() => meta.full_name || "");
+  const [school, setSchool] = useState(() => meta.school || "");
   const [profileSaved, setProfileSaved] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
   const [note, setNote] = useState("");
   const [signingOut, setSigningOut] = useState(false);
-  const [keyCount, setKeyCount] = useState(0);
-
-  useEffect(() => {
-    setName(meta.full_name || "");
-    setSchool(meta.school || "");
-  }, [meta.full_name, meta.school]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let count = 0;
-    for (let i = 0; i < window.localStorage.length; i++) {
-      const k = window.localStorage.key(i);
-      if (k && (k.startsWith("khuncool.") || k.startsWith("khuncool_"))) count++;
-    }
-    setKeyCount(count);
-  }, []);
+  const [keyCount] = useState(() => getKhuncoolLocalStorageKeys().length);
 
   const displayName = meta.full_name || "ครูของ khuncool";
   const initial = ((meta.full_name || email || "?").trim().charAt(0) || "?").toUpperCase();

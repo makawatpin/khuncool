@@ -11,6 +11,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase/client";
+import { getKhuncoolLocalStorageKeys } from "@/lib/khuncoolLocalKeys";
 
 /* ---------------------------------------------------------------------- */
 /* Error translation — ported verbatim from reference/khuncool-cloud.js   */
@@ -212,14 +213,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       if (!keepLocal && typeof window !== "undefined") {
         try {
-          const toRemove: string[] = [];
-          for (let i = 0; i < window.localStorage.length; i++) {
-            const k = window.localStorage.key(i);
-            if (k && (k.startsWith("khuncool.") || k.startsWith("khuncool_"))) {
-              toRemove.push(k);
-            }
-          }
-          toRemove.forEach((k) => window.localStorage.removeItem(k));
+          getKhuncoolLocalStorageKeys().forEach((k) =>
+            window.localStorage.removeItem(k)
+          );
         } catch {
           // best-effort: ignore storage access failures (e.g. private mode)
         }
