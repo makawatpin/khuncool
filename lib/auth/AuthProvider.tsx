@@ -80,7 +80,13 @@ interface AuthContextValue {
   signInGoogle: () => Promise<AuthResult | void>;
   resetPassword: (email: string) => Promise<AuthResult>;
   updateProfile: (meta: ProfileMeta) => Promise<AuthResult>;
-  signOut: () => Promise<void>;
+  /**
+   * @param keepLocal When false (the default is `true`), also clears this
+   * browser's `khuncool*`-prefixed localStorage keys (the 3 cloud-synced
+   * apps' local caches) after signing out — for use on shared/public
+   * machines. When true, signs out but leaves local data untouched.
+   */
+  signOut: (keepLocal?: boolean) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -196,7 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const signOut = useCallback(async () => {
+  const signOut = useCallback(async (keepLocal = true) => {
     try {
       await supabase.auth.signOut();
     } catch {
@@ -204,6 +210,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setSession(null);
       setUser(null);
+      if (!keepLocal && typeof window !== "undefined") {
+        try {
+          const toRemove: string[] = [];
+          for (let i = 0; i < window.localStorage.length; i++) {
+            const k = window.localStorage.key(i);
+            if (k && (k.startsWith("khuncool.") || k.startsWith("khuncool_"))) {
+              toRemove.push(k);
+            }
+          }
+          toRemove.forEach((k) => window.localStorage.removeItem(k));
+        } catch {
+          // best-effort: ignore storage access failures (e.g. private mode)
+        }
+      }
     }
   }, []);
 
