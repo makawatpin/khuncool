@@ -104,6 +104,25 @@ export default function SavingsApp() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
 
+  // Mirrors `balances` synchronously (updated the instant we compute a new
+  // array, not on the next render) so apply() can read the true latest
+  // balance even when two withdraw clicks fire back-to-back before React
+  // has re-rendered. Prevents a stale-closure race that could let a rapid
+  // double-click withdraw push a balance negative.
+  const balancesRef = useRef<number[]>(balances);
+  const setBalancesSynced = useCallback(
+    (updater: number[] | ((prev: number[]) => number[])) => {
+      const next =
+        typeof updater === "function"
+          ? (updater as (prev: number[]) => number[])(balancesRef.current)
+          : updater;
+      balancesRef.current = next;
+      setBalances(next);
+      return next;
+    },
+    [],
+  );
+
   const state = { students, balances, txns, room, lastTs };
   useCloudSync("savings", state);
 
@@ -115,7 +134,7 @@ export default function SavingsApp() {
         const d: Persisted = JSON.parse(raw);
         if (Array.isArray(d.students) && d.students.length) {
           setStudents(d.students);
-          setBalances(
+          setBalancesSynced(
             Array.isArray(d.balances) ? d.balances : d.students.map(() => 0),
           );
           setTxns(Array.isArray(d.txns) ? d.txns : []);
@@ -130,13 +149,14 @@ export default function SavingsApp() {
       );
       if (Array.isArray(r) && r.length) {
         setStudents(r as string[]);
-        setBalances((r as string[]).map(() => 0));
+        setBalancesSynced((r as string[]).map(() => 0));
         setTxns([]);
       }
     } catch {
       /* ignore */
     }
     setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Online/offline banner + cleanup.
@@ -222,18 +242,22 @@ export default function SavingsApp() {
 
   const apply = useCallback(
     (i: number, amt: number, type: "deposit" | "withdraw") => {
-      const cur = balances[i] || 0;
+      if (amt <= 0) return;
+      // Read the live balance from the ref (kept in sync synchronously by
+      // setBalancesSynced), not from the `balances` state closure — this is
+      // what makes back-to-back withdraw clicks compose correctly instead
+      // of both computing against the same stale balance.
+      const cur = balancesRef.current[i] || 0;
       let usedAmt = amt;
       if (type === "withdraw") {
         usedAmt = Math.min(amt, cur);
         if (usedAmt <= 0) return;
       }
+      const nextBal = [...balancesRef.current];
+      nextBal[i] =
+        type === "withdraw" ? Math.max(0, cur - usedAmt) : cur + usedAmt;
+      setBalancesSynced(nextBal);
       const ts = entryTs();
-      setBalances((current) => {
-        const bal = [...current];
-        bal[i] = type === "withdraw" ? (bal[i] || 0) - usedAmt : (bal[i] || 0) + usedAmt;
-        return bal;
-      });
       setTxns((t) => [...t, { name: students[i], amt: usedAmt, type, ts }]);
       setLastTs(ts);
       setRowAmts((r) => {
@@ -243,7 +267,7 @@ export default function SavingsApp() {
       });
       flashToast();
     },
-    [balances, entryTs, students, flashToast],
+    [setBalancesSynced, entryTs, students, flashToast],
   );
 
   const deposit = useCallback(
@@ -268,7 +292,7 @@ export default function SavingsApp() {
     const amt = parseAmt(quickAmt);
     if (!amt) return;
     const ts = entryTs();
-    setBalances((current) => current.map((b) => (b || 0) + amt));
+    setBalancesSynced((current) => current.map((b) => (b || 0) + amt));
     setTxns((current) => [
       ...current,
       ...students.map((name, idx) => ({
@@ -281,7 +305,7 @@ export default function SavingsApp() {
     setLastTs(ts);
     setQuickAmt("");
     flashToast();
-  }, [quickAmt, entryTs, students, flashToast]);
+  }, [quickAmt, entryTs, students, flashToast, setBalancesSynced]);
 
   const undoTxn = useCallback(
     (ts: number) => {
@@ -289,7 +313,7 @@ export default function SavingsApp() {
       if (!t) return;
       const i = students.indexOf(t.name);
       if (i >= 0) {
-        setBalances((bal) => {
+        setBalancesSynced((bal) => {
           const next = [...bal];
           next[i] = (next[i] || 0) + (t.type === "deposit" ? -t.amt : t.amt);
           if (next[i] < 0) next[i] = 0;
@@ -299,17 +323,17 @@ export default function SavingsApp() {
       setTxns((current) => current.filter((x) => x.ts !== ts));
       flashToast();
     },
-    [txns, students, flashToast],
+    [txns, students, flashToast, setBalancesSynced],
   );
 
   const addName = useCallback(() => {
     const v = newName.trim();
     if (!v) return;
     setStudents((current) => [...current, v]);
-    setBalances((current) => [...current, 0]);
+    setBalancesSynced((current) => [...current, 0]);
     setNewName("");
     flashToast();
-  }, [newName, flashToast]);
+  }, [newName, flashToast, setBalancesSynced]);
 
   const onKeyName = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -335,11 +359,11 @@ export default function SavingsApp() {
       prev[n] = balances[i] || 0;
     });
     setStudents(list);
-    setBalances(list.map((n) => prev[n] || 0));
+    setBalancesSynced(list.map((n) => prev[n] || 0));
     setBulkMode(false);
     setRowAmts({});
     flashToast();
-  }, [bulkText, students, balances, flashToast]);
+  }, [bulkText, students, balances, flashToast, setBalancesSynced]);
 
   const importPaste = useCallback(() => {
     const list = importText
@@ -355,12 +379,12 @@ export default function SavingsApp() {
       prev[n] = balances[i] || 0;
     });
     setStudents(list);
-    setBalances(list.map((n) => prev[n] || 0));
+    setBalancesSynced(list.map((n) => prev[n] || 0));
     setShowImport(false);
     setImportText("");
     setRowAmts({});
     flashToast();
-  }, [importText, students, balances, flashToast]);
+  }, [importText, students, balances, flashToast, setBalancesSynced]);
 
   const onFile = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -430,7 +454,7 @@ export default function SavingsApp() {
             return;
           }
           setStudents(newStudents);
-          setBalances(newBalances);
+          setBalancesSynced(newBalances);
           setShowImport(false);
           setImportMsg("");
           setRowAmts({});
@@ -443,7 +467,7 @@ export default function SavingsApp() {
       };
       reader.readAsArrayBuffer(file);
     },
-    [flashToast],
+    [flashToast, setBalancesSynced],
   );
 
   const exportExcel = useCallback(() => {
