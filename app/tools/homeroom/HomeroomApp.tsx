@@ -118,9 +118,10 @@ export default function HomeroomApp() {
     principal,
     principalRole,
   };
-  useCloudSync("homeroom", state);
+  const { pulled } = useCloudSync("homeroom", state);
 
-  // Load persisted state on mount.
+  // Load persisted state on mount, and re-run if a cloud pull (after
+  // sign-in) writes newer data into LS.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(LS);
@@ -151,7 +152,7 @@ export default function HomeroomApp() {
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pulled]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {

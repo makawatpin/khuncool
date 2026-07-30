@@ -101,9 +101,10 @@ export default function AttendanceApp() {
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   const state = { students, statuses, room };
-  useCloudSync("attendance", state);
+  const { pulled } = useCloudSync("attendance", state);
 
-  // Load persisted state on mount.
+  // Load persisted state on mount, and re-run if a cloud pull (after
+  // sign-in) writes newer data into LS_KEY.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(LS_KEY);
@@ -132,7 +133,7 @@ export default function AttendanceApp() {
       /* ignore */
     }
     setHydrated(true);
-  }, []);
+  }, [pulled]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {

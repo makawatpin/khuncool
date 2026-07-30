@@ -124,9 +124,10 @@ export default function SavingsApp() {
   );
 
   const state = { students, balances, txns, room, lastTs };
-  useCloudSync("savings", state);
+  const { pulled } = useCloudSync("savings", state);
 
-  // Load persisted state on mount.
+  // Load persisted state on mount, and re-run if a cloud pull (after
+  // sign-in) writes newer data into LS_KEY.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(LS_KEY);
@@ -157,7 +158,7 @@ export default function SavingsApp() {
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pulled]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {
