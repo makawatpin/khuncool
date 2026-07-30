@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useAuth } from "@/lib/auth/AuthProvider";
 
 /* ---------------------------------------------------------------------- */
 /* Context                                                                */
@@ -64,16 +65,62 @@ export function AccountForm({
   onSkip?: () => void;
   className?: string;
 }) {
+  const { signUp, signIn, signInGoogle, resetPassword } = useAuth();
   const [tab, setTab] = useState<AccountTab>("signup");
   const [name, setName] = useState("");
   const [school, setSchool] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const [note, setNote] = useState("");
 
-  // Phase 1: no real auth wiring. Submitting is a no-op that just
-  // closes the sheet (via onSkip) — nothing is sent over the network.
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!email || (tab !== "reset" && !password)) {
+      setErr("กรอกอีเมลและรหัสผ่านก่อนนะ");
+      return;
+    }
+    setBusy(true);
+    setErr("");
+    setNote("");
+
+    const result =
+      tab === "signup"
+        ? await signUp(email, password, { fullName: name, school })
+        : tab === "reset"
+          ? await resetPassword(email)
+          : await signIn(email, password);
+
+    if (!result.ok) {
+      setBusy(false);
+      setErr(result.error || "ไม่สำเร็จ");
+      return;
+    }
+
+    if (result.confirm) {
+      setBusy(false);
+      setNote(`ส่งลิงก์ยืนยันไปที่ ${email} แล้ว — กดยืนยันในอีเมลแล้วกลับมาเข้าสู่ระบบ`);
+      return;
+    }
+
+    if (tab === "reset") {
+      setBusy(false);
+      setNote("ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว");
+      return;
+    }
+
+    setBusy(false);
+    setPassword("");
     onSkip?.();
+  };
+
+  const handleGoogle = async () => {
+    setErr("");
+    setNote("");
+    const result = await signInGoogle();
+    if (result && !result.ok) {
+      setErr(result.error || "ไม่สำเร็จ");
+    }
   };
 
   const heading =
@@ -208,12 +255,24 @@ export function AccountForm({
         </div>
       )}
 
+      {err && (
+        <div className="mb-3 rounded-[10px] bg-error-bg px-3 py-2 text-[12.5px] font-medium text-error">
+          {err}
+        </div>
+      )}
+      {note && (
+        <div className="mb-3 rounded-[10px] bg-success-bg px-3 py-2 text-[12.5px] font-medium text-success">
+          {note}
+        </div>
+      )}
+
       <button
         type="button"
         onClick={handleSubmit}
-        className="mt-1 w-full rounded-btn bg-primary py-3.5 text-[14.5px] font-semibold text-white shadow-cta transition-colors hover:bg-primary-hover"
+        disabled={busy}
+        className="mt-1 w-full rounded-btn bg-primary py-3.5 text-[14.5px] font-semibold text-white shadow-cta transition-colors hover:bg-primary-hover disabled:opacity-60"
       >
-        {submitLabel}
+        {busy ? "กำลังดำเนินการ…" : submitLabel}
       </button>
 
       {tab !== "reset" ? (
@@ -225,9 +284,7 @@ export function AccountForm({
           </div>
           <button
             type="button"
-            // Phase 1: no real OAuth wiring yet — closing the sheet mirrors
-            // the "skip" behavior until Google sign-in is implemented.
-            onClick={onSkip}
+            onClick={handleGoogle}
             className="flex w-full items-center justify-center gap-2 rounded-btn border border-border-strong bg-surface-card py-3 text-sm font-semibold text-ink transition-colors hover:bg-surface-light"
           >
             <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true">

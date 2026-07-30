@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
+import { useAuth } from "@/lib/auth/AuthProvider";
 
 const PILLARS = [
   {
@@ -41,7 +42,17 @@ const NAV_LINKS = [
 
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
+  const { user } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const initial = (
+    (user?.user_metadata?.full_name as string | undefined) ||
+    user?.email ||
+    "?"
+  )
+    .trim()
+    .charAt(0)
+    .toUpperCase();
 
   return (
     <>
@@ -93,13 +104,25 @@ export default function Header() {
             ))}
           </nav>
 
-          <button
-            type="button"
-            onClick={openAccountSheet}
-            className="rounded-pill bg-primary px-4 py-2 text-[13px] font-semibold text-white hover:bg-primary-hover"
-          >
-            สมัคร
-          </button>
+          {user ? (
+            <button
+              type="button"
+              onClick={openAccountSheet}
+              aria-label="บัญชีของฉัน"
+              title={user.email ?? "บัญชีของฉัน"}
+              className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-sm font-bold text-white hover:opacity-90"
+            >
+              {initial}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={openAccountSheet}
+              className="rounded-pill bg-primary px-4 py-2 text-[13px] font-semibold text-white hover:bg-primary-hover"
+            >
+              สมัคร
+            </button>
+          )}
         </div>
       </header>
 

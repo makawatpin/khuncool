@@ -7,6 +7,7 @@ import {
   AccountSheetProvider,
   AccountSheetOverlay,
 } from "@/components/AccountSheet";
+import { AuthProvider } from "@/lib/auth/AuthProvider";
 
 const sarabun = Sarabun({
   variable: "--font-sarabun",
@@ -48,12 +49,14 @@ export default function RootLayout({
       className={`${sarabun.variable} ${anuphan.variable} ${fredoka.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AccountSheetProvider>
-          <Header />
-          {children}
-          <Footer />
-          <AccountSheetOverlay />
-        </AccountSheetProvider>
+        <AuthProvider>
+          <AccountSheetProvider>
+            <Header />
+            {children}
+            <Footer />
+            <AccountSheetOverlay />
+          </AccountSheetProvider>
+        </AuthProvider>
       </body>
     </html>
   );
