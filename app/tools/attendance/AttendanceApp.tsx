@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
+import SyncStatus from "@/components/SyncStatus";
 import {
   ATTENDANCE_STATUS_DEFS,
   printAttendance,
@@ -101,7 +102,7 @@ export default function AttendanceApp() {
   const frameRef = useRef<HTMLDivElement | null>(null);
 
   const state = { students, statuses, room };
-  const { pulled } = useCloudSync("attendance", state);
+  const { pulled, status: cloudStatus } = useCloudSync("attendance", state);
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
@@ -388,6 +389,7 @@ export default function AttendanceApp() {
 
   return (
     <div ref={frameRef} className="bg-white">
+      <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์

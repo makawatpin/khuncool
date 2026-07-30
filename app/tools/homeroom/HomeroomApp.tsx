@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
+import SyncStatus from "@/components/SyncStatus";
 import {
   type HomeroomSession,
   type HomeroomTopic,
@@ -118,7 +119,7 @@ export default function HomeroomApp() {
     principal,
     principalRole,
   };
-  const { pulled } = useCloudSync("homeroom", state);
+  const { pulled, status: cloudStatus } = useCloudSync("homeroom", state);
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS.
@@ -496,6 +497,7 @@ export default function HomeroomApp() {
 
   return (
     <div className="bg-white">
+      <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์

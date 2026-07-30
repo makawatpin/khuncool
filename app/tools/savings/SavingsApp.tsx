@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
+import SyncStatus from "@/components/SyncStatus";
 import { printSavings } from "@/lib/printSavings";
 
 const LS_KEY = "khuncool_savings_v1";
@@ -124,7 +125,7 @@ export default function SavingsApp() {
   );
 
   const state = { students, balances, txns, room, lastTs };
-  const { pulled } = useCloudSync("savings", state);
+  const { pulled, status: cloudStatus } = useCloudSync("savings", state);
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
@@ -561,6 +562,7 @@ export default function SavingsApp() {
 
   return (
     <div ref={frameRef} className="bg-white">
+      <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์

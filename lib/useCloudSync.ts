@@ -48,8 +48,13 @@ function stampKey(key: string) {
  */
 export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
   const { user } = useAuth();
-  const [status, setStatus] = useState<CloudSyncStatus>("local-only");
+  // Tracks only the signed-in sync lifecycle (syncing/synced/error). The
+  // signed-out case is derived below instead of being set from an effect,
+  // so mounting/unmounting sign-in state never calls setState synchronously
+  // inside an effect body (react-hooks/set-state-in-effect).
+  const [asyncStatus, setStatus] = useState<CloudSyncStatus>("local-only");
   const [pulled, setPulled] = useState(0);
+  const status: CloudSyncStatus = user ? asyncStatus : "local-only";
 
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pulledForUser = useRef<string | null>(null);
@@ -60,7 +65,6 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
   // Pull once per sign-in.
   useEffect(() => {
     if (!user) {
-      setStatus("local-only");
       pulledForUser.current = null;
       return;
     }
@@ -170,7 +174,6 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
     return () => {
       if (pushTimer.current) clearTimeout(pushTimer.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, key, stateJson]);
 
   return { status, pulled };
