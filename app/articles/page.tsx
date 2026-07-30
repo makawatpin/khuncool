@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+// NOTE: mirrors the source helmet's hardcoded JSON-LD (ISO dates, exact
+// order, literal headlines) rather than deriving from ALL_ARTICLES in
+// ./data.ts. If a 6th article is added, update BOTH this array and
+// ./data.ts manually — they are not kept in sync automatically.
 const BLOG_POSTS_JSON_LD = [
   {
     headline: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง",
