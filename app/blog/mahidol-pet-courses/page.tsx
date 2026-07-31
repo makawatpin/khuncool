@@ -196,9 +196,9 @@ export default function BlogMahidolPetCoursesPage() {
           src="/assets/mahidol-pet-courses-cover.webp"
           alt="มหาวิทยาลัยมหิดล เปิด 2 คอร์สเรียนฟรี สำหรับคนรักสัตว์"
           width={1200}
-          height={340}
+          height={630}
           priority
-          className="block h-[200px] w-full rounded-card-lg bg-[#F1F3F6] object-cover md:h-[340px] md:rounded-[20px]"
+          className="block w-full rounded-card-lg bg-[#F1F3F6] object-cover md:rounded-[20px]"
         />
       </div>
 

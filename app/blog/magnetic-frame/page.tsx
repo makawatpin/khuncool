@@ -179,9 +179,9 @@ export default function BlogMagneticFramePage() {
           src="/assets/magnet-frame-cover-v2.webp"
           alt="กรอบป้ายติดผนังแม่เหล็ก"
           width={1200}
-          height={600}
+          height={630}
           priority
-          className="mx-auto block max-h-[540px] w-full rounded-card-lg bg-[#F1F3F6] object-cover md:max-h-[600px] md:rounded-[20px]"
+          className="block w-full rounded-card-lg bg-[#F1F3F6] object-cover md:rounded-[20px]"
         />
       </div>
 
