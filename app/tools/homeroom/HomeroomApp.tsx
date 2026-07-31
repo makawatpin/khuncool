@@ -37,6 +37,18 @@ function defaultTopics(): HomeroomTopic[] {
   return DEFAULT_TOPICS.map((label, i) => ({ id: "t" + i, label }));
 }
 
+const HELP_STEPS = [
+  "ตั้งข้อมูลหัวกระดาษ (โรงเรียน ชั้น ภาคเรียน ครูที่ปรึกษา) ที่การ์ด “หัวแบบฟอร์ม”",
+  "นำเข้ารายชื่อนักเรียนทั้งห้อง (Excel หรือวางรายชื่อ) — ใช้รายชื่อร่วมกับแอปเช็กชื่อและออมเงิน",
+  "กด “+ บันทึกวันนี้” หรือ “+ จ–ศ” เพื่อเพิ่มวันบันทึก แล้วติ๊กหัวข้อที่อบรมของวันนั้น",
+  "กด “✅ ดึงจากเช็กชื่อ” เพื่อดึงจำนวนคนมา/ขาดจากแอปเช็กชื่อมาใส่ให้อัตโนมัติ",
+  "ตั้ง “แผนหัวข้อรายสัปดาห์” ล่วงหน้าได้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กหัวข้อให้เอง",
+  "“🖨 พิมพ์” แบบฟอร์มรายสัปดาห์ หรือ “🗂 พิมพ์ชุดเอกสารสิ้นเทอม” รวมเช็กชื่อ+ออมเงินไว้ในไฟล์เดียว",
+];
+
+const DEVICE_NOTE =
+  "ข้อมูลถูกบันทึกอัตโนมัติในเครื่อง/เบราว์เซอร์นี้เท่านั้น ไม่ได้ซิงก์ขึ้นคลาวด์ หากต้องการใช้งานต่อบนเครื่องอื่น ให้ส่งออก Excel จากเครื่องเดิมแล้วนำเข้าที่อีกเครื่อง";
+
 interface RawSavingsState {
   room?: string;
   students?: string[];
@@ -85,6 +97,7 @@ export default function HomeroomApp() {
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [importMsg, setImportMsg] = useState("");
+  const [showHelp, setShowHelp] = useState(false);
   const [blankRows, setBlankRows] = useState(4);
   const [plan, setPlan] = useState<Record<number, string[]>>({});
   const [planWeek, setPlanWeek] = useState(1);
@@ -974,6 +987,53 @@ export default function HomeroomApp() {
         </div>
       )}
 
+      {/* HELP modal */}
+      {showHelp && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(26,29,38,.55)] p-[22px] backdrop-blur-[3px]">
+          <div className="max-h-[640px] w-full max-w-[520px] overflow-y-auto rounded-[22px] bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,.45)] md:rounded-3xl md:p-[34px_32px]">
+            <div className="mb-4 flex items-center gap-2.5 md:mb-[22px] md:gap-3">
+              <div className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-[11px] bg-[#E1E3FD] text-[19px] md:h-11 md:w-11 md:rounded-[13px] md:text-[23px]">
+                💡
+              </div>
+              <div className="flex-1 text-[17px] font-bold md:text-[21px]">
+                วิธีใช้บันทึกโฮมรูม
+              </div>
+              <span
+                onClick={() => setShowHelp(false)}
+                className="cursor-pointer text-[22px] leading-none text-[#A9B0BE] hover:text-[#DC2626] md:text-[26px]"
+              >
+                ×
+              </span>
+            </div>
+            <div className="flex flex-col gap-3 md:gap-3.5">
+              {HELP_STEPS.map((text, i) => (
+                <div key={i} className="flex gap-[11px] md:gap-[13px]">
+                  <div className="flex h-6 w-6 flex-none items-center justify-center whitespace-nowrap rounded-full bg-[#5C5EE6] text-xs font-bold text-white md:h-7 md:w-7 md:text-[13px]">
+                    {i + 1}
+                  </div>
+                  <div className="flex-1 text-[13px] leading-[1.5] text-[#434A58] md:pt-0.5 md:text-[14.5px] md:leading-[1.55]">
+                    {text}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex gap-2.5 rounded-xl border border-[#FCD9B6] bg-[#FFF6ED] p-3 md:mt-5 md:rounded-[13px] md:p-[14px_16px]">
+              <span className="flex-none text-base md:text-[19px]">🔒</span>
+              <div className="text-xs leading-[1.55] text-[#8A5A1A] md:text-[13.5px]">
+                {DEVICE_NOTE}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowHelp(false)}
+              className="mt-4 w-full rounded-xl bg-[#5C5EE6] py-3.5 text-sm font-bold text-white hover:bg-[#4A46D6] md:mt-[22px] md:rounded-[13px] md:py-[15px] md:text-[15px]"
+            >
+              เข้าใจแล้ว
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* IMPORT modal */}
       {showImport && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(26,29,38,.55)] p-[22px] backdrop-blur-[3px]">
@@ -1046,6 +1106,13 @@ export default function HomeroomApp() {
                 ←
               </button>
               <div className="flex-1 text-[15px] font-bold">ตั้งค่า</div>
+              <button
+                type="button"
+                onClick={() => setShowHelp(true)}
+                className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-3 py-2 text-[12.5px] font-semibold text-[#5C5EE6]"
+              >
+                💡 วิธีใช้
+              </button>
               <button
                 type="button"
                 onClick={doPrint}
@@ -1264,6 +1331,13 @@ export default function HomeroomApp() {
           {headerSub}
         </div>
         <div className="flex flex-none gap-2">
+          <button
+            type="button"
+            onClick={() => setShowHelp(true)}
+            className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#5C5EE6] hover:bg-surface-light"
+          >
+            💡 วิธีใช้
+          </button>
           <button
             type="button"
             onClick={doPrint}
