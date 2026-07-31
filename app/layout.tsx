@@ -50,7 +50,7 @@ export default function RootLayout({
       lang="th"
       className={`${sarabun.variable} ${anuphan.variable} ${fredoka.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col pb-16 md:pb-0">
+      <body className="min-h-full flex flex-col">
         <AuthProvider>
           <AccountSheetProvider>
             <Header />
