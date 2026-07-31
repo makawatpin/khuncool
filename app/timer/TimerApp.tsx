@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 type Preset = { label: string; sec: number };
 
@@ -88,6 +89,7 @@ function pad2(n: number): string {
 }
 
 export default function TimerApp() {
+  useTrackToolUse("timer");
   const [total, setTotal] = useState(300);
   const [remaining, setRemaining] = useState(300);
   const [running, setRunning] = useState(false);
