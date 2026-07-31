@@ -25,7 +25,7 @@ export default function HeroSection() {
           </span>
         </h1>
         <p className="m-0 mb-4 text-[14.5px] leading-relaxed text-ink-secondary md:mb-[22px] md:text-base lg:mb-[26px] lg:text-lg">
-          บทความครู · สื่อการสอนออนไลน์ที่เล่นบนเว็บได้เลย · แอปช่วยงานครู —
+          บทความครู · เครื่องมือครูที่เล่นบนเว็บได้เลย · แอปช่วยงานครู —
           เปิดใช้ฟรี ไม่ต้องติดตั้ง
         </p>
         <div className="flex gap-2.5 md:gap-[11px] lg:gap-3">

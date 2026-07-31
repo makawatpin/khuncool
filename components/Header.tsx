@@ -59,7 +59,7 @@ const PILLARS = [
   },
   {
     Icon: ToolsIcon,
-    title: "สื่อการสอนออนไลน์",
+    title: "เครื่องมือครู",
     path: "/tools",
     desc: "เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง",
   },
@@ -71,7 +71,7 @@ const PILLARS = [
   },
   {
     Icon: AppsIcon,
-    title: "แอป",
+    title: "แอปจัดการห้องเรียน",
     path: "/apps",
     desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
   },

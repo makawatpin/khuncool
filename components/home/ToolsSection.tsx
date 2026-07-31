@@ -38,7 +38,7 @@ export default function ToolsSection() {
       <div className="mt-5 md:mt-7 lg:mt-0">
         <div className="mb-3 flex items-baseline justify-between md:mb-3.5 lg:mb-[14px]">
           <h2 className="m-0 whitespace-nowrap text-[17px] font-bold md:text-[19px] lg:text-xl">
-            สื่อการสอนออนไลน์
+            เครื่องมือครู
           </h2>
           <Link
             href="/tools"
