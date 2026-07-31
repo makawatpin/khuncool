@@ -34,8 +34,10 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "khuncool",
-  description: "khuncool design handoff",
+  metadataBase: new URL("https://www.khuncool.com"),
+  title: "khuncool - เครื่องมือครู สื่อการสอน ใช้ฟรี",
+  description:
+    "รวมเครื่องมือครูและสื่อการสอนออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง เช่น สุ่มชื่อนักเรียน จับเวลา แบ่งกลุ่ม และกระดานคะแนน",
 };
 
 export default function RootLayout({

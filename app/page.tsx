@@ -38,6 +38,11 @@ const jsonLd = {
       name: "khuncool",
       url: "https://www.khuncool.com/",
       logo: "https://www.khuncool.com/assets/khuncool-logo.png",
+      email: "khuncoolhub@gmail.com",
+      founder: {
+        "@type": "Person",
+        name: "อาวล์",
+      },
     },
     {
       "@type": "WebSite",
