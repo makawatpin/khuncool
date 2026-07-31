@@ -89,7 +89,7 @@ export default function AboutPage() {
           />
           <div>
             <div className="text-sm font-bold md:text-base">
-              ทีมคูล เริ่มต้นโดยคุณอาวล์
+              ทีมคุณคูล โดยคุณอาวล์
             </div>
             <div className="text-[11.5px] text-ink-faint md:text-xs">
               ผู้ก่อตั้ง khuncool.com
@@ -98,7 +98,7 @@ export default function AboutPage() {
         </div>
         <div className="flex flex-col gap-3 md:max-w-[62ch] md:gap-3.5">
           <p className="m-0 text-[13.5px] leading-[1.75] text-ink-secondary md:text-[14.5px] md:leading-[1.8]">
-            khuncool เริ่มต้นจากคุณอาวล์คนเดียว
+            khuncool เริ่มต้นจากคุณอาวล์
             ซึ่งไม่ได้เป็นคุณครูและไม่ได้จบการศึกษาสายครุศาสตร์โดยตรง
             แต่ได้เข้ามาข้องเกี่ยวกับธุรกิจโรงเรียนของคุณพ่อ
             จนได้เห็นปัญหาที่คุณครูในโรงเรียนต้องเจอในแต่ละวันอย่างใกล้ชิด
