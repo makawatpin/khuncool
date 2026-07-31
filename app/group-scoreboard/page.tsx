@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function GroupScoreboardPage() {
   return (
-    <main className="flex-1">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto">
       {/* Breadcrumb */}
       <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
         <Link href="/" className="text-ink-faint">

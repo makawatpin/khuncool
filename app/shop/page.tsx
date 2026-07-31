@@ -85,7 +85,7 @@ const jsonLd = {
 
 export default function ShopPage() {
   return (
-    <main className="flex-1">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

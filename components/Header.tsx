@@ -58,18 +58,20 @@ export default function Header() {
     <>
       {/* announcement bar */}
       <div className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white">
-        <span className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold">
-          อบรมฟรี
-        </span>
-        <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
-          อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · สมัครวันนี้
-        </span>
-        <span className="flex-none opacity-70">›</span>
+        <div className="mx-auto flex w-full max-w-[1160px] items-center gap-2">
+          <span className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold">
+            อบรมฟรี
+          </span>
+          <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+            อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · สมัครวันนี้
+          </span>
+          <span className="flex-none opacity-70">›</span>
+        </div>
       </div>
 
       {/* sticky header */}
       <header className="sticky top-0 z-20 border-b border-border bg-white/[.92] px-3.5 py-3 backdrop-blur-md">
-        <div className="flex items-center gap-2.5">
+        <div className="mx-auto flex max-w-[1160px] items-center gap-2.5">
           <button
             type="button"
             onClick={() => setDrawerOpen((v) => !v)}
