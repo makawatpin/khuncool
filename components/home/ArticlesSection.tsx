@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ALL_ARTICLES, CAT_MAP } from "@/app/articles/data";
 
-const ARTICLES = ALL_ARTICLES.slice(0, 5).map((a, i) => ({
+const ARTICLES = ALL_ARTICLES.slice(0, 6).map((a, i) => ({
   ...a,
   rank: String(i + 1),
   catColor: CAT_MAP[a.cat].color,
