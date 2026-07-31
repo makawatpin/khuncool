@@ -93,7 +93,7 @@ export const ALL_ARTICLES: Article[] = [
     date: "26 ก.ค. 2568",
     dateISO: "2025-07-26",
     readTime: "4 นาที",
-    img: "/assets/magnet-frame-cover.png",
+    img: "/assets/magnet-frame-cover-v2.webp",
     alt: "รีวิว กรอบป้ายติดผนังแม่เหล็ก",
     href: "/blog/magnetic-frame",
     excerpt:

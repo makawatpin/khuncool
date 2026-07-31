@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง",
     description:
       "รีวิวกรอบป้ายติดผนังแม่เหล็กสำหรับห้องเรียน ติดตั้งง่ายไม่ต้องเจาะผนัง เปลี่ยนป้ายได้เร็ว",
-    images: ["https://www.khuncool.com/assets/magnet-frame-cover.png"],
+    images: ["https://www.khuncool.com/assets/magnet-frame-cover-v2.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -59,7 +59,7 @@ const jsonLd = {
         url: "https://www.khuncool.com/about",
       },
       publisher: { "@type": "Organization", name: "Khuncool" },
-      image: "https://www.khuncool.com/assets/magnet-frame-cover.png",
+      image: "https://www.khuncool.com/assets/magnet-frame-cover-v2.webp",
       mainEntityOfPage: "https://www.khuncool.com/blog/magnetic-frame",
     },
   ],
@@ -176,7 +176,7 @@ export default function BlogMagneticFramePage() {
 
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         <Image
-          src="/assets/magnet-frame-cover.png"
+          src="/assets/magnet-frame-cover-v2.webp"
           alt="กรอบป้ายติดผนังแม่เหล็ก"
           width={1200}
           height={600}
