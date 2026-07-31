@@ -29,6 +29,7 @@ const HELP_STEPS = [
   "ยอดคงเหลือรายคนและยอดรวมทั้งห้องอัปเดตให้อัตโนมัติ",
   "กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด",
   "กด “🗑 ลบรายชื่อ” เพื่อเปิดโหมดลบ แล้วแตะ ✕ ท้ายชื่อที่ต้องการลบออก",
+  "กด “↺ ล้างยอดเงิน” เพื่อตั้งยอดทุกคนเป็น ฿0 และล้างประวัติทั้งหมด (ยืนยันก่อนลบ ทำแล้วกู้คืนไม่ได้)",
   "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้ — รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและบันทึกโฮมรูมด้วย",
   "“ส่งออก” เป็น Excel (มีประวัติครบ) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)",
 ];
@@ -365,6 +366,20 @@ export default function SavingsApp() {
     },
     [flashToast, setBalancesSynced],
   );
+
+  const clearBalances = useCallback(() => {
+    if (
+      !window.confirm(
+        "ล้างยอดเงินทุกคนเป็น ฿0 และล้างประวัติฝาก-ถอนทั้งหมด? ทำแล้วกู้คืนไม่ได้",
+      )
+    )
+      return;
+    setBalancesSynced(students.map(() => 0));
+    setTxns([]);
+    setLastTs(0);
+    setRowAmts({});
+    flashToast("ล้างยอดเงินแล้ว ✓");
+  }, [students, flashToast, setBalancesSynced]);
 
   const onKeyName = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -938,6 +953,16 @@ export default function SavingsApp() {
         </button>
       </div>
 
+      <div className="mb-2.5 md:hidden">
+        <button
+          type="button"
+          onClick={clearBalances}
+          className="w-full whitespace-nowrap rounded-[11px] border border-[#D3D8E1] bg-white px-2.5 py-2.5 text-[13px] font-semibold hover:border-[#F2C079] hover:bg-surface-light"
+        >
+          ↺ ล้างยอดเงิน
+        </button>
+      </div>
+
       <SaveScopeNote variant="mobile" />
 
       {/* Mobile summary card */}
@@ -1040,6 +1065,13 @@ export default function SavingsApp() {
               }`}
             >
               🗑 ลบรายชื่อ
+            </button>
+            <button
+              type="button"
+              onClick={clearBalances}
+              className="flex-none whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-[15px] py-2.5 text-[13px] font-semibold hover:bg-surface-light"
+            >
+              ↺ ล้างยอดเงิน
             </button>
           </div>
 
