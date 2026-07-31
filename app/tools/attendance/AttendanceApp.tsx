@@ -39,8 +39,8 @@ const DEFAULT_STUDENTS = [
 ];
 
 const HELP_STEPS = [
-  "ระบบตั้งค่าให้นักเรียนทุกคนเป็น “มา” ไว้ก่อนแล้ว",
-  "แตะปุ่ม สาย / ลา / ขาด เฉพาะคนที่ต้องเปลี่ยนสถานะ · แตะซ้ำเพื่อยกเลิก",
+  "นักเรียนทุกคนเริ่มต้นแบบยังไม่มีสถานะ",
+  "แตะปุ่ม มา / สาย / ลา / ขาด ให้แต่ละคน · แตะซ้ำเพื่อยกเลิก",
   "ปุ่ม “ทั้งหมดมา” ตั้งทุกคนเป็นมา · “ล้างสถานะ” ล้างทั้งหมด",
   "“นำเข้า Excel” เพื่อดึงรายชื่อทั้งห้องจากไฟล์ หรือวางรายชื่อก็ได้",
   "“ส่งออก” เป็น Excel (ทำสถิติต่อ) หรือ PDF (พิมพ์บัญชีเรียกชื่อ)",
@@ -53,13 +53,8 @@ const DEVICE_NOTE =
 const SAVE_NOTE =
   "บันทึกอัตโนมัติเฉพาะเครื่องนี้ — ย้ายเครื่องต้องส่งออก Excel แล้วนำเข้า";
 
-function isWeekend() {
-  const d = new Date().getDay();
-  return d === 0 || d === 6;
-}
-
 function defaultStatus(): AttendanceStatusKey | null {
-  return isWeekend() ? null : "present";
+  return null;
 }
 
 function statusLabel(key: AttendanceStatusKey | null) {
