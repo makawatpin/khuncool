@@ -1,6 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ARTICLES } from "./data";
+import { ALL_ARTICLES, CAT_MAP } from "@/app/articles/data";
+
+const ARTICLES = ALL_ARTICLES.slice(0, 5).map((a, i) => ({
+  ...a,
+  rank: String(i + 1),
+  catColor: CAT_MAP[a.cat].color,
+  cover: a.img,
+  read: `อ่าน ${a.readTime}`,
+}));
 
 export default function ArticlesSection() {
   return (
@@ -34,7 +42,8 @@ export default function ArticlesSection() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <span
-                    className={`text-[10.5px] font-semibold ${a.catColor} md:text-[11px]`}
+                    className="text-[10.5px] font-semibold md:text-[11px]"
+                    style={{ color: a.catColor }}
                   >
                     {a.cat}
                   </span>
@@ -84,7 +93,8 @@ export default function ArticlesSection() {
                 </span>
                 <div>
                   <div
-                    className={`mb-0.5 hidden text-[11px] font-semibold ${a.catColor} lg:block`}
+                    className="mb-0.5 hidden text-[11px] font-semibold lg:block"
+                    style={{ color: a.catColor }}
                   >
                     {a.cat}
                   </div>

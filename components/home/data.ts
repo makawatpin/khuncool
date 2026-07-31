@@ -38,65 +38,6 @@ export const TOOLS = [
   { icon: "🦆", title: "เกมแข่งเป็ด", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/tools/duck-race" },
 ];
 
-export const ARTICLES = [
-  {
-    rank: "1",
-    cat: "คอร์สเรียน",
-    catColor: "text-[#8A5A1A]",
-    title: "มหาวิทยาลัยมหิดล เปิด 2 คอร์สเรียนฟรี สำหรับคนรักสัตว์ มีใบเซอร์",
-    date: "31 ก.ค. 2569",
-    read: "อ่าน 6 นาที",
-    cover: "/assets/mahidol-pet-courses-cover.webp",
-    linksTool: "",
-    href: "/blog/mahidol-pet-courses",
-  },
-  {
-    rank: "2",
-    cat: "อบรมฟรี",
-    catColor: "text-success",
-    title:
-      "เรียนภาษาอังกฤษฟรี มีใบเซอร์! คอร์ส Intermediate Conversational English จาก PSU MOOC",
-    date: "25 ก.ค. 2568",
-    read: "อ่าน 4 นาที",
-    cover: "/assets/psu-english-cover.webp",
-    linksTool: "",
-    href: "/blog/psu-english",
-  },
-  {
-    rank: "3",
-    cat: "สื่อการสอน",
-    catColor: "text-[#3D38B4]",
-    title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น",
-    date: "27 ก.ค. 2569",
-    read: "อ่าน 5 นาที",
-    cover: "/assets/wheel-cover.png",
-    linksTool: "วงล้อสุ่ม /tools/wheel",
-    href: "/blog/wheel",
-  },
-  {
-    rank: "4",
-    cat: "รีวิวสินค้า",
-    catColor: "text-[#C2500B]",
-    title: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง ตัวช่วยทำบอร์ดผลงานเด็ก",
-    date: "26 ก.ค. 2568",
-    read: "อ่าน 4 นาที",
-    cover: "/assets/magnet-frame-detail.jpg",
-    linksTool: "",
-    href: "/blog/magnetic-frame",
-  },
-  {
-    rank: "5",
-    cat: "สื่อการสอน",
-    catColor: "text-[#3D38B4]",
-    title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
-    date: "27 ก.ค. 2569",
-    read: "อ่าน 6 นาที",
-    cover: "/assets/random-name-cover.png",
-    linksTool: "วงล้อสุ่ม /tools/wheel",
-    href: "/blog/random-name-activities",
-  },
-];
-
 export const PRODUCTS = [
   {
     name: "กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง มีกาวในตัว",

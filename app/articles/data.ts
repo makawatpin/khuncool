@@ -24,6 +24,8 @@ export type Article = {
   alt: string;
   href: string;
   excerpt: string;
+  /** Optional related-tool callout shown on the homepage article list. */
+  linksTool?: string;
 };
 
 export const ALL_ARTICLES: Article[] = [
@@ -62,6 +64,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/wheel",
     excerpt:
       "รู้จักวงล้อสุ่มชื่อ สื่อการสอนออนไลน์ที่ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น พร้อมวิธีใช้ 4 ขั้นตอน และ 8 ไอเดียใช้งานจริง",
+    linksTool: "วงล้อสุ่ม /tools/wheel",
   },
   {
     title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
@@ -74,6 +77,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/random-name-activities",
     excerpt:
       "รวม 10 กิจกรรมสุ่มชื่อนักเรียนที่ครูเอาไปใช้ได้ทันที ตั้งแต่วอร์มอัพต้นคาบไปจนถึงกิจกรรมท้ายชั่วโมง",
+    linksTool: "วงล้อสุ่ม /tools/wheel",
   },
   {
     title: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
