@@ -81,6 +81,7 @@ export default function AttendanceApp() {
   );
   const [room, setRoom] = useState("ป.5/2");
   const [newName, setNewName] = useState("");
+  const [deleteMode, setDeleteMode] = useState(false);
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
   const [showHelp, setShowHelp] = useState(false);
@@ -201,6 +202,15 @@ export default function AttendanceApp() {
       if (e.key === "Enter") addName();
     },
     [addName],
+  );
+
+  const removeStudent = useCallback(
+    (i: number) => {
+      setStudents((current) => current.filter((_, idx) => idx !== i));
+      setStatuses((current) => current.filter((_, idx) => idx !== i));
+      flashToast("ลบแล้ว ✓");
+    },
+    [flashToast],
   );
 
   const toggleBulk = useCallback(() => {
@@ -686,6 +696,17 @@ export default function AttendanceApp() {
         >
           ล้างสถานะ
         </button>
+        <button
+          type="button"
+          onClick={() => setDeleteMode((v) => !v)}
+          className={`flex-none whitespace-nowrap rounded-[11px] border px-2.5 py-2.5 text-[13px] font-semibold ${
+            deleteMode
+              ? "border-[#DC2626] bg-[#FEF4F4] text-[#DC2626]"
+              : "border-[#D3D8E1] bg-white hover:bg-surface-light"
+          }`}
+        >
+          🗑 ลบรายชื่อ
+        </button>
       </div>
 
       <div className="md:grid md:grid-cols-[1fr_320px] md:items-start md:gap-7">
@@ -705,6 +726,17 @@ export default function AttendanceApp() {
               className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-[15px] py-2.5 text-[13px] font-semibold hover:bg-surface-light"
             >
               ล้างสถานะ
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeleteMode((v) => !v)}
+              className={`whitespace-nowrap rounded-[10px] border px-[15px] py-2.5 text-[13px] font-semibold ${
+                deleteMode
+                  ? "border-[#DC2626] bg-[#FEF4F4] text-[#DC2626]"
+                  : "border-[#D3D8E1] bg-white hover:bg-surface-light"
+              }`}
+            >
+              🗑 ลบรายชื่อ
             </button>
           </div>
 
@@ -755,6 +787,16 @@ export default function AttendanceApp() {
                       </button>
                     ))}
                   </div>
+                  {deleteMode && (
+                    <button
+                      type="button"
+                      onClick={() => removeStudent(i)}
+                      aria-label={`ลบ ${name}`}
+                      className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9]"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
