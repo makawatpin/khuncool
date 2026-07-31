@@ -432,14 +432,24 @@ export default function BlogMahidolPetCoursesPage() {
                 </span>
               </div>
             </div>
-            <a
-              href="https://bit.ly/3TjSa8X"
-              target="_blank"
-              rel="noopener"
-              className="mt-4 block rounded-xl bg-[#0A9380] p-3 text-center text-sm font-bold text-white no-underline hover:brightness-[1.06]"
-            >
-              สมัครเรียนฟรี ↗
-            </a>
+            <div className="mt-4 flex flex-col gap-2">
+              <a
+                href="https://bit.ly/3TjSa8X"
+                target="_blank"
+                rel="noopener"
+                className="block rounded-xl bg-primary p-3 text-center text-sm font-bold text-white no-underline hover:bg-[#4A46D6]"
+              >
+                สมัครคอร์สหมา ↗
+              </a>
+              <a
+                href="https://bit.ly/4bfvJI8"
+                target="_blank"
+                rel="noopener"
+                className="block rounded-xl bg-[#0A9380] p-3 text-center text-sm font-bold text-white no-underline hover:brightness-[1.06]"
+              >
+                สมัครคอร์สแมว ↗
+              </a>
+            </div>
           </div>
         </aside>
       </div>
