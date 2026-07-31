@@ -162,14 +162,18 @@ export default function SavingsApp() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pulled]);
 
-  // Keep the selected date chip scrolled into view (e.g. after using the
-  // ‹ › step buttons, which can move the selection off-screen).
+  // Keep the selected date chip centered — including on first mount, so
+  // today's chip starts in the middle of the strip instead of pinned to
+  // one edge (a trailing spacer makes room to center it even though there
+  // are no future-dated chips after it).
+  const chipScrollDone = useRef(false);
   useEffect(() => {
     activeChipRef.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior: chipScrollDone.current ? "smooth" : "auto",
       inline: "center",
       block: "nearest",
     });
+    chipScrollDone.current = true;
   }, [entryDate]);
 
   // Online/offline banner + cleanup.
@@ -234,19 +238,10 @@ export default function SavingsApp() {
 
   const backdating = entryDate !== todayISO();
 
-  const shiftEntryDate = useCallback((days: number) => {
-    setEntryDate((cur) => {
-      const base = new Date((cur || todayISO()) + "T12:00:00");
-      base.setDate(base.getDate() + days);
-      const iso = `${base.getFullYear()}-${pad(base.getMonth() + 1)}-${pad(base.getDate())}`;
-      return iso > todayISO() ? todayISO() : iso;
-    });
-  }, []);
-
   const dateChips = useMemo(() => {
     const today = todayISO();
     const out: { iso: string; dow: string; day: number; isToday: boolean }[] = [];
-    for (let k = 0; k < 21; k++) {
+    for (let k = 20; k >= 0; k--) {
       const dt = new Date();
       dt.setHours(12, 0, 0, 0);
       dt.setDate(dt.getDate() - k);
@@ -875,25 +870,6 @@ export default function SavingsApp() {
               ย้อนหลัง
             </span>
           )}
-          <div className="ml-auto flex flex-none gap-1.5">
-            <button
-              type="button"
-              onClick={() => shiftEntryDate(-1)}
-              aria-label="ย้อนไป 1 วัน"
-              className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-[#D3D8E1] bg-white text-[13px] font-bold text-[#5A6273]"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={() => shiftEntryDate(1)}
-              disabled={!backdating}
-              aria-label="ไปวันถัดไป"
-              className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-[#D3D8E1] bg-white text-[13px] font-bold text-[#5A6273] disabled:opacity-40"
-            >
-              ›
-            </button>
-          </div>
         </div>
         <div
           className="flex gap-[7px] overflow-x-auto py-0.5 pb-1.5"
@@ -920,6 +896,7 @@ export default function SavingsApp() {
               <span className="text-[17px] font-bold">{d.day}</span>
             </button>
           ))}
+          <div className="w-[45vw] flex-none" aria-hidden="true" />
         </div>
         {backdating && (
           <div className="mt-0.5 text-[11.5px] text-[#8A5A1A]">
