@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const ROSTER_KEY = "khuncool.roster";
 
@@ -49,6 +50,7 @@ function loadInitialNames(): string[] {
 }
 
 export default function GroupsApp() {
+  useTrackToolUse("group-maker");
   const [names, setNames] = useState<string[]>(SAMPLE_NAMES);
   const [hydrated, setHydrated] = useState(false);
   const [newName, setNewName] = useState("");

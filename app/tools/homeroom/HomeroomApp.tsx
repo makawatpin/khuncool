@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
@@ -82,6 +83,7 @@ interface Persisted {
 }
 
 export default function HomeroomApp() {
+  useTrackToolUse("homeroom");
   const [school, setSchool] = useState("");
   const [level, setLevel] = useState("");
   const [term, setTerm] = useState("1");

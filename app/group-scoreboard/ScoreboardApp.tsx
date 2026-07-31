@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const LS_KEY = "khuncool.scoreboard";
 const ROSTER_KEY = "khuncool.roster";
@@ -28,6 +29,7 @@ const DEFAULT_TEAMS: Team[] = [
 ];
 
 export default function ScoreboardApp() {
+  useTrackToolUse("scoreboard");
   const [title, setTitle] = useState("แข่งตอบคำถามประจำสัปดาห์");
   const [step, setStep] = useState(1);
   const [teams, setTeams] = useState<Team[]>(DEFAULT_TEAMS);

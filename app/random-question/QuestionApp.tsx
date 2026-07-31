@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const SAMPLE_QUESTIONS = [
   "อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค",
@@ -12,6 +13,7 @@ const SAMPLE_QUESTIONS = [
 ];
 
 export default function QuestionApp() {
+  useTrackToolUse("question");
   const [questions, setQuestions] = useState<string[]>(SAMPLE_QUESTIONS);
   const [used, setUsed] = useState<string[]>([]);
   const [current, setCurrent] = useState("กดปุ่มเพื่อสุ่มคำถาม");

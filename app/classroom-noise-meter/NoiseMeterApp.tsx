@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const LS_KEY = "khuncool.noisemeter";
 
@@ -44,6 +45,7 @@ function zoneFor(level: number, limit: number) {
 }
 
 export default function NoiseMeterApp() {
+  useTrackToolUse("noise-meter");
   const [phase, setPhase] = useState<Phase>("idle");
   const [reason, setReason] = useState<DenyReason>("denied");
   const [level, setLevel] = useState(0);

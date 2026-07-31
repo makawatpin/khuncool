@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
@@ -74,6 +75,7 @@ type Persisted = {
 };
 
 export default function AttendanceApp() {
+  useTrackToolUse("attendance");
   const [students, setStudents] = useState<string[]>(DEFAULT_STUDENTS);
   const [statuses, setStatuses] = useState<(AttendanceStatusKey | null)[]>(
     () => DEFAULT_STUDENTS.map(() => defaultStatus()),

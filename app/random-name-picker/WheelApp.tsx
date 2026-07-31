@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const NAMES_KEY = "khuncool.wheel.names";
 const ROSTER_KEY = "khuncool.roster";
@@ -202,6 +203,7 @@ function canvasSizeForViewport(): number {
 }
 
 export default function WheelApp() {
+  useTrackToolUse("wheel");
   const [names, setNames] = useState<string[]>(SAMPLE_NAMES);
   const [hydrated, setHydrated] = useState(false);
   const [newName, setNewName] = useState("");

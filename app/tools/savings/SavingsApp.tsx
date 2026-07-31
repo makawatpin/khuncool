@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
@@ -80,6 +81,7 @@ function fileStamp() {
 }
 
 export default function SavingsApp() {
+  useTrackToolUse("savings");
   const [students, setStudents] = useState<string[]>(DEFAULT_STUDENTS);
   const [balances, setBalances] = useState<number[]>(DEFAULT_BALANCES);
   const [txns, setTxns] = useState<Txn[]>([]);
