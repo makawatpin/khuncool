@@ -139,7 +139,7 @@ export default function Header() {
       </header>
 
       {/* mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-border bg-white/[.97] backdrop-blur-md md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 bg-primary md:hidden">
         {PILLARS.map((p) => {
           const active = pathname === p.path || pathname.startsWith(`${p.path}/`);
           return (
@@ -147,7 +147,7 @@ export default function Header() {
               key={p.path}
               href={p.path}
               className={`flex flex-col items-center gap-0.5 py-2 no-underline ${
-                active ? "text-primary" : "text-ink-secondary"
+                active ? "text-white" : "text-white/65"
               }`}
             >
               <span className="text-lg">{p.icon}</span>
