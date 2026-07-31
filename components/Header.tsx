@@ -5,6 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
+import { ALL_ARTICLES } from "@/app/articles/data";
+
+const LATEST_ARTICLES = [...ALL_ARTICLES]
+  .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
+  .slice(0, 6);
 
 const PILLARS = [
   {
@@ -52,20 +57,36 @@ export default function Header() {
   return (
     <>
       {/* announcement bar */}
-      <Link
-        href="/articles"
-        className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white no-underline hover:opacity-95"
-      >
+      <div className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white">
         <div className="mx-auto flex w-full max-w-[1160px] items-center gap-2">
-          <span className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold">
-            อบรมฟรี
-          </span>
-          <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
-            อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · ดูบทความอบรมฟรี
-          </span>
-          <span className="flex-none opacity-70">›</span>
+          <Link
+            href="/articles"
+            className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold text-white no-underline hover:opacity-90"
+          >
+            บทความใหม่
+          </Link>
+          <div className="flex-1 overflow-hidden">
+            <div className="flex w-max animate-marquee items-center gap-10 whitespace-nowrap">
+              {[...LATEST_ARTICLES, ...LATEST_ARTICLES].map((a, i) => (
+                <Link
+                  key={`${a.href}-${i}`}
+                  href={a.href}
+                  className="text-white no-underline hover:underline"
+                >
+                  {a.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <Link
+            href="/articles"
+            className="flex-none opacity-70 no-underline hover:opacity-100"
+            aria-label="ดูบทความทั้งหมด"
+          >
+            ›
+          </Link>
         </div>
-      </Link>
+      </div>
 
       {/* sticky header */}
       <header className="sticky top-0 z-20 border-b border-border bg-white/[.92] px-3.5 py-3 backdrop-blur-md">
