@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
+import SaveScopeNote from "@/components/SaveScopeNote";
 import {
   ATTENDANCE_STATUS_DEFS,
   printAttendance,
@@ -48,10 +49,7 @@ const HELP_STEPS = [
 ];
 
 const DEVICE_NOTE =
-  "ข้อมูลถูกบันทึกอัตโนมัติในเครื่อง/เบราว์เซอร์นี้เท่านั้น ไม่ได้ซิงก์ขึ้นคลาวด์ ถ้าเช็กในมือถือก็ต้องดูต่อในมือถือ หากต้องการใช้งานต่อบนคอมพิวเตอร์ ให้กด “ส่งออก Excel” จากเครื่องเดิม แล้ว “นำเข้า Excel” ที่อีกเครื่อง ระบบจะกู้รายชื่อและสถานะให้ครบ";
-
-const SAVE_NOTE =
-  "บันทึกอัตโนมัติเฉพาะเครื่องนี้ — ย้ายเครื่องต้องส่งออก Excel แล้วนำเข้า";
+  "ผู้ใช้ที่ไม่ได้ล็อกอิน ข้อมูลจะถูกบันทึกในเครื่อง/เบราว์เซอร์นี้เท่านั้น ถ้าเช็กในมือถือก็ต้องดูต่อในมือถือ หากต้องการใช้งานต่อบนเครื่องอื่นโดยไม่สมัครสมาชิก ให้กด “ส่งออก Excel” จากเครื่องเดิม แล้ว “นำเข้า Excel” ที่อีกเครื่อง — หรือสมัครสมาชิกฟรีเพื่อให้ข้อมูลซิงก์ขึ้นบัญชีอัตโนมัติและใช้ได้ทุกเครื่องที่ล็อกอิน";
 
 function defaultStatus(): AttendanceStatusKey | null {
   return null;
@@ -647,12 +645,7 @@ export default function AttendanceApp() {
         </button>
       </div>
 
-      <div className="rounded-[10px] mb-3.5 flex items-center gap-1.5 border border-[#FCD9B6] bg-[#FFF6ED] px-[11px] py-2.5 md:hidden">
-        <span className="flex-none text-[13px]">🔒</span>
-        <span className="flex-1 text-[11px] leading-[1.45] text-[#8A5A1A]">
-          {SAVE_NOTE}
-        </span>
-      </div>
+      <SaveScopeNote variant="mobile" />
 
       {/* Mobile summary card */}
       <div
@@ -834,12 +827,7 @@ export default function AttendanceApp() {
             </div>
           </div>
 
-          <div className="mb-3.5 flex items-center gap-2 rounded-xl border border-[#FCD9B6] bg-[#FFF6ED] px-[13px] py-[11px]">
-            <span className="flex-none text-[15px]">🔒</span>
-            <span className="flex-1 text-[11.5px] leading-[1.5] text-[#8A5A1A]">
-              {SAVE_NOTE}
-            </span>
-          </div>
+          <SaveScopeNote variant="sidebar" />
 
           <div className="rounded-[18px] border border-[#E5E8EE] bg-surface-light p-5">
             <div className="mb-3 flex items-center justify-between">

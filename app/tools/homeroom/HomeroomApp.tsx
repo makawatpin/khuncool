@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
+import SaveScopeNote from "@/components/SaveScopeNote";
 import {
   type HomeroomSession,
   type HomeroomTopic,
@@ -47,7 +48,7 @@ const HELP_STEPS = [
 ];
 
 const DEVICE_NOTE =
-  "ข้อมูลถูกบันทึกอัตโนมัติในเครื่อง/เบราว์เซอร์นี้เท่านั้น ไม่ได้ซิงก์ขึ้นคลาวด์ หากต้องการใช้งานต่อบนเครื่องอื่น ให้ส่งออก Excel จากเครื่องเดิมแล้วนำเข้าที่อีกเครื่อง";
+  "ผู้ใช้ที่ไม่ได้ล็อกอิน ข้อมูลจะถูกบันทึกในเครื่อง/เบราว์เซอร์นี้เท่านั้น หากต้องการใช้งานต่อบนเครื่องอื่นโดยไม่สมัครสมาชิก ให้ส่งออก Excel จากเครื่องเดิมแล้วนำเข้าที่อีกเครื่อง — หรือสมัครสมาชิกฟรีเพื่อให้ข้อมูลซิงก์ขึ้นบัญชีอัตโนมัติและใช้ได้ทุกเครื่องที่ล็อกอิน";
 
 interface RawSavingsState {
   room?: string;
@@ -1142,6 +1143,7 @@ export default function HomeroomApp() {
             ⚙️ ตั้งค่า
           </button>
         </div>
+        <SaveScopeNote variant="mobile" />
         <div className="mb-3.5 grid grid-cols-3 gap-2">
           {[
             { value: doneCount, label: "ครั้งที่บันทึก", bg: "#E1E3FD" },
@@ -1326,6 +1328,9 @@ export default function HomeroomApp() {
       </div>
 
       {/* ============ DESKTOP ============ */}
+      <div className="hidden md:block">
+        <SaveScopeNote variant="sidebar" />
+      </div>
       <div className="mb-3.5 hidden items-center justify-between gap-2 md:flex">
         <div className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[11.5px] text-[#A9B0BE]">
           {headerSub}
