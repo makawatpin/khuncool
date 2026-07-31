@@ -275,6 +275,12 @@ export default function DuckRacePage() {
         </h2>
         <div className="flex flex-wrap gap-2.5">
           <Link
+            href="/blog/duck-race"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 รู้จักเกมแข่งเป็ดสุ่มชื่อ
+          </Link>
+          <Link
             href="/random-name-picker"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >
