@@ -44,7 +44,7 @@ export default function AccountPage() {
   const { ready, user } = useAuth();
 
   if (!ready) {
-    return <main className="flex-1 w-full max-w-[1160px] mx-auto px-6 py-9 pb-16" />;
+    return <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white px-6 py-9 pb-16" />;
   }
 
   return user ? <MemberAccount /> : <GuestAccount />;
@@ -52,7 +52,7 @@ export default function AccountPage() {
 
 function GuestAccount() {
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto px-6 py-9 pb-16">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white px-6 py-9 pb-16">
       <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
         <div>
           <span className="inline-flex items-center gap-1.5 rounded-pill bg-success-bg px-3.5 py-1.5 text-[12.5px] font-semibold text-success whitespace-nowrap">
@@ -203,7 +203,7 @@ function MemberAccount() {
   };
 
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto px-6 py-9 pb-16">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white px-6 py-9 pb-16">
       <div className="mb-5 flex flex-wrap items-center gap-[18px] rounded-card-lg border border-border bg-surface-card p-6">
         <div className="flex h-16 w-16 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary to-teal-600 text-[26px] font-bold text-white">
           {initial}

@@ -49,14 +49,14 @@ const tags = ["กรอบป้ายติดผนัง", "กรอบแ�
 // NOTE: source data has no `href` for these related items (they reference
 // posts not yet built in this site) — rendered as non-linking cards.
 const related = [
-  { title: "รีวิวเครื่องเคลือบบัตร A4 สำหรับครู เลือกรุ่นไหนดี", date: "20 ก.ค. 2568" },
-  { title: "รีวิวสติกเกอร์รางวัลนักเรียน ชุดใหญ่ 1,000 ดวง", date: "12 ก.ค. 2568" },
-  { title: "10 กิจกรรมสุ่มชื่อนักเรียนให้ห้องเรียนสนุกขึ้น", date: "5 ก.ค. 2568" },
+  { title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง", date: "27 ก.ค. 2569", href: "/blog/wheel" },
+  { title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที", date: "27 ก.ค. 2569", href: "/blog/random-name-activities" },
+  { title: "วัดเสียงในห้องเรียน ช่วยคุมระดับเสียงเด็กแบบไม่ต้องดุ", date: "15 ก.ค. 2569", href: "/classroom-noise-meter" },
 ];
 
 export default function BlogMagneticFramePage() {
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
       <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
         <Link href="/" className="text-ink-faint">หน้าแรก</Link>
         <span>›</span>
@@ -213,11 +213,11 @@ export default function BlogMagneticFramePage() {
             <div className="mb-3 text-sm font-bold">📌 รีวิวอื่น ๆ</div>
             <div className="flex flex-col">
               {related.map((r) => (
-                <div key={r.title} className="border-t border-border py-2.5">
-                  <div className="mb-0.5 text-[11px] font-semibold text-[#C2500B]">รีวิวสินค้า</div>
+                <Link key={r.title} href={r.href} className="block border-t border-border py-2.5 text-inherit no-underline hover:opacity-65">
+                  <div className="mb-0.5 text-[11px] font-semibold text-[#C2500B]">สื่อการสอน</div>
                   <div className="text-[13.5px] font-semibold leading-[1.5]">{r.title}</div>
                   <div className="mt-0.5 text-[11.5px] text-ink-faint">{r.date}</div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

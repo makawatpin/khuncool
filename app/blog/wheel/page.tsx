@@ -73,11 +73,12 @@ const related = [
   { cat: "สื่อการสอน", title: "จับเวลาในห้องเรียน ใช้ยังไงให้เด็กทำงานเสร็จทันเวลา", date: "22 ก.ค. 2569", href: "/timer" },
   { cat: "รีวิวสินค้า", title: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง", date: "26 ก.ค. 2569", href: "/blog/magnetic-frame" },
   { cat: "สื่อการสอน", title: "วัดเสียงในห้องเรียน ช่วยคุมระดับเสียงเด็กแบบไม่ต้องดุ", date: "15 ก.ค. 2569", href: "/classroom-noise-meter" },
+  { cat: "เครื่องมือครู", title: "แข่งเป็ดสุ่มชื่อ กิจกรรมสุ่มชื่อนักเรียนแบบสนุก", date: "27 ก.ค. 2569", href: "/duck-race" },
 ];
 
 export default function BlogWheelPage() {
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

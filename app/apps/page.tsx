@@ -80,7 +80,7 @@ const jsonLd = {
 
 export default function AppsPage() {
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

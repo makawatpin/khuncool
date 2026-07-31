@@ -142,7 +142,7 @@ const USE_CASES = [
 
 export default function TimerPage() {
   return (
-    <main className="flex-1 w-full max-w-[1160px] mx-auto">
+    <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -248,6 +248,16 @@ export default function TimerPage() {
               </p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Related */}
+      <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
+        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">เครื่องมือและบทความที่เกี่ยวข้อง</h2>
+        <div className="flex flex-wrap gap-2.5">
+          <Link href="/classroom-noise-meter" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🔊 วัดเสียงในห้องเรียน</Link>
+          <Link href="/blog/wheel" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">📖 8 ไอเดียใช้วงล้อสุ่มในห้องเรียน</Link>
+          <Link href="/tools" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🧰 เครื่องมือทั้งหมด</Link>
         </div>
       </div>
     </main>
