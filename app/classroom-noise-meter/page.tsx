@@ -267,6 +267,12 @@ export default function NoiseMeterPage() {
         </h2>
         <div className="flex flex-wrap gap-2.5">
           <Link
+            href="/blog/noise-meter"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 รู้จักเครื่องวัดเสียงในห้องเรียน
+          </Link>
+          <Link
             href="/timer"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >
