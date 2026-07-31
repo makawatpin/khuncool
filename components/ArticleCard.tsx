@@ -19,7 +19,7 @@ export default function ArticleCard({ article: a, variant = "list" }: Props) {
           alt={a.alt}
           width={640}
           height={360}
-          className="block h-[170px] w-full bg-[#F1F3F6] object-cover object-top md:h-full md:min-h-[280px]"
+          className="block aspect-video w-full bg-[#F1F3F6] object-contain object-top md:aspect-auto md:h-full md:min-h-[280px]"
         />
         <div className="p-3.5 md:flex md:flex-col md:justify-center md:p-8">
           <div className="mb-2 flex items-center gap-2 md:mb-3 md:gap-[9px]">
@@ -57,7 +57,7 @@ export default function ArticleCard({ article: a, variant = "list" }: Props) {
         alt={a.alt}
         width={170}
         height={170}
-        className="h-24 w-24 flex-none rounded-[10px] bg-[#F1F3F6] object-cover object-top md:h-[170px] md:w-full md:rounded-none"
+        className="aspect-video h-24 w-auto flex-none rounded-[10px] bg-[#F1F3F6] object-contain object-top md:h-auto md:w-full md:rounded-none"
       />
       <div className="min-w-0 flex-1 md:flex md:flex-1 md:flex-col md:p-4">
         <div className="mb-[5px] flex items-center gap-1.5 md:mb-2">
