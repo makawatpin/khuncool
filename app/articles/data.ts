@@ -24,8 +24,8 @@ export type Article = {
   alt: string;
   href: string;
   excerpt: string;
-  /** Optional related-tool callout shown on the homepage article list. */
-  linksTool?: string;
+  /** Optional related-tool callout shown on the homepage article list (desktop/tablet only). */
+  linksTool?: { label: string; href: string };
 };
 
 export const ALL_ARTICLES: Article[] = [
@@ -40,7 +40,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/noise-meter",
     excerpt:
       "รู้จักเครื่องวัดเสียงในห้องเรียน สื่อการสอนออนไลน์ที่ช่วยให้นักเรียนเห็นและควบคุมความดังของตัวเองแบบเรียลไทม์ พร้อมวิธีใช้และไอเดียนำไปใช้จริง",
-    linksTool: "วัดเสียงในห้อง /classroom-noise-meter",
+    linksTool: { label: "วัดเสียงในห้อง", href: "/classroom-noise-meter" },
   },
   {
     title: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี",
@@ -53,7 +53,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/duck-race",
     excerpt:
       "รู้จักเกมแข่งเป็ดสุ่มชื่อนักเรียน สื่อการสอนออนไลน์ที่สนุกกว่าวงล้อสุ่มแบบเดิม พร้อมวิธีใช้ 4 ขั้นตอน และ 6 ไอเดียใช้งานจริง",
-    linksTool: "แข่งเป็ด /duck-race",
+    linksTool: { label: "แข่งเป็ด", href: "/duck-race" },
   },
   {
     title: "สพป.ปราจีนบุรี เขต 2 เปิดรับสมัครพนักงานราชการทั่วไป 6 อัตรา",
@@ -90,7 +90,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/wheel",
     excerpt:
       "รู้จักวงล้อสุ่มชื่อ สื่อการสอนออนไลน์ที่ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น พร้อมวิธีใช้ 4 ขั้นตอน และ 8 ไอเดียใช้งานจริง",
-    linksTool: "วงล้อสุ่ม /tools/wheel",
+    linksTool: { label: "วงล้อสุ่ม", href: "/random-name-picker" },
   },
   {
     title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
@@ -103,7 +103,7 @@ export const ALL_ARTICLES: Article[] = [
     href: "/blog/random-name-activities",
     excerpt:
       "รวม 10 กิจกรรมสุ่มชื่อนักเรียนที่ครูเอาไปใช้ได้ทันที ตั้งแต่วอร์มอัพต้นคาบไปจนถึงกิจกรรมท้ายชั่วโมง",
-    linksTool: "วงล้อสุ่ม /tools/wheel",
+    linksTool: { label: "วงล้อสุ่ม", href: "/random-name-picker" },
   },
   {
     title: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",

@@ -31,37 +31,40 @@ export default function ArticlesSection() {
 
         <div className="flex flex-col gap-3.5 md:grid md:grid-cols-2 md:gap-4 lg:gap-[18px]">
           {ARTICLES.map((a) => (
-            <Link
-              key={a.href}
-              href={a.href}
-              className="block text-inherit no-underline"
-            >
-              <div className="flex items-start gap-2.5 md:block">
-                <div className="relative aspect-video w-[132px] flex-none overflow-hidden rounded-card-sm md:mb-2.5 md:w-full lg:mb-[11px] lg:rounded-card">
-                  <Image src={a.cover} alt={a.title} fill className="object-cover" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <span
-                    className="text-[10.5px] font-semibold md:text-[11px]"
-                    style={{ color: a.catColor }}
-                  >
-                    {a.cat}
-                  </span>
-                  <div className="my-0.5 line-clamp-3 text-[13px] font-semibold leading-snug md:line-clamp-2 md:text-[15px] lg:text-base">
-                    {a.title}
+            <div key={a.href}>
+              <Link href={a.href} className="block text-inherit no-underline">
+                <div className="flex items-start gap-2.5 md:block">
+                  <div className="relative aspect-video w-[132px] flex-none overflow-hidden rounded-card-sm md:mb-2.5 md:w-full lg:mb-[11px] lg:rounded-card">
+                    <Image src={a.cover} alt={a.title} fill className="object-cover" />
                   </div>
-                  <div className="text-[10.5px] text-ink-faint md:text-[11.5px] lg:text-xs">
-                    {a.date} · {a.read}
-                  </div>
-                  {a.linksTool && (
-                    <div className="mt-1.5 ml-[143px] text-[11.5px] text-primary md:ml-0 md:mt-1 lg:mt-1.5">
-                      → เกี่ยวข้อง:{" "}
-                      <span className="font-semibold">{a.linksTool}</span>
+                  <div className="min-w-0 flex-1">
+                    <span
+                      className="text-[10.5px] font-semibold md:text-[11px]"
+                      style={{ color: a.catColor }}
+                    >
+                      {a.cat}
+                    </span>
+                    <div className="my-0.5 line-clamp-3 text-[13px] font-semibold leading-snug md:line-clamp-2 md:text-[15px] lg:text-base">
+                      {a.title}
                     </div>
-                  )}
+                    <div className="text-[10.5px] text-ink-faint md:text-[11.5px] lg:text-xs">
+                      {a.date} · {a.read}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+              {a.linksTool && (
+                <Link
+                  href={a.linksTool.href}
+                  className="mt-1 hidden text-[11.5px] text-primary no-underline md:block lg:mt-1.5"
+                >
+                  → เกี่ยวข้อง:{" "}
+                  <span className="font-semibold">
+                    {a.linksTool.label} {a.linksTool.href}
+                  </span>
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       </div>
