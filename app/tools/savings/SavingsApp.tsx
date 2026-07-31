@@ -28,7 +28,8 @@ const HELP_STEPS = [
   "อยากให้ทุกคนฝากเท่ากัน กดปุ่มลัด +5 +10 +20 หรือพิมพ์เอง แล้วกด “ฝากทุกคน”",
   "ยอดคงเหลือรายคนและยอดรวมทั้งห้องอัปเดตให้อัตโนมัติ",
   "กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด",
-  "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้",
+  "กด “🗑 ลบรายชื่อ” เพื่อเปิดโหมดลบ แล้วแตะ ✕ ท้ายชื่อที่ต้องการลบออก",
+  "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้ — รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและบันทึกโฮมรูมด้วย",
   "“ส่งออก” เป็น Excel (มีประวัติครบ) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)",
 ];
 
@@ -87,6 +88,7 @@ export default function SavingsApp() {
   const [quickAmt, setQuickAmt] = useState("");
   const [rowAmts, setRowAmts] = useState<Record<number, string>>({});
   const [newName, setNewName] = useState("");
+  const [deleteMode, setDeleteMode] = useState(false);
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
   const [showHelp, setShowHelp] = useState(false);
@@ -102,6 +104,7 @@ export default function SavingsApp() {
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const frameRef = useRef<HTMLDivElement | null>(null);
+  const activeChipRef = useRef<HTMLButtonElement | null>(null);
 
   // Mirrors `balances` synchronously (updated the instant we compute a new
   // array, not on the next render) so apply() can read the true latest
@@ -158,6 +161,16 @@ export default function SavingsApp() {
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pulled]);
+
+  // Keep the selected date chip scrolled into view (e.g. after using the
+  // ‹ › step buttons, which can move the selection off-screen).
+  useEffect(() => {
+    activeChipRef.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [entryDate]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {
@@ -220,6 +233,15 @@ export default function SavingsApp() {
   }, [entryDate]);
 
   const backdating = entryDate !== todayISO();
+
+  const shiftEntryDate = useCallback((days: number) => {
+    setEntryDate((cur) => {
+      const base = new Date((cur || todayISO()) + "T12:00:00");
+      base.setDate(base.getDate() + days);
+      const iso = `${base.getFullYear()}-${pad(base.getMonth() + 1)}-${pad(base.getDate())}`;
+      return iso > todayISO() ? todayISO() : iso;
+    });
+  }, []);
 
   const dateChips = useMemo(() => {
     const today = todayISO();
@@ -334,6 +356,20 @@ export default function SavingsApp() {
     setNewName("");
     flashToast();
   }, [newName, flashToast, setBalancesSynced]);
+
+  const removeStudent = useCallback(
+    (i: number) => {
+      setStudents((current) => current.filter((_, idx) => idx !== i));
+      setBalancesSynced((current) => current.filter((_, idx) => idx !== i));
+      setRowAmts((r) => {
+        const next = { ...r };
+        delete next[i];
+        return next;
+      });
+      flashToast("ลบแล้ว ✓");
+    },
+    [flashToast, setBalancesSynced],
+  );
 
   const onKeyName = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -839,12 +875,35 @@ export default function SavingsApp() {
               ย้อนหลัง
             </span>
           )}
+          <div className="ml-auto flex flex-none gap-1.5">
+            <button
+              type="button"
+              onClick={() => shiftEntryDate(-1)}
+              aria-label="ย้อนไป 1 วัน"
+              className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-[#D3D8E1] bg-white text-[13px] font-bold text-[#5A6273]"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => shiftEntryDate(1)}
+              disabled={!backdating}
+              aria-label="ไปวันถัดไป"
+              className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-[#D3D8E1] bg-white text-[13px] font-bold text-[#5A6273] disabled:opacity-40"
+            >
+              ›
+            </button>
+          </div>
         </div>
-        <div className="flex gap-[7px] overflow-x-auto py-0.5 pb-1.5">
+        <div
+          className="flex gap-[7px] overflow-x-auto py-0.5 pb-1.5"
+          style={{ WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
+        >
           {dateChips.map((d) => (
             <button
               key={d.iso}
               type="button"
+              ref={d.iso === entryDate ? activeChipRef : undefined}
               onClick={() => setEntryDate(d.iso)}
               className="flex h-[54px] w-[54px] flex-none flex-col items-center justify-center rounded-[13px] leading-[1.25]"
               style={
@@ -888,6 +947,17 @@ export default function SavingsApp() {
           className="flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[11px] border border-[#D3D8E1] bg-white px-2.5 py-2.5 text-[13px] font-semibold hover:border-[#F2C079] hover:bg-surface-light"
         >
           📤 ส่งออก
+        </button>
+        <button
+          type="button"
+          onClick={() => setDeleteMode((v) => !v)}
+          className={`flex-none whitespace-nowrap rounded-[11px] border px-2.5 py-2.5 text-[13px] font-semibold ${
+            deleteMode
+              ? "border-[#DC2626] bg-[#FEF4F4] text-[#DC2626]"
+              : "border-[#D3D8E1] bg-white hover:bg-surface-light"
+          }`}
+        >
+          🗑 ลบรายชื่อ
         </button>
       </div>
 
@@ -983,6 +1053,17 @@ export default function SavingsApp() {
                 className="rounded-lg border border-[#D3D8E1] bg-white px-[9px] py-1.5 text-[13px] font-semibold text-ink outline-none focus:border-[#C2500B]"
               />
             </div>
+            <button
+              type="button"
+              onClick={() => setDeleteMode((v) => !v)}
+              className={`flex-none whitespace-nowrap rounded-[10px] border px-[15px] py-2.5 text-[13px] font-semibold ${
+                deleteMode
+                  ? "border-[#DC2626] bg-[#FEF4F4] text-[#DC2626]"
+                  : "border-[#D3D8E1] bg-white hover:bg-surface-light"
+              }`}
+            >
+              🗑 ลบรายชื่อ
+            </button>
           </div>
 
           {/* Quick deposit all (desktop) */}
@@ -1088,6 +1169,16 @@ export default function SavingsApp() {
                     >
                       ถอน
                     </button>
+                    {deleteMode && (
+                      <button
+                        type="button"
+                        onClick={() => removeStudent(i)}
+                        aria-label={`ลบ ${name}`}
+                        className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9]"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
