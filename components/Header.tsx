@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { ALL_ARTICLES } from "@/app/articles/data";
@@ -43,7 +43,7 @@ const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
   const { user } = useAuth();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const pathname = usePathname();
 
   const initial = (
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -91,28 +91,6 @@ export default function Header() {
       {/* sticky header */}
       <header className="sticky top-0 z-20 border-b border-border bg-white/[.92] px-3.5 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1160px] items-center gap-2.5">
-          <button
-            type="button"
-            onClick={() => setDrawerOpen((v) => !v)}
-            aria-label="เมนู"
-            aria-expanded={drawerOpen}
-            className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-card-sm border border-border bg-surface-card hover:bg-surface-light md:hidden"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <line x1="2" y1="4.5" x2="16" y2="4.5" />
-              <line x1="2" y1="9" x2="16" y2="9" />
-              <line x1="2" y1="13.5" x2="16" y2="13.5" />
-            </svg>
-          </button>
           <Link href="/" className="flex flex-1 items-center gap-1.5 md:flex-none">
             <Image
               src="/assets/khuncool-logo.png"
@@ -160,27 +138,24 @@ export default function Header() {
         </div>
       </header>
 
-      {/* mobile nav drawer */}
-      {drawerOpen && (
-        <div className="flex flex-col gap-1.5 border-b border-border bg-surface-light p-3.5 md:hidden">
-          {PILLARS.map((p) => (
+      {/* mobile bottom nav */}
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-border bg-white/[.97] backdrop-blur-md md:hidden">
+        {PILLARS.map((p) => {
+          const active = pathname === p.path || pathname.startsWith(`${p.path}/`);
+          return (
             <Link
               key={p.path}
               href={p.path}
-              onClick={() => setDrawerOpen(false)}
-              className="flex items-center gap-2.5 rounded-card-sm border border-border bg-surface-card p-2.5 no-underline hover:border-primary/40"
+              className={`flex flex-col items-center gap-0.5 py-2 no-underline ${
+                active ? "text-primary" : "text-ink-secondary"
+              }`}
             >
               <span className="text-lg">{p.icon}</span>
-              <div className="flex-1">
-                <div className="text-[13.5px] font-semibold text-ink">
-                  {p.title}
-                </div>
-                <div className="text-[11px] text-ink-faint">{p.desc}</div>
-              </div>
+              <span className="text-[10.5px] font-medium">{p.title}</span>
             </Link>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </nav>
     </>
   );
 }
