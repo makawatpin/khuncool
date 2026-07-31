@@ -182,15 +182,14 @@ export default function Header() {
           </nav>
 
           {user ? (
-            <button
-              type="button"
-              onClick={openAccountSheet}
+            <Link
+              href="/account"
               aria-label="บัญชีของฉัน"
               title={user.email ?? "บัญชีของฉัน"}
-              className="hidden h-9 w-9 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-sm font-bold text-white hover:opacity-90 md:flex"
+              className="hidden h-9 w-9 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-sm font-bold text-white no-underline hover:opacity-90 md:flex"
             >
               {initial}
-            </button>
+            </Link>
           ) : (
             <button
               type="button"
@@ -312,13 +311,10 @@ export default function Header() {
 
             <div className="border-t border-border p-3">
               {user ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeSidebar();
-                    openAccountSheet();
-                  }}
-                  className="flex w-full items-center gap-2.5 rounded-card-sm p-2 text-left hover:bg-surface-light"
+                <Link
+                  href="/account"
+                  onClick={closeSidebar}
+                  className="flex w-full items-center gap-2.5 rounded-card-sm p-2 text-left no-underline hover:bg-surface-light"
                 >
                   <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-[13px] font-bold text-white">
                     {initial}
@@ -326,7 +322,7 @@ export default function Header() {
                   <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-ink">
                     {displayName}
                   </span>
-                </button>
+                </Link>
               ) : (
                 <button
                   type="button"
