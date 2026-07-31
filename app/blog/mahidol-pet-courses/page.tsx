@@ -91,7 +91,7 @@ const courses = [
     ],
     target:
       "เหมาะกับผู้เลี้ยงสุนัข ตลอดจนผู้ที่สนใจเกี่ยวกับพฤติกรรมและปัญหาพฤติกรรมของสุนัขและแมว",
-    href: "https://bit.ly/3TjSa8X",
+    href: "https://channel.mahidol.ac.th/mca/course/27/understanding-dog-behavior-and-basic-problem-solving",
     accent: { bg: "#E1E3FD", color: "#3D38B4" },
   },
   {
@@ -118,7 +118,7 @@ const courses = [
       { n: "5", h: "ความเข้าใจผิดเกี่ยวกับการเลี้ยงแมว", t: "13.38 นาที" },
     ],
     target: "เหมาะกับมือใหม่ที่กำลังจะเลี้ยงแมว หรือคนที่เลี้ยงอยู่แล้วแต่อยากเข้าใจแมวให้มากขึ้น",
-    href: "https://bit.ly/4bfvJI8",
+    href: "https://channel.mahidol.ac.th/mca/course/29/beginner-cat-guide",
     accent: { bg: "#FFEAD5", color: "#C2500B" },
   },
 ];
@@ -350,7 +350,7 @@ export default function BlogMahidolPetCoursesPage() {
             </div>
             <div className="flex flex-none gap-2">
               <a
-                href="https://bit.ly/3TjSa8X"
+                href="https://channel.mahidol.ac.th/mca/course/27/understanding-dog-behavior-and-basic-problem-solving"
                 target="_blank"
                 rel="noopener"
                 className="rounded-xl bg-primary px-4 py-3 text-[13px] font-bold text-white no-underline shadow-[0_10px_24px_-8px_rgba(92,94,230,.5)] hover:bg-[#4A46D6]"
@@ -358,7 +358,7 @@ export default function BlogMahidolPetCoursesPage() {
                 คอร์สหมา ↗
               </a>
               <a
-                href="https://bit.ly/4bfvJI8"
+                href="https://channel.mahidol.ac.th/mca/course/29/beginner-cat-guide"
                 target="_blank"
                 rel="noopener"
                 className="rounded-xl bg-[#0A9380] px-4 py-3 text-[13px] font-bold text-white no-underline hover:brightness-[1.06]"
@@ -434,7 +434,7 @@ export default function BlogMahidolPetCoursesPage() {
             </div>
             <div className="mt-4 flex flex-col gap-2">
               <a
-                href="https://bit.ly/3TjSa8X"
+                href="https://channel.mahidol.ac.th/mca/course/27/understanding-dog-behavior-and-basic-problem-solving"
                 target="_blank"
                 rel="noopener"
                 className="block rounded-xl bg-primary p-3 text-center text-sm font-bold text-white no-underline hover:bg-[#4A46D6]"
@@ -442,7 +442,7 @@ export default function BlogMahidolPetCoursesPage() {
                 สมัครคอร์สหมา ↗
               </a>
               <a
-                href="https://bit.ly/4bfvJI8"
+                href="https://channel.mahidol.ac.th/mca/course/29/beginner-cat-guide"
                 target="_blank"
                 rel="noopener"
                 className="block rounded-xl bg-[#0A9380] p-3 text-center text-sm font-bold text-white no-underline hover:brightness-[1.06]"
