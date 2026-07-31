@@ -41,6 +41,17 @@ export const TOOLS = [
 export const ARTICLES = [
   {
     rank: "1",
+    cat: "คอร์สเรียน",
+    catColor: "text-[#8A5A1A]",
+    title: "มหาวิทยาลัยมหิดล เปิด 2 คอร์สเรียนฟรี สำหรับคนรักสัตว์ มีใบเซอร์",
+    date: "31 ก.ค. 2569",
+    read: "อ่าน 6 นาที",
+    cover: "/assets/mahidol-pet-courses-cover.webp",
+    linksTool: "",
+    href: "/blog/mahidol-pet-courses",
+  },
+  {
+    rank: "2",
     cat: "อบรมฟรี",
     catColor: "text-success",
     title:
@@ -52,7 +63,7 @@ export const ARTICLES = [
     href: "/blog/psu-english",
   },
   {
-    rank: "2",
+    rank: "3",
     cat: "สื่อการสอน",
     catColor: "text-[#3D38B4]",
     title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น",
@@ -63,7 +74,7 @@ export const ARTICLES = [
     href: "/blog/wheel",
   },
   {
-    rank: "3",
+    rank: "4",
     cat: "รีวิวสินค้า",
     catColor: "text-[#C2500B]",
     title: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง ตัวช่วยทำบอร์ดผลงานเด็ก",
@@ -74,7 +85,7 @@ export const ARTICLES = [
     href: "/blog/magnetic-frame",
   },
   {
-    rank: "4",
+    rank: "5",
     cat: "สื่อการสอน",
     catColor: "text-[#3D38B4]",
     title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
@@ -83,17 +94,6 @@ export const ARTICLES = [
     cover: "/assets/random-name-cover.png",
     linksTool: "วงล้อสุ่ม /tools/wheel",
     href: "/blog/random-name-activities",
-  },
-  {
-    rank: "5",
-    cat: "ข่าวครู",
-    catColor: "text-[#8A6206]",
-    title: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
-    date: "27 ก.ค. 2569",
-    read: "อ่าน 4 นาที",
-    cover: "/assets/royal-award-cover.png",
-    linksTool: "",
-    href: "/blog/royal-award-2569",
   },
 ];
 
