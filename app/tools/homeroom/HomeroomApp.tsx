@@ -86,6 +86,7 @@ export default function HomeroomApp() {
   const [packStatus, setPackStatus] = useState("");
   const [offline, setOffline] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [mobileView, setMobileView] = useState<"list" | "settings">("list");
 
   // Ref mirror of sessions, kept in sync synchronously so patch() calls that
   // fire back-to-back (e.g. rapid edits) always read the latest array
@@ -495,6 +496,279 @@ export default function HomeroomApp() {
     [topics, sessions],
   );
 
+  const settingsCards = (
+    <>
+      <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
+        <h3 className="m-0 mb-1 text-[15px]">หัวแบบฟอร์ม</h3>
+        <p className="m-0 mb-3.5 text-xs leading-[1.5] text-[#7C8494]">ข้อมูลนี้จะขึ้นหัวกระดาษเวลาพิมพ์</p>
+        <div className="flex flex-col gap-[11px]">
+          <div>
+            <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">โรงเรียน</label>
+            <input
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+              placeholder="โรงเรียนบ้านหนองคูล"
+              className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ชั้น</label>
+              <input
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+                placeholder="ป.4/1"
+                className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+            </div>
+            <div>
+              <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ภาคเรียน</label>
+              <input
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+                placeholder="1"
+                className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ปีการศึกษา</label>
+              <input
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                placeholder="2569"
+                className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+            </div>
+            <div>
+              <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ครูที่ปรึกษา</label>
+              <input
+                value={teacher}
+                onChange={(e) => setTeacher(e.target.value)}
+                placeholder="ครูสมชาย"
+                className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
+        <div className="mb-1 flex items-baseline justify-between gap-2.5">
+          <h3 className="m-0 whitespace-nowrap text-[15px]">หัวข้อโฮมรูมของคุณ</h3>
+          <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">{topics.length} หัวข้อ</span>
+        </div>
+        <p className="m-0 mb-[13px] text-xs leading-[1.5] text-[#7C8494]">
+          แก้ชื่อได้เลย · ลบที่ไม่ใช้ · เพิ่มหัวข้อของโรงเรียนเอง
+        </p>
+        <div className="mb-3 flex flex-col gap-[7px]">
+          {topics.map((t, i) => (
+            <div key={t.id} className="flex items-center gap-[7px]">
+              <span className="w-4 flex-none text-right font-mono text-[11px] text-[#A9B0BE]">{i + 1}</span>
+              <input
+                value={t.label}
+                onChange={(e) => renameTopic(t.id, e.target.value)}
+                className="min-w-0 flex-1 rounded-[9px] border border-[#E5E8EE] p-[9px_11px] text-[13.5px] outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => removeTopic(t.id)}
+                title="ลบหัวข้อ"
+                className="h-8 w-8 flex-none rounded-[9px] border border-[#E5E8EE] bg-white text-[13px] text-[#A9B0BE] hover:border-[#F8C9C9] hover:text-[#D93B3B]"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <input
+            value={newTopic}
+            onChange={(e) => setNewTopic(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") addTopic();
+            }}
+            placeholder="เพิ่มหัวข้อใหม่…"
+            className="min-w-0 flex-1 rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-[13.5px] outline-none"
+          />
+          <button
+            type="button"
+            onClick={addTopic}
+            className="whitespace-nowrap rounded-[10px] bg-[#1A1D26] px-3.5 py-2.5 text-[13.5px] font-semibold text-white hover:bg-[#2A2E3A]"
+          >
+            เพิ่ม
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={resetTopics}
+          className="mt-2.5 w-full rounded-[10px] border border-dashed border-[#D3D8E1] bg-white p-[9px] text-[12.5px] font-semibold text-[#5A6273] hover:bg-surface-light"
+        >
+          คืนค่าชุดหัวข้อคุณลักษณะอันพึงประสงค์ 8 ข้อ
+        </button>
+      </div>
+
+      <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
+        <div className="mb-1 flex items-baseline justify-between gap-2.5">
+          <h3 className="m-0 whitespace-nowrap text-[15px]">แผนหัวข้อรายสัปดาห์</h3>
+          <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">วางล่วงหน้าได้</span>
+        </div>
+        <p className="m-0 mb-3 text-xs leading-[1.5] text-[#7C8494]">
+          ล็อกหัวข้อของสัปดาห์ไว้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กให้เอง
+        </p>
+        <div className="mb-3 flex flex-wrap gap-[7px]">
+          {planWeekOptions.map((w) => {
+            const active = w === planWeek;
+            const hasPlan = (plan[w] || []).length > 0;
+            return (
+              <button
+                key={w}
+                type="button"
+                onClick={() => setPlanWeek(w)}
+                style={{
+                  background: active ? "#5C5EE6" : hasPlan ? "#E1E3FD" : "#fff",
+                  color: active ? "#fff" : hasPlan ? "#3D38B4" : "#5A6273",
+                  borderColor: active ? "#5C5EE6" : "#E5E8EE",
+                }}
+                className="min-w-[34px] whitespace-nowrap rounded-[9px] border p-[6px_9px] text-[12.5px] font-semibold"
+              >
+                {w}
+              </button>
+            );
+          })}
+        </div>
+        <div className="mb-2.5 flex flex-col gap-0.5">
+          {topics.map((t) => {
+            const on = (plan[planWeek] || []).includes(t.id);
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => togglePlanTopic(t.id)}
+                style={{ background: on ? "#E1E3FD" : "transparent" }}
+                className="flex min-w-0 w-full items-center gap-2.5 rounded-lg p-[7px_8px] text-left text-[12.5px]"
+              >
+                <span
+                  style={{
+                    border: `1.5px solid ${on ? "#5C5EE6" : "#C6CAD3"}`,
+                    background: on ? "#5C5EE6" : "#fff",
+                  }}
+                  className="flex h-[17px] w-[17px] flex-none items-center justify-center rounded-[5px] text-[11px] text-white"
+                >
+                  {on ? "✓" : ""}
+                </span>
+                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={applyPlanToWeek}
+          className="w-full whitespace-nowrap rounded-[10px] border border-[#C6C9FB] bg-[#EFF0FE] p-[9px] text-[12.5px] font-semibold text-[#3D38B4] hover:bg-[#E1E3FD]"
+        >
+          ใช้แผนนี้กับวันที่บันทึกไว้แล้ว
+        </button>
+      </div>
+
+      <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
+        <h3 className="m-0 mb-3 text-[15px]">ตัวเลือกการพิมพ์</h3>
+        <div className="flex flex-col gap-[9px]">
+          <button
+            type="button"
+            onClick={() => setShowSign((v) => !v)}
+            style={{ background: showSign ? "#E1E3FD" : "#fff" }}
+            className="flex min-w-0 w-full items-center gap-2.5 rounded-[11px] border border-[#E5E8EE] p-2.5 text-left text-[13.5px]"
+          >
+            <span
+              style={{
+                border: `1.5px solid ${showSign ? "#5C5EE6" : "#C6CAD3"}`,
+                background: showSign ? "#5C5EE6" : "#fff",
+              }}
+              className="flex h-[18px] w-[18px] flex-none items-center justify-center rounded-[5px] text-xs text-white"
+            >
+              {showSign ? "✓" : ""}
+            </span>
+            <span className="min-w-0">ใส่ช่องลงชื่อครูที่ปรึกษา</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPrincipal((v) => !v)}
+            style={{ background: showPrincipal ? "#E1E3FD" : "#fff" }}
+            className="flex min-w-0 w-full items-center gap-2.5 rounded-[11px] border border-[#E5E8EE] p-2.5 text-left text-[13.5px]"
+          >
+            <span
+              style={{
+                border: `1.5px solid ${showPrincipal ? "#5C5EE6" : "#C6CAD3"}`,
+                background: showPrincipal ? "#5C5EE6" : "#fff",
+              }}
+              className="flex h-[18px] w-[18px] flex-none items-center justify-center rounded-[5px] text-xs text-white"
+            >
+              {showPrincipal ? "✓" : ""}
+            </span>
+            <span className="min-w-0">ใส่ช่องลงชื่อผู้บริหาร</span>
+          </button>
+          {showPrincipal && (
+            <div>
+              <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">
+                ชื่อผู้บริหาร / ตำแหน่ง
+              </label>
+              <input
+                value={principal}
+                onChange={(e) => setPrincipal(e.target.value)}
+                placeholder="นายสมศักดิ์ ดีเลิศ"
+                className="mb-2 w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+              <input
+                value={principalRole}
+                onChange={(e) => setPrincipalRole(e.target.value)}
+                placeholder="ผู้อำนวยการโรงเรียน"
+                className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+              />
+            </div>
+          )}
+          <div>
+            <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">
+              แถวเปล่าท้ายตาราง (ไว้เขียนมือ)
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={20}
+              value={blankRows}
+              onChange={(e) => setBlankRows(Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)))}
+              className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
+            />
+          </div>
+        </div>
+        <p className="mt-3 text-[11.5px] leading-[1.55] text-[#A9B0BE]">
+          แบบฟอร์มพิมพ์เป็น A4 ตั้ง 1 สัปดาห์ต่อกลุ่มแถว เหมือนแบบบันทึกที่ส่งฝ่ายวิชาการ
+        </p>
+      </div>
+
+      <div
+        className="rounded-2xl border border-[#C6C9FB] p-[18px]"
+        style={{ background: "linear-gradient(160deg,#EFF0FE,#fff)" }}
+      >
+        <h3 className="m-0 mb-1.5 text-[15px]">ส่งออกเอกสารสิ้นเทอม</h3>
+        <p className="m-0 mb-[13px] text-xs leading-[1.55] text-[#5A6273]">
+          รวมบันทึกโฮมรูม + สรุปการมาเรียน + สรุปเงินออม เป็นชุดเดียว พิมพ์ทีเดียวจบ
+        </p>
+        <button
+          type="button"
+          onClick={printTermPack}
+          className="w-full whitespace-nowrap rounded-[11px] bg-[#5C5EE6] p-3 text-[13.5px] font-semibold text-white hover:bg-[#4A46D6]"
+        >
+          🗂 พิมพ์ชุดเอกสารสิ้นเทอม
+        </button>
+        <div className="mt-2.5 text-[11.5px] leading-[1.55] text-[#7C8494]">
+          {packStatus || "ต้องมีข้อมูลในแอปเช็กชื่อ/ออมเงินก่อน ระบบจะดึงมาเองตอนพิมพ์"}
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div className="bg-white">
       <SyncStatus status={cloudStatus} />
@@ -506,6 +780,46 @@ export default function HomeroomApp() {
 
       {/* ============ MOBILE ============ */}
       <div className="md:hidden">
+        {mobileView === "settings" ? (
+          <>
+            <div className="mb-3.5 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setMobileView("list")}
+                className="flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border border-[#D3D8E1] bg-white text-[15px]"
+              >
+                ←
+              </button>
+              <div className="flex-1 text-[15px] font-bold">ตั้งค่า</div>
+              <button
+                type="button"
+                onClick={doPrint}
+                className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-3 py-2 text-[12.5px] font-semibold"
+              >
+                🖨 พิมพ์
+              </button>
+              <button
+                type="button"
+                onClick={doExcel}
+                className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-3 py-2 text-[12.5px] font-semibold"
+              >
+                ⬇ Excel
+              </button>
+            </div>
+            <div className="flex flex-col gap-[18px]">{settingsCards}</div>
+          </>
+        ) : (
+          <>
+        <div className="mb-3.5 flex items-center justify-between gap-2">
+          <div className="text-[15px] font-bold">โฮมรูม</div>
+          <button
+            type="button"
+            onClick={() => setMobileView("settings")}
+            className="flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border border-[#D3D8E1] bg-white text-[15px]"
+          >
+            ⚙️
+          </button>
+        </div>
         <div className="mb-3.5 grid grid-cols-3 gap-2">
           {[
             { value: doneCount, label: "ครั้งที่บันทึก", bg: "#E1E3FD" },
@@ -685,6 +999,8 @@ export default function HomeroomApp() {
             })}
           </div>
         )}
+          </>
+        )}
       </div>
 
       {/* ============ DESKTOP ============ */}
@@ -711,274 +1027,7 @@ export default function HomeroomApp() {
       </div>
       <div className="hidden md:grid md:grid-cols-[296px_minmax(0,1fr)] md:items-start md:gap-5">
         <div className="flex flex-col gap-[18px]">
-          <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
-            <h3 className="m-0 mb-1 text-[15px]">หัวแบบฟอร์ม</h3>
-            <p className="m-0 mb-3.5 text-xs leading-[1.5] text-[#7C8494]">ข้อมูลนี้จะขึ้นหัวกระดาษเวลาพิมพ์</p>
-            <div className="flex flex-col gap-[11px]">
-              <div>
-                <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">โรงเรียน</label>
-                <input
-                  value={school}
-                  onChange={(e) => setSchool(e.target.value)}
-                  placeholder="โรงเรียนบ้านหนองคูล"
-                  className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ชั้น</label>
-                  <input
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    placeholder="ป.4/1"
-                    className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ภาคเรียน</label>
-                  <input
-                    value={term}
-                    onChange={(e) => setTerm(e.target.value)}
-                    placeholder="1"
-                    className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ปีการศึกษา</label>
-                  <input
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    placeholder="2569"
-                    className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">ครูที่ปรึกษา</label>
-                  <input
-                    value={teacher}
-                    onChange={(e) => setTeacher(e.target.value)}
-                    placeholder="ครูสมชาย"
-                    className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
-            <div className="mb-1 flex items-baseline justify-between gap-2.5">
-              <h3 className="m-0 whitespace-nowrap text-[15px]">หัวข้อโฮมรูมของคุณ</h3>
-              <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">{topics.length} หัวข้อ</span>
-            </div>
-            <p className="m-0 mb-[13px] text-xs leading-[1.5] text-[#7C8494]">
-              แก้ชื่อได้เลย · ลบที่ไม่ใช้ · เพิ่มหัวข้อของโรงเรียนเอง
-            </p>
-            <div className="mb-3 flex flex-col gap-[7px]">
-              {topics.map((t, i) => (
-                <div key={t.id} className="flex items-center gap-[7px]">
-                  <span className="w-4 flex-none text-right font-mono text-[11px] text-[#A9B0BE]">{i + 1}</span>
-                  <input
-                    value={t.label}
-                    onChange={(e) => renameTopic(t.id, e.target.value)}
-                    className="min-w-0 flex-1 rounded-[9px] border border-[#E5E8EE] p-[9px_11px] text-[13.5px] outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeTopic(t.id)}
-                    title="ลบหัวข้อ"
-                    className="h-8 w-8 flex-none rounded-[9px] border border-[#E5E8EE] bg-white text-[13px] text-[#A9B0BE] hover:border-[#F8C9C9] hover:text-[#D93B3B]"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <input
-                value={newTopic}
-                onChange={(e) => setNewTopic(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") addTopic();
-                }}
-                placeholder="เพิ่มหัวข้อใหม่…"
-                className="min-w-0 flex-1 rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-[13.5px] outline-none"
-              />
-              <button
-                type="button"
-                onClick={addTopic}
-                className="whitespace-nowrap rounded-[10px] bg-[#1A1D26] px-3.5 py-2.5 text-[13.5px] font-semibold text-white hover:bg-[#2A2E3A]"
-              >
-                เพิ่ม
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={resetTopics}
-              className="mt-2.5 w-full rounded-[10px] border border-dashed border-[#D3D8E1] bg-white p-[9px] text-[12.5px] font-semibold text-[#5A6273] hover:bg-surface-light"
-            >
-              คืนค่าชุดหัวข้อคุณลักษณะอันพึงประสงค์ 8 ข้อ
-            </button>
-          </div>
-
-          <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
-            <div className="mb-1 flex items-baseline justify-between gap-2.5">
-              <h3 className="m-0 whitespace-nowrap text-[15px]">แผนหัวข้อรายสัปดาห์</h3>
-              <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">วางล่วงหน้าได้</span>
-            </div>
-            <p className="m-0 mb-3 text-xs leading-[1.5] text-[#7C8494]">
-              ล็อกหัวข้อของสัปดาห์ไว้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กให้เอง
-            </p>
-            <div className="mb-3 flex flex-wrap gap-[7px]">
-              {planWeekOptions.map((w) => {
-                const active = w === planWeek;
-                const hasPlan = (plan[w] || []).length > 0;
-                return (
-                  <button
-                    key={w}
-                    type="button"
-                    onClick={() => setPlanWeek(w)}
-                    style={{
-                      background: active ? "#5C5EE6" : hasPlan ? "#E1E3FD" : "#fff",
-                      color: active ? "#fff" : hasPlan ? "#3D38B4" : "#5A6273",
-                      borderColor: active ? "#5C5EE6" : "#E5E8EE",
-                    }}
-                    className="min-w-[34px] whitespace-nowrap rounded-[9px] border p-[6px_9px] text-[12.5px] font-semibold"
-                  >
-                    {w}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mb-2.5 flex flex-col gap-0.5">
-              {topics.map((t) => {
-                const on = (plan[planWeek] || []).includes(t.id);
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => togglePlanTopic(t.id)}
-                    style={{ background: on ? "#E1E3FD" : "transparent" }}
-                    className="flex min-w-0 w-full items-center gap-2.5 rounded-lg p-[7px_8px] text-left text-[12.5px]"
-                  >
-                    <span
-                      style={{
-                        border: `1.5px solid ${on ? "#5C5EE6" : "#C6CAD3"}`,
-                        background: on ? "#5C5EE6" : "#fff",
-                      }}
-                      className="flex h-[17px] w-[17px] flex-none items-center justify-center rounded-[5px] text-[11px] text-white"
-                    >
-                      {on ? "✓" : ""}
-                    </span>
-                    <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{t.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              type="button"
-              onClick={applyPlanToWeek}
-              className="w-full whitespace-nowrap rounded-[10px] border border-[#C6C9FB] bg-[#EFF0FE] p-[9px] text-[12.5px] font-semibold text-[#3D38B4] hover:bg-[#E1E3FD]"
-            >
-              ใช้แผนนี้กับวันที่บันทึกไว้แล้ว
-            </button>
-          </div>
-
-          <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
-            <h3 className="m-0 mb-3 text-[15px]">ตัวเลือกการพิมพ์</h3>
-            <div className="flex flex-col gap-[9px]">
-              <button
-                type="button"
-                onClick={() => setShowSign((v) => !v)}
-                style={{ background: showSign ? "#E1E3FD" : "#fff" }}
-                className="flex min-w-0 w-full items-center gap-2.5 rounded-[11px] border border-[#E5E8EE] p-2.5 text-left text-[13.5px]"
-              >
-                <span
-                  style={{
-                    border: `1.5px solid ${showSign ? "#5C5EE6" : "#C6CAD3"}`,
-                    background: showSign ? "#5C5EE6" : "#fff",
-                  }}
-                  className="flex h-[18px] w-[18px] flex-none items-center justify-center rounded-[5px] text-xs text-white"
-                >
-                  {showSign ? "✓" : ""}
-                </span>
-                <span className="min-w-0">ใส่ช่องลงชื่อครูที่ปรึกษา</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPrincipal((v) => !v)}
-                style={{ background: showPrincipal ? "#E1E3FD" : "#fff" }}
-                className="flex min-w-0 w-full items-center gap-2.5 rounded-[11px] border border-[#E5E8EE] p-2.5 text-left text-[13.5px]"
-              >
-                <span
-                  style={{
-                    border: `1.5px solid ${showPrincipal ? "#5C5EE6" : "#C6CAD3"}`,
-                    background: showPrincipal ? "#5C5EE6" : "#fff",
-                  }}
-                  className="flex h-[18px] w-[18px] flex-none items-center justify-center rounded-[5px] text-xs text-white"
-                >
-                  {showPrincipal ? "✓" : ""}
-                </span>
-                <span className="min-w-0">ใส่ช่องลงชื่อผู้บริหาร</span>
-              </button>
-              {showPrincipal && (
-                <div>
-                  <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">
-                    ชื่อผู้บริหาร / ตำแหน่ง
-                  </label>
-                  <input
-                    value={principal}
-                    onChange={(e) => setPrincipal(e.target.value)}
-                    placeholder="นายสมศักดิ์ ดีเลิศ"
-                    className="mb-2 w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                  <input
-                    value={principalRole}
-                    onChange={(e) => setPrincipalRole(e.target.value)}
-                    placeholder="ผู้อำนวยการโรงเรียน"
-                    className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                  />
-                </div>
-              )}
-              <div>
-                <label className="mb-[5px] block text-[11.5px] font-semibold text-[#5A6273]">
-                  แถวเปล่าท้ายตาราง (ไว้เขียนมือ)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  max={20}
-                  value={blankRows}
-                  onChange={(e) => setBlankRows(Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)))}
-                  className="w-full rounded-[10px] border border-[#D3D8E1] p-[10px_12px] text-sm outline-none"
-                />
-              </div>
-            </div>
-            <p className="mt-3 text-[11.5px] leading-[1.55] text-[#A9B0BE]">
-              แบบฟอร์มพิมพ์เป็น A4 ตั้ง 1 สัปดาห์ต่อกลุ่มแถว เหมือนแบบบันทึกที่ส่งฝ่ายวิชาการ
-            </p>
-          </div>
-
-          <div
-            className="rounded-2xl border border-[#C6C9FB] p-[18px]"
-            style={{ background: "linear-gradient(160deg,#EFF0FE,#fff)" }}
-          >
-            <h3 className="m-0 mb-1.5 text-[15px]">ส่งออกเอกสารสิ้นเทอม</h3>
-            <p className="m-0 mb-[13px] text-xs leading-[1.55] text-[#5A6273]">
-              รวมบันทึกโฮมรูม + สรุปการมาเรียน + สรุปเงินออม เป็นชุดเดียว พิมพ์ทีเดียวจบ
-            </p>
-            <button
-              type="button"
-              onClick={printTermPack}
-              className="w-full whitespace-nowrap rounded-[11px] bg-[#5C5EE6] p-3 text-[13.5px] font-semibold text-white hover:bg-[#4A46D6]"
-            >
-              🗂 พิมพ์ชุดเอกสารสิ้นเทอม
-            </button>
-            <div className="mt-2.5 text-[11.5px] leading-[1.55] text-[#7C8494]">
-              {packStatus || "ต้องมีข้อมูลในแอปเช็กชื่อ/ออมเงินก่อน ระบบจะดึงมาเองตอนพิมพ์"}
-            </div>
-          </div>
+          {settingsCards}
         </div>
 
         <div className="flex min-w-0 flex-col gap-[18px]">
