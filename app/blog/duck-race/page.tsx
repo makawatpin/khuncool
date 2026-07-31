@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี",
     description:
       "รู้จักเกมแข่งเป็ดสุ่มชื่อนักเรียน พร้อมวิธีใช้และไอเดียนำไปใช้จริงในห้องเรียน",
-    images: ["https://www.khuncool.com/assets/duck-race-cover.png"],
+    images: ["https://www.khuncool.com/assets/duck-race-blog-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -59,7 +59,7 @@ const jsonLd = {
         url: "https://www.khuncool.com/about",
       },
       publisher: { "@type": "Organization", name: "Khuncool" },
-      image: "https://www.khuncool.com/assets/duck-race-cover.png",
+      image: "https://www.khuncool.com/assets/duck-race-blog-cover.webp",
       mainEntityOfPage: "https://www.khuncool.com/blog/duck-race",
     },
   ],
@@ -182,7 +182,7 @@ export default function BlogDuckRacePage() {
 
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         <Image
-          src="/assets/duck-race-cover.png"
+          src="/assets/duck-race-blog-cover.webp"
           alt="เกมแข่งเป็ดสุ่มชื่อนักเรียน สื่อการสอนออนไลน์"
           width={1200}
           height={630}

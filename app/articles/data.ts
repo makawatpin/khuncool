@@ -35,7 +35,7 @@ export const ALL_ARTICLES: Article[] = [
     date: "31 ก.ค. 2569",
     dateISO: "2026-07-31",
     readTime: "5 นาที",
-    img: "/assets/duck-race-cover.png",
+    img: "/assets/duck-race-blog-cover.webp",
     alt: "เกมแข่งเป็ดสุ่มชื่อนักเรียน สื่อการสอนออนไลน์",
     href: "/blog/duck-race",
     excerpt:
