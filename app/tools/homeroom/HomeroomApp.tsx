@@ -20,6 +20,7 @@ import {
 const LS = "khuncool.homeroom";
 const ATTENDANCE_LS = "khuncool_attendance_v1";
 const SAVINGS_LS = "khuncool_savings_v1";
+const ROSTER_KEY = "khuncool.roster";
 
 const DEFAULT_TOPICS = [
   "รักชาติ ศาสน์ กษัตริย์",
@@ -64,6 +65,7 @@ interface Persisted {
   showPrincipal: boolean;
   principal: string;
   principalRole: string;
+  students?: string[];
 }
 
 export default function HomeroomApp() {
@@ -76,6 +78,13 @@ export default function HomeroomApp() {
   const [sessions, setSessions] = useState<HomeroomSession[]>([]);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [newTopic, setNewTopic] = useState("");
+  const [students, setStudents] = useState<string[]>([]);
+  const [newName, setNewName] = useState("");
+  const [bulkMode, setBulkMode] = useState(false);
+  const [bulkText, setBulkText] = useState("");
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState("");
+  const [importMsg, setImportMsg] = useState("");
   const [blankRows, setBlankRows] = useState(4);
   const [plan, setPlan] = useState<Record<number, string[]>>({});
   const [planWeek, setPlanWeek] = useState(1);
@@ -87,6 +96,8 @@ export default function HomeroomApp() {
   const [offline, setOffline] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "settings">("list");
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Ref mirror of sessions, kept in sync synchronously so patch() calls that
   // fire back-to-back (e.g. rapid edits) always read the latest array
@@ -119,6 +130,7 @@ export default function HomeroomApp() {
     showPrincipal,
     principal,
     principalRole,
+    students,
   };
   const { pulled, status: cloudStatus } = useCloudSync("homeroom", state);
 
@@ -145,10 +157,22 @@ export default function HomeroomApp() {
           setShowPrincipal(!!d.showPrincipal);
           setPrincipal(d.principal || "");
           setPrincipalRole(d.principalRole || "ผู้อำนวยการโรงเรียน");
+          if (Array.isArray(d.students) && d.students.length) {
+            setStudents(d.students);
+          } else {
+            const r: unknown = JSON.parse(
+              window.localStorage.getItem(ROSTER_KEY) || "null",
+            );
+            if (Array.isArray(r) && r.length) setStudents(r as string[]);
+          }
           setHydrated(true);
           return;
         }
       }
+      const r: unknown = JSON.parse(
+        window.localStorage.getItem(ROSTER_KEY) || "null",
+      );
+      if (Array.isArray(r) && r.length) setStudents(r as string[]);
     } catch {
       /* ignore */
     }
@@ -189,9 +213,11 @@ export default function HomeroomApp() {
           showPrincipal,
           principal,
           principalRole,
+          students,
           savedAt: Date.now(),
         }),
       );
+      window.localStorage.setItem(ROSTER_KEY, JSON.stringify(students));
     } catch {
       /* ignore */
     }
@@ -209,6 +235,7 @@ export default function HomeroomApp() {
     showPrincipal,
     principal,
     principalRole,
+    students,
     hydrated,
   ]);
 
@@ -218,6 +245,112 @@ export default function HomeroomApp() {
     },
     [setSessionsSynced],
   );
+
+  const addName = useCallback(() => {
+    const v = newName.trim();
+    if (!v) return;
+    setStudents((current) => [...current, v]);
+    setNewName("");
+  }, [newName]);
+
+  const onKeyName = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") addName();
+    },
+    [addName],
+  );
+
+  const toggleBulk = useCallback(() => {
+    setBulkMode((v) => {
+      if (!v) setBulkText(students.join("\n"));
+      return !v;
+    });
+  }, [students]);
+
+  const applyBulk = useCallback(() => {
+    const list = bulkText
+      .split("\n")
+      .map((x) => x.trim())
+      .filter(Boolean);
+    setStudents(list);
+    setBulkMode(false);
+  }, [bulkText]);
+
+  const importPaste = useCallback(() => {
+    const list = importText
+      .split("\n")
+      .map((x) => x.trim())
+      .filter(Boolean);
+    if (!list.length) {
+      setImportMsg("ยังไม่มีรายชื่อให้นำเข้า");
+      return;
+    }
+    setStudents(list);
+    setShowImport(false);
+    setImportText("");
+  }, [importText]);
+
+  const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = ev.target?.result;
+        const wb = XLSX.read(data, { type: "array" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const aoa: unknown[][] = XLSX.utils.sheet_to_json(ws, {
+          header: 1,
+          blankrows: false,
+        });
+        if (!aoa.length) {
+          setImportMsg("ไฟล์ว่างเปล่า");
+          return;
+        }
+        let header: string[] | null = null;
+        let start = 0;
+        const first = (aoa[0] as unknown[]).map((c) =>
+          String(c == null ? "" : c).trim(),
+        );
+        if (
+          first.some((c) => c.includes("ชื่อ") || c.toLowerCase().includes("name"))
+        ) {
+          header = first;
+          start = 1;
+        }
+        let nameCol = 1;
+        if (header) {
+          const ni = header.findIndex(
+            (c) => c.includes("ชื่อ") || c.toLowerCase().includes("name"),
+          );
+          if (ni >= 0) nameCol = ni;
+        } else {
+          nameCol = (aoa[0] as unknown[]).length >= 2 ? 1 : 0;
+        }
+        const newStudents: string[] = [];
+        for (let i = start; i < aoa.length; i++) {
+          const row = (aoa[i] || []) as unknown[];
+          let name = String(row[nameCol] == null ? "" : row[nameCol]).trim();
+          if (!name && nameCol !== 0)
+            name = String(row[0] == null ? "" : row[0]).trim();
+          if (!name) continue;
+          newStudents.push(name);
+        }
+        if (!newStudents.length) {
+          setImportMsg("ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)");
+          return;
+        }
+        setStudents(newStudents);
+        setShowImport(false);
+        setImportMsg("");
+      } catch {
+        setImportMsg("อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls");
+      } finally {
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }, []);
 
   const attendanceSnapshot = useCallback(() => {
     const raw = readAppLS<RawAttendanceState>(ATTENDANCE_LS);
@@ -262,7 +395,7 @@ export default function HomeroomApp() {
       dayNote: "",
       checked: [],
       other: "",
-      total: (last && last.total) || "",
+      total: students.length ? String(students.length) : (last && last.total) || "",
       present: "",
       absent: "",
     };
@@ -272,7 +405,7 @@ export default function HomeroomApp() {
     if (Array.isArray(planTopics)) next.checked = [...planTopics];
     setSessionsSynced(nextSessions);
     setCurrentId(id);
-  }, [plan, setSessionsSynced]);
+  }, [plan, setSessionsSynced, students]);
 
   const addWeek = useCallback(() => {
     const cur = sessionsRef.current;
@@ -298,7 +431,10 @@ export default function HomeroomApp() {
         dayNote: "",
         checked: [],
         other: "",
-        total: (cur[cur.length - 1] || ({} as HomeroomSession)).total || "",
+        total:
+          students.length
+            ? String(students.length)
+            : (cur[cur.length - 1] || ({} as HomeroomSession)).total || "",
         present: "",
         absent: "",
       });
@@ -318,7 +454,7 @@ export default function HomeroomApp() {
     setSessionsSynced(nextSessions);
     setCurrentId(adds[adds.length - 1].id);
     setPackStatus("เพิ่ม " + adds.length + " วันในสัปดาห์แล้ว");
-  }, [plan, setSessionsSynced]);
+  }, [plan, setSessionsSynced, students]);
 
   const removeSession = useCallback(
     (id: string) => {
@@ -498,6 +634,66 @@ export default function HomeroomApp() {
 
   const settingsCards = (
     <>
+      <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
+        <div className="mb-1 flex items-baseline justify-between gap-2.5">
+          <h3 className="m-0 whitespace-nowrap text-[15px]">รายชื่อนักเรียนทั้งห้อง</h3>
+          <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">{students.length} คน</span>
+        </div>
+        <p className="m-0 mb-3 text-xs leading-[1.5] text-[#7C8494]">
+          ใช้นับจำนวนนักเรียนทั้งหมดอัตโนมัติ · รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและออมเงิน
+        </p>
+        <div className="mb-2.5 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              setShowImport(true);
+              setImportMsg("");
+              setImportText("");
+            }}
+            className="flex items-center gap-1.5 whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-[13px] py-2 text-[12.5px] font-semibold hover:border-[#C6C9FB] hover:bg-surface-light"
+          >
+            📥 นำเข้า Excel
+          </button>
+          <span onClick={toggleBulk} className="cursor-pointer text-[12.5px] text-primary">
+            {bulkMode ? "✎ ทีละชื่อ" : "✎ วางหลายชื่อ"}
+          </span>
+        </div>
+        {bulkMode ? (
+          <div>
+            <textarea
+              value={bulkText}
+              onChange={(e) => setBulkText(e.target.value)}
+              placeholder="วางรายชื่อ ทีละบรรทัด…"
+              className="h-[130px] w-full resize-y rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-3 py-2.5 text-[13px] outline-none focus:border-primary"
+            />
+            <button
+              type="button"
+              onClick={applyBulk}
+              className="mt-2 w-full whitespace-nowrap rounded-[10px] bg-primary py-2.5 text-[13.5px] font-semibold text-white hover:bg-primary-hover"
+            >
+              ใช้รายชื่อนี้
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyDown={onKeyName}
+              placeholder="เพิ่มชื่อ… กด Enter"
+              className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-3 py-2.5 text-[13.5px] outline-none focus:border-primary"
+            />
+            <button
+              type="button"
+              onClick={addName}
+              className="flex-none whitespace-nowrap rounded-[10px] bg-primary px-[15px] py-2.5 text-[13.5px] font-semibold text-white hover:bg-primary-hover"
+            >
+              เพิ่ม
+            </button>
+          </div>
+        )}
+      </div>
+
       <div className="rounded-2xl border border-[#E5E8EE] p-[18px]">
         <h3 className="m-0 mb-1 text-[15px]">หัวแบบฟอร์ม</h3>
         <p className="m-0 mb-3.5 text-xs leading-[1.5] text-[#7C8494]">ข้อมูลนี้จะขึ้นหัวกระดาษเวลาพิมพ์</p>
@@ -778,6 +974,65 @@ export default function HomeroomApp() {
         </div>
       )}
 
+      {/* IMPORT modal */}
+      {showImport && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(26,29,38,.55)] p-[22px] backdrop-blur-[3px]">
+          <div className="w-full max-w-[336px] rounded-[22px] bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,.45)] md:max-w-[480px] md:rounded-3xl md:p-[30px]">
+            <div className="mb-2 flex items-center gap-2.5">
+              <div className="flex-1 text-[17px] font-bold md:text-xl">
+                นำเข้ารายชื่อ
+              </div>
+              <span
+                onClick={() => setShowImport(false)}
+                className="cursor-pointer text-[22px] leading-none text-[#A9B0BE] hover:text-[#DC2626] md:text-[26px]"
+              >
+                ×
+              </span>
+            </div>
+            <p className="mb-4 text-xs leading-[1.55] text-[#7C8494] md:mb-[18px] md:text-[13.5px]">
+              อัปโหลดไฟล์ Excel (.xlsx) หรือวางรายชื่อจาก Excel/Sheets ก็ได้
+            </p>
+            <label className="mb-3.5 flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-[1.5px] border-dashed border-[#C6C9FB] bg-[#F4F5FF] p-[22px] hover:border-primary md:mb-4 md:gap-[9px] md:p-7">
+              <span className="text-[26px] md:text-[30px]">📄</span>
+              <span className="text-[13.5px] font-semibold text-[#3D38B4] md:text-[15px]">
+                เลือกไฟล์ Excel
+              </span>
+              <span className="text-[11px] text-[#A9B0BE] md:text-xs">
+                .xlsx / .xls
+              </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={onFile}
+                className="hidden"
+              />
+            </label>
+            <div className="mb-1.5 text-xs font-semibold text-[#7C8494] md:mb-2 md:text-[13px]">
+              หรือวางรายชื่อ (ทีละบรรทัด)
+            </div>
+            <textarea
+              value={importText}
+              onChange={(e) => setImportText(e.target.value)}
+              placeholder={"สมชาย ใจดี\nสมหญิง รักเรียน…"}
+              className="h-[110px] w-full resize-y rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-3 py-2.5 text-[13px] outline-none focus:border-primary md:h-[120px] md:text-[13.5px]"
+            />
+            <button
+              type="button"
+              onClick={importPaste}
+              className="mt-3 w-full rounded-xl bg-primary py-3.5 text-sm font-bold text-white hover:bg-primary-hover md:mt-3.5 md:rounded-[13px] md:py-[14px] md:text-[15px]"
+            >
+              นำเข้ารายชื่อที่วาง
+            </button>
+            {importMsg && (
+              <div className="mt-2.5 text-center text-xs text-[#0A9380] md:mt-3 md:text-[13px]">
+                {importMsg}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ============ MOBILE ============ */}
       <div className="md:hidden">
         {mobileView === "settings" ? (
@@ -815,9 +1070,9 @@ export default function HomeroomApp() {
           <button
             type="button"
             onClick={() => setMobileView("settings")}
-            className="flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border border-[#D3D8E1] bg-white text-[15px]"
+            className="flex flex-none items-center gap-1.5 whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-3 py-2 text-[12.5px] font-semibold hover:bg-surface-light"
           >
-            ⚙️
+            ⚙️ ตั้งค่า
           </button>
         </div>
         <div className="mb-3.5 grid grid-cols-3 gap-2">
