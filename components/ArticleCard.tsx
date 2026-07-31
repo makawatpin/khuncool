@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Article } from "@/app/articles/data";
 
@@ -13,10 +14,11 @@ export default function ArticleCard({ article: a, variant = "list" }: Props) {
         href={a.href}
         className="block overflow-hidden rounded-2xl border border-border bg-surface-card text-inherit no-underline hover:border-[#C6C9FB] md:grid md:grid-cols-2 md:rounded-[20px]"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={a.img}
           alt={a.alt}
+          width={640}
+          height={360}
           className="block h-[170px] w-full bg-[#F1F3F6] object-cover md:h-full md:min-h-[280px]"
         />
         <div className="p-3.5 md:flex md:flex-col md:justify-center md:p-8">
@@ -50,10 +52,11 @@ export default function ArticleCard({ article: a, variant = "list" }: Props) {
       href={a.href}
       className="flex gap-3 overflow-hidden rounded-[14px] border border-border bg-surface-card p-2.5 text-inherit no-underline hover:border-[#C6C9FB] md:flex-col md:rounded-[18px] md:p-0 md:hover:shadow-[0_12px_28px_-10px_rgba(26,29,38,.16)]"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={a.img}
         alt={a.alt}
+        width={170}
+        height={170}
         className="h-24 w-24 flex-none rounded-[10px] bg-[#F1F3F6] object-cover md:h-[170px] md:w-full md:rounded-none"
       />
       <div className="min-w-0 flex-1 md:flex md:flex-1 md:flex-col md:p-4">

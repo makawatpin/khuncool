@@ -69,17 +69,24 @@ export default function HomeroomPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <Link href="/apps" className="text-ink-faint">
-          แอปครู
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">บันทึกโฮมรูม</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <Link href="/apps" className="text-ink-faint">
+            แอปครู
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            บันทึกโฮมรูม
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
@@ -88,7 +95,8 @@ export default function HomeroomPage() {
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
           <span className="md:hidden">
-            บันทึกโฮมรูมหน้าเสาธง ใช้จากมือถือได้ทันที บันทึกอัตโนมัติในเครื่องนี้
+            บันทึกโฮมรูมหน้าเสาธง ใช้จากมือถือได้ทันที
+            บันทึกอัตโนมัติในเครื่องนี้
           </span>
           <span className="hidden md:inline">
             ตั้งหัวข้อโฮมรูมเอง วางแผนล่วงหน้ารายสัปดาห์

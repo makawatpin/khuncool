@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ArticleCard from "@/components/ArticleCard";
-import { ARTICLES, CATS, FEATURED } from "./data";
+import { ALL_ARTICLES, ARTICLES, CATS, FEATURED } from "./data";
 
 export const metadata: Metadata = {
   title: "บทความครู สื่อการสอน รีวิวสินค้า ข่าวการศึกษา | khuncool",
@@ -22,38 +22,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
 };
-
-// NOTE: mirrors the source helmet's hardcoded JSON-LD (ISO dates, exact
-// order, literal headlines) rather than deriving from ALL_ARTICLES in
-// ./data.ts. If a 6th article is added, update BOTH this array and
-// ./data.ts manually — they are not kept in sync automatically.
-const BLOG_POSTS_JSON_LD = [
-  {
-    headline: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง",
-    url: "https://www.khuncool.com/blog/wheel",
-    datePublished: "2026-07-27",
-  },
-  {
-    headline: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
-    url: "https://www.khuncool.com/blog/random-name-activities",
-    datePublished: "2026-07-26",
-  },
-  {
-    headline: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง",
-    url: "https://www.khuncool.com/blog/magnetic-frame",
-    datePublished: "2025-07-26",
-  },
-  {
-    headline: "เรียนภาษาอังกฤษฟรี ออนไลน์ มีใบเซอร์",
-    url: "https://www.khuncool.com/blog/psu-english",
-    datePublished: "2025-07-25",
-  },
-  {
-    headline: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
-    url: "https://www.khuncool.com/blog/royal-award-2569",
-    datePublished: "2026-07-25",
-  },
-];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -80,18 +48,19 @@ const jsonLd = {
       name: "บทความ",
       url: "https://www.khuncool.com/articles",
       inLanguage: "th-TH",
-      description: "รวมบทความสำหรับครูไทย สื่อการสอน รีวิวสินค้า และข่าวการศึกษา",
+      description:
+        "รวมบทความสำหรับครูไทย สื่อการสอน รีวิวสินค้า และข่าวการศึกษา",
     },
     {
       "@type": "Blog",
       name: "khuncool บทความ",
       url: "https://www.khuncool.com/articles",
       inLanguage: "th-TH",
-      blogPost: BLOG_POSTS_JSON_LD.map((p) => ({
+      blogPost: ALL_ARTICLES.map((a) => ({
         "@type": "BlogPosting",
-        headline: p.headline,
-        url: p.url,
-        datePublished: p.datePublished,
+        headline: a.title,
+        url: `https://www.khuncool.com${a.href}`,
+        datePublished: a.dateISO,
       })),
     },
   ],
@@ -106,13 +75,20 @@ export default function ArticlesPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">บทความ</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            บทความ
+          </span>
+        </div>
+      </nav>
 
       {/* Hero */}
       <div className="px-4 pb-[6px] pt-3 md:px-8 md:pb-6 md:pt-4">
@@ -121,8 +97,8 @@ export default function ArticlesPage() {
         </h1>
         <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[70ch] md:text-base md:leading-[1.8]">
           <span className="md:hidden">
-            สื่อการสอน รีวิวอุปกรณ์ห้องเรียน และข่าวการศึกษา อัปเดตใหม่ทุกสัปดาห์
-            อ่านฟรีไม่ต้องสมัครสมาชิก
+            สื่อการสอน รีวิวอุปกรณ์ห้องเรียน และข่าวการศึกษา
+            อัปเดตใหม่ทุกสัปดาห์ อ่านฟรีไม่ต้องสมัครสมาชิก
           </span>
           <span className="hidden md:inline">
             สื่อการสอน รีวิวอุปกรณ์ห้องเรียน และข่าวการศึกษาที่ครูควรรู้
@@ -164,8 +140,9 @@ export default function ArticlesPage() {
         <div>
           <h2 className="m-0 mb-4 text-2xl">ทำไมต้องอ่านบทความจากขุนคูล</h2>
           <p className="m-0 mb-3.5 max-w-none text-[14.5px] leading-[1.85] text-ink-secondary">
-            ทีมงานเขียนจากประสบการณ์จริงในห้องเรียนไทย ทั้งสื่อการสอนที่ใช้ได้ทันที
-            รีวิวอุปกรณ์ที่ทดลองใช้เอง และข่าวการศึกษาที่ครูต้องรู้ทันเวลา
+            ทีมงานเขียนจากประสบการณ์จริงในห้องเรียนไทย
+            ทั้งสื่อการสอนที่ใช้ได้ทันที รีวิวอุปกรณ์ที่ทดลองใช้เอง
+            และข่าวการศึกษาที่ครูต้องรู้ทันเวลา
             ไม่มีการรับจ้างเขียนโปรโมตแบบไม่เปิดเผย
           </p>
           <p className="m-0 text-[14.5px] leading-[1.85] text-ink-secondary">

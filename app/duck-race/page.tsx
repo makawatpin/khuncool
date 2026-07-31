@@ -103,7 +103,8 @@ const jsonLd = {
     {
       "@type": "HowTo",
       name: "วิธีใช้เกมแข่งเป็ดสุ่มชื่อ Khuncool",
-      description: "ขั้นตอนการใช้เกมแข่งเป็ดสุ่มชื่อออนไลน์ ตั้งแต่ใส่รายชื่อจนถึงดูผลลัพธ์",
+      description:
+        "ขั้นตอนการใช้เกมแข่งเป็ดสุ่มชื่อออนไลน์ ตั้งแต่ใส่รายชื่อจนถึงดูผลลัพธ์",
       inLanguage: "th",
       step: HOWTO_STEPS.map((s, i) => ({
         "@type": "HowToStep",
@@ -163,19 +164,24 @@ export default function DuckRacePage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <Link href="/tools" className="text-ink-faint">
-          เครื่องมือครู
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">
-          แข่งเป็ดสเก็ต
-        </span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <Link href="/tools" className="text-ink-faint">
+            เครื่องมือครู
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            แข่งเป็ดสเก็ต
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
@@ -264,12 +270,34 @@ export default function DuckRacePage() {
 
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
-        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">เครื่องมือและบทความที่เกี่ยวข้อง</h2>
+        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">
+          เครื่องมือและบทความที่เกี่ยวข้อง
+        </h2>
         <div className="flex flex-wrap gap-2.5">
-          <Link href="/random-name-picker" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🎡 วงล้อสุ่มชื่อนักเรียน</Link>
-          <Link href="/blog/wheel" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">📖 8 ไอเดียใช้วงล้อสุ่มในห้องเรียน</Link>
-          <Link href="/blog/random-name-activities" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">📖 ไอเดียกิจกรรมสุ่มชื่อนักเรียน</Link>
-          <Link href="/tools" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🧰 เครื่องมือทั้งหมด</Link>
+          <Link
+            href="/random-name-picker"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            🎡 วงล้อสุ่มชื่อนักเรียน
+          </Link>
+          <Link
+            href="/blog/wheel"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 8 ไอเดียใช้วงล้อสุ่มในห้องเรียน
+          </Link>
+          <Link
+            href="/blog/random-name-activities"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 ไอเดียกิจกรรมสุ่มชื่อนักเรียน
+          </Link>
+          <Link
+            href="/tools"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            🧰 เครื่องมือทั้งหมด
+          </Link>
         </div>
       </div>
     </main>

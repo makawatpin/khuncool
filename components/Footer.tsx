@@ -7,6 +7,7 @@ const FOOTER_LINKS = [
   { t: "บทความครู", href: "/articles" },
   { t: "ร้านค้าแนะนำ", href: "/shop" },
   { t: "เกี่ยวกับเรา", href: "/about" },
+  { t: "ติดต่อเรา", href: "/about#contact" },
   { t: "นโยบายความเป็นส่วนตัว", href: "/privacy" },
 ];
 

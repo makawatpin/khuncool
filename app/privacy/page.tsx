@@ -41,15 +41,20 @@ export default function PrivacyPage() {
   return (
     <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">
-          นโยบายความเป็นส่วนตัว
-        </span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            นโยบายความเป็นส่วนตัว
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
@@ -57,7 +62,9 @@ export default function PrivacyPage() {
           นโยบายความเป็นส่วนตัว
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
-          เราให้ความสำคัญกับความเป็นส่วนตัวของคุณ นโยบายนี้อธิบายว่าเราจัดเก็บและใช้ข้อมูลอย่างไรเมื่อคุณใช้งาน khuncool.com
+          เราให้ความสำคัญกับความเป็นส่วนตัวของคุณ
+          นโยบายนี้อธิบายว่าเราจัดเก็บและใช้ข้อมูลอย่างไรเมื่อคุณใช้งาน
+          khuncool.com
         </p>
       </div>
 

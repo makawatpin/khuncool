@@ -85,13 +85,20 @@ export default function ToolsPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">เครื่องมือครู</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            เครื่องมือครู
+          </span>
+        </div>
+      </nav>
 
       {/* Hero */}
       <div className="px-4 pb-[22px] pt-3 md:grid md:grid-cols-[1.15fr_0.85fr] md:items-start md:gap-11 md:px-8 md:pb-[30px] md:pt-4">
@@ -109,13 +116,11 @@ export default function ToolsPage() {
           <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[56ch] md:text-base md:leading-[1.8]">
             <span className="md:hidden">
               รวมเครื่องมือช่วยสอนที่ครูไทยใช้บ่อยที่สุดไว้ในที่เดียว —
-              สุ่มชื่อนักเรียน แบ่งกลุ่ม จับเวลา คุมเสียงในห้อง
-              และให้คะแนนกลุ่ม เปิดจากมือถือหรือฉายขึ้นจอหน้าชั้นได้ทันที
-              ไม่ต้องสมัครสมาชิก
+              สุ่มชื่อนักเรียน แบ่งกลุ่ม จับเวลา คุมเสียงในห้อง และให้คะแนนกลุ่ม
+              เปิดจากมือถือหรือฉายขึ้นจอหน้าชั้นได้ทันที ไม่ต้องสมัครสมาชิก
             </span>
             <span className="hidden md:inline">
-              khuncool
-              รวมเครื่องมือช่วยสอนที่ครูไทยใช้บ่อยที่สุดไว้ในเว็บเดียว
+              khuncool รวมเครื่องมือช่วยสอนที่ครูไทยใช้บ่อยที่สุดไว้ในเว็บเดียว
               ตั้งแต่วงล้อสุ่มชื่อนักเรียน สุ่มแบ่งกลุ่ม จับเวลากิจกรรม
               เครื่องวัดเสียงในห้องเรียน ไปจนถึงกระดานคะแนนกลุ่ม
               ทุกตัวเปิดใช้งานผ่านเบราว์เซอร์ได้ทันที
@@ -284,9 +289,7 @@ export default function ToolsPage() {
                 href={r.href}
                 className="flex items-center gap-2.5 rounded-xl border border-[#EEF0F4] bg-surface-light p-[13px_15px] text-inherit no-underline hover:bg-[#F1F2FC]"
               >
-                <span className="flex-1 text-sm text-ink-secondary">
-                  {r.t}
-                </span>
+                <span className="flex-1 text-sm text-ink-secondary">{r.t}</span>
                 <span className="flex-none text-[13px] text-primary">
                   อ่าน ›
                 </span>
@@ -326,9 +329,10 @@ export default function ToolsPage() {
         </div>
         <Link
           href="/account"
+          title="เข้าสู่ระบบหรือสมัครสมาชิกเพื่อส่งคำขอเครื่องมือใหม่"
           className="flex-none rounded-btn bg-primary px-5 py-[11px] text-sm font-semibold text-white no-underline hover:bg-primary-hover hover:text-white"
         >
-          ส่งคำขอเครื่องมือ
+          ส่งคำขอเครื่องมือ (เข้าสู่ระบบ)
         </Link>
       </div>
     </main>

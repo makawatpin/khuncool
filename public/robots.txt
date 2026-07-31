@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /account
-
-Sitemap: https://www.khuncool.com/sitemap.xml

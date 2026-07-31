@@ -52,17 +52,20 @@ export default function Header() {
   return (
     <>
       {/* announcement bar */}
-      <div className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white">
+      <Link
+        href="/articles"
+        className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white no-underline hover:opacity-95"
+      >
         <div className="mx-auto flex w-full max-w-[1160px] items-center gap-2">
           <span className="flex-none rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px] font-semibold">
             อบรมฟรี
           </span>
           <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
-            อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · สมัครวันนี้
+            อบรมออนไลน์ได้เกียรติบัตร 20 ชม. · ดูบทความอบรมฟรี
           </span>
           <span className="flex-none opacity-70">›</span>
         </div>
-      </div>
+      </Link>
 
       {/* sticky header */}
       <header className="sticky top-0 z-20 border-b border-border bg-white/[.92] px-3.5 py-3 backdrop-blur-md">
@@ -72,9 +75,22 @@ export default function Header() {
             onClick={() => setDrawerOpen((v) => !v)}
             aria-label="เมนู"
             aria-expanded={drawerOpen}
-            className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-card-sm border border-border bg-surface-card text-base hover:bg-surface-light md:hidden"
+            className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-card-sm border border-border bg-surface-card hover:bg-surface-light md:hidden"
           >
-            ☰
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <line x1="2" y1="4.5" x2="16" y2="4.5" />
+              <line x1="2" y1="9" x2="16" y2="9" />
+              <line x1="2" y1="13.5" x2="16" y2="13.5" />
+            </svg>
           </button>
           <Link href="/" className="flex flex-1 items-center gap-1.5 md:flex-none">
             <Image

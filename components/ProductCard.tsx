@@ -1,9 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/app/shop/data";
 
 type Props = {
   product: Product;
 };
+
+function ratingStars(rating: string): string {
+  const n = Math.round(parseFloat(rating) || 0);
+  return "★".repeat(n) + "☆".repeat(Math.max(0, 5 - n));
+}
 
 export default function ProductCard({ product: p }: Props) {
   return (
@@ -13,10 +19,11 @@ export default function ProductCard({ product: p }: Props) {
           {p.badge}
         </span>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={p.img}
         alt={p.alt}
+        width={300}
+        height={300}
         className="block aspect-square w-full bg-[#F1F3F6] object-cover"
       />
       <div className="flex flex-1 flex-col p-[9px_10px_11px] md:p-[10px_11px_12px]">
@@ -28,7 +35,7 @@ export default function ProductCard({ product: p }: Props) {
         </h3>
         <div className="mb-1.5 flex items-center gap-[5px]">
           <span className="text-[10.5px] text-[#F59E0B] md:text-[11px]">
-            ★★★★★
+            {ratingStars(p.rating)}
           </span>
           <span className="text-[10px] text-ink-faint">{p.rating}</span>
         </div>

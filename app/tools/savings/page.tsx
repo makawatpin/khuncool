@@ -69,17 +69,24 @@ export default function SavingsPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <Link href="/apps" className="text-ink-faint">
-          แอปครู
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">ออมเงิน</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <Link href="/apps" className="text-ink-faint">
+            แอปครู
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            ออมเงิน
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">

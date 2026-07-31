@@ -17,6 +17,8 @@ export type Article = {
   title: string;
   cat: Category;
   date: string;
+  /** ISO date (YYYY-MM-DD) backing `date` — used for JSON-LD and sitemap lastmod. */
+  dateISO: string;
   readTime: string;
   img: string;
   alt: string;
@@ -29,6 +31,7 @@ export const ALL_ARTICLES: Article[] = [
     title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง",
     cat: "สื่อการสอน",
     date: "27 ก.ค. 2569",
+    dateISO: "2026-07-27",
     readTime: "5 นาที",
     img: "/assets/wheel-cover.png",
     alt: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี",
@@ -40,6 +43,7 @@ export const ALL_ARTICLES: Article[] = [
     title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
     cat: "สื่อการสอน",
     date: "26 ก.ค. 2569",
+    dateISO: "2026-07-26",
     readTime: "6 นาที",
     img: "/assets/random-name-cover.png",
     alt: "10 กิจกรรมสุ่มชื่อนักเรียน",
@@ -51,6 +55,7 @@ export const ALL_ARTICLES: Article[] = [
     title: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
     cat: "ข่าวการศึกษา",
     date: "25 ก.ค. 2569",
+    dateISO: "2026-07-25",
     readTime: "4 นาที",
     img: "/assets/royal-award-cover.png",
     alt: "รางวัลพระราชทาน 2569",
@@ -62,6 +67,7 @@ export const ALL_ARTICLES: Article[] = [
     title: "เรียนภาษาอังกฤษฟรี ออนไลน์ มีใบเซอร์ คอร์สที่ครูควรรู้",
     cat: "คอร์สเรียน",
     date: "25 ก.ค. 2568",
+    dateISO: "2025-07-25",
     readTime: "4 นาที",
     img: "/assets/psu-english-cover.webp",
     alt: "เรียนภาษาอังกฤษฟรี ออนไลน์ มีใบเซอร์",
@@ -73,6 +79,7 @@ export const ALL_ARTICLES: Article[] = [
     title: "รีวิว กรอบป้ายติดผนังแม่เหล็ก ไม่ต้องเจาะผนัง",
     cat: "รีวิวสินค้า",
     date: "26 ก.ค. 2568",
+    dateISO: "2025-07-26",
     readTime: "4 นาที",
     img: "/assets/magnet-frame-cover.png",
     alt: "รีวิว กรอบป้ายติดผนังแม่เหล็ก",

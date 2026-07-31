@@ -30,7 +30,7 @@ export default function ArticlesSection() {
             >
               <div className="flex items-start gap-2.5 md:block">
                 <div className="relative aspect-video w-[132px] flex-none overflow-hidden rounded-card-sm md:mb-2.5 md:w-full lg:mb-[11px] lg:rounded-card">
-                  <Image src={a.cover} alt="" fill className="object-cover" />
+                  <Image src={a.cover} alt={a.title} fill className="object-cover" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <span

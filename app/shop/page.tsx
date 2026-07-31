@@ -48,7 +48,8 @@ const jsonLd = {
       name: "ร้านค้าครู",
       url: "https://www.khuncool.com/shop",
       inLanguage: "th-TH",
-      description: "รวมอุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมขุนคูล",
+      description:
+        "รวมอุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมขุนคูล",
     },
     {
       "@type": "ItemList",
@@ -92,13 +93,20 @@ export default function ShopPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">ร้านค้าครู</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            ร้านค้าครู
+          </span>
+        </div>
+      </nav>
 
       {/* Hero */}
       <div className="px-4 pb-0 pt-3 md:grid md:grid-cols-[1.15fr_0.85fr] md:items-start md:gap-11 md:px-8 md:pb-[30px] md:pt-4">
@@ -109,7 +117,9 @@ export default function ShopPage() {
               <br />
               ที่ครูใช้จริง
             </span>
-            <span className="hidden md:inline">อุปกรณ์ห้องเรียนที่ครูใช้จริง</span>
+            <span className="hidden md:inline">
+              อุปกรณ์ห้องเรียนที่ครูใช้จริง
+            </span>
           </h1>
           <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[56ch] md:text-base md:leading-[1.8]">
             <span className="md:hidden">
@@ -117,9 +127,10 @@ export default function ShopPage() {
               ไม่รับสปอนเซอร์เพื่อจัดอันดับ
             </span>
             <span className="hidden md:inline">
-              ทีมขุนคูลคัดเลือกและทดลองใช้อุปกรณ์ห้องเรียนด้วยตัวเอง ก่อนแนะนำต่อ
-              เน้นของที่คุ้มค่า ทนทาน ใช้งานง่ายในชีวิตประจำวันของครู
-              ไม่รับสปอนเซอร์เพื่อจัดอันดับ ลิงก์สั่งซื้อบางส่วนเป็นลิงก์พันธมิตร
+              ทีมขุนคูลคัดเลือกและทดลองใช้อุปกรณ์ห้องเรียนด้วยตัวเอง
+              ก่อนแนะนำต่อ เน้นของที่คุ้มค่า ทนทาน
+              ใช้งานง่ายในชีวิตประจำวันของครู ไม่รับสปอนเซอร์เพื่อจัดอันดับ
+              ลิงก์สั่งซื้อบางส่วนเป็นลิงก์พันธมิตร
             </span>
           </p>
           <div className="flex flex-wrap gap-[7px] md:gap-2">
@@ -194,7 +205,8 @@ export default function ShopPage() {
             ดูทั้งความทนทาน ความคุ้มราคา และความง่ายในการใช้งานประจำวัน
           </p>
           <p className="m-0 mb-[18px] text-[14.5px] leading-[1.85] text-ink-secondary">
-            สินค้าที่มีบทความรีวิวแนบ จะมีปุ่ม “อ่านรีวิว” ให้กดไปดูรายละเอียดการใช้งานจริงก่อนตัดสินใจซื้อ
+            สินค้าที่มีบทความรีวิวแนบ จะมีปุ่ม “อ่านรีวิว”
+            ให้กดไปดูรายละเอียดการใช้งานจริงก่อนตัดสินใจซื้อ
           </p>
           <div className="flex flex-col gap-[9px]">
             <Link
@@ -213,7 +225,9 @@ export default function ShopPage() {
               <span className="flex-1 text-sm text-ink-secondary">
                 เครื่องมือครูใช้สดในคาบเรียน ใช้ฟรี
               </span>
-              <span className="flex-none text-[13px] text-primary">เปิดใช้ ›</span>
+              <span className="flex-none text-[13px] text-primary">
+                เปิดใช้ ›
+              </span>
             </Link>
           </div>
         </div>
@@ -222,7 +236,10 @@ export default function ShopPage() {
       {/* Mobile-only footer link + disclosure */}
       <div className="border-t border-border bg-surface-light px-4 pb-7 pt-[22px] md:hidden">
         <h2 className="m-0 mb-2 text-[15px]">อยากอ่านรีวิวเต็ม ๆ</h2>
-        <Link href="/articles" className="text-[13px] text-primary no-underline">
+        <Link
+          href="/articles"
+          className="text-[13px] text-primary no-underline"
+        >
           ดูบทความทั้งหมด ›
         </Link>
         <div className="mt-4 text-[11px] text-[#A9B0BE]">
@@ -233,7 +250,8 @@ export default function ShopPage() {
       {/* Desktop-only affiliate disclosure footer */}
       <div className="hidden px-8 pb-[26px] text-[11.5px] text-[#A9B0BE] md:block">
         © 2568 khuncool.com · เพื่อครูไทยทุกคน ·
-        ลิงก์สั่งซื้อบางส่วนเป็นลิงก์พันธมิตร ทีมงานอาจได้รับค่าคอมมิชชันโดยไม่มีค่าใช้จ่ายเพิ่มจากคุณ
+        ลิงก์สั่งซื้อบางส่วนเป็นลิงก์พันธมิตร
+        ทีมงานอาจได้รับค่าคอมมิชชันโดยไม่มีค่าใช้จ่ายเพิ่มจากคุณ
       </div>
     </main>
   );

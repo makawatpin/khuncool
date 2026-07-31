@@ -51,13 +51,20 @@ export default function AboutPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">เกี่ยวกับเรา</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            เกี่ยวกับเรา
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
@@ -91,7 +98,8 @@ export default function AboutPage() {
         </div>
         <div className="flex flex-col gap-3 md:max-w-[62ch] md:gap-3.5">
           <p className="m-0 text-[13.5px] leading-[1.75] text-ink-secondary md:text-[14.5px] md:leading-[1.8]">
-            khuncool เริ่มต้นจากคุณอาวล์คนเดียว ซึ่งไม่ได้เป็นคุณครูและไม่ได้จบการศึกษาสายครุศาสตร์โดยตรง
+            khuncool เริ่มต้นจากคุณอาวล์คนเดียว
+            ซึ่งไม่ได้เป็นคุณครูและไม่ได้จบการศึกษาสายครุศาสตร์โดยตรง
             แต่ได้เข้ามาข้องเกี่ยวกับธุรกิจโรงเรียนของคุณพ่อ
             จนได้เห็นปัญหาที่คุณครูในโรงเรียนต้องเจอในแต่ละวันอย่างใกล้ชิด
           </p>
@@ -109,12 +117,15 @@ export default function AboutPage() {
       </div>
 
       {/* Contact */}
-      <div className="border-t border-border bg-surface-light px-4 py-6 md:px-8 md:py-9">
+      <div
+        id="contact"
+        className="border-t border-border bg-surface-light px-4 py-6 md:px-8 md:py-9 scroll-mt-20"
+      >
         <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">ติดต่อเรา</h2>
         <div className="mt-3 max-w-[62ch] rounded-2xl border border-border bg-surface-card p-3.5 md:p-4">
           <p className="m-0 text-[13.5px] leading-[1.7] text-ink-secondary md:text-[14.5px] md:leading-[1.75]">
-            มีข้อเสนอแนะ พบปัญหาการใช้งาน หรืออยากแนะนำเครื่องมือที่อยากให้ทำเพิ่ม
-            ติดต่อได้ที่{" "}
+            มีข้อเสนอแนะ พบปัญหาการใช้งาน
+            หรืออยากแนะนำเครื่องมือที่อยากให้ทำเพิ่ม ติดต่อได้ที่{" "}
             <a
               href="mailto:khuncoolhub@gmail.com"
               className="font-semibold text-primary underline"

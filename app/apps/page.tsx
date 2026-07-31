@@ -38,7 +38,8 @@ const jsonLd = {
       name: "แอปช่วยงานครู",
       url: "https://www.khuncool.com/apps",
       inLanguage: "th-TH",
-      description: "รวมแอปบันทึกข้อมูลนักเรียนสำหรับครู ใช้ฟรีผ่านเว็บ ไม่ต้องติดตั้ง",
+      description:
+        "รวมแอปบันทึกข้อมูลนักเรียนสำหรับครู ใช้ฟรีผ่านเว็บ ไม่ต้องติดตั้ง",
     },
     {
       "@type": "ItemList",
@@ -87,13 +88,20 @@ export default function AppsPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">แอปช่วยงานครู</span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            แอปช่วยงานครู
+          </span>
+        </div>
+      </nav>
 
       {/* Hero */}
       <div className="px-4 pb-[22px] pt-3 md:grid md:grid-cols-[1.15fr_0.85fr] md:items-start md:gap-11 md:px-8 md:pb-[30px] md:pt-4">
@@ -110,16 +118,19 @@ export default function AppsPage() {
           </h1>
           <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[56ch] md:text-base md:leading-[1.8]">
             <span className="md:hidden">
-              เช็กชื่อ ออมเงิน บันทึกโฮมรูม และคะแนนกลุ่ม เก็บต่อเนื่องรายห้องรายคน
+              เช็กชื่อ ออมเงิน บันทึกโฮมรูม และคะแนนกลุ่ม
+              เก็บต่อเนื่องรายห้องรายคน
               เปิดจากมือถือระหว่างสอนแล้วทำสรุปต่อจากคอมที่บ้านได้
               ไม่ต้องติดตั้งโปรแกรม
             </span>
             <span className="hidden md:inline">
-              khuncool รวมแอปที่ครูไทยต้องใช้ทุกวันไว้ในเว็บเดียว ทั้งเช็กชื่อนักเรียน
-              บันทึกเงินออม บันทึกโฮมรูม และกระดานคะแนนกลุ่ม
+              khuncool รวมแอปที่ครูไทยต้องใช้ทุกวันไว้ในเว็บเดียว
+              ทั้งเช็กชื่อนักเรียน บันทึกเงินออม บันทึกโฮมรูม
+              และกระดานคะแนนกลุ่ม
               ต่างจากเครื่องมือใช้สดในคาบตรงที่แอปกลุ่มนี้เก็บข้อมูลต่อเนื่องรายห้องรายคน
               ย้อนดูได้ สรุปเป็นรายงานส่งโรงเรียนได้
-              และเมื่อล็อกอินแล้วข้อมูลจะซิงก์ตามไปทุกเครื่องโดยไม่ต้องติดตั้งโปรแกรมใด ๆ
+              และเมื่อล็อกอินแล้วข้อมูลจะซิงก์ตามไปทุกเครื่องโดยไม่ต้องติดตั้งโปรแกรมใด
+              ๆ
             </span>
           </p>
           <div className="flex flex-wrap gap-[7px] md:gap-2">
@@ -178,9 +189,7 @@ export default function AppsPage() {
                   {a.icon}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="m-0 mb-0.5 text-base md:text-lg">
-                    {a.title}
-                  </h3>
+                  <h3 className="m-0 mb-0.5 text-base md:text-lg">{a.title}</h3>
                   <p className="m-0 text-xs text-ink-secondary md:text-[13px]">
                     {a.sub}
                   </p>
@@ -255,14 +264,15 @@ export default function AppsPage() {
           </h2>
           <p className="m-0 mb-3.5 text-[14.5px] leading-[1.85] text-ink-secondary">
             ครูส่วนใหญ่บันทึกการมาเรียนในสมุด บันทึกเงินออมในไฟล์ Excel
-            และเขียนบันทึกโฮมรูมในอีกเล่ม พอถึงสิ้นเดือนต้องเปิดสามที่เพื่อทำรายงานเดียว
+            และเขียนบันทึกโฮมรูมในอีกเล่ม
+            พอถึงสิ้นเดือนต้องเปิดสามที่เพื่อทำรายงานเดียว
             การรวมทุกอย่างไว้ในบัญชีเดียวทำให้กรอกครั้งเดียวแล้วดึงสรุปออกมาได้ทันที
             และไม่ต้องกังวลว่าสมุดจะหายหรือไฟล์จะอยู่คนละเครื่อง
           </p>
           <p className="m-0 mb-[18px] text-[14.5px] leading-[1.85] text-ink-secondary">
             แอปทุกตัวใช้รายชื่อนักเรียนชุดเดียวกันกับเครื่องมือในคาบเรียน
-            เพิ่มรายชื่อห้องหนึ่งครั้ง แล้วใช้ได้ทั้งการสุ่มชื่อ แบ่งกลุ่ม เช็กชื่อ
-            และบันทึกเงินออม
+            เพิ่มรายชื่อห้องหนึ่งครั้ง แล้วใช้ได้ทั้งการสุ่มชื่อ แบ่งกลุ่ม
+            เช็กชื่อ และบันทึกเงินออม
           </p>
           <div className="flex flex-col gap-[9px]">
             {RELATED.map((r) => (
@@ -271,9 +281,7 @@ export default function AppsPage() {
                 href={r.href}
                 className="flex items-center gap-2.5 rounded-xl border border-[#EEF0F4] bg-surface-light p-[13px_15px] text-inherit no-underline hover:bg-[#F1F2FC]"
               >
-                <span className="flex-1 text-sm text-ink-secondary">
-                  {r.t}
-                </span>
+                <span className="flex-1 text-sm text-ink-secondary">{r.t}</span>
                 <span className="flex-none text-[13px] text-primary">
                   อ่าน ›
                 </span>
@@ -285,9 +293,7 @@ export default function AppsPage() {
 
       {/* Mobile-only related reading */}
       <div className="border-t border-border bg-surface-light px-4 pb-7 pt-[22px] md:hidden">
-        <h2 className="m-0 mb-2 text-[15px]">
-          มองหาเครื่องมือใช้สดในคาบเรียน
-        </h2>
+        <h2 className="m-0 mb-2 text-[15px]">มองหาเครื่องมือใช้สดในคาบเรียน</h2>
         <Link href="/tools" className="text-[13px] text-primary no-underline">
           ดูเครื่องมือครูทั้งหมด ›
         </Link>

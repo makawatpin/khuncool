@@ -83,7 +83,8 @@ const jsonLd = {
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
       inLanguage: "th",
-      description: "เครื่องมือสุ่มแบ่งกลุ่มนักเรียนออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง",
+      description:
+        "เครื่องมือสุ่มแบ่งกลุ่มนักเรียนออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง",
       offers: {
         "@type": "Offer",
         price: "0",
@@ -93,7 +94,8 @@ const jsonLd = {
     {
       "@type": "HowTo",
       name: "วิธีใช้เครื่องมือสุ่มแบ่งกลุ่มนักเรียน Khuncool",
-      description: "ขั้นตอนการสุ่มแบ่งกลุ่มนักเรียนออนไลน์ ตั้งแต่ใส่รายชื่อจนถึงได้ผลลัพธ์",
+      description:
+        "ขั้นตอนการสุ่มแบ่งกลุ่มนักเรียนออนไลน์ ตั้งแต่ใส่รายชื่อจนถึงได้ผลลัพธ์",
       inLanguage: "th",
       step: HOWTO_STEPS.map((s, i) => ({
         "@type": "HowToStep",
@@ -148,19 +150,24 @@ export default function GroupMakerPage() {
       />
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
-        <Link href="/" className="text-ink-faint">
-          หน้าแรก
-        </Link>
-        <span>›</span>
-        <Link href="/tools" className="text-ink-faint">
-          เครื่องมือครู
-        </Link>
-        <span>›</span>
-        <span className="font-semibold text-ink-secondary">
-          สุ่มแบ่งกลุ่ม
-        </span>
-      </div>
+      <nav aria-label="breadcrumb">
+        <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
+          <Link href="/" className="text-ink-faint">
+            หน้าแรก
+          </Link>
+          <span>›</span>
+          <Link href="/tools" className="text-ink-faint">
+            เครื่องมือครู
+          </Link>
+          <span>›</span>
+          <span
+            className="font-semibold text-ink-secondary"
+            aria-current="page"
+          >
+            สุ่มแบ่งกลุ่ม
+          </span>
+        </div>
+      </nav>
 
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
@@ -169,7 +176,8 @@ export default function GroupMakerPage() {
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
           <span className="md:hidden">
-            ใส่รายชื่อ เลือกจำนวนกลุ่มหรือจำนวนคนต่อกลุ่ม แล้วกดสุ่มแบ่งกลุ่มได้ทันที
+            ใส่รายชื่อ เลือกจำนวนกลุ่มหรือจำนวนคนต่อกลุ่ม
+            แล้วกดสุ่มแบ่งกลุ่มได้ทันที
           </span>
           <span className="hidden md:inline">
             ใส่รายชื่อนักเรียนแล้วเลือกได้ว่าจะกำหนดจำนวนกลุ่มหรือจำนวนคนต่อกลุ่ม
@@ -254,11 +262,28 @@ export default function GroupMakerPage() {
 
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
-        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">เครื่องมือและบทความที่เกี่ยวข้อง</h2>
+        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">
+          เครื่องมือและบทความที่เกี่ยวข้อง
+        </h2>
         <div className="flex flex-wrap gap-2.5">
-          <Link href="/group-scoreboard" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🏆 กระดานคะแนนกลุ่ม</Link>
-          <Link href="/random-name-picker" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🎡 วงล้อสุ่มชื่อนักเรียน</Link>
-          <Link href="/tools" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70">🧰 เครื่องมือทั้งหมด</Link>
+          <Link
+            href="/group-scoreboard"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            🏆 กระดานคะแนนกลุ่ม
+          </Link>
+          <Link
+            href="/random-name-picker"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            🎡 วงล้อสุ่มชื่อนักเรียน
+          </Link>
+          <Link
+            href="/tools"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            🧰 เครื่องมือทั้งหมด
+          </Link>
         </div>
       </div>
     </main>
