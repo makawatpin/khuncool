@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HeroSection() {
   return (
     <section
@@ -27,18 +29,18 @@ export default function HeroSection() {
           เปิดใช้ฟรี ไม่ต้องติดตั้ง
         </p>
         <div className="flex gap-2.5 md:gap-[11px] lg:gap-3">
-          <a
-            href="#tools"
+          <Link
+            href="/tools"
             className="flex-1 whitespace-nowrap rounded-btn bg-primary px-3 py-3 text-center text-sm font-semibold text-white shadow-cta hover:bg-primary-hover md:flex-none md:px-[22px] md:py-[13px] md:text-[14.5px] lg:px-[26px] lg:py-3.5 lg:text-[15.5px]"
           >
             ลองเครื่องมือ<span className="hidden md:inline">ออนไลน์</span>
-          </a>
-          <a
-            href="#articles"
+          </Link>
+          <Link
+            href="/articles"
             className="flex-1 whitespace-nowrap rounded-btn border border-border-strong bg-surface-card px-3 py-3 text-center text-sm font-semibold text-ink hover:bg-surface-light md:flex-none md:px-[22px] md:py-[13px] md:text-[14.5px] lg:px-[26px] lg:py-3.5 lg:text-[15.5px]"
           >
             อ่านบทความ<span className="hidden md:inline">ครู</span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

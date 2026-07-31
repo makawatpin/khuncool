@@ -68,7 +68,7 @@ export default function BlogMagneticFramePage() {
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/assets/magnet-frame-detail.jpg"
+          src="/assets/magnet-frame-cover.png"
           alt="กรอบป้ายติดผนังแม่เหล็ก"
           className="mx-auto block max-h-[540px] w-full rounded-card-lg bg-[#F1F3F6] object-cover md:max-h-[600px] md:rounded-[20px]"
         />
