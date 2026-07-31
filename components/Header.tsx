@@ -8,37 +8,32 @@ import { useAuth } from "@/lib/auth/AuthProvider";
 
 const PILLARS = [
   {
-    icon: "🛠️",
-    title: "เครื่องมือออนไลน์",
-    path: "/tools",
-    desc: "เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง",
-  },
-  {
-    icon: "📱",
-    title: "แอปช่วยงานครู",
-    path: "/apps",
-    desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
-  },
-  {
     icon: "📰",
-    title: "บทความครู",
+    title: "บทความ",
     path: "/articles",
     desc: "ข่าวครู รีวิวสินค้า ข่าวอบรมได้เกียรติบัตร และวิธีทำสื่อการสอน",
   },
   {
-    icon: "🛍️",
-    title: "ร้านค้าแนะนำ",
+    icon: "🎡",
+    title: "สื่อการสอนออนไลน์",
+    path: "/tools",
+    desc: "เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง",
+  },
+  {
+    icon: "🛒",
+    title: "แนะนำสินค้า",
     path: "/shop",
     desc: "คัดของใช้ในห้องเรียนพร้อมลิงก์ซื้อ (Affiliate) จากครูจริง",
   },
+  {
+    icon: "📱",
+    title: "แอป",
+    path: "/apps",
+    desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
+  },
 ];
 
-const NAV_LINKS = [
-  { title: "เครื่องมือ", href: "/tools" },
-  { title: "แอป", href: "/apps" },
-  { title: "บทความ", href: "/articles" },
-  { title: "ร้านค้า", href: "/shop" },
-];
+const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
