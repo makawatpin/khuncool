@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { ALL_ARTICLES } from "@/app/articles/data";
-import { TOOLS } from "@/app/tools/data";
+import { APPS, TOOLS } from "@/app/tools/data";
 
 const LATEST_ARTICLES = [...ALL_ARTICLES]
   .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
@@ -79,12 +79,17 @@ const PILLARS = [
 
 const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 
+const SUBMENUS: Record<string, { title: string; href: string }[]> = {
+  "/tools": TOOLS.map((t) => ({ title: t.title, href: t.href })),
+  "/apps": APPS.map((a) => ({ title: a.title, href: a.href })),
+};
+
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
   const { user } = useAuth();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [toolsExpanded, setToolsExpanded] = useState(false);
+  const [expandedPath, setExpandedPath] = useState<string | null>(null);
 
   const closeSidebar = () => setSidebarOpen(false);
 
@@ -234,15 +239,19 @@ export default function Header() {
 
             <div className="flex-1 overflow-y-auto py-2">
               {PILLARS.map((p) => {
-                if (p.path === "/tools") {
+                const submenu = SUBMENUS[p.path];
+                if (submenu) {
+                  const expanded = expandedPath === p.path;
                   return (
                     <div key={p.path}>
                       <button
                         type="button"
-                        onClick={() => setToolsExpanded((v) => !v)}
-                        aria-expanded={toolsExpanded}
+                        onClick={() =>
+                          setExpandedPath((cur) => (cur === p.path ? null : p.path))
+                        }
+                        aria-expanded={expanded}
                         className={`flex w-full items-center gap-2.5 px-4 py-3 text-left ${
-                          toolsExpanded ? "bg-surface-light text-primary" : "text-ink"
+                          expanded ? "bg-surface-light text-primary" : "text-ink"
                         }`}
                       >
                         <p.Icon />
@@ -256,26 +265,26 @@ export default function Header() {
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className={`ml-auto flex-none transition-transform ${toolsExpanded ? "rotate-180" : ""}`}
+                          className={`ml-auto flex-none transition-transform ${expanded ? "rotate-180" : ""}`}
                           aria-hidden="true"
                         >
                           <polyline points="3.5,5 7,8.5 10.5,5" />
                         </svg>
                       </button>
-                      {toolsExpanded && (
+                      {expanded && (
                         <div className="flex flex-col pb-1.5">
-                          {TOOLS.map((t) => (
+                          {submenu.map((s) => (
                             <Link
-                              key={t.href}
-                              href={t.href}
+                              key={s.href}
+                              href={s.href}
                               onClick={closeSidebar}
                               className="py-2 pl-11 pr-4 text-[13px] text-ink-secondary no-underline"
                             >
-                              {t.title}
+                              {s.title}
                             </Link>
                           ))}
                           <Link
-                            href="/tools"
+                            href={p.path}
                             onClick={closeSidebar}
                             className="py-2 pl-11 pr-4 text-[13px] font-semibold text-primary no-underline"
                           >
