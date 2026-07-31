@@ -114,8 +114,17 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
     ctx.shadowBlur = size * 0.01;
     ctx.shadowOffsetY = 1;
     ctx.font = `600 ${fs}px 'Anuphan','Sarabun'`;
+    const maxTextWidth = r - 14 - size * 0.11;
     let label = names[i];
-    if (label.length > 12) label = label.slice(0, 11) + "…";
+    if (ctx.measureText(label).width > maxTextWidth) {
+      while (
+        label.length > 1 &&
+        ctx.measureText(label + "…").width > maxTextWidth
+      ) {
+        label = label.slice(0, -1);
+      }
+      label += "…";
+    }
     ctx.fillText(label, r - 14, 0);
     ctx.restore();
   }
