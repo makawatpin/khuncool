@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { ALL_ARTICLES } from "./articles/data";
+import { MEDIA as MEDIA_ENGLISH } from "./media/english/data";
 import { APPS, TOOLS } from "./tools/data";
 
 const BASE_URL = "https://www.khuncool.com";
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/`, lastModified: now, priority: 1.0 },
     { url: `${BASE_URL}/tools`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/apps`, lastModified: now, priority: 0.9 },
+    { url: `${BASE_URL}/media/english`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/articles`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/shop`, lastModified: now, priority: 0.8 },
     { url: `${BASE_URL}/about`, lastModified: now, priority: 0.5 },
@@ -35,5 +37,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...toolRoutes, ...appRoutes, ...articleRoutes];
+  const mediaEnglishRoutes: MetadataRoute.Sitemap = MEDIA_ENGLISH.map((m) => ({
+    url: `${BASE_URL}${m.href}`,
+    lastModified: now,
+    priority: 0.7,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...toolRoutes,
+    ...appRoutes,
+    ...articleRoutes,
+    ...mediaEnglishRoutes,
+  ];
 }

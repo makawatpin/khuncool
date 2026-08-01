@@ -47,6 +47,506 @@
   animation-play-state: paused;
 }
 
+/* sound-wheel keyframes */
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.4) rotate(-4deg);
+    opacity: 0;
+  }
+  65% {
+    transform: scale(1.08) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-40px) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(820px) rotate(620deg);
+    opacity: 0;
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(-50%, 0) scale(0.6);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -24px) scale(1.15);
+  }
+  100% {
+    transform: translate(-50%, -120px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(92, 94, 230, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 22px rgba(92, 94, 230, 0);
+  }
+}
+
+@keyframes ringBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes reactPop {
+  0% {
+    transform: scale(0.2) rotate(-25deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95) rotate(-4deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(0);
+    opacity: 0;
+  }
+}
+
+@keyframes spinSlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(-180px);
+  }
+  to {
+    transform: translateX(calc(100vw + 180px));
+  }
+}
+
+@keyframes eqBar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes popStar {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3) rotate(10deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-10px) rotate(-2deg);
+  }
+  35% {
+    transform: translateX(10px) rotate(2deg);
+  }
+  55% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes bobIn {
+  0% {
+    transform: translateY(22px) scale(0.94);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes soundPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* phonics-bingo keyframes */
+@keyframes stampIn {
+  0% {
+    transform: scale(2.2) rotate(-18deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(0.88) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(-6deg);
+    opacity: 1;
+  }
+}
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+@keyframes sonar {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.9);
+    opacity: 0;
+  }
+}
+@keyframes bingoIn {
+  0% {
+    transform: scale(0.3) rotate(-12deg);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1.18) rotate(3deg);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(0.96) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1.04) rotate(0);
+    opacity: 0;
+  }
+}
+@keyframes lineGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 209, 102, 0);
+    border-color: #ffd166;
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 209, 102, 0.35);
+    border-color: #ffb020;
+  }
+}
+@keyframes flameGrow {
+  0%,
+  100% {
+    transform: scale(1) rotate(-3deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(4deg);
+  }
+}
+
+/* classroom-objects keyframes */
+@keyframes dealIn {
+  0% {
+    transform: translateY(26px) scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(-4px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes matchPop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.16) rotate(-3deg);
+  }
+  70% {
+    transform: scale(0.96) rotate(2deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* is-are-sorting keyframes */
+@keyframes flyL {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-42vw, -140px) scale(0.35) rotate(-18deg);
+    opacity: 0;
+  }
+}
+@keyframes flyR {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(42vw, -140px) scale(0.35) rotate(18deg);
+    opacity: 0;
+  }
+}
+@keyframes bucketPop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* vocabulary-arcade keyframes */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes slideUp {
+  0% {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes tilePop {
+  0% {
+    transform: scale(0.4) rotate(-8deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* Shared display-font rule for /media/english game cards: the Claude Design
+   mockups set headings, buttons, and score/label chips to Fredoka (falling
+   back to Anuphan) for a playful look distinct from the site's default
+   Sarabun body copy. Ported game components carry the `kc-game` class on
+   their root element so this applies without repeating fontFamily inline
+   on every element. */
+.kc-game h1,
+.kc-game h2,
+.kc-game h3,
+.kc-game button,
+.kc-game .kc-title {
+  font-family: var(--font-fredoka), var(--font-anuphan), sans-serif;
+}
+
+/* The Claude Design mockups give nearly every clickable button a
+   `style-hover="transform:scale(1.06)"` pop — a DC-canvas-only attribute
+   with no direct React/CSS equivalent, so it was dropped during porting.
+   Restore that hover feedback globally here instead of on every button.
+   !important is needed because many buttons already set an inline
+   `transform` for game-state styling (selected/active/disabled), which
+   would otherwise block the :hover rule from taking effect. */
+.kc-game button:not(:disabled) {
+  transition: transform 0.18s ease;
+}
+.kc-game button:not(:disabled):hover {
+  transform: scale(1.06) !important;
+}
+
+/* Family Tree's draggable word-bank chips are plain divs (not buttons, so
+   they can carry native HTML5 drag events), so the button hover rule above
+   doesn't reach them. Matches the source's own
+   style-hover="transform:translateY(-4px) rotate(-2deg)". */
+.kc-chip-hover:hover {
+  transform: translateY(-4px) rotate(-2deg) !important;
+}
+
+/* KcFace avatar keyframes (family-tree): gentle bob + eye blink, ported
+   from the original KcFace.dc.html component. */
+@keyframes kcBlink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.12);
+  }
+}
+@keyframes kcBreathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* family-tree keyframes */
+@keyframes swayLeaf {
+  0% {
+    transform: translateY(-40px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(760px) rotate(300deg);
+    opacity: 0;
+  }
+}
+@keyframes wiggleBtn {
+  0%,
+  100% {
+    transform: rotate(-4deg) scale(1);
+  }
+  50% {
+    transform: rotate(4deg) scale(1.06);
+  }
+}
+@keyframes dashFlow {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+@keyframes drawIn {
+  from {
+    stroke-dashoffset: 900;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sparkOut {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-46px) scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* talk-card keyframes */
+@keyframes bubbleUp {
+  0% {
+    transform: translateY(40px) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(-780px) scale(1.1);
+    opacity: 0;
+  }
+}
+@keyframes cardFlyIn {
+  0% {
+    transform: translateY(46px) scale(0.9) rotate(-3deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-6px) scale(1.02) rotate(0.6deg);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes shakeX {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-7px);
+  }
+  75% {
+    transform: translateX(7px);
+  }
+}
+
 :root {
   /* Brand */
   --color-primary: #5c5ee6;

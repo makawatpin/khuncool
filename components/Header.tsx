@@ -8,6 +8,7 @@ import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { ALL_ARTICLES } from "@/app/articles/data";
 import { APPS, TOOLS } from "@/app/tools/data";
+import { MEDIA as MEDIA_ENGLISH } from "@/app/media/english/data";
 
 const LATEST_ARTICLES = [...ALL_ARTICLES]
   .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
@@ -41,6 +42,15 @@ function ShopIcon() {
   );
 }
 
+function MediaIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4" width="13" height="10" rx="1.8" />
+      <path d="M7.5 7.2v3.6l3.2-1.8-3.2-1.8Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 function AppsIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -64,6 +74,12 @@ const PILLARS = [
     desc: "เกมและเครื่องมือ interactive ที่ใช้ผ่านเว็บได้เลย ไม่ต้องติดตั้ง",
   },
   {
+    Icon: MediaIcon,
+    title: "สื่อการสอน",
+    path: "/media/english",
+    desc: "เกมและสื่อการสอนแยกตามวิชา เปิดฉายขึ้นจอหน้าชั้นได้ทันที",
+  },
+  {
     Icon: ShopIcon,
     title: "แนะนำสินค้า",
     path: "/shop",
@@ -81,6 +97,7 @@ const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 
 const SUBMENUS: Record<string, { title: string; href: string }[]> = {
   "/tools": TOOLS.map((t) => ({ title: t.title, href: t.href })),
+  "/media/english": MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
   "/apps": APPS.map((a) => ({ title: a.title, href: a.href })),
 };
 
