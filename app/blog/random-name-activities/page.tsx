@@ -273,7 +273,7 @@ export default function BlogRandomNameActivitiesPage() {
           <div className="mb-2 rounded-2xl border border-[#FFD98A] bg-[#FFFBF3] p-4 md:p-[16px_20px]">
             <div className="text-sm leading-[1.75] text-[#2E3440] md:text-[15px]">
               ทุกกิจกรรมด้านล่างใช้คู่กับ{" "}
-              <Link href="/random-name-picker">วงล้อสุ่มของขุนคูล</Link>{" "}
+              <Link href="/random-name-picker">วงล้อสุ่มของคุณคูล</Link>{" "}
               ได้ทันที ใส่รายชื่อนักเรียนครั้งเดียว ใช้ได้ทั้งเทอม
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function BlogRandomNameActivitiesPage() {
           <div className="mt-4 flex items-center gap-4 rounded-2xl border border-[#C6C9FB] bg-[#F7F7FE] p-4 md:mt-6 md:p-[20px_22px]">
             <div className="flex-1">
               <div className="mb-1 text-base font-bold md:text-[16.5px]">
-                อยากเริ่มเลย ใช้วงล้อสุ่มของขุนคูล
+                อยากเริ่มเลย ใช้วงล้อสุ่มของคุณคูล
               </div>
               <div className="text-[13.5px] text-ink-secondary">
                 ใช้ฟรี · ไม่ต้องสมัคร · วางรายชื่อทั้งห้องได้ในคลิกเดียว

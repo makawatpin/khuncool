@@ -12,7 +12,7 @@ import AppsSection from "@/components/home/AppsSection";
 export const metadata: Metadata = {
   title: "Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี",
   description:
-    "ขุนคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
+    "คุณคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
   alternates: {
     canonical: "https://www.khuncool.com/",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี",
     description:
-      "ขุนคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
+      "คุณคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/",
     images: ["https://www.khuncool.com/assets/wheel-cover.png"],
     locale: "th_TH",

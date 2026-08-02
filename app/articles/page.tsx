@@ -102,7 +102,7 @@ export default function ArticlesPage() {
           </span>
           <span className="hidden md:inline">
             สื่อการสอน รีวิวอุปกรณ์ห้องเรียน และข่าวการศึกษาที่ครูควรรู้
-            อัปเดตใหม่ทุกสัปดาห์โดยทีมขุนคูล อ่านฟรีไม่ต้องสมัครสมาชิก
+            อัปเดตใหม่ทุกสัปดาห์โดยทีมคุณคูล อ่านฟรีไม่ต้องสมัครสมาชิก
           </span>
         </p>
         <div className="flex gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible md:pb-0">
@@ -138,7 +138,7 @@ export default function ArticlesPage() {
       {/* Desktop-only editorial + related links */}
       <div className="hidden px-8 pb-9 md:grid md:grid-cols-2 md:items-start md:gap-11">
         <div>
-          <h2 className="m-0 mb-4 text-2xl">ทำไมต้องอ่านบทความจากขุนคูล</h2>
+          <h2 className="m-0 mb-4 text-2xl">ทำไมต้องอ่านบทความจากคุณคูล</h2>
           <p className="m-0 mb-3.5 max-w-none text-[14.5px] leading-[1.85] text-ink-secondary">
             ทีมงานเขียนจากประสบการณ์จริงในห้องเรียนไทย
             ทั้งสื่อการสอนที่ใช้ได้ทันที รีวิวอุปกรณ์ที่ทดลองใช้เอง

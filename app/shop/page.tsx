@@ -5,7 +5,7 @@ import FaqAccordion from "./FaqAccordion";
 import { CATS, FAQS, PRODUCTS, TRUST_CHIPS, priceToNumber } from "./data";
 
 export const metadata: Metadata = {
-  title: "ร้านค้าครู อุปกรณ์ห้องเรียน แนะนำโดยขุนคูล | khuncool",
+  title: "ร้านค้าครู อุปกรณ์ห้องเรียน แนะนำโดยคุณคูล | khuncool",
   description:
     "รวมอุปกรณ์ห้องเรียนที่ครูใช้จริง กรอบป้ายแม่เหล็ก เครื่องเคลือบบัตร ขาตั้งโน้ตบุ๊ก ไมค์ลำโพงพกพา และกระบอกน้ำ พร้อมรีวิวและลิงก์สั่งซื้อ",
   alternates: {
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "ร้านค้าครู อุปกรณ์ห้องเรียน แนะนำโดยขุนคูล",
-    description: "อุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมขุนคูล",
+    title: "ร้านค้าครู อุปกรณ์ห้องเรียน แนะนำโดยคุณคูล",
+    description: "อุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมคุณคูล",
     images: ["https://www.khuncool.com/assets/magnet-frame-cover.png"],
     locale: "th_TH",
   },
@@ -49,7 +49,7 @@ const jsonLd = {
       url: "https://www.khuncool.com/shop",
       inLanguage: "th-TH",
       description:
-        "รวมอุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมขุนคูล",
+        "รวมอุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมคุณคูล",
     },
     {
       "@type": "ItemList",
@@ -123,11 +123,11 @@ export default function ShopPage() {
           </h1>
           <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[56ch] md:text-base md:leading-[1.8]">
             <span className="md:hidden">
-              คัดสรรและรีวิวโดยทีมขุนคูล เน้นของที่คุ้มค่า ทนทาน ใช้งานง่าย
+              คัดสรรและรีวิวโดยทีมคุณคูล เน้นของที่คุ้มค่า ทนทาน ใช้งานง่าย
               ไม่รับสปอนเซอร์เพื่อจัดอันดับ
             </span>
             <span className="hidden md:inline">
-              ทีมขุนคูลคัดเลือกและทดลองใช้อุปกรณ์ห้องเรียนด้วยตัวเอง
+              ทีมคุณคูลคัดเลือกและทดลองใช้อุปกรณ์ห้องเรียนด้วยตัวเอง
               ก่อนแนะนำต่อ เน้นของที่คุ้มค่า ทนทาน
               ใช้งานง่ายในชีวิตประจำวันของครู ไม่รับสปอนเซอร์เพื่อจัดอันดับ
               ลิงก์สั่งซื้อบางส่วนเป็นลิงก์พันธมิตร
