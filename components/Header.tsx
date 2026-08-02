@@ -76,7 +76,7 @@ const PILLARS = [
   {
     Icon: MediaIcon,
     title: "สื่อการสอน",
-    path: "/media/english",
+    path: "/media",
     desc: "เกมและสื่อการสอนแยกตามวิชา เปิดฉายขึ้นจอหน้าชั้นได้ทันที",
   },
   {
@@ -97,7 +97,7 @@ const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 
 const SUBMENUS: Record<string, { title: string; href: string }[]> = {
   "/tools": TOOLS.map((t) => ({ title: t.title, href: t.href })),
-  "/media/english": MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
+  "/media": MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
   "/apps": APPS.map((a) => ({ title: a.title, href: a.href })),
 };
 

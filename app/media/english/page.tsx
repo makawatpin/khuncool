@@ -105,7 +105,7 @@ export default function MediaEnglishPage() {
             หน้าแรก
           </Link>
           <span>›</span>
-          <Link href="/tools" className="text-ink-faint">
+          <Link href="/media" className="text-ink-faint">
             สื่อการสอน
           </Link>
           <span>›</span>
