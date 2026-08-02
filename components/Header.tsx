@@ -97,9 +97,22 @@ const NAV_LINKS = PILLARS.map((p) => ({ title: p.title, href: p.path }));
 
 const SUBMENUS: Record<string, { title: string; href: string }[]> = {
   "/tools": TOOLS.map((t) => ({ title: t.title, href: t.href })),
-  "/media": MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
   "/apps": APPS.map((a) => ({ title: a.title, href: a.href })),
 };
+
+type MediaSubjectGroup = {
+  subject: string;
+  subjectHref: string;
+  games: { title: string; href: string }[];
+};
+
+const MEDIA_SUBMENU: MediaSubjectGroup[] = [
+  {
+    subject: "ภาษาอังกฤษ",
+    subjectHref: "/media/english",
+    games: MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
+  },
+];
 
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
@@ -256,7 +269,8 @@ export default function Header() {
             <div className="flex-1 overflow-y-auto py-2">
               {PILLARS.map((p) => {
                 const submenu = SUBMENUS[p.path];
-                if (submenu) {
+                const isMedia = p.path === "/media";
+                if (submenu || isMedia) {
                   const expanded = expandedPath === p.path;
                   return (
                     <div key={p.path}>
@@ -287,7 +301,39 @@ export default function Header() {
                           <polyline points="3.5,5 7,8.5 10.5,5" />
                         </svg>
                       </button>
-                      {expanded && (
+                      {expanded && isMedia && (
+                        <div className="flex flex-col pb-1.5">
+                          {MEDIA_SUBMENU.map((group) => (
+                            <div key={group.subjectHref} className="flex flex-col">
+                              <Link
+                                href={group.subjectHref}
+                                onClick={closeSidebar}
+                                className="py-2 pl-11 pr-4 text-[13px] font-semibold text-ink no-underline"
+                              >
+                                {group.subject}
+                              </Link>
+                              {group.games.map((g) => (
+                                <Link
+                                  key={g.href}
+                                  href={g.href}
+                                  onClick={closeSidebar}
+                                  className="py-2 pl-14 pr-4 text-[13px] text-ink-secondary no-underline"
+                                >
+                                  {g.title}
+                                </Link>
+                              ))}
+                            </div>
+                          ))}
+                          <Link
+                            href={p.path}
+                            onClick={closeSidebar}
+                            className="py-2 pl-11 pr-4 text-[13px] font-semibold text-primary no-underline"
+                          >
+                            ดูทั้งหมด ›
+                          </Link>
+                        </div>
+                      )}
+                      {expanded && !isMedia && submenu && (
                         <div className="flex flex-col pb-1.5">
                           {submenu.map((s) => (
                             <Link
