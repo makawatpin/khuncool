@@ -816,11 +816,11 @@ export default function VocabularyArcadeApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 38, height: 38, flex: "none", objectFit: "contain" }}
+            style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Vocabulary Arcade</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
           <Link
             href="/media/english"
             style={{
@@ -946,7 +946,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 0: intro */}
       {stage === 0 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px 90px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px clamp(20px,6vh,90px)", textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
             {introEmojis.map((ch, i) => (
               <div
@@ -1010,10 +1010,10 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 1: category picker */}
       {stage === 1 && (
-        <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px 100px", textAlign: "center" }}>
-          <h2 style={{ fontWeight: 600, fontSize: "clamp(22px,3.4vw,28px)", margin: "0 0 6px" }}>เลือกหมวดคำศัพท์ที่จะเล่น 📚</h2>
-          <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 24px" }}>หมวดละ 20 คำ · แตะการ์ดเพื่อเริ่ม</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14 }}>
+        <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
+          <h2 style={{ fontWeight: 600, fontSize: "clamp(20px,3.4vw,28px)", margin: "0 0 4px" }}>เลือกหมวดคำศัพท์ที่จะเล่น 📚</h2>
+          <p style={{ fontSize: 13, color: "#5A6273", margin: "0 0 12px" }}>หมวดละ 20 คำ · แตะการ์ดเพื่อเริ่ม</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(30%,150px),1fr))", gap: "clamp(8px,2vw,14px)" }}>
             {hydrated &&
               CATS.map((c, i) => {
                 const bestScore = best[c.key] || 0;
@@ -1034,8 +1034,8 @@ export default function VocabularyArcadeApp() {
                       gap: 8,
                       background: c.bg,
                       border: `2px solid ${c.bd}`,
-                      borderRadius: 24,
-                      padding: "22px 12px",
+                      borderRadius: "clamp(14px,4vw,24px)",
+                      padding: "clamp(10px,3vw,22px) clamp(6px,2vw,12px)",
                       position: "relative",
                       overflow: "hidden",
                       cursor: "pointer",
@@ -1055,21 +1055,21 @@ export default function VocabularyArcadeApp() {
                         opacity: 0.55,
                       }}
                     />
-                    {done && <span style={{ position: "absolute", top: 10, right: 12, fontSize: 17 }}>✅</span>}
-                    <div style={{ fontSize: 44, position: "relative", animation: `floatY 3.2s ease-in-out infinite ${(i * 0.05).toFixed(2)}s` }}>
+                    {done && <span style={{ position: "absolute", top: 6, right: 8, fontSize: "clamp(13px,3vw,17px)" }}>✅</span>}
+                    <div style={{ fontSize: "clamp(26px,7vw,44px)", position: "relative", animation: `floatY 3.2s ease-in-out infinite ${(i * 0.05).toFixed(2)}s` }}>
                       {c.emoji}
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: 16, position: "relative" }}>{c.en}</div>
-                    <div style={{ fontSize: 12.5, color: "#6C7484", position: "relative" }}>{c.th}</div>
+                    <div style={{ fontWeight: 600, fontSize: "clamp(12px,3vw,16px)", position: "relative" }}>{c.en}</div>
+                    <div style={{ fontSize: "clamp(10px,2.4vw,12.5px)", color: "#6C7484", position: "relative" }}>{c.th}</div>
                     {bestScore > 0 && (
                       <div
                         style={{
-                          fontSize: 11,
+                          fontSize: "clamp(9px,2.2vw,11px)",
                           fontWeight: 600,
                           color: "#0A9380",
                           background: "#D0FBEF",
                           borderRadius: 20,
-                          padding: "3px 9px",
+                          padding: "2px 7px",
                           position: "relative",
                         }}
                       >
@@ -1085,7 +1085,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 2: mode + difficulty picker */}
       {stage === 2 && (
-        <div style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1135,7 +1135,7 @@ export default function VocabularyArcadeApp() {
               );
             })}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,210px),1fr))", gap: "clamp(10px,3vw,16px)" }}>
             {MODES.map((m, i) => (
               <button
                 key={m.key}
@@ -1151,8 +1151,8 @@ export default function VocabularyArcadeApp() {
                   gap: 9,
                   background: m.bg,
                   border: `2px solid ${m.bd}`,
-                  borderRadius: 24,
-                  padding: "26px 16px",
+                  borderRadius: "clamp(16px,4vw,24px)",
+                  padding: "clamp(14px,4vw,26px) clamp(8px,3vw,16px)",
                   position: "relative",
                   overflow: "hidden",
                   cursor: "pointer",
@@ -1172,11 +1172,11 @@ export default function VocabularyArcadeApp() {
                     opacity: 0.5,
                   }}
                 />
-                <div style={{ fontSize: 42, position: "relative", animation: `floatY 3s ease-in-out infinite ${(i * 0.06).toFixed(2)}s` }}>
+                <div style={{ fontSize: "clamp(30px,7vw,42px)", position: "relative", animation: `floatY 3s ease-in-out infinite ${(i * 0.06).toFixed(2)}s` }}>
                   {m.emoji}
                 </div>
-                <div style={{ fontWeight: 600, fontSize: 17, position: "relative" }}>{m.label}</div>
-                <div style={{ fontSize: 12.5, color: "#6C7484", lineHeight: 1.55, position: "relative" }}>{m.desc}</div>
+                <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,17px)", position: "relative" }}>{m.label}</div>
+                <div style={{ fontSize: "clamp(11px,2.8vw,12.5px)", color: "#6C7484", lineHeight: 1.4, position: "relative" }}>{m.desc}</div>
               </button>
             ))}
           </div>
@@ -1185,7 +1185,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 3: play */}
       {stage === 3 && q && qMode && (
-        <div style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px 110px" }}>
+        <div style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px clamp(20px,6vh,110px)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
             <div
               style={{
@@ -1534,7 +1534,7 @@ export default function VocabularyArcadeApp() {
             op: (pct >= 0.4 && i === 0) || (pct >= 0.7 && i === 1) || (pct >= 0.95 && i === 2) ? 1 : 0.22,
           }));
           return (
-            <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px 110px", textAlign: "center" }}>
+            <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,110px)", textAlign: "center" }}>
               <div style={{ fontSize: 74 }}>{resultEmoji}</div>
               <h2 style={{ fontWeight: 700, fontSize: "clamp(26px,4.6vw,36px)", margin: "6px 0 6px" }}>{resultTitle}</h2>
               <p style={{ fontSize: 16, color: "#5A6273", margin: "0 0 18px" }}>

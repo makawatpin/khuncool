@@ -395,7 +395,7 @@ export default function ClassroomObjectsApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 38, height: 38, flex: "none", objectFit: "contain" }}
+            style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>
             Classroom Objects Match

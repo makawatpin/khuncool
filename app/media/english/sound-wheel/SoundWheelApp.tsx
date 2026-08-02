@@ -819,15 +819,15 @@ export default function SoundWheelApp() {
             zIndex: 5,
             maxWidth: 720,
             margin: "4px auto 0",
-            padding: "0 20px 70px",
+            padding: "0 20px clamp(16px,4vh,70px)",
             textAlign: "center",
           }}
         >
           <div
             style={{
-              fontSize: 56,
+              fontSize: "clamp(30px,7vw,56px)",
               lineHeight: 1,
-              marginBottom: 10,
+              marginBottom: 4,
               animation: "wiggle 2.6s ease-in-out infinite",
             }}
           >
@@ -837,8 +837,8 @@ export default function SoundWheelApp() {
             style={{
               fontFamily: "var(--font-fredoka)",
               fontWeight: 700,
-              fontSize: "clamp(30px,6.4vw,50px)",
-              margin: "0 0 12px",
+              fontSize: "clamp(20px,6.4vw,50px)",
+              margin: "0 0 4px",
               letterSpacing: "-.02em",
             }}
           >
@@ -856,10 +856,10 @@ export default function SoundWheelApp() {
           </h1>
           <p
             style={{
-              fontSize: "clamp(15px,3.6vw,17px)",
-              lineHeight: 1.75,
+              fontSize: "clamp(12px,3.6vw,17px)",
+              lineHeight: 1.4,
               color: "#5A6273",
-              margin: "0 0 24px",
+              margin: "0 0 10px",
             }}
           >
             วงล้อหยุดที่เสียงไหน
@@ -872,19 +872,19 @@ export default function SoundWheelApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 24,
-              padding: "18px 16px 20px",
+              padding: "10px 12px 12px",
               boxShadow: "0 20px 40px -30px rgba(26,29,38,.6)",
-              marginBottom: 22,
+              marginBottom: 10,
             }}
           >
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
                 color: "#9AA3B2",
                 fontWeight: 700,
-                marginBottom: 12,
+                marginBottom: 6,
               }}
             >
               เลือกชุดเสียง
@@ -894,8 +894,8 @@ export default function SoundWheelApp() {
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 8,
-                marginBottom: 18,
+                gap: 6,
+                marginBottom: 8,
               }}
             >
               {(Object.keys(SETS) as SetKey[]).map((k) => {
@@ -908,8 +908,8 @@ export default function SoundWheelApp() {
                     style={{
                       fontFamily: "var(--font-fredoka)",
                       fontWeight: 600,
-                      fontSize: 14,
-                      padding: "10px 18px",
+                      fontSize: 13,
+                      padding: "7px 14px",
                       borderRadius: 999,
                       cursor: "pointer",
                       border: `2px solid ${active ? "#5C5EE6" : "#E5E8EE"}`,
@@ -925,12 +925,12 @@ export default function SoundWheelApp() {
             </div>
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
                 color: "#9AA3B2",
                 fontWeight: 700,
-                marginBottom: 12,
+                marginBottom: 6,
               }}
             >
               จำนวนช่องบนวงล้อ
@@ -940,7 +940,7 @@ export default function SoundWheelApp() {
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 8,
+                gap: 6,
               }}
             >
               {[6, 8, 10, 12].map((n) => {
@@ -953,8 +953,8 @@ export default function SoundWheelApp() {
                     style={{
                       fontFamily: "var(--font-fredoka)",
                       fontWeight: 600,
-                      fontSize: 14,
-                      padding: "10px 18px",
+                      fontSize: 13,
+                      padding: "7px 14px",
                       borderRadius: 999,
                       cursor: "pointer",
                       border: `2px solid ${active ? "#14B79A" : "#E5E8EE"}`,
@@ -975,8 +975,8 @@ export default function SoundWheelApp() {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              gap: 10,
-              marginBottom: 26,
+              gap: 6,
+              marginBottom: 10,
             }}
           >
             {[
@@ -989,12 +989,12 @@ export default function SoundWheelApp() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
+                  gap: 6,
                   background: "#fff",
                   border: "1px solid #E5E8EE",
                   borderRadius: 999,
-                  padding: "9px 16px",
-                  fontSize: 14,
+                  padding: "6px 12px",
+                  fontSize: 12.5,
                   fontWeight: 600,
                   boxShadow: "0 8px 18px -14px rgba(0,0,0,.5)",
                 }}
@@ -1020,12 +1020,12 @@ export default function SoundWheelApp() {
             style={{
               fontFamily: "var(--font-fredoka)",
               fontWeight: 600,
-              fontSize: "clamp(17px,4.6vw,20px)",
+              fontSize: "clamp(15px,4.6vw,20px)",
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               border: "none",
               borderRadius: 999,
-              padding: "16px 44px",
+              padding: "12px 32px",
               cursor: "pointer",
               boxShadow: "0 12px 26px -8px rgba(92,94,230,.6)",
               animation: "pulseGlow 2.4s ease-in-out infinite",
@@ -1043,10 +1043,10 @@ export default function SoundWheelApp() {
             position: "relative",
             zIndex: 5,
             margin: "0 auto",
-            padding: "6px 16px 60px",
+            padding: "6px 16px clamp(10px,3vh,60px)",
             display: "flex",
             flexWrap: "wrap",
-            gap: 26,
+            gap: 8,
             alignItems: "flex-start",
             justifyContent: "center",
           }}
@@ -1068,7 +1068,7 @@ export default function SoundWheelApp() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                paddingTop: 16,
+                paddingTop: 4,
               }}
             >
               <div
@@ -1092,8 +1092,8 @@ export default function SoundWheelApp() {
                 height={680}
                 onClick={spin}
                 style={{
-                  width: "min(84vw,430px)",
-                  height: "min(84vw,430px)",
+                  width: "min(46vw,430px)",
+                  height: "min(46vw,430px)",
                   display: "block",
                   cursor: "pointer",
                   position: "relative",
@@ -1108,8 +1108,8 @@ export default function SoundWheelApp() {
               onClick={spin}
               disabled={spinning}
               style={{
-                marginTop: 14,
-                width: "min(84vw,430px)",
+                marginTop: 6,
+                width: "min(46vw,430px)",
                 fontFamily: "var(--font-fredoka)",
                 fontWeight: 600,
                 fontSize: 19,
@@ -1144,7 +1144,7 @@ export default function SoundWheelApp() {
                   background: "#fff",
                   border: "1px solid #E5E8EE",
                   borderRadius: 18,
-                  padding: "12px 14px",
+                  padding: "8px 10px",
                   textAlign: "center",
                   boxShadow: "0 12px 26px -22px rgba(0,0,0,.7)",
                 }}
@@ -1177,7 +1177,7 @@ export default function SoundWheelApp() {
                   background: "#fff",
                   border: "1px solid #E5E8EE",
                   borderRadius: 18,
-                  padding: "12px 14px",
+                  padding: "8px 10px",
                   textAlign: "center",
                   boxShadow: "0 12px 26px -22px rgba(0,0,0,.7)",
                 }}
@@ -1213,7 +1213,7 @@ export default function SoundWheelApp() {
                   background: "#fff",
                   border: `2px solid ${result.color}`,
                   borderRadius: 26,
-                  padding: "22px 18px",
+                  padding: "clamp(12px,3vh,22px) 18px",
                   textAlign: "center",
                   boxShadow: "0 24px 46px -30px rgba(26,29,38,.7)",
                   animation: cardAnim,
@@ -1356,15 +1356,15 @@ export default function SoundWheelApp() {
                   background: "rgba(255,255,255,.72)",
                   border: "2px dashed #C9CFE0",
                   borderRadius: 26,
-                  padding: "30px 20px",
+                  padding: "clamp(14px,3vh,30px) 20px",
                   textAlign: "center",
                   animation: "bobIn .4s ease-out",
                 }}
               >
                 <div
                   style={{
-                    fontSize: 40,
-                    marginBottom: 8,
+                    fontSize: "clamp(24px,5vh,40px)",
+                    marginBottom: 4,
                     animation: "floatY 3s ease-in-out infinite",
                   }}
                 >
@@ -1375,7 +1375,7 @@ export default function SoundWheelApp() {
                     fontFamily: "var(--font-fredoka)",
                     fontWeight: 600,
                     fontSize: 18,
-                    marginBottom: 6,
+                    marginBottom: 4,
                   }}
                 >
                   กดวงล้อเพื่อหมุน
@@ -1384,7 +1384,7 @@ export default function SoundWheelApp() {
                   style={{
                     fontSize: 14,
                     color: "#5A6273",
-                    lineHeight: 1.7,
+                    lineHeight: 1.4,
                   }}
                 >
                   ให้นักเรียนผลัดกันหมุน แล้วออกเสียงพร้อมกันทั้งห้อง

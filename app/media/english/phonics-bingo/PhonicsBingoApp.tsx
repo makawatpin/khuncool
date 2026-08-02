@@ -642,7 +642,7 @@ export default function PhonicsBingoApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 38, height: 38, flex: "none", objectFit: "contain" }}
+            style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Phonics Bingo</div>
         </div>
@@ -769,9 +769,13 @@ export default function PhonicsBingoApp() {
             position: "relative",
             zIndex: 5,
             maxWidth: 760,
-            margin: "6px auto 0",
-            padding: "0 20px 40px",
+            margin: "4px auto 0",
+            padding: "0 20px 20px",
             textAlign: "center",
+            minHeight: "min(80vh,648px)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
           <div
@@ -779,21 +783,21 @@ export default function PhonicsBingoApp() {
               display: "flex",
               justifyContent: "center",
               alignItems: "flex-end",
-              gap: 14,
-              marginBottom: 16,
+              gap: 10,
+              marginBottom: 6,
             }}
           >
             {INTRO_CAST.map((p, i) => (
               <div key={i} style={{ animation: `floatY ${p.dur}s ease-in-out infinite ${p.delay}s` }}>
-                <KcFace {...p} size={64} />
+                <KcFace {...p} size={44} />
               </div>
             ))}
           </div>
           <h1
             style={{
               fontWeight: 700,
-              fontSize: "clamp(30px,6vw,48px)",
-              margin: "0 0 12px",
+              fontSize: "clamp(24px,6vw,48px)",
+              margin: "0 0 6px",
             }}
           >
             ฟังเสียง แล้วแตะ
@@ -811,10 +815,10 @@ export default function PhonicsBingoApp() {
           </h1>
           <p
             style={{
-              fontSize: "clamp(15px,3.6vw,17px)",
-              lineHeight: 1.75,
+              fontSize: "clamp(13px,3.6vw,17px)",
+              lineHeight: 1.4,
               color: "#5A6273",
-              margin: "0 0 24px",
+              margin: "0 0 10px",
             }}
           >
             ครูกดปุ่มออกเสียง นักเรียนหาช่องที่ตรงกับเสียงบนการ์ด
@@ -826,18 +830,18 @@ export default function PhonicsBingoApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 24,
-              padding: "18px 16px 20px",
-              marginBottom: 24,
+              padding: "10px 12px 12px",
+              marginBottom: 10,
             }}
           >
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
                 color: "#9AA3B2",
                 fontWeight: 700,
-                marginBottom: 12,
+                marginBottom: 6,
               }}
             >
               เลือกชุดเสียง
@@ -847,8 +851,8 @@ export default function PhonicsBingoApp() {
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 8,
-                marginBottom: 18,
+                gap: 6,
+                marginBottom: 8,
               }}
             >
               {setChoices.map((c) => (
@@ -858,8 +862,8 @@ export default function PhonicsBingoApp() {
                   onClick={c.pick}
                   style={{
                     fontWeight: 600,
-                    fontSize: 14,
-                    padding: "10px 18px",
+                    fontSize: 13,
+                    padding: "7px 14px",
                     borderRadius: 999,
                     border: `2px solid ${c.border}`,
                     background: c.bg,
@@ -873,12 +877,12 @@ export default function PhonicsBingoApp() {
             </div>
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 letterSpacing: ".14em",
                 textTransform: "uppercase",
                 color: "#9AA3B2",
                 fontWeight: 700,
-                marginBottom: 12,
+                marginBottom: 6,
               }}
             >
               ขนาดการ์ด
@@ -888,7 +892,7 @@ export default function PhonicsBingoApp() {
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 8,
+                gap: 6,
               }}
             >
               {sizeChoices.map((c) => (
@@ -898,8 +902,8 @@ export default function PhonicsBingoApp() {
                   onClick={c.pick}
                   style={{
                     fontWeight: 600,
-                    fontSize: 14,
-                    padding: "10px 18px",
+                    fontSize: 13,
+                    padding: "7px 14px",
                     borderRadius: 999,
                     border: `2px solid ${c.border}`,
                     background: c.bg,
@@ -918,8 +922,8 @@ export default function PhonicsBingoApp() {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              gap: 10,
-              marginBottom: 28,
+              gap: 8,
+              marginBottom: 12,
             }}
           >
             {rules.map((r) => (
@@ -928,12 +932,12 @@ export default function PhonicsBingoApp() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
+                  gap: 6,
                   background: "#fff",
                   border: "1px solid #E5E8EE",
                   borderRadius: 999,
-                  padding: "9px 16px",
-                  fontSize: 14,
+                  padding: "6px 12px",
+                  fontSize: 13,
                   fontWeight: 600,
                 }}
               >
@@ -948,12 +952,12 @@ export default function PhonicsBingoApp() {
             onClick={start}
             style={{
               fontWeight: 600,
-              fontSize: "clamp(17px,4.6vw,20px)",
+              fontSize: "clamp(16px,4.6vw,20px)",
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               border: "none",
               borderRadius: 999,
-              padding: "16px 44px",
+              padding: "12px 32px",
               animation: "pulseGlow 2.4s ease-in-out infinite",
               cursor: "pointer",
               boxShadow: "0 12px 26px -8px rgba(92,94,230,.6)",
@@ -1056,7 +1060,7 @@ export default function PhonicsBingoApp() {
                 position: "relative",
                 background: "#fff",
                 borderRadius: 26,
-                padding: "clamp(16px,4vw,24px)",
+                padding: "clamp(10px,3vw,24px)",
                 textAlign: "center",
                 border: "1px solid #EEF0F5",
                 overflow: "hidden",
@@ -1107,7 +1111,7 @@ export default function PhonicsBingoApp() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 6,
-                  minHeight: "clamp(150px,34vw,190px)",
+                  minHeight: "clamp(90px,24vw,190px)",
                   animation: "popIn .45s cubic-bezier(.3,1.5,.5,1) both",
                 }}
               >
@@ -1141,7 +1145,7 @@ export default function PhonicsBingoApp() {
                   style={{
                     position: "relative",
                     fontWeight: 700,
-                    fontSize: "clamp(46px,12vw,72px)",
+                    fontSize: "clamp(32px,9vw,72px)",
                     lineHeight: 1.05,
                     color: shown ? "#3F41C9" : "#5C5EE6",
                   }}
@@ -1172,7 +1176,7 @@ export default function PhonicsBingoApp() {
                 type="button"
                 onClick={speakAgain}
                 style={{
-                  marginTop: 14,
+                  marginTop: 8,
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 9,
@@ -1182,8 +1186,8 @@ export default function PhonicsBingoApp() {
                   background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
                   border: "none",
                   borderRadius: 999,
-                  padding: "13px 26px",
-                  minHeight: 48,
+                  padding: "10px 22px",
+                  minHeight: 40,
                   cursor: "pointer",
                   boxShadow: "0 12px 24px -10px rgba(92,94,230,.6)",
                 }}
@@ -1197,7 +1201,7 @@ export default function PhonicsBingoApp() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  marginTop: 12,
+                  marginTop: 8,
                 }}
               >
                 <button

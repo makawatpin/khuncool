@@ -301,7 +301,7 @@ export default function IsAreSortingApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 38, height: 38, flex: "none", objectFit: "contain" }}
+            style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title font-semibold text-[15px] md:text-base">
             Is / Are Sorting

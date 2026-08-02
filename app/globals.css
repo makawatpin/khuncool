@@ -405,6 +405,27 @@
   font-family: var(--font-fredoka), var(--font-anuphan), sans-serif;
 }
 
+/* Games cap their inner content at a fixed px max-width (designed for a
+   card in a page column), so on fullscreen — meant for projecting onto a
+   classroom TV — most of the screen sits empty around a small centered
+   card. Scaling the whole fullscreen box up zooms in on that content
+   uniformly without needing to touch every game's own max-width values. */
+.kc-game:fullscreen,
+.kc-game:-webkit-full-screen {
+  transform: scale(1.35);
+  transform-origin: center center;
+}
+
+/* On phones the 1.35x projector zoom above only makes the already-tight
+   viewport worse, forcing scroll inside a game that should fit on one
+   screen while playing. Skip the zoom below tablet width. */
+@media (max-width: 640px) {
+  .kc-game:fullscreen,
+  .kc-game:-webkit-full-screen {
+    transform: none;
+  }
+}
+
 /* The Claude Design mockups give nearly every clickable button a
    `style-hover="transform:scale(1.06)"` pop — a DC-canvas-only attribute
    with no direct React/CSS equivalent, so it was dropped during porting.

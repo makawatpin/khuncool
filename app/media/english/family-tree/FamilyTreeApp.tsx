@@ -805,9 +805,9 @@ export default function FamilyTreeApp() {
   const allDone = s1Done && s2Done && s3.completed && s4AllCorrect;
 
   // ---------- derived layout values ----------
-  const treeScale = Math.min(1, (vw - 24) / 780);
+  const treeScale = Math.min(1, (vw - 24) / 780, vw < 640 ? 0.58 : 1);
   const treeH = Math.round(430 * treeScale);
-  const matchScale = Math.min(1, (vw - 24) / 496);
+  const matchScale = Math.min(1, (vw - 24) / 496, vw < 640 ? 0.62 : 1);
   const pitch = 68;
   const half = 28;
   const s2Height = WORDS.length * pitch;
@@ -878,7 +878,7 @@ export default function FamilyTreeApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 38, height: 38, flex: "none", objectFit: "contain" }}
+            style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
         </div>
@@ -1010,7 +1010,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 0: INTRO */}
       {stage === 0 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px 90px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6vh,90px)", textAlign: "center" }}>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 22 }}>
             {introCast.map((id, i) => (
               <div
@@ -1066,10 +1066,10 @@ export default function FamilyTreeApp() {
 
       {/* HUB (stage 10) */}
       {stage === 10 && (
-        <div style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <h2 style={{ fontWeight: 600, fontSize: 26, margin: "0 0 8px" }}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
           <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 28px" }}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3vw,18px)" }}>
             {[
               { n: 1 as const, emoji: "🌳", label: "ปลูกต้นไม้ครอบครัว", desc: "ลาก & วางคำศัพท์", done: s1Done, blob: "#D5FBEF" },
               { n: 2 as const, emoji: "🔗", label: "จับคู่คำศัพท์", desc: "Matching", done: s2Done, blob: "#E1E3FD" },
@@ -1087,8 +1087,8 @@ export default function FamilyTreeApp() {
                   gap: 10,
                   background: g.done ? "#F5FFFC" : "#fff",
                   border: `2px solid ${g.done ? "#14B79A" : "#E9ECF3"}`,
-                  borderRadius: 22,
-                  padding: "26px 16px",
+                  borderRadius: "clamp(16px,4vw,22px)",
+                  padding: "clamp(14px,4vw,26px) clamp(8px,3vw,16px)",
                   position: "relative",
                   overflow: "hidden",
                   cursor: "pointer",
@@ -1107,10 +1107,10 @@ export default function FamilyTreeApp() {
                     opacity: 0.5,
                   }}
                 />
-                {g.done && <span style={{ position: "absolute", top: 12, right: 14, fontSize: 18 }}>✅</span>}
-                <div style={{ fontSize: 44, position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
-                <div style={{ fontWeight: 600, fontSize: 16, position: "relative" }}>{g.label}</div>
-                <div style={{ fontSize: 12, color: "#7C8494", position: "relative" }}>{g.desc}</div>
+                {g.done && <span style={{ position: "absolute", top: 8, right: 10, fontSize: "clamp(14px,3.4vw,18px)" }}>✅</span>}
+                <div style={{ fontSize: "clamp(30px,7vw,44px)", position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
+                <div style={{ fontWeight: 600, fontSize: "clamp(13px,3.4vw,16px)", position: "relative" }}>{g.label}</div>
+                <div style={{ fontSize: "clamp(10.5px,2.6vw,12px)", color: "#7C8494", position: "relative" }}>{g.desc}</div>
               </button>
             ))}
           </div>
@@ -1140,7 +1140,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 1: DRAG & DROP */}
       {stage === 1 && (
-        <div style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1149,17 +1149,17 @@ export default function FamilyTreeApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 22,
-              padding: "14px 24px",
-              margin: "0 auto 22px",
+              padding: "8px 16px",
+              margin: "0 auto 10px",
               boxShadow: "0 12px 24px -16px rgba(0,0,0,.4)",
             }}
           >
-            <div style={{ fontSize: 46, animation: "floatY 3s ease-in-out infinite" }}>🦉</div>
+            <div style={{ fontSize: "clamp(28px,7vw,46px)", animation: "floatY 3s ease-in-out infinite" }}>🦉</div>
             <div style={{ textAlign: "left" }}>
               <div style={{ fontSize: 11, letterSpacing: ".14em", color: "#5C5EE6", fontWeight: 600, marginBottom: 4 }}>
                 ด่านที่ 1 · DRAG &amp; DROP · {WORDS.length - s1.bank.length} / {WORDS.length}
               </div>
-              <div style={{ fontWeight: 600, fontSize: 20 }}>ลากคำศัพท์ไปวางบนต้นไม้ครอบครัวให้ถูกตำแหน่ง 🌳</div>
+              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,20px)" }}>ลากคำศัพท์ไปวางบนต้นไม้ครอบครัวให้ถูกตำแหน่ง 🌳</div>
             </div>
           </div>
 
@@ -1328,13 +1328,13 @@ export default function FamilyTreeApp() {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, margin: "18px 0 14px" }}>
-            <div style={{ height: 2, width: 60, background: "#CFE9E1" }} />
-            <div style={{ fontSize: 13, color: "#6B7285" }}>ลากการ์ดจากด้านล่าง หรือแตะเลือกแล้วแตะช่องว่าง</div>
-            <div style={{ height: 2, width: 60, background: "#CFE9E1" }} />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, margin: "4px 0 4px" }}>
+            <div style={{ height: 2, width: 30, background: "#CFE9E1" }} />
+            <div style={{ fontSize: 11, color: "#6B7285" }}>ลากการ์ดจากด้านล่าง หรือแตะเลือกแล้วแตะช่องว่าง</div>
+            <div style={{ height: 2, width: 30, background: "#CFE9E1" }} />
           </div>
 
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", minHeight: 60 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", minHeight: 44 }}>
             {s1.bank.map((id) => {
               const w = WORD_MAP[id];
               const sel = s1.selected === id;
@@ -1353,17 +1353,17 @@ export default function FamilyTreeApp() {
                     background: "#fff",
                     border: `2px solid ${sel ? "#5C5EE6" : "#E5E8EE"}`,
                     borderRadius: 999,
-                    padding: "7px 18px 7px 8px",
+                    padding: "5px 14px 5px 6px",
                     cursor: "grab",
                     boxShadow: sel ? "0 14px 24px -12px rgba(92,94,230,.9)" : "0 6px 14px -10px rgba(0,0,0,.5)",
                     transform: sel ? "translateY(-6px) scale(1.05)" : "none",
                     fontWeight: 600,
-                    fontSize: 15,
+                    fontSize: "clamp(13px,3.4vw,15px)",
                     transition: "transform .18s",
                     fontFamily: "var(--font-fredoka), var(--font-anuphan), sans-serif",
                   }}
                 >
-                  <FamilyFace {...charOf(id)} size={34} />
+                  <FamilyFace {...charOf(id)} size={28} />
                   <span>{w.en}</span>
                 </div>
               );
@@ -1394,7 +1394,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 2: MATCHING */}
       {stage === 2 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1575,7 +1575,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 3: LISTENING QUIZ */}
       {stage === 3 && (
-        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1705,7 +1705,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 4: FILL IN THE BLANK */}
       {stage === 4 && (
-        <div style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px 100px", textAlign: "center" }}>
+        <div style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1714,21 +1714,21 @@ export default function FamilyTreeApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 22,
-              padding: "14px 24px",
-              margin: "0 auto 22px",
+              padding: "8px 16px",
+              margin: "0 auto 10px",
               boxShadow: "0 12px 24px -16px rgba(0,0,0,.4)",
             }}
           >
-            <div style={{ fontSize: 46, animation: "floatY 3s ease-in-out infinite .1s" }}>🐨</div>
+            <div style={{ fontSize: "clamp(28px,7vw,46px)", animation: "floatY 3s ease-in-out infinite .1s" }}>🐨</div>
             <div style={{ textAlign: "left" }}>
               <div style={{ fontSize: 11, letterSpacing: ".14em", color: "#5C5EE6", fontWeight: 600, marginBottom: 4 }}>
                 ด่านที่ 4 · FILL IN THE BLANK
               </div>
-              <div style={{ fontWeight: 600, fontSize: 20 }}>เลือกคำที่ใช่เติมในเรื่องราวครอบครัวของเรา 📖</div>
+              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,20px)" }}>เลือกคำที่ใช่เติมในเรื่องราวครอบครัวของเรา 📖</div>
             </div>
           </div>
-          <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 24px" }}>📔 My Family Story</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <p style={{ fontSize: 14, color: "#5A6273", margin: "0 0 12px" }}>📔 My Family Story</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {storyBlanks.map((b, idx) => {
               const isCorrect = s4.correct[idx];
               const answered = s4.answers[idx];
@@ -1740,13 +1740,13 @@ export default function FamilyTreeApp() {
                     background: "#fff",
                     border: `2px solid ${isCorrect ? "#14B79A" : "#E5E8EE"}`,
                     borderRadius: 20,
-                    padding: "20px 22px",
+                    padding: "12px 16px",
                     textAlign: "left",
                     overflow: "hidden",
                     boxShadow: "0 10px 22px -18px rgba(0,0,0,.6)",
                   }}
                 >
-                  <div style={{ fontSize: 16, marginBottom: 14, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 15, marginBottom: 8, lineHeight: 1.4 }}>
                     {b.sentence} {isCorrect && <span style={{ fontSize: 18 }}>✅</span>}
                   </div>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>

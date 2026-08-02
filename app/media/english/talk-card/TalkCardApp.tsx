@@ -961,7 +961,7 @@ export default function TalkCardApp() {
           <img
             src="/assets/khuncool-logo.png"
             alt="khuncool"
-            style={{ width: 36, height: 36, flex: "none", objectFit: "contain" }}
+            style={{ width: 36, height: 36, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div style={{ minWidth: 0 }}>
           <div className="kc-title" style={{ fontWeight: 700, fontSize: "clamp(15px,3.6vw,19px)" }}>
@@ -1084,15 +1084,15 @@ export default function TalkCardApp() {
             zIndex: 2,
             maxWidth: 1000,
             margin: "0 auto",
-            padding: "6px clamp(14px,4vw,26px) 70px",
+            padding: "6px clamp(14px,4vw,26px) clamp(16px,4vh,70px)",
           }}
         >
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              gap: 14,
-              marginBottom: 18,
+              gap: 8,
+              marginBottom: 4,
             }}
           >
             {[
@@ -1103,14 +1103,14 @@ export default function TalkCardApp() {
               <div
                 key={b.emoji}
                 style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 18,
+                  width: "clamp(34px,8vw,64px)",
+                  height: "clamp(34px,8vw,64px)",
+                  borderRadius: 14,
                   background: b.bg,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 30,
+                  fontSize: "clamp(16px,4vw,30px)",
                   boxShadow: "0 16px 26px -18px rgba(122,90,248,.45)",
                   animation: `floatY 2.6s ease-in-out ${(idx * 0.3).toFixed(1)}s infinite`,
                 }}
@@ -1119,13 +1119,13 @@ export default function TalkCardApp() {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginBottom: 26 }}>
+          <div style={{ textAlign: "center", marginBottom: 6 }}>
             <h1
               style={{
                 fontWeight: 700,
-                fontSize: "clamp(26px,6vw,44px)",
-                lineHeight: 1.25,
-                margin: "0 0 10px",
+                fontSize: "clamp(17px,6vw,44px)",
+                lineHeight: 1.15,
+                margin: "0 0 2px",
               }}
             >
               เปิดการ์ด แล้ว
@@ -1143,9 +1143,9 @@ export default function TalkCardApp() {
             </h1>
             <p
               style={{
-                fontSize: "clamp(14px,3.4vw,17px)",
+                fontSize: "clamp(11px,3.4vw,17px)",
                 color: "#6B5A66",
-                lineHeight: 1.75,
+                lineHeight: 1.4,
                 margin: "0 auto",
                 maxWidth: "56ch",
               }}
@@ -1155,8 +1155,8 @@ export default function TalkCardApp() {
             </p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-            <div style={{ fontWeight: 600, fontSize: 15 }}>1 · เลือกหัวข้อ</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>1 · เลือกหัวข้อ</div>
             <div style={{ flex: 1, height: 1, background: "#F0DCEA" }} />
             <button
               type="button"
@@ -1177,9 +1177,9 @@ export default function TalkCardApp() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,215px),1fr))",
-              gap: 10,
-              marginBottom: 28,
+              gridTemplateColumns: "repeat(auto-fill,minmax(min(45%,215px),1fr))",
+              gap: 4,
+              marginBottom: 4,
             }}
           >
             {TOPICS.map((t) => {
@@ -1192,10 +1192,10 @@ export default function TalkCardApp() {
                   style={{
                     textAlign: "left",
                     display: "flex",
-                    gap: 12,
+                    gap: 6,
                     alignItems: "center",
-                    padding: 14,
-                    borderRadius: 18,
+                    padding: "6px 8px",
+                    borderRadius: 12,
                     border: `2px solid ${on ? t.color : "#F0DCEA"}`,
                     background: on ? t.chip : "rgba(255,255,255,.8)",
                     boxShadow: on ? `0 12px 22px -16px ${t.color}` : "none",
@@ -1203,7 +1203,7 @@ export default function TalkCardApp() {
                 >
                   <span
                     style={{
-                      fontSize: 28,
+                      fontSize: "clamp(15px,4vw,28px)",
                       flex: "none",
                       display: "inline-block",
                       animation: on ? "wiggle 1.4s ease-in-out infinite" : "none",
@@ -1212,25 +1212,25 @@ export default function TalkCardApp() {
                     {t.icon}
                   </span>
                   <span style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: "block", fontSize: 15, fontWeight: 700 }}>
+                    <span style={{ display: "block", fontSize: "clamp(11px,2.8vw,15px)", fontWeight: 700 }}>
                       {t.th}
                     </span>
-                    <span style={{ display: "block", fontSize: 11.5, color: "#8A6480" }}>
+                    <span style={{ display: "block", fontSize: "clamp(9px,2.2vw,11.5px)", color: "#8A6480" }}>
                       {t.en} · {t.qs.length} คำถาม
                     </span>
                   </span>
                   <span
                     style={{
                       flex: "none",
-                      width: 24,
-                      height: 24,
+                      width: 20,
+                      height: 20,
                       borderRadius: "50%",
                       background: on ? t.color : "#DCCBD6",
                       color: "#fff",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: 13,
+                      fontSize: 11,
                     }}
                   >
                     {on ? "✓" : "+"}
@@ -1240,11 +1240,11 @@ export default function TalkCardApp() {
             })}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-            <div style={{ fontWeight: 600, fontSize: 15 }}>2 · เวลาพูดต่อคน</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>2 · เวลาพูดต่อคน</div>
             <div style={{ flex: 1, height: 1, background: "#F0DCEA" }} />
           </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 30 }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
             {DUR.map((d) => (
               <button
                 key={d.v}
@@ -1255,9 +1255,9 @@ export default function TalkCardApp() {
                   setLeft(d.v);
                 }}
                 style={{
-                  fontSize: 14.5,
+                  fontSize: "clamp(12px,3.2vw,14.5px)",
                   fontWeight: 600,
-                  padding: "11px 20px",
+                  padding: "7px 14px",
                   borderRadius: 999,
                   border: `2px solid ${dur === d.v ? "#C43F86" : "#F0DCEA"}`,
                   background: dur === d.v ? "#C43F86" : "rgba(255,255,255,.8)",
@@ -1269,11 +1269,11 @@ export default function TalkCardApp() {
             ))}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-            <div style={{ fontWeight: 600, fontSize: 15 }}>3 · จำนวนคำถามทั้งหมด</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>3 · จำนวนคำถามทั้งหมด</div>
             <div style={{ flex: 1, height: 1, background: "#F0DCEA" }} />
           </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 30 }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
             {COUNTS.map((c) => (
               <button
                 key={c.v}
@@ -1283,9 +1283,9 @@ export default function TalkCardApp() {
                   setCount(c.v);
                 }}
                 style={{
-                  fontSize: 14.5,
+                  fontSize: "clamp(12px,3.2vw,14.5px)",
                   fontWeight: 600,
-                  padding: "11px 20px",
+                  padding: "7px 14px",
                   borderRadius: 999,
                   border: `2px solid ${count === c.v ? "#C43F86" : "#F0DCEA"}`,
                   background: count === c.v ? "#C43F86" : "rgba(255,255,255,.8)",
@@ -1303,9 +1303,9 @@ export default function TalkCardApp() {
               onClick={begin}
               disabled={!poolNow.length}
               style={{
-                fontSize: "clamp(17px,4.4vw,21px)",
+                fontSize: "clamp(14px,4.4vw,21px)",
                 fontWeight: 700,
-                padding: "16px clamp(28px,8vw,46px)",
+                padding: "9px clamp(22px,8vw,46px)",
                 borderRadius: 999,
                 border: "none",
                 background: "linear-gradient(135deg,#C43F86,#7A5AF8)",
@@ -1321,21 +1321,17 @@ export default function TalkCardApp() {
 
           <div
             style={{
-              marginTop: 34,
-              padding: "18px 20px",
-              borderRadius: 20,
+              marginTop: 6,
+              padding: "5px 10px",
+              borderRadius: 12,
               background: "rgba(255,255,255,.75)",
               border: "1px solid #F3E2EE",
+              fontSize: 10.5,
+              color: "#6B5A66",
+              lineHeight: 1.4,
             }}
           >
-            <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 6 }}>
-              💡 ใช้ยังไงในห้องเรียน
-            </div>
-            <p style={{ fontSize: 13.5, color: "#6B5A66", lineHeight: 1.85, margin: 0 }}>
-              สุ่มชื่อเด็กด้วยวงล้อสุ่มชื่อ แล้วเปิดการ์ดใบใหม่ให้ตอบ
-              ให้เวลาคิดสักครู่ก่อนกดจับเวลา ถ้าเด็กติด กด “ประโยคตัวอย่าง”
-              ให้อ่านตามหนึ่งรอบ แล้วให้พูดเองอีกครั้ง
-            </p>
+            💡 สุ่มชื่อเด็กด้วยวงล้อสุ่มชื่อ แล้วเปิดการ์ดใบใหม่ให้ตอบ ถ้าเด็กติด กด “ประโยคตัวอย่าง” ให้อ่านตามก่อน
           </div>
         </div>
       )}
