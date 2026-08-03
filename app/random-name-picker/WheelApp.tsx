@@ -90,6 +90,11 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
 
   const seg = (2 * Math.PI) / n;
   const fs = Math.max(size * 0.026, Math.min(size * 0.05, (size * 0.9) / n));
+  // Keep the full glyph box (and its shadow) inside the coloured disc. A fixed
+  // 14px inset is not enough for labels that sit diagonally on a small wheel.
+  const labelOuterRadius = r - Math.max(size * 0.022, fs * 0.72);
+  const labelInnerRadius = size * 0.115;
+  const maxTextWidth = Math.max(0, labelOuterRadius - labelInnerRadius);
   for (let i = 0; i < n; i++) {
     const start = i * seg + rot;
     const end = start + seg;
@@ -115,7 +120,6 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
     ctx.shadowBlur = size * 0.01;
     ctx.shadowOffsetY = 1;
     ctx.font = `600 ${fs}px 'Anuphan','Sarabun'`;
-    const maxTextWidth = r - 14 - size * 0.11;
     let label = names[i];
     if (ctx.measureText(label).width > maxTextWidth) {
       while (
@@ -126,7 +130,11 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
       }
       label += "…";
     }
-    ctx.fillText(label, r - 14, 0);
+    // Clip as a final safeguard: text and shadow must never spill over the rim.
+    ctx.beginPath();
+    ctx.rect(-r, -r, r + labelOuterRadius, r * 2);
+    ctx.clip();
+    ctx.fillText(label, labelOuterRadius, 0);
     ctx.restore();
   }
 
