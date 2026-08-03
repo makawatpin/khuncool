@@ -130,10 +130,6 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
       }
       label += "…";
     }
-    // Clip as a final safeguard: text and shadow must never spill over the rim.
-    ctx.beginPath();
-    ctx.rect(-r, -r, r + labelOuterRadius, r * 2);
-    ctx.clip();
     ctx.fillText(label, labelOuterRadius, 0);
     ctx.restore();
   }
