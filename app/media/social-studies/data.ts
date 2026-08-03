@@ -12,6 +12,16 @@ export const MEDIA = [{
   time: "10–15 นาที",
   status: "เล่นได้แล้ว",
   href: "/media/social-studies/asean-matching",
+}, {
+  topic: "หน้าที่พลเมือง" as MediaTopic,
+  title: "คดีเด็ด... เมืองสันติสุข",
+  icon: "⚖️",
+  bg: "linear-gradient(135deg,#17131F,#5A3A12)",
+  short: "เกมโชว์กฎหมายในชีวิตประจำวัน หมุนวงล้อ ตอบคดี และแข่งขันเป็นทีม",
+  grade: "ป.4–ม.3",
+  time: "30–40 นาที",
+  status: "เล่นได้แล้ว",
+  href: "/media/social-studies/law-daily",
 }];
 
 export const TOPICS: (MediaTopic | "ทั้งหมด")[] = ["ทั้งหมด", "อาเซียน", "ภูมิศาสตร์", "ประวัติศาสตร์", "หน้าที่พลเมือง"];
