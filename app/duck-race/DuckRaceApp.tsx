@@ -635,7 +635,7 @@ export default function DuckRaceApp() {
 
   const showSpeed = useCallback((visible = true) => {
     if (speedRef.current)
-      speedRef.current.style.opacity = visible && effectsOnRef.current ? ".52" : "0";
+      speedRef.current.style.opacity = visible && effectsOnRef.current ? ".28" : "0";
   }, []);
 
   const drawView = useCallback((elapsed: number) => {
@@ -979,7 +979,7 @@ export default function DuckRaceApp() {
               pointerEvents: "none",
               opacity: effectsOn ? 0 : 0,
               background:
-                "repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 2px,transparent 2px 40px)",
+                "radial-gradient(ellipse at center,transparent 42%,rgba(10,35,58,.5) 100%)",
               transition: "opacity .3s",
               zIndex: 6,
             }}
