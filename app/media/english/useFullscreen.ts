@@ -16,17 +16,41 @@ export function useFullscreen<T extends HTMLElement>() {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || !isFallbackFull) return;
+    const isActive = isFull || isFallbackFull;
+    if (!el || !isActive) return;
 
-    const previousOverflow = document.body.style.overflow;
-    el.classList.add("kc-mobile-fullscreen");
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const previousBody = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      width: document.body.style.width,
+      overscrollBehavior: document.body.style.overscrollBehavior,
+    };
+    const previousHtml = {
+      overflow: document.documentElement.style.overflow,
+      overscrollBehavior: document.documentElement.style.overscrollBehavior,
+    };
+
+    if (isFallbackFull) el.classList.add("kc-mobile-fullscreen");
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = `-${scrollX}px`;
+    document.body.style.width = "100%";
+    document.body.style.overscrollBehavior = "none";
 
     return () => {
       el.classList.remove("kc-mobile-fullscreen");
-      document.body.style.overflow = previousOverflow;
+      Object.assign(document.body.style, previousBody);
+      Object.assign(document.documentElement.style, previousHtml);
+      window.scrollTo(scrollX, scrollY);
     };
-  }, [isFallbackFull]);
+  }, [isFull, isFallbackFull]);
 
   const toggle = useCallback(async () => {
     const el = ref.current;

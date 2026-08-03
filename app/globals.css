@@ -480,10 +480,15 @@
    screen while playing. Skip the zoom below tablet width. */
 @media (max-width: 640px) {
   .kc-game:fullscreen,
-  .kc-game:-webkit-full-screen {
+  .kc-game:-webkit-full-screen,
+  .kc-game.kc-mobile-fullscreen {
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important;
     min-height: 100vh !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+    overscroll-behavior: none;
     transform: none;
   }
 }
