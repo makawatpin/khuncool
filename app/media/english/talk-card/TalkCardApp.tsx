@@ -705,7 +705,7 @@ function shuffleArr<T>(a: T[]): T[] {
 
 export default function TalkCardApp() {
   useTrackToolUse("media-english-talk-card");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [sel, setSel] = useState<string[]>(TOPICS.map((t) => t.key));
@@ -890,7 +890,7 @@ export default function TalkCardApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: "70vh",

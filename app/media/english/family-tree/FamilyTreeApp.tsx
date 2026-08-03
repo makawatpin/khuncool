@@ -576,7 +576,7 @@ function buildStoryBlanks(): StoryItem[] {
 
 export default function FamilyTreeApp() {
   useTrackToolUse("media-english-family-tree");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4 | 5 | 10>(0);
   const [stars, setStars] = useState(0);
@@ -820,7 +820,7 @@ export default function FamilyTreeApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game kc-family-game ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-family-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: 480,

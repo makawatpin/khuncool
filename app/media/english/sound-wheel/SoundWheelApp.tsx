@@ -186,7 +186,7 @@ function makeWheel(setKey: SetKey, size: number): WheelItem[] {
 
 export default function SoundWheelApp() {
   useTrackToolUse("media-english-sound-wheel");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1>(0);
   const [setKey, setSetKey] = useState<SetKey>("letters");
@@ -491,7 +491,7 @@ export default function SoundWheelApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",

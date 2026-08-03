@@ -34,7 +34,6 @@ export function useFullscreen<T extends HTMLElement>() {
       overscrollBehavior: document.documentElement.style.overscrollBehavior,
     };
 
-    if (isFallbackFull) el.classList.add("kc-mobile-fullscreen");
     document.documentElement.style.overflow = "hidden";
     document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
@@ -45,7 +44,6 @@ export function useFullscreen<T extends HTMLElement>() {
     document.body.style.overscrollBehavior = "none";
 
     return () => {
-      el.classList.remove("kc-mobile-fullscreen");
       Object.assign(document.body.style, previousBody);
       Object.assign(document.documentElement.style, previousHtml);
       window.scrollTo(scrollX, scrollY);
@@ -94,5 +92,10 @@ export function useFullscreen<T extends HTMLElement>() {
     setIsFallbackFull(true);
   }, [isFallbackFull]);
 
-  return { ref, isFull: isFull || isFallbackFull, toggle };
+  return {
+    ref,
+    isFull: isFull || isFallbackFull,
+    fullscreenClassName: isFallbackFull ? "kc-mobile-fullscreen" : "",
+    toggle,
+  };
 }

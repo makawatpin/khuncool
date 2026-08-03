@@ -110,7 +110,7 @@ const RULES = [
 
 export default function ClassroomObjectsApp() {
   useTrackToolUse("media-english-classroom-objects");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [pairs, setPairs] = useState<Word[]>([]);
@@ -358,7 +358,7 @@ export default function ClassroomObjectsApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",

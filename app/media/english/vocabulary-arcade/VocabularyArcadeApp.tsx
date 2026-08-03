@@ -463,7 +463,7 @@ function persist(stars: number, best: Record<string, number>) {
 
 export default function VocabularyArcadeApp() {
   useTrackToolUse("media-english-vocabulary-arcade");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [catI, setCatI] = useState(0);
@@ -761,7 +761,7 @@ export default function VocabularyArcadeApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game kc-vocab-game ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-vocab-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",

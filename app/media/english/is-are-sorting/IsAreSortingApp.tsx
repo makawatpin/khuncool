@@ -104,7 +104,7 @@ const CONFETTI_COLORS = ["#5C5EE6", "#14B79A", "#FFD166", "#FF8A5C", "#C6C9FB", 
 
 export default function IsAreSortingApp() {
   useTrackToolUse("media-english-is-are-sorting");
-  const { ref: fullRef, isFull, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [i, setI] = useState(0);
@@ -279,7 +279,7 @@ export default function IsAreSortingApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game ${fullscreenClassName} relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
