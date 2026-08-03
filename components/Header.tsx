@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth/AuthProvider";
 import { ALL_ARTICLES } from "@/app/articles/data";
 import { APPS, TOOLS } from "@/app/tools/data";
 import { MEDIA as MEDIA_ENGLISH } from "@/app/media/english/data";
+import { MEDIA as MEDIA_SOCIAL_STUDIES } from "@/app/media/social-studies/data";
 
 const LATEST_ARTICLES = [...ALL_ARTICLES]
   .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
@@ -110,6 +111,11 @@ const MEDIA_SUBMENU: MediaSubjectGroup[] = [
     subject: "ภาษาอังกฤษ",
     subjectHref: "/media/english",
     games: MEDIA_ENGLISH.map((m) => ({ title: m.title, href: m.href })),
+  },
+  {
+    subject: "สังคมศึกษา",
+    subjectHref: "/media/social-studies",
+    games: MEDIA_SOCIAL_STUDIES.map((m) => ({ title: m.title, href: m.href })),
   },
 ];
 
