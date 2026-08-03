@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
@@ -577,6 +577,7 @@ function buildStoryBlanks(): StoryItem[] {
 export default function FamilyTreeApp() {
   useTrackToolUse("media-english-family-tree");
   const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const transparentDragImageRef = useRef<HTMLImageElement | null>(null);
 
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4 | 5 | 10>(0);
   const [stars, setStars] = useState(0);
@@ -671,6 +672,9 @@ export default function FamilyTreeApp() {
 
   const dragStart = useCallback((e: React.DragEvent, id: WordId) => {
     e.dataTransfer.setData("text/plain", id);
+    if (transparentDragImageRef.current) {
+      e.dataTransfer.setDragImage(transparentDragImageRef.current, 0, 0);
+    }
     setS1((s) => ({ ...s, selected: id }));
   }, []);
 
@@ -830,6 +834,16 @@ export default function FamilyTreeApp() {
         overflow: "hidden",
       }}
     >
+      {/* Safari otherwise draws a large rectangular copy of the chip while dragging. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        ref={transparentDragImageRef}
+        src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+      />
       <GameBackdrop
         sun={{ top: 36, right: 70, size: 120, from: "#FFE59A", via: "#FFD166" }}
         blobs={[
@@ -1361,6 +1375,10 @@ export default function FamilyTreeApp() {
                     fontSize: "clamp(13px,3.4vw,15px)",
                     transition: "transform .18s",
                     fontFamily: "var(--font-fredoka), var(--font-anuphan), sans-serif",
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    WebkitTouchCallout: "none",
+                    touchAction: "none",
                   }}
                 >
                   <FamilyFace {...charOf(id)} size={28} />
