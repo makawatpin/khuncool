@@ -104,33 +104,36 @@ export default function AttendanceApp() {
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(LS_KEY);
-      if (raw) {
-        const d: Persisted = JSON.parse(raw);
-        if (Array.isArray(d.students) && d.students.length) {
-          setStudents(d.students);
-          setStatuses(
-            Array.isArray(d.statuses)
-              ? d.statuses
-              : d.students.map(() => defaultStatus()),
-          );
-          if (d.room) setRoom(d.room);
-          setHydrated(true);
-          return;
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const raw = window.localStorage.getItem(LS_KEY);
+        if (raw) {
+          const d: Persisted = JSON.parse(raw);
+          if (Array.isArray(d.students) && d.students.length) {
+            setStudents(d.students);
+            setStatuses(
+              Array.isArray(d.statuses)
+                ? d.statuses
+                : d.students.map(() => defaultStatus()),
+            );
+            if (d.room) setRoom(d.room);
+            setHydrated(true);
+            return;
+          }
         }
+        const r: unknown = JSON.parse(
+          window.localStorage.getItem(ROSTER_KEY) || "null",
+        );
+        if (Array.isArray(r) && r.length) {
+          setStudents(r as string[]);
+          setStatuses((r as string[]).map(() => defaultStatus()));
+        }
+      } catch {
+        /* ignore */
       }
-      const r: unknown = JSON.parse(
-        window.localStorage.getItem(ROSTER_KEY) || "null",
-      );
-      if (Array.isArray(r) && r.length) {
-        setStudents(r as string[]);
-        setStatuses((r as string[]).map(() => defaultStatus()));
-      }
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, [pulled]);
 
   // Online/offline banner + cleanup.

@@ -416,6 +416,26 @@
   transform-origin: center center;
 }
 
+/* Mobile Safari does not provide element fullscreen for regular HTML.
+   useFullscreen adds this class as a viewport-sized fallback when the native
+   API is missing or rejects the request. */
+.kc-game.kc-mobile-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* On phones the 1.35x projector zoom above only makes the already-tight
    viewport worse, forcing scroll inside a game that should fit on one
    screen while playing. Skip the zoom below tablet width. */

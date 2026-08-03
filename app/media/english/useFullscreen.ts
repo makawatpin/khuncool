@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export function useFullscreen<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
   const [isFull, setIsFull] = useState(false);
+  const [isFallbackFull, setIsFallbackFull] = useState(false);
 
   useEffect(() => {
     const onChange = () => setIsFull(document.fullscreenElement === ref.current);
@@ -13,15 +14,48 @@ export function useFullscreen<T extends HTMLElement>() {
     return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
 
-  const toggle = useCallback(() => {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !isFallbackFull) return;
+
+    const previousOverflow = document.body.style.overflow;
+    el.classList.add("kc-mobile-fullscreen");
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      el.classList.remove("kc-mobile-fullscreen");
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isFallbackFull]);
+
+  const toggle = useCallback(async () => {
     const el = ref.current;
     if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.();
-    } else {
-      el.requestFullscreen?.().catch(() => {});
-    }
-  }, []);
 
-  return { ref, isFull, toggle };
+    if (isFallbackFull) {
+      setIsFallbackFull(false);
+      return;
+    }
+
+    if (document.fullscreenElement) {
+      await document.exitFullscreen?.();
+      return;
+    }
+
+    // iOS Safari and some in-app mobile browsers expose no usable element
+    // fullscreen API. If native fullscreen is unavailable or rejected, use a
+    // fixed, viewport-sized game surface so the control still works.
+    if (typeof el.requestFullscreen === "function") {
+      try {
+        await el.requestFullscreen();
+        return;
+      } catch {
+        // Fall through to the mobile-safe CSS implementation.
+      }
+    }
+
+    setIsFallbackFull(true);
+  }, [isFallbackFull]);
+
+  return { ref, isFull: isFull || isFallbackFull, toggle };
 }

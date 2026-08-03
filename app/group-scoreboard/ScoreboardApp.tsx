@@ -41,21 +41,23 @@ export default function ScoreboardApp() {
 
   // Load persisted state on mount.
   useEffect(() => {
-    try {
-      const d: Persisted | null = JSON.parse(
-        window.localStorage.getItem(LS_KEY) || "null",
-      );
-      if (d && Array.isArray(d.teams)) {
-        nextIdRef.current =
-          d.teams.reduce((m, t) => Math.max(m, t.id || 0), 0) + 1;
-        setTeams(d.teams);
-        if (d.title) setTitle(d.title);
-        if (d.step) setStep(d.step);
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const d: Persisted | null = JSON.parse(
+          window.localStorage.getItem(LS_KEY) || "null",
+        );
+        if (d && Array.isArray(d.teams)) {
+          nextIdRef.current =
+            d.teams.reduce((m, t) => Math.max(m, t.id || 0), 0) + 1;
+          setTeams(d.teams);
+          if (d.title) setTitle(d.title);
+          if (d.step) setStep(d.step);
+        }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
+      setHydrated(true);
+    }, 0);
 
     const syncOnline = () =>
       setOffline(typeof navigator !== "undefined" && navigator.onLine === false);
@@ -63,6 +65,7 @@ export default function ScoreboardApp() {
     window.addEventListener("online", syncOnline);
     window.addEventListener("offline", syncOnline);
     return () => {
+      window.clearTimeout(restoreTimer);
       window.removeEventListener("online", syncOnline);
       window.removeEventListener("offline", syncOnline);
     };

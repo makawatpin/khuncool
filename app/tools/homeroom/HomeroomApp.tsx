@@ -153,7 +153,8 @@ export default function HomeroomApp() {
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS.
   useEffect(() => {
-    try {
+    const restoreTimer = window.setTimeout(() => {
+      try {
       const raw = window.localStorage.getItem(LS);
       if (raw) {
         const d: Partial<Persisted> = JSON.parse(raw);
@@ -189,12 +190,13 @@ export default function HomeroomApp() {
         window.localStorage.getItem(ROSTER_KEY) || "null",
       );
       if (Array.isArray(r) && r.length) setStudents(r as string[]);
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pulled]);
+      } catch {
+        /* ignore */
+      }
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
+  }, [pulled, setSessionsSynced]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {

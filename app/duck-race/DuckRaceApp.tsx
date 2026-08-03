@@ -195,9 +195,12 @@ export default function DuckRaceApp() {
 
   // ---- persistence ----
   useEffect(() => {
-    setNames(loadInitialNames());
-    setTrackLen(loadInitialTrackLen());
-    setHydrated(true);
+    const restoreTimer = window.setTimeout(() => {
+      setNames(loadInitialNames());
+      setTrackLen(loadInitialTrackLen());
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   useEffect(() => {

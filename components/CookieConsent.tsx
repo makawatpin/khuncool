@@ -30,14 +30,19 @@ export default function CookieConsent() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      setChoice(stored === "accepted" || stored === "essential" ? stored : null);
-    } catch {
-      // localStorage unavailable (e.g. blocked) — fall back to showing the banner.
-      setChoice(null);
-    }
-    setChecked(true);
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        setChoice(
+          stored === "accepted" || stored === "essential" ? stored : null,
+        );
+      } catch {
+        // localStorage unavailable (e.g. blocked) — fall back to showing the banner.
+        setChoice(null);
+      }
+      setChecked(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   const recordChoice = (value: ConsentChoice) => {

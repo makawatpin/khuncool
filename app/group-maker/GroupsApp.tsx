@@ -65,8 +65,11 @@ export default function GroupsApp() {
 
   // Load persisted roster on mount.
   useEffect(() => {
-    setNames(loadInitialNames());
-    setHydrated(true);
+    const restoreTimer = window.setTimeout(() => {
+      setNames(loadInitialNames());
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   // Persist to the shared roster key on change (after hydration).

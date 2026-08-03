@@ -88,19 +88,22 @@ export default function NoiseMeterApp() {
 
   // Restore saved limit/win
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      const d = raw ? JSON.parse(raw) : null;
-      if (d) {
-        if (typeof d.limit === "number") setLimit(d.limit);
-        if (typeof d.win === "number") {
-          setWin(d.win);
-          setLeft(d.win);
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        const d = raw ? JSON.parse(raw) : null;
+        if (d) {
+          if (typeof d.limit === "number") setLimit(d.limit);
+          if (typeof d.win === "number") {
+            setWin(d.win);
+            setLeft(d.win);
+          }
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
-    }
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   const persist = useCallback((next: { limit?: number; win?: number }) => {

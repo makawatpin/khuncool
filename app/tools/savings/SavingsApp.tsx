@@ -134,36 +134,38 @@ export default function SavingsApp() {
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(LS_KEY);
-      if (raw) {
-        const d: Persisted = JSON.parse(raw);
-        if (Array.isArray(d.students) && d.students.length) {
-          setStudents(d.students);
-          setBalancesSynced(
-            Array.isArray(d.balances) ? d.balances : d.students.map(() => 0),
-          );
-          setTxns(Array.isArray(d.txns) ? d.txns : []);
-          if (d.room) setRoom(d.room);
-          setLastTs(d.lastTs || 0);
-          setHydrated(true);
-          return;
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const raw = window.localStorage.getItem(LS_KEY);
+        if (raw) {
+          const d: Persisted = JSON.parse(raw);
+          if (Array.isArray(d.students) && d.students.length) {
+            setStudents(d.students);
+            setBalancesSynced(
+              Array.isArray(d.balances) ? d.balances : d.students.map(() => 0),
+            );
+            setTxns(Array.isArray(d.txns) ? d.txns : []);
+            if (d.room) setRoom(d.room);
+            setLastTs(d.lastTs || 0);
+            setHydrated(true);
+            return;
+          }
         }
+        const r: unknown = JSON.parse(
+          window.localStorage.getItem(ROSTER_KEY) || "null",
+        );
+        if (Array.isArray(r) && r.length) {
+          setStudents(r as string[]);
+          setBalancesSynced((r as string[]).map(() => 0));
+          setTxns([]);
+        }
+      } catch {
+        /* ignore */
       }
-      const r: unknown = JSON.parse(
-        window.localStorage.getItem(ROSTER_KEY) || "null",
-      );
-      if (Array.isArray(r) && r.length) {
-        setStudents(r as string[]);
-        setBalancesSynced((r as string[]).map(() => 0));
-        setTxns([]);
-      }
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pulled]);
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
+  }, [pulled, setBalancesSynced]);
 
   // Keep the selected date chip centered — including on first mount, so
   // today's chip starts in the middle of the strip instead of pinned to

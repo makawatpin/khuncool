@@ -244,8 +244,11 @@ export default function WheelApp() {
 
   // Load persisted names on mount.
   useEffect(() => {
-    setNames(loadInitialNames());
-    setHydrated(true);
+    const restoreTimer = window.setTimeout(() => {
+      setNames(loadInitialNames());
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   // Persist on change (after hydration, so we don't overwrite storage on first render).
