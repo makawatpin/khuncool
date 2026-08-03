@@ -69,6 +69,18 @@ export const SUBJECTS: Subject[] = [
     stFg: "#5A6273",
     stBg: "#EEF0F4",
   },
+  {
+    t: "สังคมศึกษา",
+    icon: "🗺️",
+    bg: "#E7F0FF",
+    href: "/media/social-studies",
+    desc: "เรียนรู้อาเซียน 11 ประเทศ ผ่านเกมจับคู่ภาพ ชื่อประเทศ และธงชาติ",
+    meta: "1 สื่อ · ระดับประถมศึกษา",
+    tags: ["อาเซียน", "ภูมิศาสตร์", "วัฒนธรรม"],
+    status: "1 สื่อ",
+    stFg: "#0A9380",
+    stBg: "#D0FBEF",
+  },
 ];
 
 export const POPULAR = [

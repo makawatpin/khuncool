@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/apps`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/media`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/media/english`, lastModified: now, priority: 0.9 },
+    { url: `${BASE_URL}/media/social-studies`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/articles`, lastModified: now, priority: 0.9 },
     { url: `${BASE_URL}/shop`, lastModified: now, priority: 0.8 },
     { url: `${BASE_URL}/about`, lastModified: now, priority: 0.5 },
