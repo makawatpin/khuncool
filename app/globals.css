@@ -405,15 +405,41 @@
   font-family: var(--font-fredoka), var(--font-anuphan), sans-serif;
 }
 
-/* Games cap their inner content at a fixed px max-width (designed for a
-   card in a page column), so on fullscreen — meant for projecting onto a
-   classroom TV — most of the screen sits empty around a small centered
-   card. Scaling the whole fullscreen box up zooms in on that content
-   uniformly without needing to touch every game's own max-width values. */
+/* English games share a 16:9 presentation canvas. In fullscreen the canvas
+   is reduced before being scaled back to the viewport, enlarging the whole
+   interface uniformly while keeping every edge visible. */
 .kc-game:fullscreen,
 .kc-game:-webkit-full-screen {
-  transform: scale(1.35);
-  transform-origin: center center;
+  width: 92.5926vw !important;
+  max-width: none !important;
+  height: 92.5926vh !important;
+  min-height: 92.5926vh !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  overflow: auto !important;
+  transform: scale(1.08);
+  transform-origin: top left;
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 1440px) and (min-height: 760px) {
+  .kc-game:fullscreen,
+  .kc-game:-webkit-full-screen {
+    width: 84.7458vw !important;
+    height: 84.7458vh !important;
+    min-height: 84.7458vh !important;
+    transform: scale(1.18);
+  }
+}
+
+@media (min-width: 1900px) and (min-height: 950px) {
+  .kc-game:fullscreen,
+  .kc-game:-webkit-full-screen {
+    width: 80vw !important;
+    height: 80vh !important;
+    min-height: 80vh !important;
+    transform: scale(1.25);
+  }
 }
 
 /* Mobile Safari does not provide element fullscreen for regular HTML.
@@ -436,14 +462,183 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* On phones the 1.35x projector zoom above only makes the already-tight
+/* On phones the projector zoom above only makes the already-tight
    viewport worse, forcing scroll inside a game that should fit on one
    screen while playing. Skip the zoom below tablet width. */
 @media (max-width: 640px) {
   .kc-game:fullscreen,
   .kc-game:-webkit-full-screen {
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
     transform: none;
   }
+}
+
+/* The remaining English games use a stronger, edge-safe projector scale.
+   The reciprocal canvas size means the enlarged UI still lands exactly on
+   the viewport edges instead of being cropped by fullscreen. */
+@media (min-width: 900px) {
+  .kc-game:not(.kc-vocab-game):fullscreen,
+  .kc-game:not(.kc-vocab-game):-webkit-full-screen {
+    width:81.9672vw !important;
+    height:81.9672vh !important;
+    min-height:81.9672vh !important;
+    transform:scale(1.22);
+  }
+}
+@media (min-width: 1440px) and (min-height: 760px) {
+  .kc-game:not(.kc-vocab-game):fullscreen,
+  .kc-game:not(.kc-vocab-game):-webkit-full-screen {
+    width:72.4638vw !important;
+    height:72.4638vh !important;
+    min-height:72.4638vh !important;
+    transform:scale(1.38);
+  }
+}
+@media (min-width: 1900px) and (min-height: 950px) {
+  .kc-game:not(.kc-vocab-game):fullscreen,
+  .kc-game:not(.kc-vocab-game):-webkit-full-screen {
+    width:66.6667vw !important;
+    height:66.6667vh !important;
+    min-height:66.6667vh !important;
+    transform:scale(1.5);
+  }
+}
+
+/* Vocabulary Arcade uses the extra 16:9 space as a large classroom game
+   board instead of leaving its question card at the page-sized width. */
+.kc-vocab-game:fullscreen .kc-vocab-intro,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  max-width:1250px !important;
+  min-height:calc(84.7458vh - 70px);
+  margin:0 auto !important;
+  padding:2vh 3vw 6vh !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-intro-emojis,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro-emojis { gap:18px !important; margin-bottom:32px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-intro-emojis > div,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro-emojis > div {
+  width:clamp(92px,7vw,120px) !important;
+  height:clamp(92px,7vw,120px) !important;
+  border-radius:30px !important;
+  font-size:clamp(52px,4.5vw,72px) !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-intro h1,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro h1 { font-size:clamp(52px,4.4vw,74px) !important; margin-bottom:22px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-intro p,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro p { font-size:clamp(22px,1.6vw,28px) !important; margin-bottom:38px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-intro > button,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-intro > button { padding:22px 62px !important; font-size:clamp(24px,1.8vw,30px) !important; }
+
+.kc-vocab-game:fullscreen .kc-vocab-categories,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-categories {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  width:100%;
+  max-width:1450px !important;
+  min-height:calc(84.7458vh - 70px);
+  margin:0 auto !important;
+  padding:2vh 3vw 5vh !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-categories h2,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-categories h2 { font-size:clamp(38px,3vw,52px) !important; margin-bottom:8px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-categories > p,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-categories > p { font-size:clamp(18px,1.3vw,23px) !important; margin-bottom:24px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-category-grid,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-category-grid { grid-template-columns:repeat(5,1fr) !important; gap:22px !important; }
+.kc-vocab-game:fullscreen .kc-vocab-category-grid > button,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-category-grid > button {
+  min-height:220px;
+  gap:12px !important;
+  border-radius:30px !important;
+  padding:22px 14px !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-category-grid > button > div:nth-of-type(2),
+.kc-vocab-game:-webkit-full-screen .kc-vocab-category-grid > button > div:nth-of-type(2) { font-size:clamp(54px,4.2vw,72px) !important; }
+.kc-vocab-game:fullscreen .kc-vocab-category-grid > button > div:nth-of-type(3),
+.kc-vocab-game:-webkit-full-screen .kc-vocab-category-grid > button > div:nth-of-type(3) { font-size:clamp(20px,1.5vw,26px) !important; }
+.kc-vocab-game:fullscreen .kc-vocab-category-grid > button > div:nth-of-type(4),
+.kc-vocab-game:-webkit-full-screen .kc-vocab-category-grid > button > div:nth-of-type(4) { font-size:clamp(16px,1.1vw,20px) !important; }
+
+.kc-vocab-game:fullscreen .kc-vocab-play,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-play {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  width:100%;
+  max-width:1400px !important;
+  min-height:calc(84.7458vh - 74px);
+  padding:1vh 2.5vw 3vh !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-card,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-card {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:min(67vh,700px);
+  padding:clamp(28px,4vh,52px) clamp(28px,4vw,60px) !important;
+  border-radius:38px !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-card > div,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-card > div {
+  width:100%;
+}
+.kc-vocab-game:fullscreen .kc-vocab-visual,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-visual {
+  width:clamp(230px,19vw,320px) !important;
+  height:clamp(230px,19vw,320px) !important;
+  border-radius:60px !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-visual > span,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-visual > span {
+  font-size:clamp(130px,12vw,200px) !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-kicker,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-kicker {
+  font-size:clamp(16px,1.2vw,20px) !important;
+  margin-bottom:18px !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-listen,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-listen {
+  padding:13px 26px !important;
+  font-size:clamp(18px,1.3vw,22px) !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-progress,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-progress {
+  font-size:clamp(17px,1.2vw,21px) !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-progress > div:last-child,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-progress > div:last-child {
+  font-size:inherit !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-options,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-options {
+  max-width:1100px !important;
+  gap:18px !important;
+  margin-top:14px !important;
+}
+.kc-vocab-game:fullscreen .kc-vocab-options button,
+.kc-vocab-game:-webkit-full-screen .kc-vocab-options button {
+  min-height:100px;
+  border-radius:24px !important;
+  font-size:clamp(27px,2.2vw,36px) !important;
+}
+
+@media (max-height: 760px) and (min-width: 900px) {
+  .kc-vocab-game:fullscreen .kc-vocab-card,
+  .kc-vocab-game:-webkit-full-screen .kc-vocab-card { min-height:58vh; }
+  .kc-vocab-game:fullscreen .kc-vocab-visual,
+  .kc-vocab-game:-webkit-full-screen .kc-vocab-visual { width:190px !important; height:190px !important; }
+  .kc-vocab-game:fullscreen .kc-vocab-visual > span,
+  .kc-vocab-game:-webkit-full-screen .kc-vocab-visual > span { font-size:120px !important; }
+  .kc-vocab-game:fullscreen .kc-vocab-options button,
+  .kc-vocab-game:-webkit-full-screen .kc-vocab-options button { min-height:76px; }
 }
 
 /* The Claude Design mockups give nearly every clickable button a

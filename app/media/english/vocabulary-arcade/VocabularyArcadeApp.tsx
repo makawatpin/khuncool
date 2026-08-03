@@ -761,7 +761,7 @@ export default function VocabularyArcadeApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game"
+      className="kc-game kc-vocab-game"
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",
@@ -946,8 +946,8 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 0: intro */}
       {stage === 0 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px clamp(20px,6vh,90px)", textAlign: "center" }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
+        <div className="kc-vocab-intro" style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px clamp(20px,6vh,90px)", textAlign: "center" }}>
+          <div className="kc-vocab-intro-emojis" style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
             {introEmojis.map((ch, i) => (
               <div
                 key={ch + i}
@@ -1010,10 +1010,10 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 1: category picker */}
       {stage === 1 && (
-        <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-vocab-categories" style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <h2 style={{ fontWeight: 600, fontSize: "clamp(20px,3.4vw,28px)", margin: "0 0 4px" }}>เลือกหมวดคำศัพท์ที่จะเล่น 📚</h2>
           <p style={{ fontSize: 13, color: "#5A6273", margin: "0 0 12px" }}>หมวดละ 20 คำ · แตะการ์ดเพื่อเริ่ม</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(30%,150px),1fr))", gap: "clamp(8px,2vw,14px)" }}>
+          <div className="kc-vocab-category-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(30%,150px),1fr))", gap: "clamp(8px,2vw,14px)" }}>
             {hydrated &&
               CATS.map((c, i) => {
                 const bestScore = best[c.key] || 0;
@@ -1185,8 +1185,8 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 3: play */}
       {stage === 3 && q && qMode && (
-        <div style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px clamp(20px,6vh,110px)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
+        <div className="kc-vocab-play" style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px clamp(20px,6vh,110px)" }}>
+          <div className="kc-vocab-progress" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
             <div
               style={{
                 flex: 1,
@@ -1227,6 +1227,7 @@ export default function VocabularyArcadeApp() {
           </div>
 
           <div
+            className="kc-vocab-card"
             style={{
               position: "relative",
               background: "#fff",
@@ -1240,12 +1241,13 @@ export default function VocabularyArcadeApp() {
             }}
           >
             <div style={{ position: "relative", textAlign: "center" }}>
-              <div style={{ fontSize: 11, letterSpacing: ".16em", color: "#5C5EE6", fontWeight: 600, marginBottom: 12 }}>
+              <div className="kc-vocab-kicker" style={{ fontSize: 11, letterSpacing: ".16em", color: "#5C5EE6", fontWeight: 600, marginBottom: 12 }}>
                 {(MODES.find((m) => m.key === qMode) || {}).label} · {cat.en}
               </div>
 
               {(qMode === "pic" || qMode === "spell") && (
                 <div
+                  className="kc-vocab-visual"
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -1306,6 +1308,7 @@ export default function VocabularyArcadeApp() {
               {qMode === "pic" && (
                 <div style={{ marginBottom: 16 }}>
                   <button
+                    className="kc-vocab-listen"
                     type="button"
                     onClick={() => speakEnglish(q.w[0])}
                     style={{
@@ -1420,6 +1423,7 @@ export default function VocabularyArcadeApp() {
 
               {(qMode === "pic" || qMode === "word") && (
                 <div
+                  className="kc-vocab-options"
                   style={{
                     display: "grid",
                     gridTemplateColumns:
