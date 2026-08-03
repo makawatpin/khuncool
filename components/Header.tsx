@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -117,7 +116,6 @@ const MEDIA_SUBMENU: MediaSubjectGroup[] = [
 export default function Header() {
   const { openAccountSheet } = useAccountSheet();
   const { user } = useAuth();
-  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedPath, setExpandedPath] = useState<string | null>(null);
 

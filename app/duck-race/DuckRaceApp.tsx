@@ -233,17 +233,20 @@ export default function DuckRaceApp() {
   }, [trackLen, hydrated]);
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(window.localStorage.getItem(GRAPHICS_KEY) || "null");
-      if (saved) {
-        setDuckScale(saved.duckScale ?? 100);
-        setSceneTone(saved.sceneTone ?? 100);
-        setShowLabels(saved.showLabels ?? true);
-        setEffectsOn(saved.effectsOn ?? true);
+    const restoreTimer = window.setTimeout(() => {
+      try {
+        const saved = JSON.parse(window.localStorage.getItem(GRAPHICS_KEY) || "null");
+        if (saved) {
+          setDuckScale(saved.duckScale ?? 100);
+          setSceneTone(saved.sceneTone ?? 100);
+          setShowLabels(saved.showLabels ?? true);
+          setEffectsOn(saved.effectsOn ?? true);
+        }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      /* ignore */
-    }
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, []);
 
   useEffect(() => {
