@@ -904,6 +904,40 @@
 }
 .kc-game::backdrop { background:#111425; }
 
+/* iPhone/iPad Safari does not support the Fullscreen API for ordinary HTML
+   elements. The shared fullscreen hook therefore applies this class instead.
+   Keep this rule outside the disabled legacy-fullscreen block above so the
+   fallback really occupies the visual viewport on iOS. */
+.kc-game.kc-mobile-fullscreen {
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147483647 !important;
+  width:100vw !important;
+  max-width:none !important;
+  height:100vh !important;
+  height:100dvh !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  border-radius:0 !important;
+  overflow:auto !important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+@media (max-width:767px) {
+  .kc-game.kc-mobile-fullscreen {
+    width:100vw !important;
+    height:100vh !important;
+    height:100dvh !important;
+    min-height:100vh !important;
+    min-height:100dvh !important;
+    overflow:hidden !important;
+    overscroll-behavior:none;
+    transform:none !important;
+  }
+}
+
 /* The document enters native fullscreen while the game itself remains a
    normal element. That lets us centre and scale the original canvas without
    the browser's fullscreen UA rules stretching or reflowing it. */
