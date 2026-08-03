@@ -92,7 +92,7 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
   const fs = Math.max(size * 0.026, Math.min(size * 0.05, (size * 0.9) / n));
   // Keep the full glyph box (and its shadow) inside the coloured disc. A fixed
   // 14px inset is not enough for labels that sit diagonally on a small wheel.
-  const labelOuterRadius = r - Math.max(size * 0.022, fs * 0.72);
+  const labelOuterRadius = r - Math.max(size * 0.03, fs * 0.9);
   const labelInnerRadius = size * 0.115;
   const maxTextWidth = Math.max(0, labelOuterRadius - labelInnerRadius);
   for (let i = 0; i < n; i++) {
@@ -113,7 +113,9 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(start + seg / 2);
-    ctx.textAlign = "right";
+    // Use an explicit start position instead of textAlign="right". Safari on
+    // iOS can place Thai canvas text on the wrong side of a rotated anchor.
+    ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#fff";
     ctx.shadowColor = "rgba(0,0,0,.28)";
@@ -130,7 +132,8 @@ function drawWheel(canvas: HTMLCanvasElement, names: string[], rot: number) {
       }
       label += "…";
     }
-    ctx.fillText(label, labelOuterRadius, 0);
+    const labelWidth = ctx.measureText(label).width;
+    ctx.fillText(label, labelOuterRadius - labelWidth, 0);
     ctx.restore();
   }
 
@@ -271,6 +274,18 @@ export default function WheelApp() {
 
   useEffect(() => {
     if (!spinning) drawAll();
+  }, [drawAll, spinning]);
+
+  // Canvas does not update itself when web fonts finish loading. Redraw once
+  // the Thai font is ready so its measured width matches the rendered text.
+  useEffect(() => {
+    let cancelled = false;
+    void document.fonts.ready.then(() => {
+      if (!cancelled && !spinning) drawAll();
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [drawAll, spinning]);
 
   // Keep canvas backing-store resolution in sync with the md breakpoint (620 mobile / 840 desktop).
