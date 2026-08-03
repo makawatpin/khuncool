@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
@@ -53,6 +53,10 @@ export default function AseanMatchingApp() {
   const question = questions[round];
   const choices = useMemo(() => question ? choicesFor(question, GAME_DATA[category]) : [], [question, category]);
 
+  useEffect(() => {
+    ref.current?.scrollTo({ top: 0, left: 0 });
+  }, [stage, ref]);
+
   const start = useCallback(() => {
     KcSfx.unlock(); KcSfx.play("whoosh");
     setQuestions(shuffle(GAME_DATA[category])); setRound(0); setScore(0); setStreak(0);
@@ -83,7 +87,7 @@ export default function AseanMatchingApp() {
   const toggleBgm = () => { const next = !bgmLive; setBgmLive(next); KcSfx.bgm(next); KcSfx.play("click"); };
   const percent = questions.length ? ((round + 1) / questions.length) * 100 : 0;
 
-  return <div ref={ref} className={`${styles.shell} ${fullscreenClassName}`} onMouseOver={hoverSfxDelegate} style={{ "--cat": categoryMeta.color, "--catSoft": `${categoryMeta.color}30` } as React.CSSProperties}>
+  return <div ref={ref} data-category={category} data-stage={stage} className={`${styles.shell} ${fullscreenClassName}`} onMouseOver={hoverSfxDelegate} style={{ "--cat": categoryMeta.color, "--catSoft": `${categoryMeta.color}30` } as React.CSSProperties}>
     <div className={styles.mesh}/><div className={`${styles.orb} ${styles.orb1}`}/><div className={`${styles.orb} ${styles.orb2}`}/><div className={`${styles.orb} ${styles.orb3}`}/>
     <header className={styles.topbar}><div className={styles.brand}><Image src="/assets/khuncool-logo.png" alt="khuncool" width={38} height={38}/><span>เกมจับคู่ภาพอาเซียน</span></div>
       <div className={styles.controls}>
@@ -102,7 +106,7 @@ export default function AseanMatchingApp() {
       </section>}
 
       {stage === "play" && question && <section className={styles.game}><div className={styles.hud}><div className={styles.hudLeft}><span className={styles.round}>ข้อ {round + 1}/{questions.length}</span>{streak >= 2 && <span className={styles.pill}>🔥 x{streak}</span>}</div><div className={styles.progress}><div className={styles.progressFill} style={{ width: `${percent}%` }}/></div><div className={styles.score}>คะแนน <strong>{score}</strong></div></div>
-        <div className={styles.board}><div className={styles.questionCard}><span className={styles.prompt}>สิ่งนี้อยู่คู่กับประเทศใด?</span><div className={styles.bigVisual}>{question.visual}</div><div className={styles.answerName}>{question.answer}</div><p className={styles.hint}>💡 {question.hint}</p></div>
+        <div className={styles.board}><div className={styles.questionCard}><span className={styles.prompt}>สิ่งนี้อยู่คู่กับประเทศใด?</span>{question.image ? <div className={category === "costume" ? styles.costumeFrame : category === "food" ? styles.foodFrame : styles.currencyFrame}><Image src={question.image} alt={category === "costume" ? `เครื่องแต่งกาย ${question.answer}` : category === "food" ? `อาหารประจำชาติ ${question.answer}` : `ธนบัตร ${question.answer}`} fill sizes={category === "costume" ? "(max-width: 767px) 42vw, 280px" : "(max-width: 767px) 72vw, 300px"} priority={round === 0}/></div> : <div className={styles.bigVisual}>{question.visual}</div>}<div className={styles.answerName}>{question.answer}</div><p className={styles.hint}>💡 {question.hint}</p></div>
           <div className={styles.answers}>{choices.map((choice) => { const isSelected = selected === choice.country; const correct = locked && choice.country === question.country; const wrong = locked && isSelected && !correct; return <button type="button" disabled={locked} key={choice.country} onClick={() => choose(choice)} className={`${styles.answer} ${correct ? styles.correct : ""} ${wrong ? styles.wrong : ""} ${locked && !correct && !wrong ? styles.dim : ""}`}><span className={styles.answerFlag}><AseanFlag code={choice.code}/></span><span className={styles.answerText}>{choice.country}</span></button>; })}</div></div>
       </section>}
 
