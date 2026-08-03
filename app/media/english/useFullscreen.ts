@@ -70,9 +70,10 @@ export function useFullscreen<T extends HTMLElement>() {
     // its internal React stage. Keep phones and touch-first devices inside the
     // stable CSS fullscreen surface instead, so moving between game screens
     // never exits fullscreen.
-    const useStableMobileFullscreen = window.matchMedia(
-      "(max-width: 767px), (hover: none) and (pointer: coarse)",
-    ).matches;
+    const useStableMobileFullscreen =
+      navigator.maxTouchPoints > 0 ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      window.matchMedia("(max-width: 767px)").matches;
     if (useStableMobileFullscreen) {
       setIsFallbackFull(true);
       return;
