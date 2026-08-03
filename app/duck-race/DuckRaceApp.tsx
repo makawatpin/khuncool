@@ -5,6 +5,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
+const GRAPHICS_KEY = "khuncool.duckrace.graphics";
 const ROSTER_KEY = "khuncool.roster";
 
 const SAMPLE_NAMES = [
@@ -125,6 +126,12 @@ export default function DuckRaceApp() {
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
   const [importMsg, setImportMsg] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
+  const [duckScale, setDuckScale] = useState(100);
+  const [sceneTone, setSceneTone] = useState(100);
+  const [showLabels, setShowLabels] = useState(true);
+  const [effectsOn, setEffectsOn] = useState(true);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const vpRef = useRef<HTMLDivElement | null>(null);
@@ -148,6 +155,7 @@ export default function DuckRaceApp() {
   const trackLenRef = useRef(trackLen);
   const racingRef = useRef(racing);
   const soundOnRef = useRef(soundOn);
+  const effectsOnRef = useRef(effectsOn);
   useEffect(() => {
     namesRef.current = names;
   }, [names]);
@@ -160,6 +168,9 @@ export default function DuckRaceApp() {
   useEffect(() => {
     soundOnRef.current = soundOn;
   }, [soundOn]);
+  useEffect(() => {
+    effectsOnRef.current = effectsOn;
+  }, [effectsOn]);
 
   const acRef = useRef<AudioContext | null>(null);
   const ambRef = useRef<{
@@ -220,6 +231,37 @@ export default function DuckRaceApp() {
       /* ignore */
     }
   }, [trackLen, hydrated]);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(GRAPHICS_KEY) || "null");
+      if (saved) {
+        setDuckScale(saved.duckScale ?? 100);
+        setSceneTone(saved.sceneTone ?? 100);
+        setShowLabels(saved.showLabels ?? true);
+        setEffectsOn(saved.effectsOn ?? true);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        GRAPHICS_KEY,
+        JSON.stringify({ duckScale, sceneTone, showLabels, effectsOn }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [duckScale, sceneTone, showLabels, effectsOn]);
+
+  useEffect(() => {
+    const sync = () => setIsFullscreen(document.fullscreenElement === frameRef.current);
+    document.addEventListener("fullscreenchange", sync);
+    return () => document.removeEventListener("fullscreenchange", sync);
+  }, []);
 
   // ---- audio ----
   const ac = useCallback((): AudioContext | null => {
@@ -481,7 +523,7 @@ export default function DuckRaceApp() {
     const finishX = worldLen - Math.round(W * 0.16);
     world.style.width = worldLen + "px";
     world.style.transform = "translateX(0px)";
-    const duckSize = Math.round(H * 0.32);
+    const duckSize = Math.round(H * 0.32 * (duckScale / 100));
     const roadTop = H * 0.6;
     const roadBottom = H * 0.94;
     const bandH = roadBottom - roadTop;
@@ -521,7 +563,7 @@ export default function DuckRaceApp() {
       runner.className = "rnode";
       runner.style.cssText = `position:absolute;z-index:${4 + i};width:${duckSize}px;height:${duckSize}px;transform:translate(${startX - duckSize / 2}px,${baseTop}px);will-change:transform`;
       runner.innerHTML =
-        `<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:rgba(26,29,38,.8);color:#fff;font-size:11px;font-weight:600;font-family:'Anuphan','Sarabun';padding:2px 8px;border-radius:8px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;z-index:5">${escHtml(d.name)}</div>` +
+        `<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:rgba(26,29,38,.8);color:#fff;font-size:11px;font-weight:600;font-family:'Anuphan','Sarabun';padding:2px 8px;border-radius:8px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;z-index:5;display:${showLabels ? "block" : "none"}">${escHtml(d.name)}</div>` +
         `<div class="rbadge" style="position:absolute;top:-12px;left:-4px;width:24px;height:24px;border-radius:50%;background:#F2B01E;color:#1A1D26;font-weight:700;font-size:13px;font-family:'Anuphan';display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);z-index:6"></div>` +
         `<img alt="" src="${duckSrc(i)}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.3));animation:dbob .5s ease-in-out ${(i * 0.09).toFixed(2)}s infinite alternate">`;
       world.appendChild(runner);
@@ -532,7 +574,7 @@ export default function DuckRaceApp() {
         baseTop,
       });
     });
-  }, [worldMul]);
+  }, [worldMul, duckScale, showLabels]);
 
   const makeDucks = useCallback(() => {
     ducksRef.current = namesRef.current.map((name, i) => ({
@@ -561,7 +603,7 @@ export default function DuckRaceApp() {
     if (racingRef.current || countdown !== null) return;
     rebuild();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [names, trackLen, hydrated]);
+  }, [names, trackLen, hydrated, duckScale, showLabels]);
 
   // rebuild on viewport resize (mobile <-> desktop layout changes)
   useEffect(() => {
@@ -591,8 +633,9 @@ export default function DuckRaceApp() {
     if (countRef.current) countRef.current.style.display = "none";
   }, []);
 
-  const showSpeed = useCallback(() => {
-    if (speedRef.current) speedRef.current.style.opacity = "0";
+  const showSpeed = useCallback((visible = true) => {
+    if (speedRef.current)
+      speedRef.current.style.opacity = visible && effectsOnRef.current ? ".52" : "0";
   }, []);
 
   const drawView = useCallback((elapsed: number) => {
@@ -663,7 +706,7 @@ export default function DuckRaceApp() {
         finishOrderRef.current.push(d);
         if (finishOrderRef.current.length === 1) {
           chimeRef.current();
-          burstRef.current();
+          if (effectsOnRef.current) burstRef.current();
         } else {
           beepRef.current(520, 0.12, "sine", 0.05);
         }
@@ -686,7 +729,7 @@ export default function DuckRaceApp() {
   }
 
   const finish = useCallback(() => {
-    showSpeed();
+    showSpeed(false);
     stopAmbience();
     cheer();
     const podiumList: Podium[] = finishOrderRef.current.slice(0, 3).map((d, i) => ({
@@ -878,21 +921,42 @@ export default function DuckRaceApp() {
     }
   }, []);
 
+  const resetGraphics = useCallback(() => {
+    setDuckScale(100);
+    setSceneTone(100);
+    setShowLabels(true);
+    setEffectsOn(true);
+  }, []);
+
   const busy = racing || countdown !== null;
   const disabled = busy || names.length < 2;
   const startLabel =
     countdown !== null ? countdown : racing ? "กำลังแข่ง…" : "🦆 ปล่อยเป็ดสเก็ต!";
 
   return (
-    <div ref={frameRef}>
+    <div ref={frameRef} className="duck-race-shell">
+      <div className="duck-race-toolbar">
+        <div>
+          <span className="duck-race-eyebrow">DUCK RACE STUDIO</span>
+          <strong>สนามแข่ง 16:9</strong>
+        </div>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setShowSettings((v) => !v)} className="duck-race-toolbtn" aria-expanded={showSettings}>
+            ⚙️ <span>{showSettings ? "ซ่อนตั้งค่า" : "ตั้งค่าภาพ"}</span>
+          </button>
+          <button type="button" onClick={toggleSound} className="duck-race-iconbtn" aria-label="เปิด/ปิดเสียง">{soundOn ? "🔊" : "🔇"}</button>
+          <button type="button" onClick={toggleFull} className="duck-race-toolbtn" aria-label="เต็มจอ">⛶ <span>{isFullscreen ? "ออกจากเต็มจอ" : "เต็มจอ"}</span></button>
+        </div>
+      </div>
       {/* Race track */}
       <div
-        className="relative mb-4 overflow-hidden rounded-2xl shadow-[0_12px_26px_-12px_rgba(11,74,120,.4)] md:mb-5 md:rounded-[18px] md:shadow-[0_16px_34px_-14px_rgba(11,74,120,.45)]"
+        className="duck-race-stage"
       >
         <div
           ref={vpRef}
           onClick={startRace}
-          className="relative h-[300px] w-full cursor-pointer overflow-hidden bg-[#8fd0e8] md:h-[400px]"
+          className="relative aspect-video w-full cursor-pointer overflow-hidden bg-[#8fd0e8]"
+          style={{ filter: `saturate(${sceneTone}%) contrast(${90 + sceneTone / 10}%)` }}
         >
           <div
             ref={worldRef}
@@ -913,7 +977,7 @@ export default function DuckRaceApp() {
               position: "absolute",
               inset: 0,
               pointerEvents: "none",
-              opacity: 0,
+              opacity: effectsOn ? 0 : 0,
               background:
                 "repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 2px,transparent 2px 40px)",
               transition: "opacity .3s",
@@ -942,8 +1006,8 @@ export default function DuckRaceApp() {
         </div>
       </div>
 
-      <div className="md:grid md:grid-cols-[1fr_400px] md:items-start md:gap-7">
-        <div>
+      <div className="duck-race-controls">
+        <div className="duck-race-primary">
           <button
             type="button"
             onClick={startRace}
@@ -961,8 +1025,20 @@ export default function DuckRaceApp() {
           </p>
         </div>
 
-        <div>
+        <div className={showSettings ? "block" : "hidden"}>
           <div className="rounded-2xl border border-border bg-surface-light p-[15px] md:rounded-[18px] md:p-5">
+            <div className="mb-4 rounded-xl border border-[#dce2ff] bg-white p-3">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-bold">ปรับแต่งกราฟิก</span>
+                <button type="button" onClick={resetGraphics} className="text-xs text-primary">คืนค่าเดิม</button>
+              </div>
+              <label className="duck-race-slider"><span>ขนาดเป็ด</span><input type="range" min="75" max="135" value={duckScale} onChange={(e) => setDuckScale(Number(e.target.value))} /><b>{duckScale}%</b></label>
+              <label className="duck-race-slider"><span>สีสันฉาก</span><input type="range" min="70" max="140" value={sceneTone} onChange={(e) => setSceneTone(Number(e.target.value))} /><b>{sceneTone}%</b></label>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <label className="duck-race-toggle"><input type="checkbox" checked={showLabels} onChange={(e) => setShowLabels(e.target.checked)} /> ป้ายชื่อ</label>
+                <label className="duck-race-toggle"><input type="checkbox" checked={effectsOn} onChange={(e) => setEffectsOn(e.target.checked)} /> เอฟเฟกต์</label>
+              </div>
+            </div>
             <div className="mb-3 flex items-center gap-[11px] border-b border-border pb-3 md:mb-[15px] md:gap-3 md:pb-[15px]">
               <span className="whitespace-nowrap text-[13px] font-semibold md:text-[13.5px]">
                 ความยาวสนาม
@@ -1099,28 +1175,6 @@ export default function DuckRaceApp() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Sound / fullscreen controls */}
-      <div className="mt-3 flex justify-end gap-2 md:mt-4">
-        <button
-          type="button"
-          onClick={toggleSound}
-          title="เสียง"
-          aria-label="เปิด/ปิดเสียง"
-          className="flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-[10px] border border-border bg-surface-card text-[15px] hover:bg-surface-light"
-        >
-          {soundOn ? "🔊" : "🔇"}
-        </button>
-        <button
-          type="button"
-          onClick={toggleFull}
-          title="เต็มจอ"
-          aria-label="เต็มจอ"
-          className="flex h-9 w-9 flex-none cursor-pointer items-center justify-center rounded-[10px] border border-border bg-surface-card text-[15px] hover:bg-surface-light"
-        >
-          ⛶
-        </button>
       </div>
 
       {/* Winner modal */}
