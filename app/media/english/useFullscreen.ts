@@ -66,9 +66,21 @@ export function useFullscreen<T extends HTMLElement>() {
       return;
     }
 
-    // iOS Safari and some in-app mobile browsers expose no usable element
-    // fullscreen API. If native fullscreen is unavailable or rejected, use a
-    // fixed, viewport-sized game surface so the control still works.
+    // Mobile browsers can drop native element fullscreen when a game changes
+    // its internal React stage. Keep phones and touch-first devices inside the
+    // stable CSS fullscreen surface instead, so moving between game screens
+    // never exits fullscreen.
+    const useStableMobileFullscreen = window.matchMedia(
+      "(max-width: 767px), (hover: none) and (pointer: coarse)",
+    ).matches;
+    if (useStableMobileFullscreen) {
+      setIsFallbackFull(true);
+      return;
+    }
+
+    // iOS Safari and some in-app browsers expose no usable element fullscreen
+    // API. If native fullscreen is unavailable or rejected, use the same
+    // fixed, viewport-sized surface as a fallback.
     if (typeof el.requestFullscreen === "function") {
       try {
         await el.requestFullscreen();
