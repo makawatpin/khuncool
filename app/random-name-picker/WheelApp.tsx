@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 
 const NAMES_KEY = "khuncool.wheel.names";
 const ROSTER_KEY = "khuncool.roster";
@@ -600,6 +601,7 @@ export default function WheelApp() {
   const disabled = spinning || names.length < 2;
 
   return (
+    <ToolFullscreenFrame title="วงล้อสุ่มชื่อ">
     <div className="md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9">
       {/* Wheel column */}
       <div className="flex flex-col items-center">
@@ -807,5 +809,6 @@ export default function WheelApp() {
         </div>
       )}
     </div>
+    </ToolFullscreenFrame>
   );
 }

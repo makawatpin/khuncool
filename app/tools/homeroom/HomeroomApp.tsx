@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
+import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import {
   type HomeroomSession,
   type HomeroomTopic,
@@ -984,6 +985,7 @@ export default function HomeroomApp() {
   );
 
   return (
+    <ToolFullscreenFrame title="บันทึกโฮมรูม">
     <div className="bg-white">
       <SyncStatus status={cloudStatus} />
       {offline && (
@@ -1582,5 +1584,6 @@ export default function HomeroomApp() {
       </div>
 
     </div>
+    </ToolFullscreenFrame>
   );
 }

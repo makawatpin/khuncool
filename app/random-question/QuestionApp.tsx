@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 
 const SAMPLE_QUESTIONS = [
   "อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค",
@@ -267,6 +268,7 @@ export default function QuestionApp() {
   );
 
   return (
+    <ToolFullscreenFrame title="สุ่มคำถาม">
     <div className="md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9">
       {/* Display + pick */}
       <div>
@@ -312,5 +314,6 @@ export default function QuestionApp() {
         </div>
       </div>
     </div>
+    </ToolFullscreenFrame>
   );
 }

@@ -171,7 +171,7 @@ export default function ScoreboardApp() {
   const showEmpty = teams.length === 0;
 
   return (
-    <div ref={frameRef} className="bg-white">
+    <div ref={frameRef} className="tool-stage bg-white">
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์
@@ -450,7 +450,7 @@ export default function ScoreboardApp() {
         </div>
       )}
 
-      <div className="mt-4 flex justify-end">
+      <div className="tool-stage-actions flex justify-end">
         <button
           type="button"
           onClick={toggleFull}

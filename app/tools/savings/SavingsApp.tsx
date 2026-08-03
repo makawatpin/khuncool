@@ -609,7 +609,7 @@ export default function SavingsApp() {
   );
 
   return (
-    <div ref={frameRef} className="bg-white">
+    <div ref={frameRef} className="tool-stage bg-white">
       <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
@@ -1331,7 +1331,7 @@ export default function SavingsApp() {
       </div>
 
       {/* Mobile: history, help + fullscreen row */}
-      <div className="mt-3.5 flex justify-end gap-2 md:hidden">
+      <div className="tool-stage-actions flex justify-end gap-2 md:hidden">
         <button
           type="button"
           onClick={() => setShowHistory(true)}
@@ -1359,7 +1359,7 @@ export default function SavingsApp() {
       </div>
 
       {/* Desktop: history + help + fullscreen row */}
-      <div className="mt-3.5 hidden justify-end gap-2 md:flex">
+      <div className="tool-stage-actions hidden justify-end gap-2 md:flex">
         <button
           type="button"
           onClick={() => setShowHistory(true)}

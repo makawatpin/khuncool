@@ -830,3 +830,95 @@
   .duck-race-shell:fullscreen .duck-race-controls > div:nth-child(2) { top:60px; right:10px; width:calc(100vw - 20px); max-height:calc(100vh - 145px); }
   .duck-race-shell:fullscreen .duck-race-primary { bottom:12px; }
 }
+
+/* Shared 16:9 presentation surface for classroom tools. */
+.tool-stage {
+  position:relative;
+  width:100%;
+  min-height:min(56.25vw,760px);
+  border-radius:20px;
+}
+.tool-stage:not(:has(.tool-stage-bar)) { padding-top:52px; }
+.tool-stage-actions {
+  position:absolute;
+  z-index:55;
+  top:0;
+  right:0;
+  margin:0;
+}
+.tool-stage-actions button {
+  box-shadow:0 8px 22px -12px rgba(26,29,38,.45);
+}
+.tool-stage:fullscreen .tool-stage-actions,
+.tool-stage.tool-mobile-fullscreen .tool-stage-actions {
+  position:fixed;
+  top:clamp(12px,2vw,24px);
+  right:clamp(12px,2vw,24px);
+  padding:7px;
+  border:1px solid rgba(211,216,225,.75);
+  border-radius:14px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(12px);
+}
+.tool-stage-bar {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  margin-bottom:12px;
+}
+.tool-stage-bar > span { margin-right:auto; color:#7c8494; font-size:11px; font-weight:700; letter-spacing:.04em; }
+.tool-stage-bar button {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:38px;
+  border:1px solid #dce2ef;
+  border-radius:11px;
+  background:#fff;
+  padding:0 12px;
+  color:#3d4555;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.tool-stage:fullscreen,
+.tool-stage.tool-mobile-fullscreen {
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147483646 !important;
+  width:100vw !important;
+  max-width:none !important;
+  height:100vh !important;
+  height:100dvh !important;
+  min-height:100vh !important;
+  margin:0 !important;
+  border-radius:0 !important;
+  overflow:auto !important;
+  background:#f8f9fc !important;
+  padding:clamp(14px,2vw,28px) !important;
+  overscroll-behavior:contain;
+}
+.tool-stage:fullscreen .tool-stage-bar,
+.tool-stage.tool-mobile-fullscreen .tool-stage-bar {
+  position:sticky;
+  z-index:60;
+  top:0;
+  margin:-8px -8px 14px;
+  padding:8px;
+  border-radius:14px;
+  background:rgba(248,249,252,.9);
+  backdrop-filter:blur(12px);
+}
+.tool-stage:fullscreen .tool-stage-content,
+.tool-stage.tool-mobile-fullscreen .tool-stage-content {
+  width:min(100%,1600px);
+  min-height:calc(100vh - 88px);
+  margin-inline:auto;
+}
+@media (max-width:640px) {
+  .tool-stage { min-height:auto; border-radius:16px; }
+  .tool-stage-bar button span { display:none; }
+  .tool-stage-bar button { width:40px; padding:0; }
+}

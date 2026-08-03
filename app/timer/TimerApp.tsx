@@ -311,7 +311,7 @@ export default function TimerApp() {
   return (
     <div
       ref={frameRef}
-      className="bg-white"
+      className="tool-stage bg-white"
       style={flashing ? { animation: "flash .5s ease 4" } : undefined}
     >
       <div className="md:grid md:grid-cols-[1fr_360px] md:items-center md:gap-10">
@@ -447,7 +447,7 @@ export default function TimerApp() {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-end md:mt-5">
+      <div className="tool-stage-actions flex justify-end gap-2">
         <button
           type="button"
           onClick={toggleSound}
@@ -460,7 +460,7 @@ export default function TimerApp() {
           type="button"
           onClick={toggleFull}
           title="เต็มจอ"
-          className="ml-2 flex items-center gap-1.5 rounded-[10px] border border-border bg-white px-3 py-2 font-sans text-xs font-medium text-ink hover:bg-surface-light md:px-[13px] md:text-[13px]"
+          className="flex items-center gap-1.5 rounded-[10px] border border-border bg-white px-3 py-2 font-sans text-xs font-medium text-ink hover:bg-surface-light md:px-[13px] md:text-[13px]"
         >
           ⛶ <span className="hidden md:inline">เต็มจอ</span>
         </button>

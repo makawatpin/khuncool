@@ -334,7 +334,7 @@ export default function NoiseMeterApp() {
     }`;
 
   return (
-    <div ref={frameRef} className="bg-white">
+    <div ref={frameRef} className="tool-stage bg-white">
       {phase === "idle" && (
         <div className="rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]">
           <div className="mx-auto mb-[13px] flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1E3FD] text-[28px] md:mb-4 md:h-[70px] md:w-[70px] md:rounded-[20px] md:text-[34px]">
@@ -651,7 +651,7 @@ export default function NoiseMeterApp() {
         </>
       )}
 
-      <div className="mt-4 flex justify-end md:mt-5">
+      <div className="tool-stage-actions flex justify-end">
         <button
           type="button"
           onClick={toggleFull}

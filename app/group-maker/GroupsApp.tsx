@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 
 const ROSTER_KEY = "khuncool.roster";
 
@@ -208,6 +209,7 @@ export default function GroupsApp() {
   const divideDisabled = n < 2;
 
   return (
+    <ToolFullscreenFrame title="สุ่มแบ่งกลุ่ม">
     <div className="md:grid md:grid-cols-[360px_1fr] md:items-start md:gap-9">
       {/* Left controls */}
       <div>
@@ -454,5 +456,6 @@ export default function GroupsApp() {
         )}
       </div>
     </div>
+    </ToolFullscreenFrame>
   );
 }
