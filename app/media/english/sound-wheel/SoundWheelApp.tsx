@@ -491,7 +491,7 @@ export default function SoundWheelApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-sound-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",
@@ -814,6 +814,7 @@ export default function SoundWheelApp() {
 
       {stage === 0 && (
         <div
+          className="kc-sound-intro"
           style={{
             position: "relative",
             zIndex: 5,
@@ -1039,6 +1040,7 @@ export default function SoundWheelApp() {
 
       {stage === 1 && (
         <div
+          className="kc-sound-play"
           style={{
             position: "relative",
             zIndex: 5,

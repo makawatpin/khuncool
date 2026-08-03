@@ -761,7 +761,7 @@ export default function VocabularyArcadeApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game kc-vocab-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-vocab-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",
@@ -1085,7 +1085,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 2: mode + difficulty picker */}
       {stage === 2 && (
-        <div style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-vocab-modes" style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1538,7 +1538,7 @@ export default function VocabularyArcadeApp() {
             op: (pct >= 0.4 && i === 0) || (pct >= 0.7 && i === 1) || (pct >= 0.95 && i === 2) ? 1 : 0.22,
           }));
           return (
-            <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,110px)", textAlign: "center" }}>
+            <div className="kc-vocab-result" style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,110px)", textAlign: "center" }}>
               <div style={{ fontSize: 74 }}>{resultEmoji}</div>
               <h2 style={{ fontWeight: 700, fontSize: "clamp(26px,4.6vw,36px)", margin: "6px 0 6px" }}>{resultTitle}</h2>
               <p style={{ fontSize: 16, color: "#5A6273", margin: "0 0 18px" }}>
@@ -1553,6 +1553,7 @@ export default function VocabularyArcadeApp() {
               </div>
 
               <div
+                className="kc-vocab-result-list"
                 style={{
                   background: "#fff",
                   border: "1px solid #E5E8EE",

@@ -890,7 +890,7 @@ export default function TalkCardApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-talk-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: "70vh",
@@ -1079,6 +1079,7 @@ export default function TalkCardApp() {
       {/* SETUP */}
       {stage === 0 && (
         <div
+          className="kc-talk-setup"
           style={{
             position: "relative",
             zIndex: 2,
@@ -1339,6 +1340,7 @@ export default function TalkCardApp() {
       {/* PLAY */}
       {stage === 1 && (
         <div
+          className="kc-talk-play"
           style={{
             position: "relative",
             zIndex: 2,
@@ -1681,6 +1683,7 @@ export default function TalkCardApp() {
       {/* DONE */}
       {stage === 2 && (
         <div
+          className="kc-talk-result"
           style={{
             position: "relative",
             zIndex: 2,

@@ -358,7 +358,7 @@ export default function ClassroomObjectsApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-classroom-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",
@@ -644,6 +644,7 @@ export default function ClassroomObjectsApp() {
 
       {stage === 1 && (
         <div
+          className="kc-classroom-stage kc-classroom-play"
           style={{
             position: "relative",
             zIndex: 5,
@@ -758,6 +759,7 @@ export default function ClassroomObjectsApp() {
               }}
             />
             <div
+              className="kc-classroom-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: `repeat(${cols},minmax(0,1fr))`,
@@ -954,6 +956,7 @@ export default function ClassroomObjectsApp() {
 
       {stage === 2 && (
         <div
+          className="kc-classroom-stage kc-classroom-result"
           style={{
             position: "relative",
             zIndex: 5,

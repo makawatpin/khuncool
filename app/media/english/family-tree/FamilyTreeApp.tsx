@@ -577,7 +577,20 @@ function buildStoryBlanks(): StoryItem[] {
 export default function FamilyTreeApp() {
   useTrackToolUse("media-english-family-tree");
   const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
-  const transparentDragImageRef = useRef<HTMLImageElement | null>(null);
+  const pointerDragRef = useRef<{
+    id: WordId;
+    pointerId: number;
+    startX: number;
+    startY: number;
+    dragging: boolean;
+  } | null>(null);
+  const suppressBankClickRef = useRef(false);
+  const mouseDragRef = useRef<{
+    id: WordId;
+    startX: number;
+    startY: number;
+    dragging: boolean;
+  } | null>(null);
 
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4 | 5 | 10>(0);
   const [stars, setStars] = useState(0);
@@ -586,6 +599,7 @@ export default function FamilyTreeApp() {
 
   const [storyBlanks, setStoryBlanks] = useState<StoryItem[]>(() => buildStoryBlanks());
   const [s1, setS1] = useState<S1State>(() => buildS1());
+  const [dragPreview, setDragPreview] = useState<{ id: WordId; x: number; y: number } | null>(null);
   const [s2, setS2] = useState<S2State>(() => buildS2());
   const [s3, setS3] = useState<S3State>(() => buildS3());
   const [s4, setS4] = useState<S4State>(() => buildS4());
@@ -670,31 +684,118 @@ export default function FamilyTreeApp() {
     [s1.targets, s1.selected, tryPlace],
   );
 
-  const dragStart = useCallback((e: React.DragEvent, id: WordId) => {
-    e.dataTransfer.setData("text/plain", id);
-    if (transparentDragImageRef.current) {
-      e.dataTransfer.setDragImage(transparentDragImageRef.current, 0, 0);
-    }
-    setS1((s) => ({ ...s, selected: id }));
+  const showDragPreview = useCallback((id: WordId, clientX: number, clientY: number) => {
+    const root = fullRef.current;
+    if (!root) return;
+    const rect = root.getBoundingClientRect();
+    setDragPreview({
+      id,
+      x: ((clientX - rect.left) / rect.width) * root.offsetWidth,
+      y: ((clientY - rect.top) / rect.height) * root.offsetHeight,
+    });
+  }, [fullRef]);
+
+  const pointerDragStart = useCallback((e: React.PointerEvent<HTMLDivElement>, id: WordId) => {
+    if (e.pointerType === "mouse") return;
+    if (e.button !== 0) return;
+    KcSfx.unlock();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    pointerDragRef.current = {
+      id,
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      dragging: false,
+    };
   }, []);
 
-  const dragEnd = useCallback(() => {
-    setS1((s) => ({ ...s, hoverId: null }));
-  }, []);
+  const pointerDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = pointerDragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    if (!drag.dragging && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 6) return;
+    drag.dragging = true;
+    e.preventDefault();
+    showDragPreview(drag.id, e.clientX, e.clientY);
+    const target = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-family-target]");
+    const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
+    setS1((s) => ({
+      ...s,
+      selected: drag.id,
+      hoverId: targetId && !s.targets[targetId]?.filled ? targetId : null,
+    }));
+  }, [showDragPreview]);
 
-  const dropTarget = useCallback(
-    (e: React.DragEvent, targetId: WordId) => {
+  const pointerDragFinish = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const drag = pointerDragRef.current;
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      pointerDragRef.current = null;
+      setDragPreview(null);
+      if (!drag.dragging) return;
       e.preventDefault();
-      const id = e.dataTransfer.getData("text/plain") as WordId;
+      suppressBankClickRef.current = true;
+      const target = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-family-target]");
+      const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
       setS1((s) => ({ ...s, hoverId: null }));
-      if (id) tryPlace(targetId, id);
+      if (targetId) tryPlace(targetId, drag.id);
+      window.setTimeout(() => {
+        suppressBankClickRef.current = false;
+      }, 0);
     },
     [tryPlace],
   );
 
-  const hoverTarget = useCallback((id: WordId, on: boolean) => {
-    setS1((s) => ({ ...s, hoverId: on ? id : s.hoverId === id ? null : s.hoverId }));
+  const pointerDragCancel = useCallback(() => {
+    pointerDragRef.current = null;
+    setDragPreview(null);
+    setS1((s) => ({ ...s, hoverId: null }));
   }, []);
+
+  const mouseDragStart = useCallback((e: React.MouseEvent<HTMLDivElement>, id: WordId) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    KcSfx.unlock();
+    mouseDragRef.current = { id, startX: e.clientX, startY: e.clientY, dragging: false };
+  }, []);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const drag = mouseDragRef.current;
+      if (!drag) return;
+      if (!drag.dragging && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 6) return;
+      drag.dragging = true;
+      e.preventDefault();
+      showDragPreview(drag.id, e.clientX, e.clientY);
+      const target = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-family-target]");
+      const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
+      setS1((s) => ({
+        ...s,
+        selected: drag.id,
+        hoverId: targetId && !s.targets[targetId]?.filled ? targetId : null,
+      }));
+    };
+    const onUp = (e: MouseEvent) => {
+      const drag = mouseDragRef.current;
+      if (!drag) return;
+      mouseDragRef.current = null;
+      setDragPreview(null);
+      if (!drag.dragging) return;
+      suppressBankClickRef.current = true;
+      const target = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>("[data-family-target]");
+      const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
+      setS1((s) => ({ ...s, hoverId: null }));
+      if (targetId) tryPlace(targetId, drag.id);
+      window.setTimeout(() => {
+        suppressBankClickRef.current = false;
+      }, 0);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, [showDragPreview, tryPlace]);
 
   const s1Done = s1.bank.length === 0;
 
@@ -824,7 +925,7 @@ export default function FamilyTreeApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game kc-family-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-family-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: 480,
@@ -834,16 +935,6 @@ export default function FamilyTreeApp() {
         overflow: "hidden",
       }}
     >
-      {/* Safari otherwise draws a large rectangular copy of the chip while dragging. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={transparentDragImageRef}
-        src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-        alt=""
-        aria-hidden="true"
-        draggable={false}
-        style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
-      />
       <GameBackdrop
         sun={{ top: 36, right: 70, size: 120, from: "#FFE59A", via: "#FFD166" }}
         blobs={[
@@ -873,6 +964,33 @@ export default function FamilyTreeApp() {
           }}
         />
       ))}
+      {dragPreview && (
+        <div
+          data-family-drag-preview={dragPreview.id}
+          style={{
+            position: "absolute",
+            left: dragPreview.x,
+            top: dragPreview.y,
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "7px 16px 7px 8px",
+            borderRadius: 999,
+            border: "2px solid #5C5EE6",
+            background: "rgba(255,255,255,.96)",
+            boxShadow: "0 18px 34px -12px rgba(70,66,190,.75)",
+            color: "#30338F",
+            fontWeight: 700,
+            fontSize: 15,
+            pointerEvents: "none",
+            transform: "translate(-50%,-60%) rotate(-2deg) scale(1.08)",
+          }}
+        >
+          <FamilyFace {...charOf(dragPreview.id)} size={30} />
+          <span>{WORD_MAP[dragPreview.id].en}</span>
+        </div>
+      )}
       {/* top bar */}
       <div
         style={{
@@ -1237,10 +1355,7 @@ export default function FamilyTreeApp() {
                 return (
                   <div key={id} style={{ position: "absolute", left, top, width: 104, height: 104 }}>
                     <div
-                      onDragOver={(e) => e.preventDefault()}
-                      onDragEnter={() => hoverTarget(id, true)}
-                      onDragLeave={() => hoverTarget(id, false)}
-                      onDrop={(e) => dropTarget(e, id)}
+                      data-family-target={id}
                       onClick={() => placeTarget(id)}
                       style={{
                         position: "relative",
@@ -1355,10 +1470,15 @@ export default function FamilyTreeApp() {
               return (
                 <div
                   key={id}
-                  draggable
-                  onDragStart={(e) => dragStart(e, id)}
-                  onDragEnd={dragEnd}
-                  onClick={() => selectBank(id)}
+                  data-family-word={id}
+                  onMouseDown={(e) => mouseDragStart(e, id)}
+                  onPointerDown={(e) => pointerDragStart(e, id)}
+                  onPointerMove={pointerDragMove}
+                  onPointerUp={pointerDragFinish}
+                  onPointerCancel={pointerDragCancel}
+                  onClick={() => {
+                    if (!suppressBankClickRef.current) selectBank(id);
+                  }}
                   className="kc-chip-hover"
                   style={{
                     display: "flex",
@@ -1838,7 +1958,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 5: CELEBRATION */}
       {stage === 5 && (
-        <div style={{ position: "relative", minHeight: "72vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+        <div className="kc-family-stage kc-family-result" style={{ position: "relative", minHeight: "72vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
           {confetti.map((c) => (
             <div
               key={c.id}

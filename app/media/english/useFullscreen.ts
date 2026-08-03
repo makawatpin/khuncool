@@ -5,14 +5,42 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /** Fullscreen toggle for a game's root element, shared across all /media/english games. */
 export function useFullscreen<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
+  const fullscreenTargetRef = useRef<HTMLElement | null>(null);
+  const baseSizeRef = useRef({ width: 0, height: 0 });
   const [isFull, setIsFull] = useState(false);
   const [isFallbackFull, setIsFallbackFull] = useState(false);
 
   useEffect(() => {
-    const onChange = () => setIsFull(document.fullscreenElement === ref.current);
+    const onChange = () =>
+      setIsFull(
+        document.fullscreenElement === fullscreenTargetRef.current ||
+          Boolean(fullscreenTargetRef.current?.matches(":fullscreen")),
+      );
     document.addEventListener("fullscreenchange", onChange);
     return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !isFull) return;
+
+    const syncScale = () => {
+      const { width, height } = baseSizeRef.current;
+      if (!width || !height) return;
+      const scale = Math.min(window.innerWidth / width, window.innerHeight / height);
+      el.style.setProperty("--kc-fullscreen-scale", String(scale));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    return () => {
+      window.removeEventListener("resize", syncScale);
+      el.classList.remove("kc-compact-canvas");
+      el.style.removeProperty("--kc-fullscreen-base-width");
+      el.style.removeProperty("--kc-fullscreen-base-height");
+      el.style.removeProperty("--kc-fullscreen-scale");
+    };
+  }, [isFull]);
 
   useEffect(() => {
     const el = ref.current;
@@ -59,7 +87,7 @@ export function useFullscreen<T extends HTMLElement>() {
       return;
     }
 
-    if (document.fullscreenElement) {
+    if (document.fullscreenElement || fullscreenTargetRef.current?.matches(":fullscreen")) {
       await document.exitFullscreen?.();
       return;
     }
@@ -69,7 +97,6 @@ export function useFullscreen<T extends HTMLElement>() {
     // stable CSS fullscreen surface instead, so moving between game screens
     // never exits fullscreen.
     const useStableMobileFullscreen =
-      navigator.maxTouchPoints > 0 ||
       /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
       window.matchMedia("(max-width: 767px)").matches;
     if (useStableMobileFullscreen) {
@@ -77,14 +104,30 @@ export function useFullscreen<T extends HTMLElement>() {
       return;
     }
 
+    const rect = el.getBoundingClientRect();
+    baseSizeRef.current = { width: rect.width, height: rect.height };
+    el.style.setProperty("--kc-fullscreen-base-width", `${rect.width}px`);
+    el.style.setProperty("--kc-fullscreen-base-height", `${rect.height}px`);
+    el.style.setProperty(
+      "--kc-fullscreen-scale",
+      String(Math.min(window.innerWidth / rect.width, window.innerHeight / rect.height)),
+    );
+    el.classList.toggle("kc-compact-canvas", rect.width < 1000);
+
     // iOS Safari and some in-app browsers expose no usable element fullscreen
     // API. If native fullscreen is unavailable or rejected, use the same
     // fixed, viewport-sized surface as a fallback.
-    if (typeof el.requestFullscreen === "function") {
+    const fullscreenTarget = el.parentElement ?? el;
+    fullscreenTargetRef.current = fullscreenTarget;
+    if (typeof fullscreenTarget.requestFullscreen === "function") {
       try {
-        await el.requestFullscreen();
+        await fullscreenTarget.requestFullscreen();
         return;
       } catch {
+        el.classList.remove("kc-compact-canvas");
+        el.style.removeProperty("--kc-fullscreen-base-width");
+        el.style.removeProperty("--kc-fullscreen-base-height");
+        el.style.removeProperty("--kc-fullscreen-scale");
         // Fall through to the mobile-safe CSS implementation.
       }
     }
@@ -95,7 +138,11 @@ export function useFullscreen<T extends HTMLElement>() {
   return {
     ref,
     isFull: isFull || isFallbackFull,
-    fullscreenClassName: isFallbackFull ? "kc-mobile-fullscreen" : "",
+    fullscreenClassName: isFallbackFull
+      ? "kc-mobile-fullscreen kc-scaled-fullscreen"
+      : isFull
+        ? "kc-scaled-fullscreen"
+        : "",
     toggle,
   };
 }

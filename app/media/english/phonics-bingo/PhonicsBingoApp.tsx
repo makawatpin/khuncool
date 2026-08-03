@@ -512,7 +512,7 @@ export default function PhonicsBingoApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-bingo-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",
@@ -765,6 +765,7 @@ export default function PhonicsBingoApp() {
 
       {stage === 0 && (
         <div
+          className="kc-bingo-intro"
           style={{
             position: "relative",
             zIndex: 5,
@@ -970,6 +971,7 @@ export default function PhonicsBingoApp() {
 
       {stage === 1 && (
         <div
+          className="kc-bingo-play"
           style={{
             position: "relative",
             zIndex: 5,
@@ -1360,6 +1362,7 @@ export default function PhonicsBingoApp() {
 
       {stage === 2 && (
         <div
+          className="kc-bingo-result"
           style={{
             position: "relative",
             zIndex: 5,

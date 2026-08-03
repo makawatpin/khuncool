@@ -279,7 +279,7 @@ export default function IsAreSortingApp() {
   return (
     <div
       ref={fullRef}
-      className={`kc-game ${fullscreenClassName} relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-game kc-sorting-game kc-stage-${stage} ${fullscreenClassName} relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
@@ -445,7 +445,7 @@ export default function IsAreSortingApp() {
 
       {/* Stage 1: play */}
       {stage === 1 && (
-        <div className="relative mx-auto max-w-[900px] px-4 pb-[60px] pt-1">
+        <div className="kc-sorting-stage relative mx-auto max-w-[900px] px-4 pb-[60px] pt-1">
           <div className="mb-3.5 flex items-center gap-3">
             <div
               className="h-3 flex-1 overflow-hidden rounded-full border bg-white"
@@ -668,7 +668,7 @@ export default function IsAreSortingApp() {
 
       {/* Stage 2: result */}
       {stage === 2 && (
-        <div className="relative mx-auto max-w-[640px] px-[18px] pb-20 pt-2.5 text-center">
+        <div className="kc-sorting-stage relative mx-auto max-w-[640px] px-[18px] pb-20 pt-2.5 text-center">
           <div
             className="text-[clamp(54px,14vw,80px)]"
             style={{ animation: "popIn .6s cubic-bezier(.3,1.5,.5,1) both" }}
@@ -695,7 +695,7 @@ export default function IsAreSortingApp() {
             ))}
           </div>
           <div
-            className="mb-[26px] rounded-[22px] border bg-white p-3.5 text-left"
+            className="kc-sorting-results mb-[26px] rounded-[22px] border bg-white p-3.5 text-left"
             style={{ borderColor: "#E5E8EE", boxShadow: "0 18px 34px -28px rgba(0,0,0,.6)" }}
           >
             {results.map((r, idx) => (
