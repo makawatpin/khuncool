@@ -491,7 +491,7 @@ export default function SoundWheelApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game"
+      className={`kc-game ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",

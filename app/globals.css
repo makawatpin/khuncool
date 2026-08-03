@@ -405,6 +405,19 @@
   font-family: var(--font-fredoka), var(--font-anuphan), sans-serif;
 }
 
+/* Keep every English game's desktop landing screen on the same 16:9 canvas.
+   Playing screens retain their own content-driven height, and phones remain
+   fluid so controls never become cramped. */
+@media (min-width: 900px) {
+  .kc-game-intro:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) {
+    width:100%;
+    aspect-ratio:16 / 9;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none;
+  }
+}
+
 /* English games share a 16:9 presentation canvas. In fullscreen the canvas
    is reduced before being scaled back to the viewport, enlarging the whole
    interface uniformly while keeping every edge visible. */
@@ -504,6 +517,137 @@
     min-height:66.6667vh !important;
     transform:scale(1.5);
   }
+}
+
+/* Family Tree Explorer: each activity becomes a full classroom board in
+   fullscreen, with larger reading targets and balanced vertical placement. */
+.kc-family-game:fullscreen .kc-family-stage,
+.kc-family-game:-webkit-full-screen .kc-family-stage {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  width:100%;
+  max-width:1180px !important;
+  min-height:calc(66.6667vh - 58px);
+  margin:0 auto !important;
+  padding:1.5vh 2.5vw 4vh !important;
+}
+.kc-family-game:fullscreen .kc-family-intro,
+.kc-family-game:-webkit-full-screen .kc-family-intro,
+.kc-family-game:fullscreen .kc-family-menu,
+.kc-family-game:-webkit-full-screen .kc-family-menu,
+.kc-family-game:fullscreen .kc-family-match,
+.kc-family-game:-webkit-full-screen .kc-family-match,
+.kc-family-game:fullscreen .kc-family-listen,
+.kc-family-game:-webkit-full-screen .kc-family-listen,
+.kc-family-game:fullscreen .kc-family-story,
+.kc-family-game:-webkit-full-screen .kc-family-story {
+  width:76.923% !important;
+  min-height:calc(51.282vh - 45px);
+  zoom:1.3;
+}
+.kc-family-game:fullscreen .kc-family-intro,
+.kc-family-game:-webkit-full-screen .kc-family-intro { max-width:1100px !important; }
+.kc-family-game:fullscreen .kc-family-intro > div:first-child,
+.kc-family-game:-webkit-full-screen .kc-family-intro > div:first-child { zoom:1.28; margin-bottom:28px !important; }
+.kc-family-game:fullscreen .kc-family-intro h1,
+.kc-family-game:-webkit-full-screen .kc-family-intro h1 { font-size:clamp(48px,4vw,64px) !important; line-height:1.18 !important; }
+.kc-family-game:fullscreen .kc-family-intro p,
+.kc-family-game:-webkit-full-screen .kc-family-intro p { max-width:900px; margin:0 auto 30px !important; font-size:clamp(20px,1.5vw,25px) !important; line-height:1.65 !important; }
+.kc-family-game:fullscreen .kc-family-intro button,
+.kc-family-game:-webkit-full-screen .kc-family-intro button { padding:18px 48px !important; font-size:clamp(22px,1.7vw,28px) !important; }
+
+.kc-family-game:fullscreen .kc-family-menu,
+.kc-family-game:-webkit-full-screen .kc-family-menu { max-width:1200px !important; }
+.kc-family-game:fullscreen .kc-family-menu h2,
+.kc-family-game:-webkit-full-screen .kc-family-menu h2 { font-size:clamp(36px,3vw,50px) !important; }
+.kc-family-game:fullscreen .kc-family-menu > p,
+.kc-family-game:-webkit-full-screen .kc-family-menu > p { font-size:clamp(18px,1.3vw,23px) !important; margin-bottom:24px !important; }
+.kc-family-game:fullscreen .kc-family-menu > div,
+.kc-family-game:-webkit-full-screen .kc-family-menu > div { gap:22px !important; }
+.kc-family-game:fullscreen .kc-family-menu > div > button,
+.kc-family-game:-webkit-full-screen .kc-family-menu > div > button {
+  min-height:230px;
+  border-radius:30px !important;
+  padding:28px 22px !important;
+  font-size:clamp(20px,1.45vw,25px) !important;
+}
+
+.kc-family-game:fullscreen .kc-family-tree,
+.kc-family-game:-webkit-full-screen .kc-family-tree {
+  max-width:1280px !important;
+  justify-content:flex-start;
+  padding-top:0 !important;
+  padding-bottom:12px !important;
+}
+.kc-family-game:fullscreen .kc-family-tree > div:first-child,
+.kc-family-game:-webkit-full-screen .kc-family-tree > div:first-child,
+.kc-family-game:fullscreen .kc-family-match > div:first-child,
+.kc-family-game:-webkit-full-screen .kc-family-match > div:first-child,
+.kc-family-game:fullscreen .kc-family-listen > div:first-child,
+.kc-family-game:-webkit-full-screen .kc-family-listen > div:first-child,
+.kc-family-game:fullscreen .kc-family-story > div:first-child,
+.kc-family-game:-webkit-full-screen .kc-family-story > div:first-child {
+  padding:18px 28px !important;
+  border-radius:24px !important;
+  font-size:clamp(19px,1.4vw,24px) !important;
+}
+.kc-family-game:fullscreen .kc-family-tree .kc-chip-hover,
+.kc-family-game:-webkit-full-screen .kc-family-tree .kc-chip-hover { padding:12px 20px 12px 10px !important; font-size:19px !important; }
+.kc-family-game:fullscreen .kc-family-tree-viewport,
+.kc-family-game:-webkit-full-screen .kc-family-tree-viewport {
+  height:680px !important;
+  overflow:visible;
+}
+.kc-family-game:fullscreen .kc-family-tree-canvas,
+.kc-family-game:-webkit-full-screen .kc-family-tree-canvas { zoom:1.56; }
+.kc-family-game:fullscreen .kc-family-tree-help,
+.kc-family-game:-webkit-full-screen .kc-family-tree-help { margin:2px 0 8px !important; zoom:1.18; }
+.kc-family-game:fullscreen .kc-family-tree-bank,
+.kc-family-game:-webkit-full-screen .kc-family-tree-bank {
+  gap:10px !important;
+  min-height:58px !important;
+  align-content:flex-start;
+}
+
+.kc-family-game:fullscreen .kc-family-match,
+.kc-family-game:-webkit-full-screen .kc-family-match,
+.kc-family-game:fullscreen .kc-family-listen,
+.kc-family-game:-webkit-full-screen .kc-family-listen,
+.kc-family-game:fullscreen .kc-family-story,
+.kc-family-game:-webkit-full-screen .kc-family-story { max-width:1120px !important; }
+.kc-family-game:fullscreen .kc-family-match,
+.kc-family-game:-webkit-full-screen .kc-family-match {
+  width:100% !important;
+  min-height:calc(66.6667vh - 58px);
+  zoom:1;
+  padding-top:4px !important;
+  padding-bottom:10px !important;
+}
+.kc-family-game:fullscreen .kc-family-match button,
+.kc-family-game:-webkit-full-screen .kc-family-match button,
+.kc-family-game:fullscreen .kc-family-listen button,
+.kc-family-game:-webkit-full-screen .kc-family-listen button,
+.kc-family-game:fullscreen .kc-family-story button,
+.kc-family-game:-webkit-full-screen .kc-family-story button {
+  min-height:64px;
+  font-size:clamp(18px,1.35vw,23px) !important;
+  border-radius:18px !important;
+}
+.kc-family-game:fullscreen .kc-family-listen,
+.kc-family-game:-webkit-full-screen .kc-family-listen { max-width:1000px !important; }
+.kc-family-game:fullscreen .kc-family-listen button,
+.kc-family-game:-webkit-full-screen .kc-family-listen button { min-height:120px; }
+.kc-family-game:fullscreen .kc-family-story,
+.kc-family-game:-webkit-full-screen .kc-family-story { max-width:1050px !important; }
+.kc-family-game:fullscreen .kc-family-story > div:not(:first-child),
+.kc-family-game:-webkit-full-screen .kc-family-story > div:not(:first-child) { font-size:clamp(18px,1.25vw,22px) !important; }
+
+@media (max-height:760px) and (min-width:900px) {
+  .kc-family-game:fullscreen .kc-family-stage,
+  .kc-family-game:-webkit-full-screen .kc-family-stage { min-height:auto; justify-content:flex-start; }
+  .kc-family-game:fullscreen .kc-family-menu > div > button,
+  .kc-family-game:-webkit-full-screen .kc-family-menu > div > button { min-height:170px; }
 }
 
 /* Vocabulary Arcade uses the extra 16:9 space as a large classroom game

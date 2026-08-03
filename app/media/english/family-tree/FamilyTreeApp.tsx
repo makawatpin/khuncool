@@ -123,26 +123,26 @@ const LAYOUT: LayoutCell[] = [
 type StoryItem = { correct: WordId; options: WordId[]; sentence: string };
 
 const STORY_POOL: StoryItem[] = [
-  { correct: "mom", options: ["mom", "sister", "cousin"], sentence: "My ___ cooks my favorite food every day." },
-  { correct: "dad", options: ["dad", "brother", "uncle"], sentence: "My ___ plays football with me after school." },
-  { correct: "grandpa", options: ["grandpa", "aunt", "cousin"], sentence: "On weekends, my ___ takes me fishing." },
-  { correct: "uncle", options: ["uncle", "sister", "mom"], sentence: "My ___ always brings me candy when he visits." },
-  { correct: "grandma", options: ["grandma", "sister", "dad"], sentence: "My ___ tells me bedtime stories." },
-  { correct: "sister", options: ["sister", "uncle", "grandpa"], sentence: "My little ___ loves to draw with crayons." },
-  { correct: "brother", options: ["brother", "aunt", "mom"], sentence: "My big ___ helps me with my homework." },
-  { correct: "aunt", options: ["aunt", "grandpa", "brother"], sentence: "My ___ works at a hospital in the city." },
-  { correct: "cousin", options: ["cousin", "mom", "grandma"], sentence: "I play video games with my ___ every holiday." },
-  { correct: "mom", options: ["mom", "uncle", "brother"], sentence: "My ___ drives me to school in the morning." },
-  { correct: "dad", options: ["dad", "grandma", "sister"], sentence: "My ___ fixes my bicycle when it breaks." },
-  { correct: "grandpa", options: ["grandpa", "sister", "mom"], sentence: "My ___ grows vegetables in the garden." },
-  { correct: "grandma", options: ["grandma", "cousin", "dad"], sentence: "My ___ makes the best cookies in the world." },
-  { correct: "uncle", options: ["uncle", "grandma", "sister"], sentence: "My ___ teaches me how to swim." },
-  { correct: "aunt", options: ["aunt", "brother", "grandpa"], sentence: "My ___ sends me a card on my birthday." },
-  { correct: "sister", options: ["sister", "dad", "uncle"], sentence: "I share my toys with my ___ ." },
-  { correct: "brother", options: ["brother", "mom", "aunt"], sentence: "My ___ and I ride bikes in the park." },
-  { correct: "cousin", options: ["cousin", "grandpa", "dad"], sentence: "My ___ lives in another city, but we call often." },
-  { correct: "mom", options: ["mom", "grandpa", "brother"], sentence: "My ___ reads a book with me before bed." },
-  { correct: "dad", options: ["dad", "aunt", "cousin"], sentence: "My ___ takes photos of our family trips." },
+  { correct: "mom", options: ["mom", "sister", "aunt"], sentence: "The woman who is married to my dad is my ___." },
+  { correct: "mom", options: ["mom", "grandma", "cousin"], sentence: "My brother and I have the same mother. She is my ___." },
+  { correct: "dad", options: ["dad", "brother", "uncle"], sentence: "The man who is married to my mom is my ___." },
+  { correct: "dad", options: ["dad", "grandpa", "cousin"], sentence: "My sister and I have the same father. He is my ___." },
+  { correct: "grandpa", options: ["grandpa", "dad", "uncle"], sentence: "My dad's father is my ___." },
+  { correct: "grandpa", options: ["grandpa", "brother", "cousin"], sentence: "My mom's father is my ___." },
+  { correct: "grandma", options: ["grandma", "mom", "aunt"], sentence: "My mom's mother is my ___." },
+  { correct: "grandma", options: ["grandma", "sister", "cousin"], sentence: "My dad's mother is my ___." },
+  { correct: "uncle", options: ["uncle", "dad", "brother"], sentence: "My dad's brother is my ___." },
+  { correct: "uncle", options: ["uncle", "grandpa", "cousin"], sentence: "My mom's brother is my ___." },
+  { correct: "aunt", options: ["aunt", "mom", "sister"], sentence: "My mom's sister is my ___." },
+  { correct: "aunt", options: ["aunt", "grandma", "cousin"], sentence: "My dad's sister is my ___." },
+  { correct: "sister", options: ["sister", "mom", "aunt"], sentence: "The girl who has the same parents as me is my ___." },
+  { correct: "sister", options: ["sister", "grandma", "cousin"], sentence: "My parents' daughter, who is not me, is my ___." },
+  { correct: "brother", options: ["brother", "dad", "uncle"], sentence: "The boy who has the same parents as me is my ___." },
+  { correct: "brother", options: ["brother", "grandpa", "cousin"], sentence: "My parents' son, who is not me, is my ___." },
+  { correct: "cousin", options: ["cousin", "sister", "aunt"], sentence: "My aunt's child is my ___." },
+  { correct: "cousin", options: ["cousin", "brother", "uncle"], sentence: "My uncle's daughter is my ___." },
+  { correct: "cousin", options: ["cousin", "dad", "grandpa"], sentence: "My dad's brother's son is my ___." },
+  { correct: "cousin", options: ["cousin", "mom", "grandma"], sentence: "My mom's sister's daughter is my ___." },
 ];
 
 function shuffle<T>(arr: T[]): T[] {
@@ -820,7 +820,7 @@ export default function FamilyTreeApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game"
+      className={`kc-game kc-family-game ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: 480,
@@ -969,23 +969,6 @@ export default function FamilyTreeApp() {
             >
               {muted ? "🔇" : "🔊"}
             </button>
-            <button
-              type="button"
-              onClick={toggleFull}
-              aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
-              title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                border: "1px solid #E5E8EE",
-                background: isFull ? "#E1E3FD" : "#fff",
-                fontSize: 16,
-                cursor: "pointer",
-              }}
-            >
-              ⛶
-            </button>
             <div
               style={{
                 display: "flex",
@@ -1005,12 +988,29 @@ export default function FamilyTreeApp() {
             </div>
           </>
         )}
+          <button
+            type="button"
+            onClick={toggleFull}
+            aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+            title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              border: "1px solid #E5E8EE",
+              background: isFull ? "#E1E3FD" : "#fff",
+              fontSize: 16,
+              cursor: "pointer",
+            }}
+          >
+            ⛶
+          </button>
         </div>
       </div>
 
       {/* STAGE 0: INTRO */}
       {stage === 0 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6vh,90px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-intro" style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6vh,90px)", textAlign: "center" }}>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 22 }}>
             {introCast.map((id, i) => (
               <div
@@ -1066,7 +1066,7 @@ export default function FamilyTreeApp() {
 
       {/* HUB (stage 10) */}
       {stage === 10 && (
-        <div style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-menu" style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <h2 style={{ fontWeight: 600, fontSize: 26, margin: "0 0 8px" }}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
           <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 28px" }}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3vw,18px)" }}>
@@ -1140,7 +1140,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 1: DRAG & DROP */}
       {stage === 1 && (
-        <div style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-tree" style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1163,8 +1163,8 @@ export default function FamilyTreeApp() {
             </div>
           </div>
 
-          <div style={{ width: "100%", height: treeH, display: "flex", justifyContent: "center" }}>
-            <div style={{ position: "relative", width: 780, height: 430, flex: "none", transform: `scale(${treeScale})`, transformOrigin: "top center" }}>
+          <div className="kc-family-tree-viewport" style={{ width: "100%", height: treeH, display: "flex", justifyContent: "center" }}>
+            <div className="kc-family-tree-canvas" style={{ position: "relative", width: 780, height: 430, flex: "none", transform: `scale(${treeScale})`, transformOrigin: "top center" }}>
               <svg viewBox="0 0 780 430" style={{ position: "absolute", inset: 0, width: 780, height: 430 }}>
                 <g stroke="#8FDCC9" strokeWidth={4} strokeLinecap="round" fill="none">
                   <path d="M382 58 H398" stroke="#FFB4C6" strokeWidth={6} />
@@ -1328,13 +1328,13 @@ export default function FamilyTreeApp() {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, margin: "4px 0 4px" }}>
+          <div className="kc-family-tree-help" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, margin: "4px 0 4px" }}>
             <div style={{ height: 2, width: 30, background: "#CFE9E1" }} />
             <div style={{ fontSize: 11, color: "#6B7285" }}>ลากการ์ดจากด้านล่าง หรือแตะเลือกแล้วแตะช่องว่าง</div>
             <div style={{ height: 2, width: 30, background: "#CFE9E1" }} />
           </div>
 
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", minHeight: 44 }}>
+          <div className="kc-family-tree-bank" style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", minHeight: 44 }}>
             {s1.bank.map((id) => {
               const w = WORD_MAP[id];
               const sel = s1.selected === id;
@@ -1394,7 +1394,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 2: MATCHING */}
       {stage === 2 && (
-        <div style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-match" style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1575,7 +1575,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 3: LISTENING QUIZ */}
       {stage === 3 && (
-        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-listen" style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1705,7 +1705,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 4: FILL IN THE BLANK */}
       {stage === 4 && (
-        <div style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className="kc-family-stage kc-family-story" style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",

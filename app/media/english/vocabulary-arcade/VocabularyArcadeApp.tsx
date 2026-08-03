@@ -761,7 +761,7 @@ export default function VocabularyArcadeApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game kc-vocab-game"
+      className={`kc-game kc-vocab-game ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         position: "relative",

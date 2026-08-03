@@ -890,7 +890,7 @@ export default function TalkCardApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game"
+      className={`kc-game ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         minHeight: "70vh",

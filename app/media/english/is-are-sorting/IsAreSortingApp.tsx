@@ -279,7 +279,7 @@ export default function IsAreSortingApp() {
   return (
     <div
       ref={fullRef}
-      className="kc-game relative overflow-hidden rounded-2xl"
+      className={`kc-game relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
