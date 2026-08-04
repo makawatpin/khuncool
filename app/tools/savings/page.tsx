@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SavingsApp from "./SavingsApp";
+import ToolLandingContent from "../_components/ToolLandingContent";
+
+const PAGE_URL = "https://www.khuncool.com/tools/savings";
+
+const HOWTO_STEPS = [
+  { name: "สร้างห้องและเพิ่มรายชื่อ", text: "เพิ่มห้องเรียนแล้วพิมพ์หรือวางรายชื่อนักเรียนจาก Excel และ Google Sheets" },
+  { name: "บันทึกรายการฝากหรือถอน", text: "เลือกนักเรียน วันที่ และจำนวนเงิน แล้วบันทึกรายการตามหลักฐานที่ได้รับ" },
+  { name: "ตรวจยอดและประวัติ", text: "ตรวจยอดคงเหลือรายคนและย้อนดูประวัติรายการ เพื่อแก้ไขความคลาดเคลื่อนก่อนสรุป" },
+  { name: "พิมพ์หรือส่งออกข้อมูล", text: "พิมพ์ใบบันทึกออมเงินเป็น PDF หรือส่งออก Excel สำหรับตรวจสอบและเก็บสำรอง" },
+];
+
+const USE_CASES = [
+  { icon: "💰", title: "กิจกรรมออมเงินประจำห้อง", text: "บันทึกยอดฝากรายคนอย่างต่อเนื่องและดูยอดคงเหลือได้จากหน้าเดียว" },
+  { icon: "🔎", title: "ตรวจสอบรายการย้อนหลัง", text: "ย้อนดูวันที่และจำนวนเงินของแต่ละรายการเพื่อช่วยตรวจยอดร่วมกับหลักฐาน" },
+  { icon: "🧾", title: "พิมพ์เอกสารรายห้อง", text: "จัดทำใบบันทึกหรือสรุปยอดสำหรับตรวจสอบและสื่อสารกับผู้เกี่ยวข้อง" },
+  { icon: "📊", title: "ส่งออกเพื่อสรุปผล", text: "นำข้อมูลออกเป็น Excel เพื่อสำรอง ตรวจทาน หรือจัดรูปแบบรายงานเพิ่มเติม" },
+];
+
+const FAQS = [
+  { q: "ระบบบันทึกออมเงินนักเรียนใช้ฟรีไหม", a: "ใช้ฟรี สามารถบันทึกรายการ ตรวจยอด พิมพ์เอกสาร และส่งออกข้อมูลได้" },
+  { q: "พิมพ์ใบบันทึกออมเงินได้ไหม", a: "ได้ สามารถพิมพ์ข้อมูลเป็น PDF หรือส่งออกเป็น Excel เพื่อจัดเก็บและตรวจสอบ" },
+  { q: "รองรับรายการถอนเงินไหม", a: "รองรับทั้งรายการฝากและถอน พร้อมประวัติรายการรายคนเพื่อใช้ตรวจยอดย้อนหลัง" },
+  { q: "ควรใช้ระบบนี้แทนหลักฐานทางการเงินทั้งหมดหรือไม่", a: "ไม่ควร ควรใช้ร่วมกับใบรับเงิน สมุดบัญชี หรือหลักฐานตามระเบียบของโรงเรียน และตรวจยอดกับผู้เกี่ยวข้องอย่างสม่ำเสมอ" },
+];
 
 export const metadata: Metadata = {
   title: "บันทึกออมเงินนักเรียน ออนไลน์ ใช้ฟรี ส่งออก Excel | khuncool",
@@ -27,6 +51,14 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: "https://www.khuncool.com/" },
+        { "@type": "ListItem", position: 2, name: "แอปครู", item: "https://www.khuncool.com/apps" },
+        { "@type": "ListItem", position: 3, name: "บันทึกออมเงินนักเรียน", item: PAGE_URL },
+      ],
+    },
+    {
       "@type": "WebApplication",
       name: "บันทึกออมเงินนักเรียน Khuncool",
       url: "https://www.khuncool.com/tools/savings",
@@ -37,25 +69,14 @@ const jsonLd = {
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
     {
+      "@type": "HowTo",
+      name: "วิธีใช้ระบบบันทึกออมเงินนักเรียนออนไลน์",
+      inLanguage: "th",
+      step: HOWTO_STEPS.map((step, index) => ({ "@type": "HowToStep", position: index + 1, name: step.name, text: step.text })),
+    },
+    {
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "บันทึกออมเงินใช้ฟรีไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "พิมพ์ใบบันทึกออมเงินได้ไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ได้ พิมพ์เป็นเอกสารรายห้องได้ทันที",
-          },
-        },
-      ],
+      mainEntity: FAQS.map((faq) => ({ "@type": "Question", name: faq.q, acceptedAnswer: { "@type": "Answer", text: faq.a } })),
     },
   ],
 };
@@ -116,6 +137,18 @@ export default function SavingsPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <SavingsApp />
       </div>
+
+      <ToolLandingContent
+        steps={HOWTO_STEPS}
+        useCases={USE_CASES}
+        faqs={FAQS}
+        related={[
+          { label: "แนวทางจัดกิจกรรมออมเงิน", href: "/blog/student-savings-activity" },
+          { label: "เช็กชื่อนักเรียน", href: "/tools/attendance" },
+          { label: "บันทึกโฮมรูม", href: "/tools/homeroom" },
+          { label: "เครื่องมือครูทั้งหมด", href: "/tools" },
+        ]}
+      />
     </main>
   );
 }

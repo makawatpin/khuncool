@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HomeroomApp from "./HomeroomApp";
+import ToolLandingContent from "../_components/ToolLandingContent";
+
+const PAGE_URL = "https://www.khuncool.com/tools/homeroom";
+
+const HOWTO_STEPS = [
+  { name: "สร้างห้องและกำหนดช่วงเวลา", text: "เพิ่มชื่อห้อง ภาคเรียน และช่วงวันที่ที่ต้องการใช้บันทึกกิจกรรมโฮมรูม" },
+  { name: "เพิ่มหัวข้อโฮมรูม", text: "เขียนหัวข้อ สาระสำคัญ และสิ่งที่สังเกตได้ในแต่ละวันหรือวางแผนล่วงหน้าเป็นรายสัปดาห์" },
+  { name: "ทบทวนและแก้ไขบันทึก", text: "ย้อนดูรายการเดิม เติมรายละเอียด และตรวจความถูกต้องก่อนนำไปจัดทำเอกสาร" },
+  { name: "พิมพ์หรือส่งออกเอกสาร", text: "พิมพ์สรุปเป็น PDF หรือส่งออก Excel เพื่อจัดเก็บเป็นหลักฐานประจำชั้นและเอกสารสิ้นเทอม" },
+];
+
+const USE_CASES = [
+  { icon: "🌤️", title: "บันทึกกิจกรรมหน้าเสาธง", text: "จดประเด็นสำคัญและสิ่งที่พบหลังพูดคุยกับนักเรียนในแต่ละวัน" },
+  { icon: "🗓️", title: "วางแผนหัวข้อตลอดภาคเรียน", text: "เตรียมหัวข้อด้านการปรับตัว ความปลอดภัย สุขภาวะ และการเรียนเป็นรายสัปดาห์" },
+  { icon: "📝", title: "เก็บหลักฐานประจำชั้น", text: "รวบรวมข้อเท็จจริงและการติดตามผลอย่างเป็นระบบโดยหลีกเลี่ยงข้อมูลอ่อนไหวเกินจำเป็น" },
+  { icon: "📚", title: "จัดชุดเอกสารสิ้นเทอม", text: "พิมพ์หรือส่งออกข้อมูลเพื่อรวมกับเอกสารเช็กชื่อและกิจกรรมประจำชั้น" },
+];
+
+const FAQS = [
+  { q: "ระบบบันทึกโฮมรูมใช้ฟรีไหม", a: "ใช้ฟรี สามารถสร้างหัวข้อ บันทึกรายวัน และพิมพ์หรือส่งออกข้อมูลได้" },
+  { q: "วางแผนหัวข้อล่วงหน้าได้ไหม", a: "ได้ สามารถเตรียมหัวข้อเป็นรายวันหรือรายสัปดาห์ แล้วกลับมาเติมบันทึกหลังทำกิจกรรม" },
+  { q: "พิมพ์เอกสารสิ้นเทอมได้ไหม", a: "ได้ สามารถจัดข้อมูลที่บันทึกไว้เพื่อพิมพ์เป็น PDF หรือส่งออกเป็นไฟล์ Excel" },
+  { q: "ควรบันทึกข้อมูลนักเรียนแบบใด", a: "ควรจดข้อเท็จจริงที่จำเป็นต่อการติดตามและหลีกเลี่ยงการตีตรา การวินิจฉัย หรือรายละเอียดส่วนตัวที่ไม่จำเป็น" },
+];
 
 export const metadata: Metadata = {
   title: "บันทึกโฮมรูม ออนไลน์ ใช้ฟรี พิมพ์เอกสารสิ้นเทอมได้ | khuncool",
@@ -27,6 +51,14 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: "https://www.khuncool.com/" },
+        { "@type": "ListItem", position: 2, name: "แอปครู", item: "https://www.khuncool.com/apps" },
+        { "@type": "ListItem", position: 3, name: "บันทึกโฮมรูม", item: PAGE_URL },
+      ],
+    },
+    {
       "@type": "WebApplication",
       name: "บันทึกโฮมรูม Khuncool",
       url: "https://www.khuncool.com/tools/homeroom",
@@ -37,25 +69,14 @@ const jsonLd = {
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
     {
+      "@type": "HowTo",
+      name: "วิธีใช้ระบบบันทึกโฮมรูมออนไลน์",
+      inLanguage: "th",
+      step: HOWTO_STEPS.map((step, index) => ({ "@type": "HowToStep", position: index + 1, name: step.name, text: step.text })),
+    },
+    {
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "บันทึกโฮมรูมใช้ฟรีไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "พิมพ์เอกสารสิ้นเทอมได้ไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ได้ พิมพ์เอกสารสิ้นเทอมจากข้อมูลที่บันทึกไว้ได้ทันที",
-          },
-        },
-      ],
+      mainEntity: FAQS.map((faq) => ({ "@type": "Question", name: faq.q, acceptedAnswer: { "@type": "Answer", text: faq.a } })),
     },
   ],
 };
@@ -116,6 +137,18 @@ export default function HomeroomPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <HomeroomApp />
       </div>
+
+      <ToolLandingContent
+        steps={HOWTO_STEPS}
+        useCases={USE_CASES}
+        faqs={FAQS}
+        related={[
+          { label: "ตัวอย่างหัวข้อบันทึกโฮมรูม", href: "/blog/homeroom-log-topics" },
+          { label: "เช็กชื่อนักเรียน", href: "/tools/attendance" },
+          { label: "บันทึกออมเงินนักเรียน", href: "/tools/savings" },
+          { label: "เครื่องมือครูทั้งหมด", href: "/tools" },
+        ]}
+      />
     </main>
   );
 }

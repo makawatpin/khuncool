@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AttendanceApp from "./AttendanceApp";
+import ToolLandingContent from "../_components/ToolLandingContent";
+
+const PAGE_URL = "https://www.khuncool.com/tools/attendance";
+
+const HOWTO_STEPS = [
+  { name: "เพิ่มห้องและรายชื่อนักเรียน", text: "สร้างห้องเรียนแล้วพิมพ์รายชื่อ หรือวางรายชื่อทีละหลายบรรทัดจาก Excel และ Google Sheets" },
+  { name: "เลือกวันที่และเช็กสถานะ", text: "เลือกวันเรียนแล้วบันทึกสถานะ มา สาย ลา หรือขาด ให้กับนักเรียนแต่ละคน" },
+  { name: "ตรวจและแก้ไขข้อมูล", text: "ย้อนดูข้อมูลรายวัน แก้สถานะที่บันทึกผิด และตรวจจำนวนมาเรียนก่อนสรุป" },
+  { name: "พิมพ์หรือส่งออก", text: "พิมพ์บัญชีเรียกชื่อเป็น PDF หรือส่งออกไฟล์ Excel เพื่อเก็บสำรองและใช้งานต่อ" },
+];
+
+const USE_CASES = [
+  { icon: "✅", title: "เช็กชื่อประจำวัน", text: "บันทึกสถานะนักเรียนรายคนและย้อนดูข้อมูลของแต่ละวันได้จากหน้าเดียว" },
+  { icon: "📊", title: "สรุปการมาเรียน", text: "ตรวจจำนวนมา สาย ลา และขาด เพื่อใช้ติดตามการเข้าเรียนอย่างต่อเนื่อง" },
+  { icon: "📄", title: "เตรียมเอกสารประจำชั้น", text: "พิมพ์บัญชีเรียกชื่อหรือส่งออก Excel สำหรับจัดเก็บและตรวจสอบภายหลัง" },
+  { icon: "🔄", title: "ใช้งานหลายอุปกรณ์", text: "ล็อกอินเพื่อซิงก์ข้อมูลและเปิดใช้งานต่อจากอุปกรณ์อื่นได้" },
+];
+
+const FAQS = [
+  { q: "เช็กชื่อนักเรียนออนไลน์ใช้ฟรีไหม", a: "ใช้ฟรี สามารถสร้างห้อง เพิ่มรายชื่อ เช็กสถานะ และพิมพ์หรือส่งออกข้อมูลได้" },
+  { q: "ส่งออกเป็นไฟล์ Excel ได้ไหม", a: "ได้ สามารถส่งออกข้อมูลเพื่อเก็บสำรอง ตรวจสอบ หรือใช้งานต่อใน Excel ได้" },
+  { q: "รองรับสถานะอะไรบ้าง", a: "รองรับสถานะมา สาย ลา และขาด โดยเลือกและแก้ไขสถานะรายคนได้" },
+  { q: "ข้อมูลจะหายเมื่อเปลี่ยนเครื่องไหม", a: "ข้อมูลที่บันทึกในเครื่องจะอยู่ในเบราว์เซอร์เดิม หากต้องการใช้หลายเครื่องให้ล็อกอินเพื่อซิงก์ข้อมูลหรือส่งออกไฟล์สำรอง" },
+];
 
 export const metadata: Metadata = {
   title: "เช็กชื่อนักเรียนออนไลน์ ใช้ฟรี ส่งออกไฟล์ Excel | khuncool",
@@ -27,6 +51,14 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: "https://www.khuncool.com/" },
+        { "@type": "ListItem", position: 2, name: "แอปครู", item: "https://www.khuncool.com/apps" },
+        { "@type": "ListItem", position: 3, name: "เช็กชื่อนักเรียน", item: PAGE_URL },
+      ],
+    },
+    {
       "@type": "WebApplication",
       name: "เช็กชื่อนักเรียน Khuncool",
       url: "https://www.khuncool.com/tools/attendance",
@@ -38,25 +70,14 @@ const jsonLd = {
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
     {
+      "@type": "HowTo",
+      name: "วิธีใช้ระบบเช็กชื่อนักเรียนออนไลน์",
+      inLanguage: "th",
+      step: HOWTO_STEPS.map((step, index) => ({ "@type": "HowToStep", position: index + 1, name: step.name, text: step.text })),
+    },
+    {
       "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "เช็กชื่อนักเรียนใช้ฟรีไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ใช้ฟรีทั้งหมด ล็อกอินแล้วซิงก์ข้อมูลได้ทุกเครื่อง",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "ส่งออกเป็นไฟล์ Excel ได้ไหม",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "ได้ กดพิมพ์หรือส่งออกไฟล์ Excel ได้ทันที",
-          },
-        },
-      ],
+      mainEntity: FAQS.map((faq) => ({ "@type": "Question", name: faq.q, acceptedAnswer: { "@type": "Answer", text: faq.a } })),
     },
   ],
 };
@@ -111,6 +132,18 @@ export default function AttendancePage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <AttendanceApp />
       </div>
+
+      <ToolLandingContent
+        steps={HOWTO_STEPS}
+        useCases={USE_CASES}
+        faqs={FAQS}
+        related={[
+          { label: "รวม 10 เครื่องมือครูออนไลน์", href: "/blog/10-free-teaching-tools" },
+          { label: "บันทึกโฮมรูม", href: "/tools/homeroom" },
+          { label: "บันทึกออมเงินนักเรียน", href: "/tools/savings" },
+          { label: "เครื่องมือครูทั้งหมด", href: "/tools" },
+        ]}
+      />
     </main>
   );
 }
