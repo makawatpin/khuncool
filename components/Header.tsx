@@ -7,6 +7,7 @@ import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { ALL_ARTICLES } from "@/app/articles/data";
 import { APPS, TOOLS } from "@/app/tools/data";
+import { MEDIA as MEDIA_COMPUTER } from "@/app/media/computer/data";
 import { MEDIA as MEDIA_ENGLISH } from "@/app/media/english/data";
 import { MEDIA as MEDIA_SOCIAL_STUDIES } from "@/app/media/social-studies/data";
 
@@ -107,6 +108,11 @@ type MediaSubjectGroup = {
 };
 
 const MEDIA_SUBMENU: MediaSubjectGroup[] = [
+  {
+    subject: "คอมพิวเตอร์",
+    subjectHref: "/media/computer",
+    games: MEDIA_COMPUTER.map((m) => ({ title: m.title, href: m.href })),
+  },
   {
     subject: "ภาษาอังกฤษ",
     subjectHref: "/media/english",
