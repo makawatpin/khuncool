@@ -3,13 +3,16 @@ import Link from "next/link";
 import DuckRaceApp from "./DuckRaceApp";
 
 export const metadata: Metadata = {
-  title: "เกมแข่งเป็ดสุ่มชื่อ ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool",
+  title: "เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
   description:
-    "เกมแข่งเป็ดสุ่มชื่อนักเรียน สนุกกว่าวงล้อสุ่มแบบเดิม ใส่รายชื่อแล้วแข่งได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องติดตั้ง",
+    "เกมเป็ดสุ่มชื่อและแข่งเป็ดเข้าเส้นชัยออนไลน์ ใส่รายชื่อนักเรียนแล้วเริ่มแข่งได้ทันที ใช้ฟรี ไม่ต้องสมัครสมาชิกหรือติดตั้งโปรแกรม",
   keywords: [
     "แข่งเป็ด",
     "สุ่มเป็ด",
     "เกมแข่งเป็ด",
+    "เกมเป็ดสุ่ม",
+    "เกมสุ่มเป็ด",
+    "เป็ดเข้าเส้นชัย",
     "duck race",
     "สุ่มชื่อนักเรียน",
     "สุ่มชื่อออนไลน์",
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "เกมแข่งเป็ดสุ่มชื่อ ออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool",
+    title: "เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
     description:
       "ใส่รายชื่อนักเรียนแล้วปล่อยเป็ดแข่งได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
     url: "https://www.khuncool.com/duck-race",
@@ -178,7 +181,7 @@ export default function DuckRacePage() {
             className="font-semibold text-ink-secondary"
             aria-current="page"
           >
-            แข่งเป็ดสเก็ต
+            เกมเป็ดสุ่มชื่อ
           </span>
         </div>
       </nav>
@@ -186,11 +189,11 @@ export default function DuckRacePage() {
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
         <h1 className="m-0 mb-1.5 text-[22px] leading-[1.32] md:mb-2 md:text-[28px]">
-          เกมแข่งเป็ดสเก็ตสุ่มชื่อนักเรียน 🦆
+          เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัยฟรี 🦆
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
-          เกมแข่งเป็ดสุ่มชื่อนักเรียน สนุกกว่าวงล้อสุ่มแบบเดิม
-          ใส่รายชื่อแล้วแข่งได้ทันทีบนเว็บ ใช้ฟรี ไม่ต้องติดตั้ง
+          ใส่รายชื่อนักเรียนแล้วเล่นเกมแข่งเป็ดเข้าเส้นชัยได้ทันที
+          สุ่มชื่อแบบมีลุ้นบนเว็บ ใช้ฟรี ไม่ต้องสมัครสมาชิกหรือติดตั้ง
         </p>
       </div>
 
@@ -278,7 +281,7 @@ export default function DuckRacePage() {
             href="/blog/duck-race"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >
-            📖 รู้จักเกมแข่งเป็ดสุ่มชื่อ
+            📖 วิธีใช้เกมแข่งเป็ดในห้องเรียน
           </Link>
           <Link
             href="/random-name-picker"

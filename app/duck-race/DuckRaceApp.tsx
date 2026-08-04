@@ -934,7 +934,7 @@ export default function DuckRaceApp() {
   const busy = racing || countdown !== null;
   const disabled = busy || names.length < 2;
   const startLabel =
-    countdown !== null ? countdown : racing ? "กำลังแข่ง…" : "🦆 ปล่อยเป็ดสเก็ต!";
+    countdown !== null ? countdown : racing ? "กำลังแข่ง…" : "🦆 ปล่อยเป็ดแข่ง!";
 
   return (
     <div ref={frameRef} className="duck-race-shell">

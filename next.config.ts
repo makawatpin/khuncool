@@ -13,6 +13,26 @@ const nextConfig: NextConfig = {
         destination: "/blog/10-free-teaching-tools",
         permanent: true,
       },
+      {
+        source: "/tools/duck-race",
+        destination: "/duck-race",
+        permanent: true,
+      },
+      {
+        source: "/tools/wheel",
+        destination: "/random-name-picker",
+        permanent: true,
+      },
+      {
+        source: "/tools/scoreboard",
+        destination: "/group-scoreboard",
+        permanent: true,
+      },
+      {
+        source: "/tools/noise-meter",
+        destination: "/classroom-noise-meter",
+        permanent: true,
+      },
     ];
   },
 };

@@ -32,10 +32,10 @@ export const PILLARS = [
 ];
 
 export const TOOLS = [
-  { icon: "🎡", title: "วงล้อสุ่มชื่อ", tag: "ยอดนิยม", bg: "bg-[#E1E3FD]", href: "/tools/wheel" },
-  { icon: "🏆", title: "กระดานคะแนนกลุ่ม", tag: "ใหม่", bg: "bg-[#E1E3FD]", href: "/tools/scoreboard" },
-  { icon: "🎤", title: "เครื่องวัดเสียงในห้อง", tag: "ใหม่", bg: "bg-[#D0FBEF]", href: "/tools/noise-meter" },
-  { icon: "🦆", title: "เกมแข่งเป็ด", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/tools/duck-race" },
+  { icon: "🎡", title: "วงล้อสุ่มชื่อ", tag: "ยอดนิยม", bg: "bg-[#E1E3FD]", href: "/random-name-picker" },
+  { icon: "🏆", title: "กระดานคะแนนกลุ่ม", tag: "ใหม่", bg: "bg-[#E1E3FD]", href: "/group-scoreboard" },
+  { icon: "🎤", title: "เครื่องวัดเสียงในห้อง", tag: "ใหม่", bg: "bg-[#D0FBEF]", href: "/classroom-noise-meter" },
+  { icon: "🦆", title: "เกมเป็ดสุ่มชื่อ", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/duck-race" },
 ];
 
 export const PRODUCTS = [

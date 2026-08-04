@@ -3,17 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี ใช้ฟรี | Khuncool",
+  title: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม | Khuncool",
   description:
-    "รู้จักเกมแข่งเป็ดสุ่มชื่อนักเรียน สื่อการสอนออนไลน์ที่สนุกกว่าวงล้อสุ่มแบบเดิม พร้อมวิธีใช้ 4 ขั้นตอน และ 6 ไอเดียใช้งานจริงในห้องเรียน",
+    "วิธีใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียนแบบง่าย ๆ พร้อม 6 ไอเดียกิจกรรมสำหรับสุ่มนักเรียน นำเสนองาน แจกรางวัล และสร้างการมีส่วนร่วม",
   alternates: {
     canonical: "https://www.khuncool.com/blog/duck-race",
   },
   openGraph: {
     type: "article",
-    title: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี",
+    title: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม",
     description:
-      "รู้จักเกมแข่งเป็ดสุ่มชื่อนักเรียน พร้อมวิธีใช้และไอเดียนำไปใช้จริงในห้องเรียน",
+      "เรียนรู้วิธีใช้เกมแข่งเป็ดสุ่มชื่อ พร้อมไอเดียนำไปใช้จริงในห้องเรียน",
     images: ["https://www.khuncool.com/assets/duck-race-blog-cover.webp"],
     locale: "th_TH",
   },
@@ -43,14 +43,14 @@ const jsonLd = {
         {
           "@type": "ListItem",
           position: 3,
-          name: "สื่อการสอน",
+          name: "วิธีใช้เกมแข่งเป็ดในห้องเรียน",
           item: "https://www.khuncool.com/blog/duck-race",
         },
       ],
     },
     {
       "@type": "Article",
-      headline: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี",
+      headline: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม",
       inLanguage: "th",
       datePublished: "2026-07-31",
       author: {
@@ -203,7 +203,7 @@ export default function BlogDuckRacePage() {
           </div>
 
           <h1 className="m-0 mb-3 text-[26px] leading-[1.32] md:mb-4 md:text-[38px] md:leading-[1.25]">
-            เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี
+            วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม
           </h1>
           <p className="m-0 mb-5 text-base leading-[1.75] text-[#434A58] md:mb-6 md:text-[17px]">
             เบื่อการสุ่มชื่อแบบเดิม ๆ ไหมครับ{" "}
@@ -289,7 +289,7 @@ export default function BlogDuckRacePage() {
               เกมแข่งเป็ดสุ่มชื่อ เป็นสื่อการสอนออนไลน์ฟรีที่ช่วยให้การสุ่มชื่อนักเรียนสนุกขึ้นทันที
               ใช้งานง่าย ไม่ต้องติดตั้ง เหมาะกับทุกกิจกรรมในห้องเรียนที่ต้องการความสุ่มแบบมีลุ้น
               ลองเปิดใช้งานได้เลยที่{" "}
-              <Link href="/duck-race">หน้าเกมแข่งเป็ดสุ่มชื่อ</Link>
+              <Link href="/duck-race">เปิดเกมเป็ดสุ่มชื่อฟรี</Link>
             </p>
             <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
               คุณคูลจะรวบรวมสื่อการสอนและเครื่องมือฟรีสำหรับครูมาอัปเดตให้เรื่อย ๆ
@@ -329,7 +329,7 @@ export default function BlogDuckRacePage() {
                 href="/duck-race"
                 className="block rounded-xl bg-[#0A7A66] px-4 py-2.5 text-center text-[13.5px] font-bold text-white no-underline hover:opacity-90"
               >
-                🦆 เปิดเกมแข่งเป็ด
+                🦆 เปิดเกมเป็ดสุ่มชื่อฟรี
               </Link>
             </div>
           </div>
