@@ -175,6 +175,18 @@ export function KhuncoolOverviewArticle({ config }: { config: OverviewArticleCon
           <div className="mt-6 border-t border-[#E5E8EE] pt-5">
             <h2 className="text-lg md:text-[22px]">สรุป</h2>
             <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">{config.summary}</p>
+            {config.slug === "10-free-teaching-tools" ? (
+              <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+                หากต้องการเห็นตัวอย่างนำเครื่องมือไปเรียงเป็นกิจกรรมจริง อ่านต่อที่{" "}
+                <Link href="/blog/digital-teaching-media">แผนจัดการเรียนรู้ 50 นาทีด้วยสื่อดิจิทัล KhunCool</Link>
+              </p>
+            ) : null}
+            {config.slug === "digital-teaching-media" ? (
+              <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+                ดูความสามารถและตัวอย่างใช้รายเครื่องมือได้ในบทความหลัก{" "}
+                <Link href="/blog/10-free-teaching-tools">10 สื่อการสอนออนไลน์ใช้ฟรีจาก KhunCool</Link>
+              </p>
+            ) : null}
             <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">ดูเนื้อหาเพิ่มเติมได้ที่ <Link href="/media">หน้ารวมสื่อการสอน</Link> หรืออ่าน <Link href="/articles">บทความสำหรับครู</Link> จากทีมคุณคูล</p>
             <div className="flex flex-wrap gap-2">{config.tags.map((t) => <span key={t} className="rounded-pill bg-surface-light px-2.5 py-1.5 text-[11.5px] font-medium text-ink-secondary">#{t}</span>)}</div>
           </div>
