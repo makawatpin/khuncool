@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool",
   description: "รวมสื่อและเกมสังคมศึกษาออนไลน์สำหรับครูประถม เรียนรู้อาเซียน ภูมิศาสตร์ ประวัติศาสตร์ และหน้าที่พลเมือง เปิดใช้บนจอหน้าชั้นได้ทันที",
   alternates: { canonical: "https://www.khuncool.com/media/social-studies" },
-  openGraph: { type: "website", title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool", description: "รวมสื่อสังคมศึกษาออนไลน์สำหรับครูประถม แยกตามสาระและเปิดใช้บนจอหน้าชั้นได้", url: "https://www.khuncool.com/media/social-studies", locale: "th_TH" },
+  openGraph: { type: "website", title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool", description: "รวมสื่อสังคมศึกษาออนไลน์สำหรับครูประถม แยกตามสาระและเปิดใช้บนจอหน้าชั้นได้", url: "https://www.khuncool.com/media/social-studies", locale: "th_TH", images: [{ url: "https://www.khuncool.com/assets/khuncool-logo.webp", alt: "khuncool สื่อการสอนสังคมศึกษา" }] },
   twitter: { card: "summary_large_image" },
 };
 
@@ -18,7 +18,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [
     { "@type": "ListItem", position: 2, name: "สื่อการสอน", item: "https://www.khuncool.com/media" },
     { "@type": "ListItem", position: 3, name: "สังคมศึกษา", item: "https://www.khuncool.com/media/social-studies" },
   ]},
-  { "@type": "CollectionPage", name: "สื่อการสอนสังคมศึกษา", url: "https://www.khuncool.com/media/social-studies", inLanguage: "th-TH", description: "รวมเกมและสื่อสังคมศึกษาออนไลน์สำหรับครูประถม" },
+  { "@type": "CollectionPage", name: "สื่อการสอนสังคมศึกษา", url: "https://www.khuncool.com/media/social-studies", inLanguage: "th-TH", dateModified: "2026-08-04", author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" }, description: "รวมเกมและสื่อสังคมศึกษาออนไลน์สำหรับครูประถมและมัธยมศึกษาตอนต้น" },
   { "@type": "ItemList", numberOfItems: MEDIA.length, itemListElement: MEDIA.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.title })) },
   { "@type": "FAQPage", mainEntity: FAQS.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) },
 ]};

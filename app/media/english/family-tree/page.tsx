@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import FamilyTreeApp from "./FamilyTreeApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Family Tree Explorer", "ป.1–ป.4");
 
 export const metadata: Metadata = {
   title: "Family Tree Explorer เกมคำศัพท์ครอบครัวภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -117,6 +121,8 @@ export default function FamilyTreePage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <FamilyTreeApp />
       </div>
+
+      <GameFaq items={faqs} title="Family Tree Explorer" url="https://www.khuncool.com/media/english/family-tree" grade="ป.1–ป.4" teaches={["คำศัพท์สมาชิกในครอบครัว", "การฟังคำศัพท์ภาษาอังกฤษ", "การอ่านและเติมคำ"]} />
 
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">

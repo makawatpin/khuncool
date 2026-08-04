@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PhonicsBingoApp from "./PhonicsBingoApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Phonics Bingo", "ป.1–ป.3");
 
 export const metadata: Metadata = {
   title: "Phonics Bingo เกมบิงโกเสียงภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -118,6 +122,7 @@ export default function PhonicsBingoPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <PhonicsBingoApp />
       </div>
+      <GameFaq items={faqs} title="Phonics Bingo" url="https://www.khuncool.com/media/english/phonics-bingo" grade="ป.1–ป.3" teaches={["เสียงต้นและเสียงท้ายคำ", "Phonics", "การฟังแยกเสียงภาษาอังกฤษ"]} />
     </main>
   );
 }

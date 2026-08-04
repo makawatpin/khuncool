@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ClassroomObjectsApp from "./ClassroomObjectsApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Classroom Objects Match", "ป.1–ป.3");
 
 export const metadata: Metadata = {
   title:
@@ -122,6 +126,7 @@ export default function ClassroomObjectsPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <ClassroomObjectsApp />
       </div>
+      <GameFaq items={faqs} title="Classroom Objects Match" url="https://www.khuncool.com/media/english/classroom-objects" grade="ป.1–ป.3" teaches={["คำศัพท์สิ่งของในห้องเรียน", "การจับคู่ภาพกับคำ", "การฟังคำศัพท์ภาษาอังกฤษ"]} />
     </main>
   );
 }

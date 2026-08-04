@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import IsAreSortingApp from "./IsAreSortingApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Is / Are Sorting", "ป.3–ป.6");
 
 export const metadata: Metadata = {
   title: "Is / Are Sorting เกมแยกประโยค is are ภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -119,6 +123,7 @@ export default function IsAreSortingPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <IsAreSortingApp />
       </div>
+      <GameFaq items={faqs} title="Is / Are Sorting" url="https://www.khuncool.com/media/english/is-are-sorting" grade="ป.3–ป.6" teaches={["การใช้ is และ are", "ประธานเอกพจน์และพหูพจน์", "การอ่านประโยคภาษาอังกฤษ"]} />
     </main>
   );
 }

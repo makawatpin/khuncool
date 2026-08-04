@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import TalkCardApp from "./TalkCardApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Talk Card", "ป.4–ป.6");
 
 export const metadata: Metadata = {
   title: "Talk Card สุ่มคำถามภาษาอังกฤษให้เด็กพูดหน้าชั้น ใช้ฟรี | khuncool",
@@ -117,6 +121,8 @@ export default function TalkCardPage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <TalkCardApp />
       </div>
+
+      <GameFaq items={faqs} title="Talk Card" url="https://www.khuncool.com/media/english/talk-card" grade="ป.4–ป.6" teaches={["การพูดตอบคำถามภาษาอังกฤษ", "การฟังประโยคตัวอย่าง", "ความมั่นใจในการสื่อสาร"]} />
 
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">

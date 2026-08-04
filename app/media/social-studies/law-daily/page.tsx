@@ -15,9 +15,16 @@ export const metadata: Metadata = {
     description: "หมุนวงล้อ เปิดสำนวน วิเคราะห์เหตุการณ์ และเรียนรู้กฎหมายผ่านเกมโชว์ที่เล่นพร้อมกันได้ทั้งห้อง",
     url: pageUrl,
     locale: "th_TH",
+    images: [{ url: "https://www.khuncool.com/games/law-daily/courtroom.webp", alt: "เกมคดีเด็ด เมืองสันติสุข" }],
   },
   twitter: { card: "summary_large_image" },
 };
+
+const lawFaqs = [
+  { q: "เกมกฎหมายนี้เหมาะกับชั้นไหน", a: "เหมาะกับนักเรียน ป.4–ม.3 ครูสามารถปรับระดับการอภิปรายและรายละเอียดข้อกฎหมายให้เหมาะกับวัยได้" },
+  { q: "ต้องติดตั้งโปรแกรมหรือไม่", a: "ไม่ต้องติดตั้ง เปิดเล่นฟรีผ่านเว็บเบราว์เซอร์ รองรับคอมพิวเตอร์ แท็บเล็ต มือถือ และโหมดเต็มจอ" },
+  { q: "เกมนี้ใช้เวลานานเท่าไร", a: "แนะนำประมาณ 30–40 นาทีสำหรับการแบ่ง 4 ทีม หมุนวงล้อ วิเคราะห์คดี ตอบคำถาม และอภิปรายหลังเฉลย" },
+];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -42,8 +49,11 @@ const jsonLd = {
       learningResourceType: "Interactive game",
       teaches: ["กฎหมายในชีวิตประจำวัน", "หน้าที่พลเมือง", "กฎหมายจราจรทางบก", "การตัดสินใจอย่างรับผิดชอบ"],
       description: "เกมสังคมศึกษาแบบ Interactive Presentation สำหรับเรียนรู้กฎหมายในชีวิตประจำวันผ่านการวิเคราะห์คดีและการแข่งขันเป็นทีม",
+      dateModified: "2026-08-04",
+      author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" },
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
+    { "@type": "FAQPage", mainEntity: lawFaqs.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) },
   ],
 };
 
@@ -100,6 +110,7 @@ export default function LawDailyPage() {
           <Link href="/group-maker" className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline">👥 สุ่มแบ่งกลุ่ม</Link>
         </div>
       </div>
+      <section className="border-t border-border px-4 py-6 md:px-8 md:py-9"><h2 className="m-0 mb-4 text-lg md:text-2xl">คำถามเกี่ยวกับเกมกฎหมาย</h2><div className="grid gap-3 md:grid-cols-3">{lawFaqs.map((item) => <details key={item.q} className="rounded-2xl border border-border bg-white p-4"><summary className="cursor-pointer font-semibold text-ink">{item.q}</summary><p className="mb-0 mt-2 text-[13px] leading-6 text-ink-secondary">{item.a}</p></details>)}</div></section>
     </main>
   );
 }

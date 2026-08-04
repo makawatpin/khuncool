@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "เกมสังคมศึกษาจับคู่ภาพกับชื่อประเทศและธงชาติอาเซียน 11 ประเทศ เลือกเล่น 5 หมวด ดอกไม้ สัตว์ อาหาร สกุลเงิน และเครื่องแต่งกาย รองรับมือถือและจอห้องเรียน",
   keywords: ["เกมอาเซียน", "สื่อการสอนอาเซียน", "ธงชาติอาเซียน", "เกมสังคมศึกษา", "อาเซียน 11 ประเทศ"],
   alternates: { canonical: "https://www.khuncool.com/media/social-studies/asean-matching" },
-  openGraph: { type: "website", title: "เกมจับคู่ภาพอาเซียน 11 ประเทศ | khuncool", description: "เรียนรู้อาเซียนผ่านเกมจับคู่ภาพ ชื่อประเทศ และธงชาติ 5 หมวด", url: "https://www.khuncool.com/media/social-studies/asean-matching", locale: "th_TH" },
+  openGraph: { type: "website", title: "เกมจับคู่ภาพอาเซียน 11 ประเทศ | khuncool", description: "เรียนรู้อาเซียนผ่านเกมจับคู่ภาพ ชื่อประเทศ และธงชาติ 5 หมวด", url: "https://www.khuncool.com/media/social-studies/asean-matching", locale: "th_TH", images: [{ url: "https://www.khuncool.com/assets/asean/costumes/thailand.webp", alt: "เกมจับคู่ภาพและวัฒนธรรมอาเซียน" }] },
   twitter: { card: "summary_large_image" },
 };
 
@@ -17,7 +17,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [
     { "@type": "ListItem", position: 2, name: "สื่อสังคมศึกษา", item: "https://www.khuncool.com/media/social-studies" },
     { "@type": "ListItem", position: 3, name: "เกมจับคู่ภาพอาเซียน", item: "https://www.khuncool.com/media/social-studies/asean-matching" },
   ]},
-  { "@type": "WebApplication", name: "เกมจับคู่ภาพอาเซียน", url: "https://www.khuncool.com/media/social-studies/asean-matching", applicationCategory: "EducationalApplication", operatingSystem: "Web", inLanguage: "th", description: "เกมจับคู่ภาพกับชื่อประเทศและธงชาติอาเซียน 11 ประเทศ จำนวน 5 หมวด", offers: { "@type": "Offer", price: "0", priceCurrency: "THB" } },
+  { "@type": "WebApplication", name: "เกมจับคู่ภาพอาเซียน", url: "https://www.khuncool.com/media/social-studies/asean-matching", applicationCategory: "EducationalApplication", operatingSystem: "Web", inLanguage: "th-TH", educationalLevel: "ประถมศึกษาปีที่ 4–6", learningResourceType: "Educational game", teaches: ["ประเทศสมาชิกอาเซียน", "วัฒนธรรมอาเซียน", "ธงชาติและชื่อประเทศ"], dateModified: "2026-08-04", author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" }, description: "เกมจับคู่ภาพกับชื่อประเทศและธงชาติอาเซียน 11 ประเทศ จำนวน 5 หมวด", offers: { "@type": "Offer", price: "0", priceCurrency: "THB" } },
 ]};
 
 export default function AseanMatchingPage() {

@@ -721,6 +721,16 @@ export default function TalkCardApp() {
   const [bgmOn, setBgmOn] = useState(() => KcSfx.isBgm());
 
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+  const later = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timeoutsRef.current.delete(id);
+      fn();
+    }, ms);
+    timeoutsRef.current.add(id);
+    return id;
+  }, []);
 
   const stopTick = useCallback(() => {
     if (tickRef.current) {
@@ -747,8 +757,11 @@ export default function TalkCardApp() {
   }, [stopTick]);
 
   useEffect(() => {
+    const timers = timeoutsRef.current;
     return () => {
       stopTick();
+      timers.forEach(clearTimeout);
+      timers.clear();
       try {
         window.speechSynthesis?.cancel();
       } catch {
@@ -773,8 +786,8 @@ export default function TalkCardApp() {
       delay: Math.random() * 0.7,
     }));
     setConfetti(c);
-    setTimeout(() => setConfetti([]), 4600);
-  }, []);
+    later(() => setConfetti([]), 4600);
+  }, [later]);
 
   const begin = useCallback(() => {
     let d = shuffleArr(pool());

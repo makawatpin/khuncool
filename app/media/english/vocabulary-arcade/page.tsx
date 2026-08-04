@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import VocabularyArcadeApp from "./VocabularyArcadeApp";
+import GameFaq from "../GameFaq";
+import { gameFaqs } from "../seo";
+
+const faqs = gameFaqs("Vocabulary Arcade", "ป.1–ป.6");
 
 export const metadata: Metadata = {
   title: "Vocabulary Arcade เกมคำศัพท์ภาษาอังกฤษ 10 หมวด ใช้ฟรี | khuncool",
@@ -119,6 +123,8 @@ export default function VocabularyArcadePage() {
       <div className="px-4 pb-8 md:px-8 md:pb-10">
         <VocabularyArcadeApp />
       </div>
+
+      <GameFaq items={faqs} title="Vocabulary Arcade" url="https://www.khuncool.com/media/english/vocabulary-arcade" grade="ป.1–ป.6" teaches={["คำศัพท์ภาษาอังกฤษ 10 หมวด", "การสะกดคำ", "การฟังและจับคู่คำศัพท์"]} />
 
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">

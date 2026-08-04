@@ -213,6 +213,16 @@ export default function SoundWheelApp() {
   const rafSpinRef = useRef<number | null>(null);
   const streakRef = useRef(0);
   const resultRef = useRef<WheelItem | null>(null);
+  const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+  const later = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timeoutsRef.current.delete(id);
+      fn();
+    }, ms);
+    timeoutsRef.current.add(id);
+    return id;
+  }, []);
 
   useEffect(() => {
     wheelRef.current = wheel;
@@ -319,6 +329,7 @@ export default function SoundWheelApp() {
 
   // idle animation loop (lights chase)
   useEffect(() => {
+    const timers = timeoutsRef.current;
     const loop = () => {
       tRef.current += 1;
       if (!spinningRef.current) draw(angleRef.current);
@@ -328,6 +339,8 @@ export default function SoundWheelApp() {
     return () => {
       if (rafIdleRef.current) cancelAnimationFrame(rafIdleRef.current);
       if (rafSpinRef.current) cancelAnimationFrame(rafSpinRef.current);
+      timers.forEach(clearTimeout);
+      timers.clear();
     };
   }, [draw]);
 
@@ -347,14 +360,14 @@ export default function SoundWheelApp() {
       delay: Math.random() * 0.2,
     }));
     setConfetti(pieces);
-    setTimeout(() => setConfetti([]), 2800);
-  }, []);
+    later(() => setConfetti([]), 2800);
+  }, [later]);
 
   const float = useCallback((text: string, color: string) => {
     const f: Floater = { id: Math.random(), text, color };
     setFloaters([f]);
-    setTimeout(() => setFloaters([]), 1500);
-  }, []);
+    later(() => setFloaters([]), 1500);
+  }, [later]);
 
   const spin = useCallback(() => {
     if (spinningRef.current || stage !== 1) return;
@@ -399,11 +412,11 @@ export default function SoundWheelApp() {
         setHistory((h) => [item, ...h].slice(0, 12));
         KcSfx.play("pop");
         burstRing();
-        setTimeout(() => speakEnglish(item.word, true), 260);
+        later(() => speakEnglish(item.word, true), 260);
       }
     };
     rafSpinRef.current = requestAnimationFrame(step);
-  }, [stage, draw, burstRing]);
+  }, [stage, draw, burstRing, later]);
 
   const markRight = useCallback(() => {
     const st = streakRef.current + 1;
@@ -419,10 +432,10 @@ export default function SoundWheelApp() {
     setStreak(0);
     setCardAnim("shake .5s ease-in-out");
     float("ลองอีกครั้ง", "#B4331A");
-    setTimeout(() => {
+    later(() => {
       if (resultRef.current) speakEnglish(resultRef.current.word, true);
     }, 200);
-  }, [float]);
+  }, [float, later]);
 
   const speakAgain = useCallback(() => {
     KcSfx.play("click");

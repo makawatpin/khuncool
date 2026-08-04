@@ -585,6 +585,7 @@ export default function FamilyTreeApp() {
     dragging: boolean;
   } | null>(null);
   const suppressBankClickRef = useRef(false);
+  const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const mouseDragRef = useRef<{
     id: WordId;
     startX: number;
@@ -606,6 +607,20 @@ export default function FamilyTreeApp() {
 
   const [muted, setMuted] = useState(() => KcSfx.isMuted());
   const [bgm, setBgm] = useState(() => KcSfx.isBgm());
+
+  const later = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timeoutsRef.current.delete(id);
+      fn();
+    }, ms);
+    timeoutsRef.current.add(id);
+    return id;
+  }, []);
+
+  useEffect(() => () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current.clear();
+  }, []);
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
@@ -650,7 +665,7 @@ export default function FamilyTreeApp() {
   const tryPlace = useCallback((targetId: WordId, wordId: WordId) => {
     if (targetId === wordId) {
       KcSfx.play("drop");
-      setTimeout(() => KcSfx.play("correct"), 90);
+      later(() => KcSfx.play("correct"), 90);
       setS1((s) => ({
         ...s,
         targets: { ...s.targets, [targetId]: { filled: true } },
@@ -659,13 +674,13 @@ export default function FamilyTreeApp() {
         fxId: targetId,
       }));
       setStars((n) => n + 1);
-      setTimeout(() => setS1((s) => ({ ...s, fxId: null })), 900);
+      later(() => setS1((s) => ({ ...s, fxId: null })), 900);
     } else {
       KcSfx.play("wrong");
       setS1((s) => ({ ...s, shakeId: targetId, selected: null }));
-      setTimeout(() => setS1((s) => ({ ...s, shakeId: null })), 520);
+      later(() => setS1((s) => ({ ...s, shakeId: null })), 520);
     }
-  }, []);
+  }, [later]);
 
   const selectBank = useCallback(
     (id: WordId) => {
@@ -738,11 +753,11 @@ export default function FamilyTreeApp() {
       const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
       setS1((s) => ({ ...s, hoverId: null }));
       if (targetId) tryPlace(targetId, drag.id);
-      window.setTimeout(() => {
+      later(() => {
         suppressBankClickRef.current = false;
       }, 0);
     },
-    [tryPlace],
+    [tryPlace, later],
   );
 
   const pointerDragCancel = useCallback(() => {
@@ -785,7 +800,7 @@ export default function FamilyTreeApp() {
       const targetId = (target?.dataset.familyTarget ?? null) as WordId | null;
       setS1((s) => ({ ...s, hoverId: null }));
       if (targetId) tryPlace(targetId, drag.id);
-      window.setTimeout(() => {
+      later(() => {
         suppressBankClickRef.current = false;
       }, 0);
     };
@@ -795,7 +810,7 @@ export default function FamilyTreeApp() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
     };
-  }, [showDragPreview, tryPlace]);
+  }, [showDragPreview, tryPlace, later]);
 
   const s1Done = s1.bank.length === 0;
 
@@ -816,16 +831,16 @@ export default function FamilyTreeApp() {
         };
       });
       setStars((n) => n + 1);
-      setTimeout(() => setS2((s) => ({ ...s, fxId: null })), 850);
+      later(() => setS2((s) => ({ ...s, fxId: null })), 850);
     } else {
       KcSfx.play("wrong");
       setS2((s) => ({ ...s, shakePair: { left, right }, combo: 0 }));
-      setTimeout(
+      later(
         () => setS2((s) => ({ ...s, shakePair: null, selectedLeft: null, selectedRight: null })),
         520,
       );
     }
-  }, []);
+  }, [later]);
 
   const clickLeft = useCallback(
     (id: WordId) => {

@@ -41,9 +41,9 @@ export const SUBJECTS: Subject[] = [
     desc: "เกมคิดเลขเร็ว การบวกลบ สูตรคูณ และโจทย์ปัญหาแบบเล่นทั้งห้อง",
     meta: "กำลังพัฒนา · เปิดเทอม 2/2569",
     tags: ["คิดเลขเร็ว", "สูตรคูณ", "โจทย์ปัญหา"],
-    status: "กำลังทำ",
-    stFg: "#8A6A00",
-    stBg: "#FFF3CC",
+    status: "1 เล่นได้แล้ว",
+    stFg: "#0A9380",
+    stBg: "#D0FBEF",
   },
   {
     t: "วิทยาศาสตร์",
@@ -80,6 +80,18 @@ export const SUBJECTS: Subject[] = [
     status: "1 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
+  },
+  {
+    t: "คอมพิวเตอร์",
+    icon: "💻",
+    bg: "#E9E7FF",
+    href: "/media/computer",
+    desc: "Coding การพิมพ์ ความปลอดภัยดิจิทัล และส่วนประกอบคอมพิวเตอร์",
+    meta: "3 สื่อ · กำลังพัฒนา",
+    tags: ["Coding", "Typing", "Digital Safety"],
+    status: "กำลังทำ",
+    stFg: "#8A6A00",
+    stBg: "#FFF3CC",
   },
 ];
 

@@ -63,6 +63,14 @@ const jsonLd = {
       name: "สื่อการสอนภาษาอังกฤษ",
       url: "https://www.khuncool.com/media/english",
       inLanguage: "th-TH",
+      dateModified: "2026-08-04",
+      educationalLevel: "ประถมศึกษาปีที่ 1–6",
+      teaches: ["Phonics", "Vocabulary", "Grammar", "Speaking"],
+      author: {
+        "@type": "Organization",
+        name: "Khuncool",
+        url: "https://www.khuncool.com",
+      },
       description: "รวมเกมและสื่อภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ",
     },
     {

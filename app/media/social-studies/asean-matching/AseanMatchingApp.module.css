@@ -69,3 +69,16 @@
 
 @media(max-width:767px){.brand{min-width:0;gap:6px}.brand span,.brand span:last-child{display:block;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.shell[data-stage="play"] .hubMenu,.shell[data-stage="result"] .hubMenu{display:none}.answers{align-content:center;grid-auto-rows:auto}.answer{width:100%;min-height:0;aspect-ratio:3/2;align-self:center}}
 @media(orientation:landscape) and (max-height:500px){.brand span,.brand span:last-child{max-width:180px;font-size:11px}.answer{height:100%;aspect-ratio:auto}}
+
+/* Classroom legibility for projector and TV use. */
+@media(min-width:768px){
+  .brand{font-size:18px}.brand img{width:42px;height:42px}.hubMenu,.categoryMenu{min-height:42px;padding:10px 16px;font-size:14px}.audioBtn{height:42px;font-size:14px}.roundBtn{width:42px;height:42px;font-size:19px}
+  .eyebrow{padding:9px 16px;font-size:14px}.subtitle{max-width:760px;font-size:17px}.category{padding:17px 11px 15px}.categoryIcon{font-size:39px}.categoryTitle{font-size:16px}.categoryDesc{font-size:13px}.startBtn{min-height:52px;padding:14px 34px;font-size:19px}
+  .round,.score{font-size:15px}.score strong{font-size:24px}.pill{font-size:14px}.progress{height:11px}
+  .prompt{font-size:15px}.hint{font-size:14px}.answerText{padding:7px 15px;font-size:16px}.answer small{font-size:12px}.answerFlag{font-size:40px}.feedback{font-size:21px}
+  .result p{font-size:16px}.stat span{font-size:13px}.secondaryBtn{font-size:15px}
+}
+
+@media(max-width:767px){
+  .prompt{font-size:13px}.answerText{font-size:12px}.round,.score{font-size:12px}.score strong{font-size:18px}.startBtn{min-height:46px;font-size:16px}
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
@@ -48,6 +48,7 @@ export default function AseanMatchingApp() {
   const [locked, setLocked] = useState(false);
   const [muted, setMuted] = useState(false);
   const [bgmLive, setBgmLive] = useState(true);
+  const advanceTimer = useRef<number | null>(null);
 
   const categoryMeta = CATEGORIES.find((item) => item.id === category) ?? CATEGORIES[0];
   const question = questions[round];
@@ -57,8 +58,23 @@ export default function AseanMatchingApp() {
     ref.current?.scrollTo({ top: 0, left: 0 });
   }, [stage, ref]);
 
+  useEffect(() => {
+    const syncTimer = window.setTimeout(() => { setMuted(KcSfx.isMuted()); setBgmLive(KcSfx.isBgm()); }, 0);
+    return () => window.clearTimeout(syncTimer);
+  }, []);
+
+  useEffect(() => () => { if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current); }, []);
+
+  const cancelAdvance = () => {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
+  };
+
   const start = useCallback(() => {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
     KcSfx.unlock(); KcSfx.play("whoosh");
+    setMuted(KcSfx.isMuted()); setBgmLive(KcSfx.isBgm());
     setQuestions(shuffle(GAME_DATA[category])); setRound(0); setScore(0); setStreak(0);
     setBestStreak(0); setCorrectCount(0); setSelected(null); setFeedback(null); setLocked(false); setStage("play");
   }, [category]);
@@ -76,7 +92,8 @@ export default function AseanMatchingApp() {
     } else {
       setStreak(0); setFeedback({ type: "bad", text: `คำตอบคือ ${question.country}` }); KcSfx.play("wrong");
     }
-    window.setTimeout(() => {
+    advanceTimer.current = window.setTimeout(() => {
+      advanceTimer.current = null;
       setFeedback(null); setSelected(null); setLocked(false);
       if (round + 1 >= questions.length) { setStage("result"); KcSfx.play("win"); }
       else setRound((value) => value + 1);
@@ -92,7 +109,7 @@ export default function AseanMatchingApp() {
     <header className={styles.topbar}><div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="khuncool" width={38} height={38}/><span>เกมจับคู่ภาพอาเซียน</span></div>
       <div className={styles.controls}>
         <Link href="/media/social-studies" className={styles.hubMenu} aria-label="กลับหน้าสื่อสังคมศึกษา"><span>☰</span><b>เมนู</b></Link>
-        {stage !== "home" && <button type="button" className={styles.categoryMenu} onClick={() => { setStage("home"); setFeedback(null); setLocked(false); KcSfx.play("click"); }} aria-label="กลับไปเลือกหมวด"><span>☰</span><b>เปลี่ยนหมวด</b></button>}
+        {stage !== "home" && <button type="button" className={styles.categoryMenu} onClick={() => { cancelAdvance(); setStage("home"); setFeedback(null); setLocked(false); KcSfx.play("click"); }} aria-label="กลับไปเลือกหมวด"><span>☰</span><b>เปลี่ยนหมวด</b></button>}
         <button type="button" className={`${styles.audioBtn} ${bgmLive ? styles.audioActive : ""}`} onClick={toggleBgm}><span className={styles.equalizer}>{[0,1,2].map((bar) => <i key={bar} style={{ animationDelay: `${bar * .12}s` }}/>)}</span><span>{bgmLive ? "เพลง" : "ปิดเพลง"}</span></button>
         <button type="button" className={styles.roundBtn} onClick={toggleSound} aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"}>{muted ? "🔇" : "🔊"}</button>
         <button type="button" className={`${styles.roundBtn} ${isFull ? styles.audioActive : ""}`} onClick={toggle} aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"} title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}>⛶</button>
@@ -110,7 +127,7 @@ export default function AseanMatchingApp() {
           <div className={styles.answers}>{choices.map((choice) => { const isSelected = selected === choice.country; const correct = locked && choice.country === question.country; const wrong = locked && isSelected && !correct; return <button type="button" disabled={locked} key={choice.country} onClick={() => choose(choice)} className={`${styles.answer} ${correct ? styles.correct : ""} ${wrong ? styles.wrong : ""} ${locked && !correct && !wrong ? styles.dim : ""}`}><span className={styles.answerFlag}><AseanFlag code={choice.code}/></span><span className={styles.answerText}>{choice.country}</span></button>; })}</div></div>
       </section>}
 
-      {stage === "result" && <section className={styles.result}>{CONFETTI.map((piece, index) => <i key={index} className={styles.confetti} style={{ left: `${piece.left}%`, animationDelay: `${piece.delay}s`, background: piece.color }}/>) }<div className={styles.trophy}>{correctCount >= 9 ? "🏆" : correctCount >= 6 ? "🌟" : "🎯"}</div><h2>ภารกิจสำเร็จ!</h2><p>น้องรู้จักอาเซียนมากขึ้นอีกขั้นแล้ว</p><div className={styles.resultCard}><div className={styles.stat}><strong>{score}</strong><span>คะแนนรวม</span></div><div className={styles.stat}><strong>{correctCount}/11</strong><span>ตอบถูก</span></div><div className={styles.stat}><strong>x{bestStreak}</strong><span>คอมโบสูงสุด</span></div></div><div className={styles.resultActions}><button type="button" className={styles.startBtn} onClick={start}>เล่นหมวดนี้อีกครั้ง 🔄</button><button type="button" className={styles.secondaryBtn} onClick={() => { setStage("home"); KcSfx.play("click"); }}>เลือกหมวดอื่น</button></div></section>}
+      {stage === "result" && <section className={styles.result}>{CONFETTI.map((piece, index) => <i key={index} className={styles.confetti} style={{ left: `${piece.left}%`, animationDelay: `${piece.delay}s`, background: piece.color }}/>) }<div className={styles.trophy}>{correctCount >= 9 ? "🏆" : correctCount >= 6 ? "🌟" : "🎯"}</div><h2>ภารกิจสำเร็จ!</h2><p>น้องรู้จักอาเซียนมากขึ้นอีกขั้นแล้ว</p><div className={styles.resultCard}><div className={styles.stat}><strong>{score}</strong><span>คะแนนรวม</span></div><div className={styles.stat}><strong>{correctCount}/11</strong><span>ตอบถูก</span></div><div className={styles.stat}><strong>x{bestStreak}</strong><span>คอมโบสูงสุด</span></div></div><div className={styles.resultActions}><button type="button" className={styles.startBtn} onClick={start}>เล่นหมวดนี้อีกครั้ง 🔄</button><button type="button" className={styles.secondaryBtn} onClick={() => { cancelAdvance(); setStage("home"); KcSfx.play("click"); }}>เลือกหมวดอื่น</button></div></section>}
       {feedback && <div className={`${styles.feedback} ${feedback.type === "good" ? styles.feedbackGood : styles.feedbackBad}`}>{feedback.text}</div>}
     </div>
   </div>;
