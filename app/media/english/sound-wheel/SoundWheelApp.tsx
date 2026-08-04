@@ -676,7 +676,7 @@ export default function SoundWheelApp() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
-            alt="khuncool"
+            alt="KhunCool"
             style={{
               width: 38,
               height: 38,

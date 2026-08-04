@@ -220,7 +220,7 @@ export default function TypingDefenseGame() {
       @media(prefers-reduced-motion:reduce){.virusEmoji{animation:none}.dataDrop{animation-duration:.01ms}.matrixBackdrop i{animation:none;transform:translateY(55%)}}
     `}</style>
     <header className={styles.topbar}>
-      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="khuncool" width={38} height={38}/><span><b className="kc-title">Virus Defense</b><small>พิมพ์ดีดปราบไวรัส</small></span></div>
+      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={38} height={38}/><span><b className="kc-title">Virus Defense</b><small>พิมพ์ดีดปราบไวรัส</small></span></div>
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {!(["home", "select", "levelIntro"] as Stage[]).includes(stage) && <button type="button" className={`${styles.hubMenu} kc-game-menu`} onClick={start} aria-label="เริ่มเกมใหม่"><span>↻</span><b>เริ่มใหม่</b></button>}

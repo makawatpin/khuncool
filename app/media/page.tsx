@@ -295,7 +295,7 @@ export default function MediaPage() {
             <div className="mb-2.5 flex items-center gap-3 md:mb-3">
               <Image
                 src="/assets/khuncool-logo.webp"
-                alt="ครูคูล"
+                alt=""
                 width={52}
                 height={52}
                 className="flex-none rounded-2xl border border-border bg-white object-contain p-1.5 md:p-[7px]"

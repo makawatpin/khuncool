@@ -973,7 +973,7 @@ export default function TalkCardApp() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
-            alt="khuncool"
+            alt="KhunCool"
             style={{ width: 36, height: 36, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div style={{ minWidth: 0 }}>

@@ -199,7 +199,7 @@ export default function Header() {
           <Link href="/" className="flex flex-1 items-center gap-1.5 md:flex-none">
             <Image
               src="/assets/khuncool-logo.webp"
-              alt="khuncool"
+              alt=""
               width={30}
               height={30}
               className="flex-none object-contain"
@@ -255,7 +255,7 @@ export default function Header() {
             <div className="flex items-center gap-2 border-b border-border px-4 py-3.5">
               <Image
                 src="/assets/khuncool-logo.webp"
-                alt="khuncool"
+                alt=""
                 width={26}
                 height={26}
                 className="flex-none object-contain"

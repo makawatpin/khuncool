@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="mb-3.5 flex items-center gap-2">
           <Image
             src="/assets/khuncool-logo.webp"
-            alt="khuncool"
+            alt=""
             width={26}
             height={26}
             className="flex-none object-contain"

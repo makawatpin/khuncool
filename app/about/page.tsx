@@ -82,7 +82,7 @@ export default function AboutPage() {
         <div className="mb-4 flex items-center gap-2.5">
           <Image
             src="/assets/khuncool-logo.webp"
-            alt="khuncool"
+            alt=""
             width={36}
             height={36}
             className="flex-none object-contain"

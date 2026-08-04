@@ -815,7 +815,7 @@ export default function VocabularyArcadeApp() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
-            alt="khuncool"
+            alt="KhunCool"
             style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Vocabulary Arcade</div>

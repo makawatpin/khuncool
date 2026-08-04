@@ -88,7 +88,7 @@ export default function DigitalSortGame() {
   return <div ref={ref} className={`kc-game kc-computer-game ${styles.shell} ${fullscreenClassName}`} data-stage={stage} onMouseOver={hoverSfxDelegate}>
     <div className={styles.gridGlow}/><div className={styles.orbOne}/><div className={styles.orbTwo}/>
     <header className={styles.topbar}>
-      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="khuncool" width={38} height={38}/><span><b className="kc-title">Digital Sort</b><small>ภารกิจคัดแยกโลกดิจิทัล</small></span></div>
+      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={38} height={38}/><span><b className="kc-title">Digital Sort</b><small>ภารกิจคัดแยกโลกดิจิทัล</small></span></div>
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {stage !== "home" && <button className={`${styles.hubMenu} kc-game-menu`} type="button" onClick={() => { setStage("home"); setFeedback(null); setLocked(false); KcSfx.play("click"); }} aria-label="กลับหน้าเริ่มเกม"><span>↻</span><b>เริ่มใหม่</b></button>}

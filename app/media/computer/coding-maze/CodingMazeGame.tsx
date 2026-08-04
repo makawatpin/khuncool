@@ -197,7 +197,7 @@ export default function CodingMazeGame() {
       }
     `}</style>
     <header className={styles.topbar}>
-      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="khuncool" width={38} height={38}/><span><b className="kc-title">CPU Quest</b><small>เขาวงกตโค้ดดิ้ง</small></span></div>
+      <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={38} height={38}/><span><b className="kc-title">CPU Quest</b><small>เขาวงกตโค้ดดิ้ง</small></span></div>
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {stage !== "intro" && <button type="button" className={`${styles.hubMenu} kc-game-menu`} onClick={() => resetBoard("intro")} aria-label="เริ่มด่านใหม่"><span>↻</span><b>เริ่มใหม่</b></button>}
