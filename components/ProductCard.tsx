@@ -49,7 +49,8 @@ export default function ProductCard({ product: p }: Props) {
         </div>
         <a
           href={p.buyHref}
-          rel="sponsored"
+          target="_blank"
+          rel="noopener noreferrer sponsored"
           className="block rounded-lg border-none bg-[#F97316] p-[7px] text-center text-[11.5px] font-bold text-white no-underline hover:bg-[#EA6A0C] hover:text-white"
         >
           ดูราคา ›

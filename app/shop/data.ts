@@ -35,7 +35,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿329",
     badge: "ยอดนิยม",
     reviewHref: "/blog/magnetic-frame",
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/7KvhYc7TtI",
   },
   {
     cat: "เครื่องเขียน",
@@ -47,7 +47,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿469",
     badge: null,
     reviewHref: null,
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/9ANLl4nOwr",
   },
   {
     cat: "อุปกรณ์สอน",
@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿590",
     badge: null,
     reviewHref: null,
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/3Viz1JMJ8g",
   },
   {
     cat: "อุปกรณ์สอน",
@@ -71,7 +71,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿1,190",
     badge: "แนะนำ",
     reviewHref: null,
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/50XmnMcQXy",
   },
   {
     cat: "ของใช้ส่วนตัว",
@@ -83,7 +83,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿599",
     badge: null,
     reviewHref: null,
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/1gHKqEUGWH",
   },
   {
     cat: "ของใช้ส่วนตัว",
@@ -95,7 +95,7 @@ export const PRODUCTS: Product[] = [
     oldPrice: "฿399",
     badge: null,
     reviewHref: null,
-    buyHref: "#",
+    buyHref: "https://s.shopee.co.th/20uBElffiQ",
   },
 ];
 
