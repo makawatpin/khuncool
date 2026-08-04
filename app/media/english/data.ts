@@ -159,6 +159,7 @@ export const FAQS = [
 ];
 
 export const RELATED_ARTICLES = [
+  { t: "15 เกมคำศัพท์ภาษาอังกฤษในห้องเรียน เด็กประถมเล่นได้", href: "/blog/english-vocabulary-games" },
   { t: "ตัวอย่างแผนสอนคำศัพท์ภาษาอังกฤษ 50 นาที", href: "/blog/english-vocabulary-lesson-plan" },
   { t: "7 กิจกรรม Warm-up ภาษาอังกฤษ 5 นาที", href: "/blog/english-warm-up-activities" },
   { t: "เทคนิคสอนภาษาอังกฤษจาก PSU", href: "/blog/psu-english" },

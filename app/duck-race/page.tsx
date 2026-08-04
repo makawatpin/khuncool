@@ -278,6 +278,18 @@ export default function DuckRacePage() {
         </h2>
         <div className="flex flex-wrap gap-2.5">
           <Link
+            href="/blog/duck-race-classroom-activities"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 10 กิจกรรมเกมเป็ดสุ่ม
+          </Link>
+          <Link
+            href="/blog/wheel-vs-duck-race"
+            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+          >
+            📖 วงล้อสุ่ม vs เกมเป็ดสุ่ม
+          </Link>
+          <Link
             href="/blog/duck-race"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >
