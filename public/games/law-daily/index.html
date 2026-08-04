@@ -302,7 +302,7 @@
 
     <div class="shell">
       <main class="main-stage" id="mainStage">
-        <img class="court-bg" src="./courtroom.png" alt="ห้องพิจารณาคดี">
+        <img class="court-bg" src="./courtroom.webp" alt="ห้องพิจารณาคดี">
         <div class="court-overlay"></div>
 
         <section class="screen wheel-stage active" id="wheelScreen" aria-label="หน้าหมุนวงล้อ">
@@ -311,7 +311,7 @@
             <h2 class="hero-title">วันนี้จะเจอ<span>คดีอะไร?</span></h2>
             <p class="hero-sub">รวมพลังทั้งห้อง เลือกคำตอบที่ยุติธรรม และเรียนรู้กฎหมายที่เราใช้จริงทุกวัน</p>
             <button class="spin-btn" id="spinBtn">เริ่มเล่น</button>
-            <div class="host-crop"><img src="./host-confused.png" alt="พิธีกรกำลังสงสัยว่าคดีต่อไปคืออะไร"></div>
+            <div class="host-crop"><img src="./host-confused.webp" alt="พิธีกรกำลังสงสัยว่าคดีต่อไปคืออะไร"></div>
           </div>
           <div class="wheel-zone">
             <div class="mystery-particles"></div>
@@ -328,7 +328,7 @@
         <section class="screen case-stage" id="caseScreen" aria-label="หน้าการ์ดคดี">
           <article class="case-card" id="caseCard">
             <div class="case-visual">
-              <img id="caseImage" src="./traffic-case.png" alt="ผู้ขับขี่รถจักรยานยนต์ย้อนศรและไม่สวมหมวกนิรภัย">
+              <img id="caseImage" src="./traffic-case.webp" alt="ผู้ขับขี่รถจักรยานยนต์ย้อนศรและไม่สวมหมวกนิรภัย">
               <div class="visual-shade"></div><span class="case-no" id="caseNo">คำถาม 1/3</span>
               <div class="visual-caption"><small id="caseScene">เหตุเกิดบนถนนเมืองสันติสุข</small><strong id="caseTitle">คดีซิ่งผิดทิศ!</strong></div>
             </div>
@@ -349,7 +349,7 @@
 
         <section class="screen verdict-stage" id="verdictScreen" aria-label="หน้าเฉลยและพิพากษา">
           <article class="verdict-card" id="verdictCard">
-            <aside class="judge-panel"><div class="judge-label"><small>ผู้พิพากษาประจำเมือง</small><strong>ท่านจัสติน่า</strong></div><div class="judge-crop"><img id="judgeMascot" src="./judge-thumbs-up.png" alt="มาสคอตผู้พิพากษายกนิ้วให้คำตอบ"></div></aside>
+            <aside class="judge-panel"><div class="judge-label"><small>ผู้พิพากษาประจำเมือง</small><strong>ท่านจัสติน่า</strong></div><div class="judge-crop"><img id="judgeMascot" src="./judge-thumbs-up.webp" alt="มาสคอตผู้พิพากษายกนิ้วให้คำตอบ"></div></aside>
             <div class="verdict-body">
               <div class="verdict-status"><div class="status-icon" id="statusIcon">✓</div><div><small id="statusSmall">คำตอบของคุณ</small><h2 id="statusTitle">ถูกต้อง!</h2></div></div>
               <div class="correct-answer" id="correctAnswerText">คำตอบ C · ผิด 3 เรื่อง และแต่ละเรื่องเป็นคนละฐานความผิด</div>
@@ -381,7 +381,7 @@
   <script>
     // โครงสร้างข้อมูลรองรับการเพิ่มคดีใหม่ภายหลังได้ทันที
     const caseData = [{
-      id: 1, category: 'กฎหมายจราจรทางบก', icon: '🚦', title: 'คดีซิ่งผิดทิศ!', scene: 'เหตุเกิดบนถนนเมืองสันติสุข', image: './traffic-case.png', imageAlt: 'ผู้ขับขี่รถจักรยานยนต์ย้อนศรและไม่สวมหมวกนิรภัย', wheelRotation: 315,
+      id: 1, category: 'กฎหมายจราจรทางบก', icon: '🚦', title: 'คดีซิ่งผิดทิศ!', scene: 'เหตุเกิดบนถนนเมืองสันติสุข', image: './traffic-case.webp', imageAlt: 'ผู้ขับขี่รถจักรยานยนต์ย้อนศรและไม่สวมหมวกนิรภัย', wheelRotation: 315,
       lawNotes: [
         ['① ขับรถย้อนศร','ผู้ขับขี่ต้องเดินรถตามทิศทางที่กำหนด การย้อนศรเสี่ยงชนรถที่วิ่งมาถูกทางและเป็นความผิดตามกฎหมายจราจร'],
         ['② ไม่สวมหมวกนิรภัย','ผู้ขับขี่และคนโดยสารรถจักรยานยนต์ต้องสวมหมวกนิรภัยเพื่อป้องกันอันตรายขณะเดินทาง'],
@@ -443,7 +443,7 @@
         }
       ]
     },{
-      id: 3, category: 'กฎหมายยาเสพติดให้โทษ', icon: '🛡️', title: 'คดีสัญญาณจาก K9!', scene: 'เขตปลอดยาเสพติดเมืองสันติสุข', image: './k9-drug-case.png', imageAlt: 'สุนัขตำรวจ K9 กำลังตรวจค้นกระเป๋าต้องสงสัย', wheelRotation: 135,
+      id: 3, category: 'กฎหมายยาเสพติดให้โทษ', icon: '🛡️', title: 'คดีสัญญาณจาก K9!', scene: 'เขตปลอดยาเสพติดเมืองสันติสุข', image: './k9-drug-case.webp', imageAlt: 'สุนัขตำรวจ K9 กำลังตรวจค้นกระเป๋าต้องสงสัย', wheelRotation: 135,
       lawNotes: [
         ['① สิ่งต้องสงสัยไม่ใช่คำตัดสิน','การที่สุนัข K9 ส่งสัญญาณเป็นข้อมูลสำหรับตรวจสอบต่อ ยังต้องตรวจพิสูจน์วัตถุและรวบรวมหลักฐานอย่างถูกต้อง'],
         ['② ห้ามรับฝากของไม่ทราบที่มา','ไม่ควรรับถือหรือเก็บกระเป๋าและสิ่งของจากคนอื่นโดยไม่รู้ว่าอยู่ข้างในมีอะไร เพราะอาจนำอันตรายและปัญหาทางกฎหมายมาให้'],
@@ -567,7 +567,7 @@
       const card=$('#verdictCard'); card.classList.toggle('wrong',!correct);
       $('#statusIcon').textContent=isReveal?'⚖':(correct?'✓':'×'); $('#statusTitle').textContent=isReveal?'เฉลยคำพิพากษา':(correct?'ถูกต้อง!':'ยังไม่ถูกนะ');
       $('#statusSmall').textContent=answer===null?'เฉลยจากท่านผู้พิพากษา':`คุณเลือกข้อ ${String.fromCharCode(65+answer)}`;
-      $('#judgeMascot').src=correct?'./judge-thumbs-up.png':'./judge-confused.png';
+      $('#judgeMascot').src=correct?'./judge-thumbs-up.webp':'./judge-confused.webp';
       $('#judgeMascot').alt=correct?'มาสคอตผู้พิพากษายกนิ้วให้คำตอบ':'มาสคอตผู้พิพากษากำลังสับสนเมื่อตอบผิด';
       $('#correctAnswerText').textContent=`คำตอบ ${String.fromCharCode(65+q.correctAnswer)} · ${q.answers[q.correctAnswer]}`;
       $('#lawGrid').innerHTML=caseData[activeCase].lawNotes.map(note=>`<div class="law-note"><strong>${note[0]}</strong><p>${note[1]}</p></div>`).join('');
