@@ -27,7 +27,7 @@ export default function ToolsSection() {
             ไม่ต้องติดตั้ง
           </p>
           <Link
-            href="/tools/wheel"
+            href="/random-name-picker"
             className="block whitespace-nowrap rounded-btn bg-white px-6 py-3 text-center text-sm font-semibold text-[#2A2775] hover:bg-[#EFF0FE] md:inline-block md:px-6 md:py-3 md:text-[14.5px] lg:px-[26px] lg:py-[13px] lg:text-[15px]"
           >
             เปิดวงล้อสุ่ม →

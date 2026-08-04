@@ -8,21 +8,22 @@ import ToolsSection from "@/components/home/ToolsSection";
 import AdSlot from "@/components/home/AdSlot";
 import AffiliateProductsSection from "@/components/home/AffiliateProductsSection";
 import AppsSection from "@/components/home/AppsSection";
+import SeoHubSection from "@/components/home/SeoHubSection";
 
 export const metadata: Metadata = {
-  title: "Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี",
+  title: "เครื่องมือครูและสื่อการสอนออนไลน์ฟรี | Khuncool",
   description:
-    "คุณคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
+    "รวมเครื่องมือครูและสื่อการสอนออนไลน์ฟรี วงล้อสุ่มชื่อ เกมเป็ดสุ่ม แบ่งกลุ่ม จับเวลา เช็กชื่อ และเกมภาษาอังกฤษ เปิดใช้บนเว็บได้ทันที",
   alternates: {
     canonical: "https://www.khuncool.com/",
   },
   openGraph: {
     type: "website",
-    title: "Khuncool | แหล่งรวมความรู้และเครื่องมือสำหรับครูไทย ใช้ฟรี",
+    title: "เครื่องมือครูและสื่อการสอนออนไลน์ฟรี | Khuncool",
     description:
-      "คุณคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
+      "รวมเครื่องมือครู สื่อการสอน และเกมการเรียนรู้ เปิดใช้บนเว็บได้ทันที ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/",
-    images: ["https://www.khuncool.com/assets/wheel-cover.webp"],
+    images: ["https://www.khuncool.com/assets/random-student-picker-games-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -49,10 +50,21 @@ const jsonLd = {
       name: "khuncool",
       url: "https://www.khuncool.com/",
       inLanguage: "th-TH",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://www.khuncool.com/articles?q={search_term_string}",
-        "query-input": "required name=search_term_string",
+    },
+    {
+      "@type": "CollectionPage",
+      name: "เครื่องมือครูและสื่อการสอนออนไลน์ฟรี",
+      url: "https://www.khuncool.com/",
+      inLanguage: "th-TH",
+      description: "ศูนย์รวมเครื่องมือครู สื่อการสอนออนไลน์ และเกมการเรียนรู้สำหรับนักเรียน",
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "วงล้อสุ่มชื่อนักเรียน", url: "https://www.khuncool.com/random-name-picker" },
+          { "@type": "ListItem", position: 2, name: "เกมเป็ดสุ่มชื่อ", url: "https://www.khuncool.com/duck-race" },
+          { "@type": "ListItem", position: 3, name: "สุ่มแบ่งกลุ่มนักเรียน", url: "https://www.khuncool.com/group-maker" },
+          { "@type": "ListItem", position: 4, name: "เกมและสื่อภาษาอังกฤษ", url: "https://www.khuncool.com/media/english" },
+        ],
       },
     },
   ],
@@ -69,6 +81,7 @@ export default function Home() {
       <HeroSection />
       <ArticlesSection />
       <PillarsSection />
+      <SeoHubSection />
       <ToolsSection />
       <AdSlot />
       <AffiliateProductsSection />

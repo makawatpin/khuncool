@@ -11,13 +11,12 @@ export default function HeroSection() {
       <div className="lg:max-w-[680px] md:max-w-[560px]">
         <h1 className="m-0 mb-2.5 font-anuphan text-[25px] font-bold leading-[1.28] tracking-[-.01em] md:text-[34px] md:leading-[1.18] md:tracking-[-.02em] lg:text-[44px] lg:leading-[1.16]">
           <span className="md:hidden">
-            แหล่งรวมความรู้
+            เครื่องมือและสื่อการสอน
             <br />
-            และเครื่องมือ
-            <span className="text-primary">สำหรับครูไทย</span>
+            ออนไลน์ฟรี <span className="text-primary">สำหรับครูไทย</span>
           </span>
           <span className="hidden md:inline">
-            แหล่งรวมความรู้และเครื่องมือ
+            เครื่องมือครูและสื่อการสอนออนไลน์ฟรี
             <br />
             <span className="bg-brand bg-clip-text text-transparent">
               สำหรับครูไทย
@@ -25,8 +24,8 @@ export default function HeroSection() {
           </span>
         </h1>
         <p className="m-0 mb-4 text-[14.5px] leading-relaxed text-ink-secondary md:mb-[22px] md:text-base lg:mb-[26px] lg:text-lg">
-          บทความครู · เครื่องมือครูที่เล่นบนเว็บได้เลย · แอปช่วยงานครู —
-          เปิดใช้ฟรี ไม่ต้องติดตั้ง
+          วงล้อสุ่มชื่อ เกมเป็ดสุ่ม แบ่งกลุ่ม จับเวลา เช็กชื่อ และเกมภาษาอังกฤษ
+          เปิดใช้บนเว็บได้ทันที ไม่ต้องติดตั้ง
         </p>
         <div className="flex gap-2.5 md:gap-[11px] lg:gap-3">
           <Link
