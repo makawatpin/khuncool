@@ -20,6 +20,8 @@ type SfxName =
   | "lose"
   | "win";
 
+export type BgmTheme = "default" | "digital-sort" | "coding-maze" | "typing-defense";
+
 const NOTE = {
   C4: 261.6,
   D4: 293.7,
@@ -56,6 +58,7 @@ class KcSfxEngine {
   private muted = false;
   private bgmOn = true;
   private bgmTimer: ReturnType<typeof setInterval> | null = null;
+  private bgmTheme: BgmTheme = "default";
   private step = 0;
   private started = false;
   private unlockBound = false;
@@ -170,6 +173,39 @@ class KcSfxEngine {
 
   private bgmStep = () => {
     if (!this.ctx || !this.bgmBus) return;
+    if (this.bgmTheme === "typing-defense") {
+      const bass = [82.4, 82.4, 98, 73.4][Math.floor(this.step / 8) % 4];
+      const notes = [329.6, 392, 493.9, 587.3, 493.9, 392, 659.3, 493.9];
+      const i = this.step % 8;
+      if (i % 4 === 0) this.tone({ f: bass, dur: 0.34, v: 0.46, type: "sawtooth", bus: this.bgmBus });
+      this.tone({ f: notes[i], dur: 0.11, v: i % 2 ? 0.1 : 0.15, type: "square", bus: this.bgmBus });
+      if (i === 3 || i === 7) this.noiseToBus(0.045, 0.025, 3800, this.bgmBus);
+      this.step++;
+      return;
+    }
+    if (this.bgmTheme === "coding-maze") {
+      const bass = [130.8, 146.8, 110, 123.5][Math.floor(this.step / 8) % 4];
+      const notes = [261.6, 329.6, 392, 523.3, 392, 329.6, 293.7, 392];
+      const i = this.step % 8;
+      if (i === 0 || i === 4) this.tone({ f: bass, dur: 0.48, v: 0.38, type: "triangle", bus: this.bgmBus });
+      this.tone({ f: notes[i], dur: 0.2, v: 0.12, type: i % 2 ? "sine" : "triangle", bus: this.bgmBus });
+      if (i === 6) this.tone({ f: notes[i] * 2, dur: 0.1, v: 0.05, type: "square", bus: this.bgmBus });
+      this.step++;
+      return;
+    }
+    if (this.bgmTheme === "digital-sort") {
+      const chords = [
+        [261.6, 329.6, 392], [349.2, 440, 523.3], [293.7, 392, 493.9], [392, 493.9, 587.3],
+      ];
+      const i = this.step % 8;
+      const chord = chords[Math.floor(this.step / 8) % chords.length];
+      const melody = chord[[0, 1, 2, 1, 2, 1, 0, 2][i]];
+      if (i === 0) this.tone({ f: chord[0] / 2, dur: 0.46, v: 0.4, type: "sine", bus: this.bgmBus });
+      this.tone({ f: melody, dur: 0.2, v: 0.14, type: "triangle", bus: this.bgmBus });
+      if (i === 4) this.tone({ f: melody * 2, dur: 0.12, v: 0.06, type: "sine", bus: this.bgmBus });
+      this.step++;
+      return;
+    }
     const bar = Math.floor(this.step / 8) % 4;
     const ch = this.CHORDS[bar];
     const i = this.step % 8;
@@ -180,6 +216,43 @@ class KcSfxEngine {
     this.step++;
   };
 
+  private noiseToBus(dur: number, vol: number, hp: number, bus: GainNode) {
+    const ctx = this.init();
+    if (!ctx) return;
+    const count = Math.floor(ctx.sampleRate * dur);
+    const buffer = ctx.createBuffer(1, count, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < count; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / count);
+    const source = ctx.createBufferSource();
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+    source.buffer = buffer;
+    filter.type = "highpass";
+    filter.frequency.value = hp;
+    gain.gain.value = vol;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(bus);
+    source.start();
+  }
+
+  setBgmTheme(theme: BgmTheme) {
+    if (this.bgmTheme === theme) return;
+    this.bgmTheme = theme;
+    this.step = 0;
+    if (this.bgmTimer) {
+      clearInterval(this.bgmTimer);
+      this.bgmTimer = setInterval(this.bgmStep, this.bgmInterval());
+    }
+  }
+
+  private bgmInterval() {
+    if (this.bgmTheme === "typing-defense") return 180;
+    if (this.bgmTheme === "coding-maze") return 310;
+    if (this.bgmTheme === "digital-sort") return 245;
+    return 260;
+  }
+
   bgm(on: boolean) {
     this.bgmOn = on;
     if (typeof window !== "undefined") window.localStorage.setItem("kc-bgm-on", on ? "1" : "0");
@@ -188,7 +261,7 @@ class KcSfxEngine {
     this.resume();
     this.bgmBus.gain.cancelScheduledValues(ctx.currentTime);
     this.bgmBus.gain.linearRampToValueAtTime(on ? 0.5 : 0, ctx.currentTime + 0.6);
-    if (on && !this.bgmTimer) this.bgmTimer = setInterval(this.bgmStep, 260);
+    if (on && !this.bgmTimer) this.bgmTimer = setInterval(this.bgmStep, this.bgmInterval());
     if (!on && this.bgmTimer) {
       clearInterval(this.bgmTimer);
       this.bgmTimer = null;

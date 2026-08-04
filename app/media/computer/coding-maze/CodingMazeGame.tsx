@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useFullscreen } from "../../english/useFullscreen";
@@ -89,6 +89,11 @@ export default function CodingMazeGame() {
   const [bumping, setBumping] = useState(false);
   const [message, setMessage] = useState("วางคำสั่ง แล้วกด RUN!");
   const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    KcSfx.setBgmTheme("coding-maze");
+    return () => KcSfx.setBgmTheme("default");
+  }, []);
   const runId = useRef(0);
   const level = LEVELS[levelIndex];
   const mazeTheme = MAZE_THEMES[levelIndex];
@@ -196,7 +201,7 @@ export default function CodingMazeGame() {
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {stage !== "intro" && <button type="button" className={`${styles.hubMenu} kc-game-menu`} onClick={() => resetBoard("intro")} aria-label="เริ่มด่านใหม่"><span>↻</span><b>เริ่มใหม่</b></button>}
-        <button type="button" className={styles.roundBtn} onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"}>{muted ? "🔇" : "🔊"}</button>
+        <button type="button" className={styles.roundBtn} onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); KcSfx.bgm(!next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียงและเพลง" : "ปิดเสียงและเพลง"}>{muted ? "🔇" : "🔊"}</button>
         <button type="button" className={`${styles.roundBtn} ${isFull ? styles.activeBtn : ""}`} onClick={toggle} aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}>⛶</button>
       </div>
     </header>
@@ -205,7 +210,7 @@ export default function CodingMazeGame() {
       <div className={styles.levelBadge}>{mazeTheme.icon} {level.name.toUpperCase()} · {mazeTheme.name}</div><div className={styles.introVisual}><span>🤖</span><i>→</i><span>🧠</span></div>
       <h2>วางแผนให้ดี<br/>แล้วพาหุ่นยนต์พิชิต CPU!</h2><p>{level.hint}</p>
       <div className={styles.introStats}><span>🧩 {rows} × {cols} ช่อง</span><span>⌘ สูงสุด {maxCommands} คำสั่ง</span><span>🏆 {LEVELS.length} ด่าน</span></div>
-      <button type="button" className={styles.startBtn} onClick={() => { KcSfx.unlock(); KcSfx.play("whoosh"); setStage("play"); }}><span>เริ่มภารกิจ</span><b>▶</b></button>
+      <button type="button" className={styles.startBtn} onClick={() => { KcSfx.unlock(); KcSfx.bgm(true); KcSfx.play("whoosh"); setStage("play"); }}><span>เริ่มภารกิจ</span><b>▶</b></button>
     </section> : <section className={styles.play}>
       <div className={styles.hud}><div><span>ด่าน</span><b>{levelIndex + 1}<small> / {LEVELS.length}</small></b></div><div className={styles.hudMessage}>{message}</div><div><span>คำสั่ง</span><b>{queue.length}<small> / {maxCommands}</small></b></div></div>
       <div className={styles.gameGrid}>

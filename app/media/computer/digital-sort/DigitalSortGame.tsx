@@ -47,8 +47,13 @@ export default function DigitalSortGame() {
     ? SORT_ITEMS.find((item) => item.id === current.id)?.english ?? current.english
     : "";
 
+  useEffect(() => {
+    KcSfx.setBgmTheme("digital-sort");
+    return () => KcSfx.setBgmTheme("default");
+  }, []);
+
   const start = useCallback(() => {
-    KcSfx.unlock(); KcSfx.play("whoosh");
+    KcSfx.unlock(); KcSfx.bgm(true); KcSfx.play("whoosh");
     setItems(shuffle(SORT_ITEMS).slice(0, ROUND_SIZE)); setRound(0); setScore(0); setStreak(0);
     setBestStreak(0); setCorrect(0); setFeedback(null); setLocked(false); setStage("play");
   }, []);
@@ -87,7 +92,7 @@ export default function DigitalSortGame() {
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {stage !== "home" && <button className={`${styles.hubMenu} kc-game-menu`} type="button" onClick={() => { setStage("home"); setFeedback(null); setLocked(false); KcSfx.play("click"); }} aria-label="กลับหน้าเริ่มเกม"><span>↻</span><b>เริ่มใหม่</b></button>}
-        <button className={styles.roundBtn} type="button" onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"} title={muted ? "เปิดเสียง" : "ปิดเสียง"}>{muted ? "🔇" : "🔊"}</button>
+        <button className={styles.roundBtn} type="button" onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); KcSfx.bgm(!next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียงและเพลง" : "ปิดเสียงและเพลง"} title={muted ? "เปิดเสียงและเพลง" : "ปิดเสียงและเพลง"}>{muted ? "🔇" : "🔊"}</button>
         <button className={`${styles.roundBtn} ${isFull ? styles.activeBtn : ""}`} type="button" onClick={toggle} aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"} title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}>⛶</button>
       </div>
     </header>

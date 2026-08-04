@@ -48,6 +48,11 @@ export default function TypingDefenseGame() {
   const [speed, setSpeed] = useState<Speed>("slow");
   const [adventureLevel, setAdventureLevel] = useState(1);
   const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    KcSfx.setBgmTheme("typing-defense");
+    return () => KcSfx.setBgmTheme("default");
+  }, []);
   const [message, setMessage] = useState("เตรียมระบบป้องกันให้พร้อม!");
   const idRef = useRef(0);
   const spawnRef = useRef(0);
@@ -67,7 +72,7 @@ export default function TypingDefenseGame() {
   }, [speedMultiplier]);
 
   const start = useCallback(() => {
-    KcSfx.unlock(); KcSfx.play("whoosh");
+    KcSfx.unlock(); KcSfx.bgm(true); KcSfx.play("whoosh");
     idRef.current = 0; spawnRef.current = 0;
     setThreats([newThreat(1), newThreat(1)]); setBlasts([]); setDataDrops([]); setTyped(""); setScore(0); setCombo(0); setBestCombo(0); setCorrectAnswers(0); setAttempts(0);
     setIntegrity(3); setRemaining(roundSeconds); setCountdown(3); setMessage("เตรียมวางมือบนแป้นพิมพ์..."); setStage("countdown");
@@ -219,7 +224,7 @@ export default function TypingDefenseGame() {
       <div className={styles.controls}>
         <Link href="/media/computer" className={`${styles.hubMenu} kc-game-menu`} aria-label="กลับหน้าสื่อคอมพิวเตอร์"><span>☰</span><b>เมนู</b></Link>
         {!(["home", "select", "levelIntro"] as Stage[]).includes(stage) && <button type="button" className={`${styles.hubMenu} kc-game-menu`} onClick={start} aria-label="เริ่มเกมใหม่"><span>↻</span><b>เริ่มใหม่</b></button>}
-        <button className={styles.iconButton} type="button" onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"}>{muted ? "🔇" : "🔊"}</button>
+        <button className={styles.iconButton} type="button" onClick={() => { const next = !muted; setMuted(next); KcSfx.setMuted(next); KcSfx.bgm(!next); if (!next) KcSfx.play("click"); }} aria-label={muted ? "เปิดเสียงและเพลง" : "ปิดเสียงและเพลง"}>{muted ? "🔇" : "🔊"}</button>
         <button className={`${styles.iconButton} ${isFull ? styles.activeButton : ""}`} type="button" onClick={toggle} aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}>⛶</button>
       </div>
     </header>
