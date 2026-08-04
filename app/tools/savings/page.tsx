@@ -104,6 +104,12 @@ export default function SavingsPage() {
             หรือพิมพ์สมุดบัญชีเป็น PDF ได้ทันที
           </span>
         </p>
+        <Link
+          href="/blog/student-savings-activity"
+          className="mt-3 inline-flex rounded-pill bg-[#ECEDFE] px-3 py-2 text-[12.5px] font-semibold text-primary no-underline hover:bg-[#E1E3FD]"
+        >
+          อ่านแนวทางจัดกิจกรรมออมเงินและตรวจยอดอย่างโปร่งใส ›
+        </Link>
       </div>
 
       {/* Savings app */}

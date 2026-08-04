@@ -14,6 +14,8 @@ export type OverviewArticleConfig = {
   title: string;
   cover: string;
   coverAlt: string;
+  coverWidth?: number;
+  coverHeight?: number;
   date: string;
   dateISO: string;
   readTime: string;
@@ -29,6 +31,8 @@ export type OverviewArticleConfig = {
   practices: { n: string; head: string; body: string }[];
   evidenceHeading: string;
   evidence: string[];
+  sourceNote?: string;
+  externalSources?: { label: string; href: string }[];
   noteTitle: string;
   note: string;
   ctaTitle: string;
@@ -95,7 +99,7 @@ export function KhuncoolOverviewArticle({ config }: { config: OverviewArticleCon
       </nav>
 
       <div className="px-4 pt-3 md:px-8 md:pt-4">
-        <Image src={config.cover} alt={config.coverAlt} width={1672} height={941} priority className="block h-auto w-full rounded-card-lg bg-[#F1F3F6] object-cover md:rounded-[20px]" />
+        <Image src={config.cover} alt={config.coverAlt} width={config.coverWidth ?? 1672} height={config.coverHeight ?? 941} priority className="block h-auto w-full rounded-card-lg bg-[#F1F3F6] object-cover md:rounded-[20px]" />
       </div>
 
       <div className="px-4 pb-9 pt-4 md:grid md:grid-cols-[1fr_300px] md:gap-10 md:px-8 md:pt-6">
@@ -151,9 +155,24 @@ export function KhuncoolOverviewArticle({ config }: { config: OverviewArticleCon
 
           <h2 className="mt-8 text-xl md:text-2xl">{config.evidenceHeading}</h2>
           {config.evidence.map((p) => <p key={p} className="m-0 mb-3.5 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">{p}</p>)}
-          <p className="m-0 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
-            แนวคิดนี้สอดคล้องกับข้อมูลของ <a href="https://www.unesco.org/en/digital-education" target="_blank" rel="noopener noreferrer" className="text-primary underline">UNESCO ด้านการเรียนรู้ดิจิทัล</a> ที่มองว่าเทคโนโลยีควรช่วยเพิ่มคุณภาพ ความครอบคลุม และการบริหารการศึกษา ขณะเดียวกัน <a href="https://www.unicef.org/digitaleducation/" target="_blank" rel="noopener noreferrer" className="text-primary underline">UNICEF Digital Education</a> เน้นการใช้เทคโนโลยีอย่างมีหลักฐานรองรับ โดยให้ครูและผู้เรียนเป็นศูนย์กลาง ทั้งสองแหล่งย้ำตรงกันว่าเครื่องมือดิจิทัลควรสนับสนุนการเรียนรู้ ไม่ใช่แทนที่ความสัมพันธ์ระหว่างครูกับนักเรียน
-          </p>
+          {config.externalSources?.length ? (
+            <div className="m-0 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+              <p className="m-0 mb-2">{config.sourceNote ?? "แหล่งข้อมูลสำหรับศึกษาเพิ่มเติม:"}</p>
+              <ul className="m-0 space-y-1.5 pl-5">
+                {config.externalSources.map((source) => (
+                  <li key={source.href}>
+                    <a href={source.href} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                      {source.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p className="m-0 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+              อ่านหลักการเพิ่มเติมจาก <a href="https://www.unesco.org/en/digital-education" target="_blank" rel="noopener noreferrer" className="text-primary underline">UNESCO ด้านการเรียนรู้ดิจิทัล</a> และ <a href="https://www.unicef.org/digitaleducation/" target="_blank" rel="noopener noreferrer" className="text-primary underline">UNICEF Digital Education</a>
+            </p>
+          )}
 
           <div className="mt-5 rounded-2xl border border-[#A9EBDA] bg-[#F6FFFC] p-4 md:mt-6 md:p-[20px_22px]">
             <div className="mb-1.5 text-xs font-bold text-[#0A7A66] md:mb-2 md:text-[13px]">💡 {config.noteTitle}</div>

@@ -266,6 +266,12 @@ export default function GroupScoreboardPage() {
         </h2>
         <div className="flex flex-wrap gap-2.5">
           <Link
+            href="/blog/classroom-group-points"
+            className="rounded-pill border border-[#C6C9FB] bg-[#F7F7FE] px-3.5 py-2 text-[13px] font-semibold text-primary no-underline hover:opacity-70"
+          >
+            📖 วิธีให้คะแนนกลุ่มโดยไม่ทำให้เด็กเสียกำลังใจ
+          </Link>
+          <Link
             href="/group-maker"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >

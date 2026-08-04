@@ -104,6 +104,12 @@ export default function HomeroomPage() {
             เป็นชุดเอกสารสิ้นเทอมได้ในคลิกเดียว
           </span>
         </p>
+        <Link
+          href="/blog/homeroom-log-topics"
+          className="mt-3 inline-flex rounded-pill bg-[#ECEDFE] px-3 py-2 text-[12.5px] font-semibold text-primary no-underline hover:bg-[#E1E3FD]"
+        >
+          อ่านตัวอย่างหัวข้อบันทึกโฮมรูมตลอดภาคเรียน ›
+        </Link>
       </div>
 
       {/* Homeroom app */}

@@ -159,7 +159,8 @@ export const FAQS = [
 ];
 
 export const RELATED_ARTICLES = [
+  { t: "ตัวอย่างแผนสอนคำศัพท์ภาษาอังกฤษ 50 นาที", href: "/blog/english-vocabulary-lesson-plan" },
+  { t: "7 กิจกรรม Warm-up ภาษาอังกฤษ 5 นาที", href: "/blog/english-warm-up-activities" },
   { t: "เทคนิคสอนภาษาอังกฤษจาก PSU", href: "/blog/psu-english" },
-  { t: "10 กิจกรรมสุ่มชื่อที่ใช้ได้ทุกวิชา", href: "/blog/random-name-activities" },
   { t: "อ่านบทความอื่น ๆ ทั้งหมด", href: "/articles" },
 ];

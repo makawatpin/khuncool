@@ -13,7 +13,7 @@ import {
 } from "./data";
 
 export const metadata: Metadata = {
-  title: "สื่อการสอนภาษาอังกฤษ ประถม ใช้ฟรีออนไลน์ | khuncool",
+  title: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์ ประถม ใช้ฟรี | khuncool",
   description:
     "รวมสื่อและเกมภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ Phonics Vocabulary Grammar และ Speaking เปิดเล่นบนจอหน้าชั้นได้ทันที ไม่ต้องติดตั้ง ไม่ต้องสมัครสมาชิก",
   alternates: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "สื่อการสอนภาษาอังกฤษ ประถม ใช้ฟรีออนไลน์ | khuncool",
+    title: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์ ประถม ใช้ฟรี | khuncool",
     description:
       "รวมสื่อและเกมภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ เปิดเล่นบนจอหน้าชั้นได้ทันที ไม่ต้องติดตั้ง ไม่ต้องสมัครสมาชิก",
     url: "https://www.khuncool.com/media/english",
@@ -60,7 +60,7 @@ const jsonLd = {
     },
     {
       "@type": "CollectionPage",
-      name: "สื่อการสอนภาษาอังกฤษ",
+      name: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์",
       url: "https://www.khuncool.com/media/english",
       inLanguage: "th-TH",
       dateModified: "2026-08-04",
@@ -71,7 +71,7 @@ const jsonLd = {
         name: "Khuncool",
         url: "https://www.khuncool.com",
       },
-      description: "รวมเกมและสื่อภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ",
+      description: "รวมสื่อการสอนและเกมภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ Phonics Vocabulary Grammar และ Speaking",
     },
     {
       "@type": "ItemList",
@@ -130,7 +130,7 @@ export default function MediaEnglishPage() {
       <div className="px-4 pb-[22px] pt-3 md:grid md:grid-cols-[1.15fr_0.85fr] md:items-start md:gap-11 md:px-8 md:pb-[30px] md:pt-4">
         <div>
           <h1 className="m-0 mb-2.5 text-[26px] leading-[1.32] md:mb-3.5 md:max-w-[16ch] md:text-[40px] md:leading-[1.24]">
-            สื่อการสอนภาษาอังกฤษ เล่นได้ทั้งห้อง ใช้ฟรี
+            สื่อการสอนและเกมภาษาอังกฤษ เล่นได้ทั้งห้อง ใช้ฟรี
           </h1>
           <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[58ch] md:text-[15.5px] md:leading-[1.75]">
             <span className="md:hidden">

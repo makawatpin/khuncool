@@ -120,6 +120,18 @@ export const CASES = [
 
 export const RELATED = [
   {
+    t: "ระบบคะแนนกลุ่มในห้องเรียน ให้คะแนนอย่างไรไม่ให้เด็กเสียกำลังใจ",
+    href: "/blog/classroom-group-points",
+  },
+  {
+    t: "ตัวอย่างหัวข้อบันทึกโฮมรูมตลอดภาคเรียน",
+    href: "/blog/homeroom-log-topics",
+  },
+  {
+    t: "แนวทางจัดกิจกรรมออมเงินนักเรียนอย่างโปร่งใส",
+    href: "/blog/student-savings-activity",
+  },
+  {
     t: "10 กิจกรรมสุ่มชื่อนักเรียนที่ใช้ได้จริงในห้องเรียน",
     href: "/blog/random-name-activities",
   },
