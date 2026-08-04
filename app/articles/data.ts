@@ -30,6 +30,18 @@ export type Article = {
 
 export const ALL_ARTICLES: Article[] = [
   {
+    title: "คอร์สเรียน Excel ฟรี สอนตั้งแต่พื้นฐาน เรียนจบมีใบเซอร์",
+    cat: "คอร์สเรียน",
+    date: "4 ส.ค. 2569",
+    dateISO: "2026-08-04",
+    readTime: "6 นาที",
+    img: "/assets/excel-for-everyone-cover.webp",
+    alt: "คอร์สเรียน Excel ฟรี สอนตั้งแต่พื้นฐาน เรียนจบมีใบเซอร์",
+    href: "/blog/excel-for-everyone",
+    excerpt:
+      "รีวิวคอร์สเรียน Excel ฟรี Excel for Everyone จาก BorntoDev สอนตั้งแต่พื้นฐานถึง VLOOKUP, IF และ Dashboard เรียนจบมีใบประกาศนียบัตร",
+  },
+  {
     title: "เครื่องมือสุ่มแบ่งกลุ่มนักเรียนฟรี ใช้งานง่าย รวดเร็ว สำหรับครูยุคดิจิทัล",
     cat: "สื่อการสอน",
     date: "2 ส.ค. 2569",
