@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: "บทความครู สื่อการสอน รีวิวสินค้า ข่าวการศึกษา",
     description:
       "รวมบทความสำหรับครูไทย สื่อการสอน รีวิวสินค้า และข่าวการศึกษา อัปเดตใหม่ทุกสัปดาห์",
-    images: ["https://www.khuncool.com/assets/wheel-cover.png"],
+    images: ["https://www.khuncool.com/assets/wheel-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

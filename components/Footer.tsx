@@ -17,7 +17,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1160px]">
         <div className="mb-3.5 flex items-center gap-2">
           <Image
-            src="/assets/khuncool-logo.png"
+            src="/assets/khuncool-logo.webp"
             alt="khuncool"
             width={26}
             height={26}

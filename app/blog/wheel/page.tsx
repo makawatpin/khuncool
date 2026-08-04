@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: "article",
     title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง",
     description: "วิธีใช้วงล้อสุ่มชื่อในห้องเรียน พร้อม 8 ไอเดียใช้งานจริง",
-    images: ["https://www.khuncool.com/assets/wheel-cover.png"],
+    images: ["https://www.khuncool.com/assets/wheel-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -176,7 +176,7 @@ const jsonLd = {
         url: "https://www.khuncool.com/about",
       },
       publisher: { "@type": "Organization", name: "Khuncool" },
-      image: "https://www.khuncool.com/assets/wheel-cover.png",
+      image: "https://www.khuncool.com/assets/wheel-cover.webp",
       mainEntityOfPage: "https://www.khuncool.com/blog/wheel",
     },
     {
@@ -257,7 +257,7 @@ export default function BlogWheelPage() {
       {/* Cover image */}
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         <Image
-          src="/assets/wheel-cover.png"
+          src="/assets/wheel-cover.webp"
           alt="วงล้อสุ่ม สื่อการสอนที่ครูควรมี ช่วยให้ห้องเรียนสนุกและยุติธรรมขึ้น"
           width={1200}
           height={630}

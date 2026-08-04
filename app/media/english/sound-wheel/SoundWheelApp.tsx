@@ -662,7 +662,7 @@ export default function SoundWheelApp() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/khuncool-logo.png"
+            src="/assets/khuncool-logo.webp"
             alt="khuncool"
             style={{
               width: 38,

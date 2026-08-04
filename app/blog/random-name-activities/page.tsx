@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที",
     description:
       "10 กิจกรรมสุ่มชื่อที่ครูเอาไปใช้ได้ทันที พร้อมวิธีเล่นและเคล็ดลับ",
-    images: ["https://www.khuncool.com/assets/random-name-cover.png"],
+    images: ["https://www.khuncool.com/assets/random-name-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -193,7 +193,7 @@ const jsonLd = {
         url: "https://www.khuncool.com/about",
       },
       publisher: { "@type": "Organization", name: "Khuncool" },
-      image: "https://www.khuncool.com/assets/random-name-cover.png",
+      image: "https://www.khuncool.com/assets/random-name-cover.webp",
       mainEntityOfPage: "https://www.khuncool.com/blog/random-name-activities",
     },
     {
@@ -236,7 +236,7 @@ export default function BlogRandomNameActivitiesPage() {
 
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         <Image
-          src="/assets/random-name-cover.png"
+          src="/assets/random-name-cover.webp"
           alt="10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที"
           width={1200}
           height={630}

@@ -192,7 +192,7 @@ export default function Header() {
           </button>
           <Link href="/" className="flex flex-1 items-center gap-1.5 md:flex-none">
             <Image
-              src="/assets/khuncool-logo.png"
+              src="/assets/khuncool-logo.webp"
               alt="khuncool"
               width={30}
               height={30}
@@ -248,7 +248,7 @@ export default function Header() {
           <div className="absolute inset-y-0 left-0 flex w-[78%] max-w-[300px] flex-col bg-white shadow-lg">
             <div className="flex items-center gap-2 border-b border-border px-4 py-3.5">
               <Image
-                src="/assets/khuncool-logo.png"
+                src="/assets/khuncool-logo.webp"
                 alt="khuncool"
                 width={26}
                 height={26}

@@ -89,7 +89,7 @@ export default function AseanMatchingApp() {
 
   return <div ref={ref} data-category={category} data-stage={stage} className={`${styles.shell} ${fullscreenClassName}`} onMouseOver={hoverSfxDelegate} style={{ "--cat": categoryMeta.color, "--catSoft": `${categoryMeta.color}30` } as React.CSSProperties}>
     <div className={styles.mesh}/><div className={`${styles.orb} ${styles.orb1}`}/><div className={`${styles.orb} ${styles.orb2}`}/><div className={`${styles.orb} ${styles.orb3}`}/>
-    <header className={styles.topbar}><div className={styles.brand}><Image src="/assets/khuncool-logo.png" alt="khuncool" width={38} height={38}/><span>เกมจับคู่ภาพอาเซียน</span></div>
+    <header className={styles.topbar}><div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="khuncool" width={38} height={38}/><span>เกมจับคู่ภาพอาเซียน</span></div>
       <div className={styles.controls}>
         <Link href="/media/social-studies" className={styles.hubMenu} aria-label="กลับหน้าสื่อสังคมศึกษา"><span>☰</span><b>เมนู</b></Link>
         {stage !== "home" && <button type="button" className={styles.categoryMenu} onClick={() => { setStage("home"); setFeedback(null); setLocked(false); KcSfx.play("click"); }} aria-label="กลับไปเลือกหมวด"><span>☰</span><b>เปลี่ยนหมวด</b></button>}

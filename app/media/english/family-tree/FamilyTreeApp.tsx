@@ -1008,7 +1008,7 @@ export default function FamilyTreeApp() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/assets/khuncool-logo.png"
+            src="/assets/khuncool-logo.webp"
             alt="khuncool"
             style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description:
       "เช็กชื่อนักเรียนออนไลน์ บันทึกรายห้องต่อเนื่อง พิมพ์ใบเช็กชื่อและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี",
     url: "https://www.khuncool.com/tools/attendance",
-    images: ["https://www.khuncool.com/assets/attendance-cover.png"],
+    images: ["https://www.khuncool.com/assets/attendance-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

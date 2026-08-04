@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "ร้านค้าครู อุปกรณ์ห้องเรียน แนะนำโดยคุณคูล",
     description: "อุปกรณ์ห้องเรียนที่ครูใช้จริง คัดสรรและรีวิวโดยทีมคุณคูล",
-    images: ["https://www.khuncool.com/assets/magnet-frame-cover.png"],
+    images: ["https://www.khuncool.com/assets/magnet-frame-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

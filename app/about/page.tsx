@@ -31,7 +31,7 @@ const jsonLd = {
         "@type": "Organization",
         name: "khuncool",
         url: "https://www.khuncool.com/",
-        logo: "https://www.khuncool.com/assets/khuncool-logo.png",
+        logo: "https://www.khuncool.com/assets/khuncool-logo.webp",
         email: "khuncoolhub@gmail.com",
         founder: {
           "@type": "Person",
@@ -81,7 +81,7 @@ export default function AboutPage() {
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
         <div className="mb-4 flex items-center gap-2.5">
           <Image
-            src="/assets/khuncool-logo.png"
+            src="/assets/khuncool-logo.webp"
             alt="khuncool"
             width={36}
             height={36}

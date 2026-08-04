@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description:
       "ใส่รายชื่อนักเรียนแล้วปล่อยเป็ดแข่งได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
     url: "https://www.khuncool.com/duck-race",
-    images: ["https://www.khuncool.com/assets/duck-race-cover.png"],
+    images: ["https://www.khuncool.com/assets/duck-race-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

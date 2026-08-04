@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description:
       "บันทึกเงินออมนักเรียนรายห้องรายคน พิมพ์ใบบันทึกออมเงินและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี",
     url: "https://www.khuncool.com/tools/savings",
-    images: ["https://www.khuncool.com/assets/savings-cover.png"],
+    images: ["https://www.khuncool.com/assets/savings-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

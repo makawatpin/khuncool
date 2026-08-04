@@ -245,7 +245,7 @@ export default function BlogMagneticFramePage() {
 
           <div className="mt-7">
             <Image
-              src="/assets/magnet-frame-cover.png"
+              src="/assets/magnet-frame-cover.webp"
               alt="รายละเอียดกรอบป้ายติดผนังแม่เหล็ก"
               width={1200}
               height={630}

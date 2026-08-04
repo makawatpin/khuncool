@@ -110,7 +110,7 @@ export const ALL_ARTICLES: Article[] = [
     date: "27 ก.ค. 2569",
     dateISO: "2026-07-27",
     readTime: "5 นาที",
-    img: "/assets/wheel-cover.png",
+    img: "/assets/wheel-cover.webp",
     alt: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี",
     href: "/blog/wheel",
     excerpt:
@@ -123,7 +123,7 @@ export const ALL_ARTICLES: Article[] = [
     date: "26 ก.ค. 2569",
     dateISO: "2026-07-26",
     readTime: "6 นาที",
-    img: "/assets/random-name-cover.png",
+    img: "/assets/random-name-cover.webp",
     alt: "10 กิจกรรมสุ่มชื่อนักเรียน",
     href: "/blog/random-name-activities",
     excerpt:
@@ -136,7 +136,7 @@ export const ALL_ARTICLES: Article[] = [
     date: "25 ก.ค. 2569",
     dateISO: "2026-07-25",
     readTime: "4 นาที",
-    img: "/assets/royal-award-cover.png",
+    img: "/assets/royal-award-cover.webp",
     alt: "รางวัลพระราชทาน 2569",
     href: "/blog/royal-award-2569",
     excerpt:

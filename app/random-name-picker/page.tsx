@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description:
       "ใส่รายชื่อนักเรียนแล้วหมุนได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
     url: "https://www.khuncool.com/random-name-picker",
-    images: ["https://www.khuncool.com/assets/wheel-cover.png"],
+    images: ["https://www.khuncool.com/assets/wheel-cover.webp"],
     locale: "th_TH",
   },
   twitter: {

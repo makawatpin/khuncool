@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     description:
       "คุณคูล (Khuncool) ศูนย์รวมบทความครู สื่อการสอนออนไลน์ และแอปช่วยงานครู เช่น วงล้อสุ่มชื่อ เช็กชื่อ บันทึกโฮมรูม ใช้งานฟรีบนเว็บ ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/",
-    images: ["https://www.khuncool.com/assets/wheel-cover.png"],
+    images: ["https://www.khuncool.com/assets/wheel-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -37,7 +37,7 @@ const jsonLd = {
       "@type": "Organization",
       name: "khuncool",
       url: "https://www.khuncool.com/",
-      logo: "https://www.khuncool.com/assets/khuncool-logo.png",
+      logo: "https://www.khuncool.com/assets/khuncool-logo.webp",
       email: "khuncoolhub@gmail.com",
       founder: {
         "@type": "Person",

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "รางวัลพระราชทาน 2569 สพฐ. เปิดคัดเลือก ยื่น 1–21 ส.ค.",
     description:
       "สรุปช่วงเวลา ขั้นตอน และเอกสารที่โรงเรียนต้องเตรียม ก่อนยื่นความจำนงกับเขตพื้นที่",
-    images: ["https://www.khuncool.com/assets/royal-award-cover.png"],
+    images: ["https://www.khuncool.com/assets/royal-award-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
@@ -59,7 +59,7 @@ const jsonLd = {
         url: "https://www.khuncool.com/about",
       },
       publisher: { "@type": "Organization", name: "Khuncool" },
-      image: "https://www.khuncool.com/assets/royal-award-cover.png",
+      image: "https://www.khuncool.com/assets/royal-award-cover.webp",
       mainEntityOfPage: "https://www.khuncool.com/blog/royal-award-2569",
     },
   ],
@@ -153,7 +153,7 @@ export default function BlogRoyalAward2569Page() {
 
       <div className="px-4 pt-3 md:px-8 md:pt-4">
         <Image
-          src="/assets/royal-award-cover.png"
+          src="/assets/royal-award-cover.webp"
           alt="การคัดเลือกนักเรียนและสถานศึกษา รับรางวัลพระราชทาน ปีการศึกษา 2569"
           width={1200}
           height={630}

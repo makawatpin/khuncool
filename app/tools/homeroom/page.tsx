@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description:
       "บันทึกโฮมรูมรายห้องต่อเนื่อง พิมพ์เอกสารสิ้นเทอมและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี",
     url: "https://www.khuncool.com/tools/homeroom",
-    images: ["https://www.khuncool.com/assets/homeroom-cover.png"],
+    images: ["https://www.khuncool.com/assets/homeroom-cover.webp"],
     locale: "th_TH",
   },
   twitter: {
