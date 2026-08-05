@@ -158,6 +158,72 @@ const USE_CASES = [
   },
 ];
 
+const RELATED_TOOLS = [
+  {
+    icon: "🎡",
+    title: "วงล้อสุ่มชื่อนักเรียน",
+    href: "/random-name-picker",
+    desc: "อยากได้ผลลัพธ์ไวกว่าเกมแข่งเป็ด ใช้วงล้อสุ่มชื่อหมุนเลือกคนตอบคำถาม กันชื่อซ้ำได้ บันทึกรายชื่อไว้ใช้คาบหน้า",
+  },
+  {
+    icon: "🔀",
+    title: "สุ่มแบ่งกลุ่มนักเรียน",
+    href: "/group-maker",
+    desc: "สุ่มแบ่งกลุ่มนักเรียนให้เท่า ๆ กันอัตโนมัติ กำหนดจำนวนกลุ่มหรือจำนวนคนต่อกลุ่มก็ได้ ใช้ต่อจากการสุ่มชื่อได้ทันที",
+  },
+  {
+    icon: "🏆",
+    title: "กระดานคะแนนกลุ่ม",
+    href: "/group-scoreboard",
+    desc: "ให้คะแนนกลุ่มที่เป็ดเข้าเส้นชัยก่อน เห็นอันดับสดระหว่างเรียน ใช้กระตุ้นการมีส่วนร่วมได้ทั้งคาบ",
+  },
+  {
+    icon: "⏱️",
+    title: "จับเวลาและนับถอยหลัง",
+    href: "/timer",
+    desc: "ตั้งเวลาทำกิจกรรมหลังสุ่มชื่อเสร็จ ตัวเลขใหญ่เห็นจากหลังห้อง มีเสียงเตือนเมื่อหมดเวลา",
+  },
+  {
+    icon: "🎯",
+    title: "สุ่มคำถามหน้าชั้น",
+    href: "/random-question",
+    desc: "สุ่มชื่อได้แล้วสุ่มคำถามต่อ ใส่ชุดคำถามของคุณเองแล้วสุ่มขึ้นจอ ใช้ทบทวนบทเรียนท้ายคาบ",
+  },
+  {
+    icon: "🎤",
+    title: "เครื่องวัดเสียงในห้องเรียน",
+    href: "/classroom-noise-meter",
+    desc: "เกมแข่งเป็ดทำให้เด็กเชียร์กันเสียงดัง ใช้เครื่องวัดเสียงคุมระดับเสียงห้องเรียนไม่ให้เกินที่ตั้งไว้",
+  },
+];
+
+const RELATED_ARTICLES = [
+  {
+    title: "10 กิจกรรมเกมเป็ดสุ่มชื่อในห้องเรียน",
+    href: "/blog/duck-race-classroom-activities",
+  },
+  {
+    title: "วงล้อสุ่มชื่อ vs เกมเป็ดสุ่มชื่อ เลือกใช้ตัวไหนดี",
+    href: "/blog/wheel-vs-duck-race",
+  },
+  {
+    title: "วิธีใช้เกมแข่งเป็ดในห้องเรียน",
+    href: "/blog/duck-race",
+  },
+  {
+    title: "8 ไอเดียใช้วงล้อสุ่มในห้องเรียน",
+    href: "/blog/wheel",
+  },
+  {
+    title: "ไอเดียกิจกรรมสุ่มชื่อนักเรียน",
+    href: "/blog/random-name-activities",
+  },
+  {
+    title: "เกมสุ่มชื่อนักเรียนที่เล่นได้จริงในคาบเรียน",
+    href: "/blog/random-student-picker-games",
+  },
+];
+
 export default function DuckRacePage() {
   return (
     <main className="flex-1 w-full max-w-[1160px] mx-auto bg-white">
@@ -271,54 +337,60 @@ export default function DuckRacePage() {
         </div>
       </div>
 
-      {/* Related */}
-      <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
-        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">
-          เครื่องมือและบทความที่เกี่ยวข้อง
+      {/* Related tools */}
+      <div className="border-t border-border bg-surface-light px-4 py-6 md:px-8 md:py-9">
+        <h2 className="m-0 mb-1.5 text-lg md:mb-2 md:text-2xl">
+          เครื่องมือครูอื่นที่ใช้คู่กับเกมเป็ดสุ่มชื่อได้
         </h2>
-        <div className="flex flex-wrap gap-2.5">
-          <Link
-            href="/blog/duck-race-classroom-activities"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            📖 10 กิจกรรมเกมเป็ดสุ่ม
-          </Link>
-          <Link
-            href="/blog/wheel-vs-duck-race"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            📖 วงล้อสุ่ม vs เกมเป็ดสุ่ม
-          </Link>
-          <Link
-            href="/blog/duck-race"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            📖 วิธีใช้เกมแข่งเป็ดในห้องเรียน
-          </Link>
-          <Link
-            href="/random-name-picker"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            🎡 วงล้อสุ่มชื่อนักเรียน
-          </Link>
-          <Link
-            href="/blog/wheel"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            📖 8 ไอเดียใช้วงล้อสุ่มในห้องเรียน
-          </Link>
-          <Link
-            href="/blog/random-name-activities"
-            className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
-          >
-            📖 ไอเดียกิจกรรมสุ่มชื่อนักเรียน
-          </Link>
+        <p className="m-0 mb-3 max-w-[62ch] text-[13px] leading-[1.7] text-ink-secondary md:mb-4 md:text-sm md:leading-[1.75]">
+          หลังสุ่มชื่อด้วยเกมแข่งเป็ดแล้ว
+          ครูส่วนใหญ่ใช้เครื่องมือเหล่านี้ต่อในคาบเดียวกัน ทุกตัวใช้ฟรี
+          ไม่ต้องติดตั้ง
+        </p>
+        <div className="mt-3 flex flex-col gap-2.5 md:grid md:grid-cols-2 md:gap-3.5">
+          {RELATED_TOOLS.map((t) => (
+            <Link
+              key={t.href}
+              href={t.href}
+              className="rounded-2xl border border-border bg-surface-card p-3.5 no-underline hover:opacity-70 md:p-4"
+            >
+              <div className="mb-1.5 flex items-center gap-2.5">
+                <span className="text-lg md:text-[19px]">{t.icon}</span>
+                <span className="text-sm font-bold text-ink md:text-[15.5px]">
+                  {t.title}
+                </span>
+              </div>
+              <div className="text-[13px] leading-[1.7] text-ink-secondary md:text-sm md:leading-[1.75]">
+                {t.desc}
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-3.5">
           <Link
             href="/tools"
             className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
           >
-            🧰 เครื่องมือทั้งหมด
+            🧰 ดูเครื่องมือครูออนไลน์ทั้งหมด
           </Link>
+        </div>
+      </div>
+
+      {/* Related articles */}
+      <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
+        <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">
+          บทความที่เกี่ยวข้อง
+        </h2>
+        <div className="flex flex-wrap gap-2.5">
+          {RELATED_ARTICLES.map((a) => (
+            <Link
+              key={a.href}
+              href={a.href}
+              className="rounded-pill border border-border px-3.5 py-2 text-[13px] font-semibold text-ink no-underline hover:opacity-70"
+            >
+              📖 {a.title}
+            </Link>
+          ))}
         </div>
       </div>
     </main>
