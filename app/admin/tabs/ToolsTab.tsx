@@ -24,6 +24,7 @@ export default function ToolsTab() {
           <button
             key={d}
             type="button"
+            aria-pressed={days === d}
             onClick={() => setDays(d)}
             className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
               days === d
