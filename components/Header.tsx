@@ -108,6 +108,9 @@ type MediaSubjectGroup = {
 };
 
 const MEDIA_SUBMENU: MediaSubjectGroup[] = [
+  { subject: "คณิตศาสตร์", subjectHref: "/media/mathematics", games: [{ title: "ถอดรหัสบอมบ์ตัวเลข", href: "/media/mathematics/math-bomb-defusal" }] },
+  { subject: "วิทยาศาสตร์", subjectHref: "/media/science", games: [] },
+  { subject: "ภาษาไทย", subjectHref: "/media/thai", games: [] },
   {
     subject: "คอมพิวเตอร์",
     subjectHref: "/media/computer",

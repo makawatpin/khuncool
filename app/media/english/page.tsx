@@ -8,6 +8,7 @@ import {
   MEDIA,
   RELATED_ARTICLES,
   RELATED_TOOLS,
+  SKILLS,
   SUBJECTS,
   TRUST_CHIPS,
 } from "./data";
@@ -156,35 +157,27 @@ export default function MediaEnglishPage() {
               </span>
             ))}
           </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {SKILLS.filter((skill) => skill !== "ทั้งหมด").map((skill) => <span key={skill} className="rounded-full bg-[#EEEEFD] px-3 py-1.5 text-xs font-semibold text-primary">{skill}</span>)}
+          </div>
         </div>
 
-        {/* Desktop-only "start here" card */}
-        <div className="mt-6 hidden rounded-card-lg border border-border bg-surface-light p-[20px_22px] md:block">
-          <h2 className="m-0 mb-2.5 text-[15px]">
-            เริ่มจากสื่อที่ครูใช้บ่อยที่สุด
-          </h2>
-          <Link
-            href="/media/english/family-tree"
-            className="flex items-center gap-[13px] rounded-2xl border border-border bg-surface-card p-3.5 text-inherit no-underline hover:border-[#C6C9FB]"
-          >
-            <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-[#DFF6EF] text-[23px]">
-              🌳
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="m-0 mb-0.5 text-[15.5px]">Family Tree Explorer</h3>
-              <p className="m-0 text-[12.5px] text-ink-secondary">
-                คำศัพท์ครอบครัว 4 ด่าน · ป.1–ป.4
-              </p>
-            </div>
-            <span className="flex-none text-[13px] font-semibold text-primary">
-              เล่น ›
-            </span>
-          </Link>
-        </div>
+        <aside className="mt-6 rounded-[20px] border border-border bg-surface-light p-5 md:p-6" aria-label="สื่อแนะนำ">
+          <p className="m-0 text-xs font-bold uppercase tracking-wider text-primary">สื่อแนะนำ</p>
+          <h2 className="mb-2 mt-2 text-xl">{MEDIA[0].title}</h2>
+          <p className="m-0 text-sm leading-7 text-ink-secondary">{MEDIA[0].short}</p>
+          <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-white p-3.5">
+            <span className="text-2xl">{MEDIA[0].icon}</span>
+            <span className="min-w-0 flex-1 text-xs text-ink-secondary">{MEDIA[0].grade} · {MEDIA[0].time}</span>
+            <Link href={MEDIA[0].href} className="flex-none text-sm font-semibold text-primary no-underline">เปิดใช้ ›</Link>
+          </div>
+        </aside>
       </div>
 
       {/* Skill filter + grid */}
-      <div className="px-4 pb-6 md:px-8 md:pb-[34px]">
+      <div id="media" className="px-4 pb-6 md:px-8 md:pb-[34px]">
+        <h2 className="m-0 mb-1.5 text-lg md:text-2xl">สื่อการสอนภาษาอังกฤษ</h2>
+        <p className="m-0 mb-3 max-w-[64ch] text-[13px] leading-[1.65] text-ink-secondary md:mb-[18px] md:text-[14.5px]">เลือกสื่อแล้วเปิดใช้งานผ่านเบราว์เซอร์ได้ทันที ไม่ต้องติดตั้งและไม่ต้องสมัครสมาชิก</p>
         <MediaGrid />
       </div>
 

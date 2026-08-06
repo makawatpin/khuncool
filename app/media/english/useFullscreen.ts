@@ -9,6 +9,7 @@ export function useFullscreen<T extends HTMLElement>() {
   const baseSizeRef = useRef({ width: 0, height: 0 });
   const [isFull, setIsFull] = useState(false);
   const [isFallbackFull, setIsFallbackFull] = useState(false);
+  const [isDesktopFallbackFull, setIsDesktopFallbackFull] = useState(false);
 
   useEffect(() => {
     const onChange = () =>
@@ -22,7 +23,7 @@ export function useFullscreen<T extends HTMLElement>() {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || !isFull) return;
+    if (!el || (!isFull && !isDesktopFallbackFull)) return;
 
     const syncScale = () => {
       const { width, height } = baseSizeRef.current;
@@ -40,7 +41,7 @@ export function useFullscreen<T extends HTMLElement>() {
       el.style.removeProperty("--kc-fullscreen-base-height");
       el.style.removeProperty("--kc-fullscreen-scale");
     };
-  }, [isFull]);
+  }, [isFull, isDesktopFallbackFull]);
 
   useEffect(() => {
     const el = ref.current;
@@ -66,8 +67,13 @@ export function useFullscreen<T extends HTMLElement>() {
     document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
     document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = `-${scrollX}px`;
+    // The fullscreen game is a fixed viewport surface. Offsetting the fixed
+    // body by the previous page scroll also offsets that surface on some
+    // mobile browsers, clipping its top or bottom by exactly scrollY pixels.
+    // Keep the locked document at the viewport origin and restore the saved
+    // page position when fullscreen closes instead.
+    document.body.style.top = "0px";
+    document.body.style.left = "0px";
     document.body.style.width = "100%";
     document.body.style.overscrollBehavior = "none";
 
@@ -84,6 +90,7 @@ export function useFullscreen<T extends HTMLElement>() {
 
     if (isFallbackFull) {
       setIsFallbackFull(false);
+      setIsDesktopFallbackFull(false);
       return;
     }
 
@@ -100,6 +107,7 @@ export function useFullscreen<T extends HTMLElement>() {
       /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
       window.matchMedia("(max-width: 767px)").matches;
     if (useStableMobileFullscreen) {
+      setIsDesktopFallbackFull(false);
       setIsFallbackFull(true);
       return;
     }
@@ -124,21 +132,22 @@ export function useFullscreen<T extends HTMLElement>() {
         await fullscreenTarget.requestFullscreen();
         return;
       } catch {
-        el.classList.remove("kc-compact-canvas");
-        el.style.removeProperty("--kc-fullscreen-base-width");
-        el.style.removeProperty("--kc-fullscreen-base-height");
-        el.style.removeProperty("--kc-fullscreen-scale");
-        // Fall through to the mobile-safe CSS implementation.
+        // Preserve the measured canvas for the desktop CSS fallback. Reflowing
+        // it to 100vw here would resize responsive children and then scale the
+        // whole game a second time.
       }
     }
 
+    setIsDesktopFallbackFull(true);
     setIsFallbackFull(true);
   }, [isFallbackFull]);
 
   return {
     ref,
     isFull: isFull || isFallbackFull,
-    fullscreenClassName: isFallbackFull
+    fullscreenClassName: isDesktopFallbackFull
+      ? "kc-desktop-fallback-fullscreen kc-scaled-fullscreen"
+      : isFallbackFull
       ? "kc-mobile-fullscreen kc-scaled-fullscreen"
       : isFull
         ? "kc-scaled-fullscreen"

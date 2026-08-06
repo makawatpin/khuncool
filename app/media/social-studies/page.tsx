@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import FaqAccordion from "./FaqAccordion";
 import MediaGrid from "./MediaGrid";
-import { CASES, FAQS, MEDIA, RELATED_ARTICLES, RELATED_TOOLS, SUBJECTS, TRUST_CHIPS } from "./data";
+import { CASES, FAQS, MEDIA, RELATED_ARTICLES, RELATED_TOOLS, SUBJECTS, TOPICS, TRUST_CHIPS } from "./data";
 
 export const metadata: Metadata = {
   title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool",
@@ -35,11 +35,12 @@ export default function SocialStudiesPage() {
       <div><h1 className="m-0 mb-2.5 text-[26px] leading-[1.32] md:mb-3.5 md:max-w-[16ch] md:text-[40px] md:leading-[1.24]">สื่อการสอนสังคมศึกษา เล่นได้ทั้งห้อง ใช้ฟรี</h1>
         <p className="m-0 mb-3.5 text-sm leading-[1.7] text-ink-secondary md:mb-4 md:max-w-[58ch] md:text-[15.5px] md:leading-[1.75]">รวมเกมและสื่อสังคมศึกษาสำหรับครูประถมไว้ที่เดียว แยกตามสาระที่กำลังสอน เปิดจากเบราว์เซอร์และฉายขึ้นจอหน้าชั้นได้ เริ่มต้นด้วยเรื่องอาเซียน 11 ประเทศ</p>
         <div className="flex flex-wrap gap-[7px] md:gap-2">{TRUST_CHIPS.map((chip) => <span key={chip} className="rounded-pill bg-success-bg px-2.5 py-[5px] text-[11.5px] font-semibold text-success md:px-3 md:py-1.5 md:text-[12.5px]">{chip}</span>)}</div>
+        <div className="mt-3 flex flex-wrap gap-2">{TOPICS.filter((topic) => topic !== "ทั้งหมด").map((topic) => <span key={topic} className="rounded-full bg-[#E7F0FF] px-3 py-1.5 text-xs font-semibold text-primary">{topic}</span>)}</div>
       </div>
-      <div className="mt-6 hidden rounded-card-lg border border-border bg-surface-light p-[20px_22px] md:block"><h2 className="m-0 mb-2.5 text-[15px]">เริ่มจากสื่อแนะนำ</h2><Link href="/media/social-studies/asean-matching" className="flex items-center gap-[13px] rounded-2xl border border-border bg-surface-card p-3.5 text-inherit no-underline hover:border-[#C6C9FB]"><div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-[#E7F0FF] text-[23px]">🌏</div><div className="min-w-0 flex-1"><h3 className="m-0 mb-0.5 text-[15.5px]">เกมจับคู่ภาพอาเซียน</h3><p className="m-0 text-[12.5px] text-ink-secondary">5 หมวด · ป.4–ป.6</p></div><span className="flex-none text-[13px] font-semibold text-primary">เล่น ›</span></Link></div>
+      <aside className="mt-6 rounded-[20px] border border-border bg-surface-light p-5 md:p-6" aria-label="สื่อแนะนำ"><p className="m-0 text-xs font-bold uppercase tracking-wider text-primary">สื่อแนะนำ</p><h2 className="mb-2 mt-2 text-xl">{MEDIA[0].title}</h2><p className="m-0 text-sm leading-7 text-ink-secondary">{MEDIA[0].short}</p><div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-white p-3.5"><span className="text-2xl">{MEDIA[0].icon}</span><span className="min-w-0 flex-1 text-xs text-ink-secondary">{MEDIA[0].grade} · {MEDIA[0].time}</span><Link href={MEDIA[0].href} className="flex-none text-sm font-semibold text-primary no-underline">เปิดใช้ ›</Link></div></aside>
     </div>
 
-    <div className="px-4 pb-6 md:px-8 md:pb-[34px]"><MediaGrid /></div>
+    <div id="media" className="px-4 pb-6 md:px-8 md:pb-[34px]"><h2 className="m-0 mb-1.5 text-lg md:text-2xl">สื่อการสอนสังคมศึกษา</h2><p className="m-0 mb-3 max-w-[64ch] text-[13px] leading-[1.65] text-ink-secondary md:mb-[18px] md:text-[14.5px]">เลือกสื่อแล้วเปิดใช้งานผ่านเบราว์เซอร์ได้ทันที ไม่ต้องติดตั้งและไม่ต้องสมัครสมาชิก</p><MediaGrid /></div>
 
     <div className="border-y border-[#EEF0F4] bg-surface-light px-4 py-[22px] md:px-8 md:py-[26px]"><h2 className="m-0 mb-1.5 text-lg md:text-2xl">เลือกสื่อตามสิ่งที่กำลังจะสอน</h2><p className="m-0 mb-3 max-w-[62ch] text-[13px] leading-[1.65] text-ink-secondary md:mb-[18px] md:text-[14.5px]">เริ่มจากเป้าหมายของคาบ แล้วเลือกสื่อที่ตรงกับกิจกรรม</p><div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-[9px]">{CASES.map((item) => <div key={item.q} className="flex items-center gap-2.5 rounded-xl border border-[#EEF0F4] bg-white p-[12px_13px] md:p-[13px_15px]"><span className="flex-1 text-[13px] text-ink-secondary md:text-sm">{item.q}</span><span className="flex-none text-xs font-semibold text-primary md:text-[13px]">{item.a}</span></div>)}</div></div>
 
