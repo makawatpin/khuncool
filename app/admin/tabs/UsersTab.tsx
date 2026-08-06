@@ -56,6 +56,7 @@ export default function UsersTab() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="ค้นหาอีเมล ชื่อ หรือโรงเรียน"
+          aria-label="ค้นหาอีเมล ชื่อ หรือโรงเรียน"
           className="w-full rounded-lg border border-border py-2 pl-9 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
