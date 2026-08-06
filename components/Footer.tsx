@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const FOOTER_LINKS = [
   { t: "เครื่องมือออนไลน์", href: "/tools" },
@@ -12,6 +15,9 @@ const FOOTER_LINKS = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <footer className="mt-auto border-t border-border bg-surface-light px-4 pb-[30px] pt-6">
       <div className="mx-auto max-w-[1160px]">
