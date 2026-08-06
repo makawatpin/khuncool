@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useAccountSheet } from "./AccountSheet";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -133,12 +134,15 @@ export default function Header() {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedPath, setExpandedPath] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const closeSidebar = () => setSidebarOpen(false);
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) || user?.email || "";
   const initial = (displayName || "?").trim().charAt(0).toUpperCase();
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
