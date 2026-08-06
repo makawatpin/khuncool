@@ -181,6 +181,7 @@ export default function ToolsPage() {
               icon={t.icon}
               title={t.title}
               bg={t.bg}
+              image={t.image}
               short={t.short}
               desc={t.desc}
             />
