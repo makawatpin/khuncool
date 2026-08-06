@@ -72,16 +72,35 @@ export default function ArticlesSection() {
       {/* sidebar: ad + popular (desktop/tablet only) */}
       <div className="mt-7 hidden md:mt-8 md:block lg:mt-0">
         <div className="flex flex-col gap-4 lg:sticky lg:top-20">
-          <div className="flex h-[180px] flex-col items-center justify-center rounded-card border-[1.5px] border-dashed border-border-strong bg-surface-light lg:h-[280px]">
-            <span className="font-mono text-[11px] tracking-wider text-ink-faint">
-              <span className="lg:hidden">AD · 336×280</span>
-              <span className="hidden lg:inline">AD · 300×250</span>
-            </span>
-            <span className="mt-1 text-[11.5px] text-ink-faint">
-              <span className="lg:hidden">AdSense — in-content</span>
-              <span className="hidden lg:inline">AdSense — sticky sidebar</span>
-            </span>
-          </div>
+          <aside aria-label="แนะนำจาก KhunCool">
+            <Link
+              href="/tools"
+              className="group relative block h-[220px] overflow-hidden rounded-card border border-sky-200 bg-[#eaf8ff] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:h-[310px]"
+            >
+              <Image
+                src="/assets/house-ads/teacher-tools-sidebar.png"
+                alt="เครื่องมือช่วยสอนฟรีจาก KhunCool"
+                fill
+                sizes="(max-width: 1023px) 90vw, 320px"
+                className="object-cover object-center transition duration-500 group-hover:scale-[1.025]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#eaf8ff] via-[#eaf8ff]/90 to-transparent lg:via-[#eaf8ff]/75" />
+              <div className="relative z-10 flex h-full max-w-[62%] flex-col items-start p-5 lg:max-w-full lg:p-5">
+                <span className="rounded-full border border-sky-200 bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-sky-700 shadow-sm">
+                  แนะนำจาก KhunCool
+                </span>
+                <h3 className="mt-2 text-lg font-extrabold leading-tight text-ink lg:text-xl">
+                  เครื่องมือครู<br />พร้อมใช้ ฟรี
+                </h3>
+                <p className="mt-1 text-xs leading-relaxed text-ink-muted lg:max-w-[190px]">
+                  จับเวลา สุ่มชื่อ แบ่งกลุ่ม และอีกเพียบ
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-sm transition group-hover:gap-2">
+                  ดูเครื่องมือ <span aria-hidden="true">→</span>
+                </span>
+              </div>
+            </Link>
+          </aside>
           <div className="rounded-card border border-border bg-surface-card p-4 pb-1.5 lg:p-[18px] lg:pb-2">
             <h3 className="m-0 mb-2.5 flex items-center gap-1.5 text-sm font-bold">
               🔥 อ่านมากสัปดาห์นี้
