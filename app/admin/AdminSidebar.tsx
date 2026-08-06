@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { TABS, type TabKey } from "./tabsConfig";
 
@@ -21,7 +22,13 @@ function SidebarContent({
   return (
     <div className="flex h-full flex-col p-3">
       <div className="flex items-center gap-2 px-2 pb-5 pt-1">
-        <div className="h-7 w-7 flex-none rounded-[9px] bg-brand" />
+        <Image
+          src="/assets/khuncool-logo.webp"
+          alt=""
+          width={28}
+          height={28}
+          className="h-7 w-7 flex-none rounded-[9px] object-contain"
+        />
         <div className="leading-tight">
           <div className="font-anuphan text-[13px] font-extrabold tracking-tight text-white">
             khuncool
