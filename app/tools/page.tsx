@@ -173,7 +173,7 @@ export default function ToolsPage() {
           แต่ละตัวมีหน้าของตัวเองที่เปิดใช้ได้เลย
           ไม่มีขั้นตอนติดตั้งและไม่มีโฆษณาคั่นระหว่างใช้งาน
         </p>
-        <div className="grid grid-cols-2 gap-[9px] md:grid-cols-3 md:gap-3.5">
+        <div className="grid grid-cols-2 gap-[9px] md:grid-cols-3 md:gap-3 lg:grid-cols-4">
           {TOOLS.map((t) => (
             <ToolCard
               key={t.href}
