@@ -14,6 +14,7 @@ export type MediaItem = {
   title: string;
   icon: string;
   bg: string;
+  image: string;
   short: string;
   long: string;
   grade: string;
@@ -28,6 +29,7 @@ export const MEDIA: MediaItem[] = [
     title: "Family Tree Explorer",
     icon: "🌳",
     bg: "#DFF6EF",
+    image: "/assets/game-covers/family-tree.webp",
     short: "ลากคำศัพท์ปลูกต้นไม้ครอบครัว 4 ด่าน",
     long: "เกมคำศัพท์ครอบครัวแบบลากวาง เริ่มจากจับคู่ภาพกับคำ ไปจนถึงเติมผังครอบครัวให้ครบ มีเสียงอ่านทุกคำ",
     grade: "ป.1–ป.4",
@@ -40,6 +42,7 @@ export const MEDIA: MediaItem[] = [
     title: "Vocabulary Arcade",
     icon: "🎮",
     bg: "#EEEFFE",
+    image: "/assets/game-covers/vocabulary-arcade.webp",
     short: "คำศัพท์ 10 หมวด 4 โหมดเล่น มีเสียงอ่าน",
     long: "เลือกหมวดคำศัพท์ที่กำลังสอน แล้วเล่นได้ 4 โหมด — เลือกคำจากรูป เลือกรูปจากคำ เรียงตัวอักษร และโหมดผสม มีดาวสะสม คอมโบ และตารางสรุปคำท้ายเกม",
     grade: "ป.1–ป.6",
@@ -52,6 +55,7 @@ export const MEDIA: MediaItem[] = [
     title: "Phonics Bingo",
     icon: "🔤",
     bg: "#EEEEFD",
+    image: "/assets/game-covers/phonics-bingo.webp",
     short: "บิงโกเสียงต้นคำ เล่นพร้อมกันทั้งห้อง",
     long: "ครูกดสุ่มเสียง เด็กกาช่องบนกระดานของตัวเอง ฝึกแยกเสียงต้นคำและท้ายคำ พิมพ์กระดานแจกได้",
     grade: "ป.1–ป.3",
@@ -64,6 +68,7 @@ export const MEDIA: MediaItem[] = [
     title: "Classroom Objects Match",
     icon: "✏️",
     bg: "#FFF0E4",
+    image: "/assets/game-covers/classroom-objects.webp",
     short: "จับคู่ภาพกับคำของใช้ในห้องเรียน",
     long: "จับคู่ภาพสิ่งของรอบตัวกับคำศัพท์ภายในเวลาที่กำหนด เหมาะเป็นกิจกรรมอุ่นเครื่องต้นคาบ",
     grade: "ป.1–ป.3",
@@ -76,6 +81,7 @@ export const MEDIA: MediaItem[] = [
     title: "Is / Are Sorting",
     icon: "🧩",
     bg: "#E7F0FF",
+    image: "/assets/game-covers/is-are-sorting.webp",
     short: "แยกประโยคเข้าช่อง is หรือ are",
     long: "ลากประโยคเข้าช่องให้ถูก พร้อมคำอธิบายภาษาไทยเมื่อตอบผิด ครูดูสรุปข้อที่ทั้งห้องพลาดบ่อยได้",
     grade: "ป.3–ป.6",
@@ -88,6 +94,7 @@ export const MEDIA: MediaItem[] = [
     title: "Talk Card สุ่มคำถามพูด",
     icon: "🎤",
     bg: "#FDE8F3",
+    image: "/assets/game-covers/talk-card.webp",
     short: "สุ่มคำถามภาษาอังกฤษให้เด็กตอบหน้าชั้น",
     long: "สุ่มคำถามสนทนาพร้อมประโยคตัวอย่างและเสียงอ่าน ใช้คู่กับวงล้อสุ่มชื่อเพื่อเลือกคนตอบ",
     grade: "ป.4–ป.6",
@@ -100,6 +107,7 @@ export const MEDIA: MediaItem[] = [
     title: "Sound Wheel วงล้อเสียง",
     icon: "🎡",
     bg: "#EAF7E4",
+    image: "/assets/game-covers/sound-wheel.webp",
     short: "หมุนวงล้อ ออกเสียง แล้วบอกคำศัพท์",
     long: "หมุนวงล้อได้หนึ่งเสียง ให้เด็กออกเสียงและบอกคำศัพท์ที่ขึ้นต้นด้วยเสียงนั้น มี 3 ชุดเสียง (พยัญชนะ a–z, digraphs, สระสั้น CVC) พร้อมเสียงอ่าน ดาวสะสม และสตรีคถูกต่อเนื่อง",
     grade: "ป.1–ป.3",

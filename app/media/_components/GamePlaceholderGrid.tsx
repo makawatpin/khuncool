@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { SubjectResource } from "./SubjectResourcePage";
 
 export default function GamePlaceholderGrid({ games, accent, soft }: { games: SubjectResource[]; accent: string; soft: string }) {
@@ -21,7 +22,13 @@ export default function GamePlaceholderGrid({ games, accent, soft }: { games: Su
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {visible.map((game, index) => {
           const card = <article className="flex min-h-[230px] flex-col overflow-hidden rounded-2xl border border-border bg-white transition hover:-translate-y-0.5 hover:border-primary hover:shadow-md">
-            <div className="flex h-[88px] items-center justify-center text-3xl" style={{ background: soft }} aria-hidden="true">🎮</div>
+            {game.image ? (
+              <div className="relative aspect-video overflow-hidden" style={{ background: soft }}>
+                <Image src={game.image} alt={`ภาพประกอบเกม ${game.title}`} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 260px" className="object-cover" />
+              </div>
+            ) : (
+              <div className="flex aspect-video items-center justify-center text-3xl" style={{ background: soft }} aria-hidden="true">🎮</div>
+            )}
             <div className="flex flex-1 flex-col p-4">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <span className="rounded-md px-2 py-1 text-[10px] font-semibold" style={{ color: accent, background: soft }}>{game.type}</span>

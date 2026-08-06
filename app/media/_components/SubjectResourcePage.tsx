@@ -7,6 +7,7 @@ export type SubjectResource = {
   grades: string;
   type: string;
   href?: string;
+  image?: string;
 };
 
 export type SubjectPageContent = {

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { MEDIA, SKILLS, type MediaSkill } from "./data";
 
@@ -36,13 +37,16 @@ export default function MediaGrid() {
           <Link
             key={m.href}
             href={m.href}
-            className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-card text-inherit no-underline hover:border-[#C6C9FB] hover:bg-[#FBFBFE]"
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-card text-inherit no-underline hover:border-[#C6C9FB] hover:bg-[#FBFBFE]"
           >
-            <div
-              className="flex h-[66px] items-center justify-center text-[26px] md:h-[88px] md:text-[32px]"
-              style={{ background: m.bg }}
-            >
-              {m.icon}
+            <div className="relative aspect-video overflow-hidden" style={{ background: m.bg }}>
+              <Image
+                src={m.image}
+                alt={`ภาพประกอบเกม ${m.title}`}
+                fill
+                sizes="(max-width: 767px) 50vw, 260px"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              />
             </div>
             <div className="flex flex-1 flex-col p-[10px_11px_11px] md:p-[11px_12px_12px]">
               <div className="mb-[5px] flex flex-wrap items-center gap-[5px] md:mb-1.5">
