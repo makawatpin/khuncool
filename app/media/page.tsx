@@ -239,10 +239,16 @@ export default function MediaPage() {
               className="flex flex-col overflow-hidden rounded-2xl border border-[#EEF0F4] bg-white text-inherit no-underline hover:border-[#C6C9FB]"
             >
               <div
-                className="flex h-[60px] items-center justify-center text-[25px] md:h-[84px] md:text-[31px]"
+                className="relative aspect-video overflow-hidden"
                 style={{ background: p.bg }}
               >
-                {p.icon}
+                <Image
+                  src={p.image}
+                  alt={`ภาพประกอบเกม ${p.t}`}
+                  fill
+                  sizes="(max-width: 767px) 50vw, 260px"
+                  className="object-cover"
+                />
               </div>
               <div className="p-[10px_11px_11px] md:p-3">
                 <div className="mb-[3px] font-anuphan text-[13px] font-semibold md:text-[15px]">
