@@ -18,6 +18,8 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
     topics: ["สิ่งมีชีวิต", "สสาร", "แรงและพลังงาน", "โลกและอวกาศ", "กระบวนการสืบเสาะ"],
     resources: [
       { title: "ห้องทดลองฉุกเฉิน", description: "วิเคราะห์สถานการณ์ เลือกวิธีแก้ปัญหา และกู้ระบบห้องทดลองให้ครบ 10 ภารกิจ", grades: "ป.3–ป.6 · 8–12 นาที", type: "วิทยาศาสตร์รอบตัว", href: "/media/science/science-lab-crisis", image: "/assets/game-covers/science-lab-crisis.webp" },
+      { title: "Motion Lab การเคลื่อนที่และแรง", description: "ทดลองตำแหน่ง ระยะทาง การกระจัด เวลา และอัตราเร็ว ผ่านรถจำลองบนเส้นจำนวน", grades: "ม.2 · 10–20 นาที", type: "การเคลื่อนที่และแรง", href: "/media/science/motion-lab" },
+      { title: "Density Lab ความหนาแน่น", description: "เลือกวัตถุ ของเหลว และปริมาตร ทดลองการลอยจมพร้อมวิเคราะห์ค่าความหนาแน่น", grades: "ม.1 · 10–20 นาที", type: "สสารและสมบัติของสาร", href: "/media/science/density-lab" },
     ],
     outcomes: ["ตั้งคำถามและคาดการณ์จากความรู้เดิม", "เก็บและใช้หลักฐานจากการสังเกตหรือทดลอง", "อธิบายปรากฏการณ์ด้วยเหตุผลและคำศัพท์วิทยาศาสตร์"],
   },
