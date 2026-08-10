@@ -98,14 +98,33 @@ function auditStage({ min = 11 } = {}) {
   // 4. Horizontal page scroll.
   const pageScrollsSideways = document.documentElement.scrollWidth > window.innerWidth + 1;
 
+  // 5. The body must actually be bound to the stage.
+  //
+  // .kc-stage-body is position:absolute; inset:0. A game that sets `position`
+  // inline on the same element wins over that and leaves the body in flow,
+  // free to grow past the stage — at which point every measurement above is
+  // taken against a box the game is no longer inside. Cheap to check, and
+  // silent if you do not.
+  const bodyEl = stage.querySelector(".kc-stage-body");
+  const bodyBox = bodyEl && bodyEl.getBoundingClientRect();
+  const bodyUnbound = Boolean(
+    bodyEl && (bodyBox.height > box.height + 2 || bodyBox.width > box.width + 2),
+  );
+
   const shape =
     box.width / box.height < 0.9 ? "portrait" : box.height < 440 ? "short" : "wide";
 
   return {
     viewport: [window.innerWidth, window.innerHeight],
     stage: { width: Math.round(box.width), height: Math.round(box.height), shape, tapFloor: tap },
-    pass: !unreachable.length && !undersizedTargets.length && !smallText.length && !pageScrollsSideways,
+    pass:
+      !unreachable.length &&
+      !undersizedTargets.length &&
+      !smallText.length &&
+      !pageScrollsSideways &&
+      !bodyUnbound,
     pageScrollsSideways,
+    bodyUnbound,
     unreachable,
     undersizedTargets,
     smallText,

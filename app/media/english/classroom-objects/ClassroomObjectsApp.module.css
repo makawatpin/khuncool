@@ -1,0 +1,107 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces the .kc-classroom-game.kc-stage-1 .kc-classroom-grid column
+   override in app/globals.css, which forced six columns on any screen wider
+   than 900px and left every other size to a JS-computed default. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > * {
+  flex: 0 0 auto;
+}
+
+/* The memory board is the elastic part of the play screen: the toolbar, the
+   status row and the footer keep their size and the grid takes what is left,
+   so nothing gets pushed off the bottom. */
+.play {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.grid {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: repeat(var(--kc-cols, 4), minmax(0, 1fr));
+  gap: clamp(7px, 2cqi, 14px);
+}
+
+/* The results screen leads with a celebration emoji sized for a projector.
+   It is the part that gives when the board is short, so the replay button
+   below the word list stays reachable. */
+.result {
+  justify-content: center;
+  overflow: auto;
+}
+
+.result > :first-child {
+  flex: 0 0 auto;
+  font-size: min(clamp(54px, 14cqi, 80px), 16cqb) !important;
+  line-height: 1;
+}
+
+/* Twelve 3:4 cards. Two rows across the board is the arrangement that reads as
+   one field of cards rather than a list. */
+@container kcstage (aspect-ratio >= 0.9) {
+  .grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  /* A card's 3:4 aspect derives its height from the column width, so on a wide
+     board the two rows can claim more height than the board has and push the
+     shuffle button off. Cap the card against the board's height instead; the
+     card just stops being portrait. */
+  .grid > * {
+    max-height: 30cqb;
+  }
+}
+
+/* Upright, the cards are 3:4, so the column count decides the board's height:
+   three columns give four tall rows that do not fit above the shuffle button,
+   four give three shorter ones that do. */
+@container kcstage (aspect-ratio < 0.9) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(5px, 1.6cqi, 10px);
+  }
+}
+
+/* A shallow board has the width for six across but not the height for two
+   rows of 3:4 cards. The rows divide whatever height is left instead, and the
+   cards fill their row — the picture and the word still read, the card is just
+   no longer portrait. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .grid {
+    height: 46cqb;
+    gap: 6px;
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  .grid > * {
+    aspect-ratio: auto !important;
+    min-height: 0;
+  }
+
+  /* Chrome pays for the board. The toolbar and the status row are one line
+     each here; they do not need display-sized padding. */
+  .topbar {
+    padding: 5px 12px !important;
+  }
+
+  .play {
+    padding: 2px 10px 8px !important;
+  }
+
+  .play > :first-child {
+    margin-bottom: 6px !important;
+  }
+
+  .play > :last-child {
+    margin-top: 6px !important;
+  }
+}

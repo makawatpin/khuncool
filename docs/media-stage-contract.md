@@ -29,6 +29,8 @@ const { stageProps, isFull, toggle } = useStage<HTMLDivElement>();
 - `.kc-stage` — กำหนดขนาดเวที เป็น container (`container: kcstage / size`) และเป็นตัวที่เข้าเต็มจอ
 - `.kc-stage-body` — ถือ token และเป็นตัวที่ container query เข้าถึงได้
 
+⚠️ **ห้ามตั้ง `position` หรือ `overflow` แบบ inline บน `.kc-stage-body`** — มันเป็นของ `stage.css` (`position:absolute; inset:0`) ถ้าเขียน inline ทับ body จะหลุดออกมาอยู่ใน flow แล้วโตเกินเวทีได้ โดยที่ทุกอย่างยัง "ดูปกติ" · สคริปต์ตรวจมีช่อง `bodyUnbound` ไว้จับข้อนี้
+
 ต้องมี 2 ชั้นเพราะ container query แต่งได้เฉพาะ**ลูก**ของ container ไม่ใช่ตัว container เอง
 
 ## 3. ใช้ token ตาม "ทรง" ไม่ใช่ตามชนิดอุปกรณ์
@@ -91,7 +93,7 @@ Token ที่มี: `--kc-tap`, `--kc-pad`, `--kc-gap`, `--kc-radius`, `--kc-
 | math-bomb-defusal | ✅ ย้ายแล้ว |
 | coding-maze, digital-sort, typing-defense | ✅ ย้ายแล้ว |
 | asean-matching, law-daily | ✅ ย้ายแล้ว |
-| is-are-sorting | ✅ ย้ายแล้ว |
-| อีก 6 เกม /media/english | ⬜ |
+| is-are-sorting, classroom-objects | ✅ ย้ายแล้ว |
+| อีก 5 เกม /media/english | ⬜ |
 
 เกมที่ยังไม่ย้ายใช้ `app/media/english/useFullscreen.ts` ตัวเดิมอยู่ — จะลบทิ้งเมื่อย้ายครบ

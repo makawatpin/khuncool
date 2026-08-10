@@ -505,12 +505,6 @@
     transform: scale(.78);
   }
 
-  /* The memory game uses two rows on a desktop board. Four columns made its
-     3:4 cards form three very tall rows and hid the shuffle control. */
-  .kc-classroom-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-classroom-grid {
-    grid-template-columns: repeat(6,minmax(0,1fr)) !important;
-  }
-
   .kc-vocab-game.kc-stage-2:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-modes {
     transform: scale(.86);
     transform-origin: top center;
@@ -663,8 +657,6 @@
   .kc-family-game.kc-stage-5:fullscreen .kc-family-stage,
   .kc-family-game.kc-stage-5:-webkit-full-screen .kc-family-stage { min-height:650px !important; transform:scale(.78); }
 
-  .kc-classroom-game.kc-stage-1:fullscreen .kc-classroom-grid,
-  .kc-classroom-game.kc-stage-1:-webkit-full-screen .kc-classroom-grid { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
   .kc-vocab-game.kc-stage-2:fullscreen .kc-vocab-modes,
   .kc-vocab-game.kc-stage-2:-webkit-full-screen .kc-vocab-modes { transform:scale(.86); transform-origin:top center; }
   .kc-bingo-game.kc-stage-0:fullscreen .kc-bingo-intro,
