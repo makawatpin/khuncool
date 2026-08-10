@@ -102,15 +102,15 @@
   --kc-fs-label: max(11px, 1.2cqi);
 }
 
+/* A range track is ~16px tall by default — under WCAG 2.2's 24x24 minimum and
+   not a draggable target with a finger. Give it the shape's full tap height in
+   every shape; the thumb stays centred in the taller box. */
+.kc-stage-body input[type="range"] {
+  min-height: var(--kc-tap);
+}
+
 /* Portrait shape — phone upright, and any fullscreen portrait surface. */
 @container kcstage (aspect-ratio < 0.9) {
-  /* A range track is ~16px tall by default, which is not a draggable target
-     with a finger. Both touch shapes give it the full tap height; the thumb
-     stays centred in the taller box. */
-  .kc-stage-body input[type="range"] {
-    min-height: var(--kc-tap);
-  }
-
   .kc-stage-body {
     --kc-tap: 48px;
     --kc-pad: 4.5cqi;
@@ -127,10 +127,6 @@
 /* Short shape — phone sideways. Wide enough for side-by-side content but with
    almost no vertical room, so chrome shrinks and type is driven by height. */
 @container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
-  .kc-stage-body input[type="range"] {
-    min-height: var(--kc-tap);
-  }
-
   .kc-stage-body {
     --kc-tap: 44px;
     --kc-pad: 1.6cqi;
