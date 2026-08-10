@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./ScienceLabGame.module.css";
 
 type Difficulty = "easy" | "medium" | "hard";
@@ -74,7 +74,7 @@ function optionIcon(option:string){
 }
 
 export default function ScienceLabGame(){
-  const { ref,isFull,fullscreenClassName,toggle }=useFullscreen<HTMLDivElement>();
+  const { isFull,stageProps,toggle }=useStage<HTMLDivElement>();
   const [screen,setScreen]=useState<"intro"|"setup"|"game">("intro");
   const [difficulty,setDifficulty]=useState<Difficulty>("easy"); const [duration,setDuration]=useState(45); const [muted,setMuted]=useState(false);
   const [order,setOrder]=useState<number[]>([]); const [position,setPosition]=useState(0); const [optionOrder,setOptionOrder]=useState([0,1,2,3]);
@@ -89,7 +89,7 @@ export default function ScienceLabGame(){
   useEffect(()=>{if(status!=="playing")return;const id=window.setInterval(()=>setTime(v=>{if(v<=1){setLives(x=>Math.max(0,x-1));setStatus("lost");tone("bad");return 0;}if(v<=10&&tick.current!==v){tick.current=v;tone("tick");}return v-1;}),1000);return()=>clearInterval(id);},[status,tone]);
   const choose=(index:number)=>{if(status!=="playing")return;setPicked(index);setStatus("checking");tone("tick");setTimeout(()=>{if(index===question.answer){setScore(v=>v+100+time*2);setCorrect(v=>v+1);setStatus("won");tone("ok");}else{setLives(v=>Math.max(0,v-1));setStatus("lost");tone("bad");}},900);};
   const endOrAdvance=()=>lives===0?setStatus("gameover"):advance();
-  return <div className={styles.shell}><div ref={ref} className={`${styles.game} ${styles[status]} ${fullscreenClassName}`}>
+  return <div {...stageProps} className={`kc-stage ${styles.shell}`}><div className={`kc-stage-body ${styles.game} ${styles[status]}`}>
     <div className={styles.grid}/><div className={styles.glow}/><div className={styles.bubbles}>{Array.from({length:18},(_,i)=><i key={i} style={{"--x":`${(i*37)%100}%`,"--d":`${3+(i%5)}s`,"--delay":`${i*-.31}s`} as CSSProperties}/>)}</div>
     <header className={styles.top}><div className={styles.brand}><Image src="/assets/khuncool-logo.webp" width={38} height={38} alt="KhunCool"/><div><b>Science Lab Crisis</b><small>ห้องทดลองฉุกเฉิน</small></div></div><div className={styles.actions}><Link href="/media/science">☰ <span>เมนู</span></Link>{screen==="game"&&<button onClick={()=>setScreen("setup")}>⚙ <span>ตั้งค่า</span></button>}<button onClick={()=>setMuted(v=>!v)} aria-label={muted?"เปิดเสียง":"ปิดเสียง"}>{muted?"🔇":"🔊"}</button><button onClick={toggle} aria-label={isFull?"ออกจากเต็มจอ":"เต็มจอ"}>⛶</button>{screen==="game"&&<div className={styles.hud}><span>{position+1}/10</span><span>{"♥".repeat(lives)}<i>{"♥".repeat(3-lives)}</i></span><b>⭐ {score}</b></div>}</div></header>
     {screen==="intro"&&<main className={styles.intro}><div className={styles.labIcon}><span>🧪</span><i/><i/><i/><b>LAB<br/>07</b><em>🧑‍🔬</em></div><p className={styles.kicker}>THE AMAZING SCIENCE LAB</p><h2>ห้องทดลอง<br/><span>ฉุกเฉิน!</span></h2><p>สวมบทนักวิทยาศาสตร์ วิเคราะห์เหตุการณ์<br/>เลือกอุปกรณ์และกู้แล็บให้ทันเวลา</p><div className={styles.chips}><span>🧬 สิ่งมีชีวิต</span><span>⚡ พลังงาน</span><span>🌍 อวกาศ</span></div><button className={styles.primary} onClick={()=>setScreen("setup")}>รับบัตรนักวิจัย →</button></main>}
