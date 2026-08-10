@@ -1,0 +1,155 @@
+/* Layout that has to change with the stage's shape. Everything else in this
+   game is static colour and spacing and stays inline on the elements.
+
+   These rules replace the per-stage transform:scale() and result-grid hacks
+   that used to live in app/globals.css keyed on .kc-sorting-game.kc-stage-N.
+   Scaling made the whole screen smaller to force a fit; laying the results out
+   in columns and letting the list scroll fixes the actual problem, and does it
+   from the stage's own size rather than the viewport's. */
+
+/* The body stacks its toolbar above whichever screen is showing, and the
+   screen takes the rest — that is what lets a screen bound its own scrolling
+   region instead of growing past the board. */
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  flex: 1 1 auto;
+}
+
+.screen {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+/* The card area is the elastic part of the play screen in every shape. The
+   baskets and the two answer buttons keep their size; the card gives up space
+   so the buttons stay on the board. This is what the old
+   .kc-sorting-game.kc-stage-1 transform:scale() was standing in for — it shrank
+   the entire screen, type included, to buy the same room. */
+.buckets,
+.answers {
+  flex: 0 0 auto;
+}
+
+/* The card's floor has to be a floor, not a fixed size. Its Tailwind
+   min-height is driven by the stage's width, which on a wide but shallow board
+   reserves more room than the board has and pushes the answer buttons off. */
+.cardArea {
+  flex: 1 1 auto;
+  min-height: 120px;
+}
+
+/* The header block (emoji, title, score line) keeps its size; the answer list
+   is what gives, so the replay button below it always stays on the board. */
+.results {
+  display: grid;
+  min-height: 0;
+  overflow: auto;
+  align-content: start;
+  gap: 2px;
+}
+
+.results > * {
+  min-width: 0;
+}
+
+@container kcstage (aspect-ratio >= 0.9) {
+  .results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 10px;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  .results {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A shallow board — a phone held sideways, a tablet upright. The baskets and
+   the card stacked vertically need more height than there is, so the baskets
+   flatten to a single label row and the card takes what is left. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .screen {
+    padding-top: 0;
+    padding-bottom: 4px;
+  }
+
+  /* The progress row is one line of chrome; it does not need a display gap. */
+  .screen > :first-child {
+    margin-bottom: 6px !important;
+  }
+
+  .buckets {
+    flex: 0 0 auto;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  /* The baskets keep their letter and their count; the rule reminder under it
+     is the part that can go, and it is the tallest line of the three. */
+  .buckets > * {
+    padding: 6px 8px;
+  }
+
+  .buckets > * > :nth-child(2) {
+    display: none;
+  }
+
+  /* The basket letter is display type sized for a projector; on this board it
+     only has to stay readable. */
+  .buckets > * > :first-child {
+    font-size: max(20px, 7cqb) !important;
+  }
+
+  .cardArea {
+    flex: 1 1 auto;
+    min-height: 40px;
+    margin-bottom: 6px;
+  }
+
+  .answers {
+    flex: 0 0 auto;
+  }
+
+  .answers > * {
+    min-height: var(--kc-tap);
+    padding-block: 0 !important;
+    font-size: max(15px, 5cqb) !important;
+  }
+
+  /* The results screen leads with a celebration emoji and a headline sized for
+     a projector. On a shallow board those cost the whole answer list, so the
+     celebration shrinks and the list keeps the room. */
+  .resultScreen > :first-child {
+    font-size: max(28px, 11cqb) !important;
+    line-height: 1;
+  }
+
+  .resultScreen > h2 {
+    margin-bottom: 2px;
+    font-size: max(16px, 6cqb) !important;
+  }
+
+  .resultScreen > p {
+    margin-bottom: 6px !important;
+    font-size: max(12px, 3.4cqb);
+  }
+
+  .resultScreen > div:nth-of-type(2) {
+    margin-bottom: 6px !important;
+  }
+
+  .resultScreen > div:nth-of-type(2) > * {
+    font-size: max(20px, 8cqb) !important;
+  }
+
+  .results {
+    margin-bottom: 8px !important;
+    padding: 8px !important;
+  }
+}

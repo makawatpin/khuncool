@@ -6,7 +6,8 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, hoverSfxDelegate } from "@/lib/kcSfx";
 import GameBackdrop from "../GameBackdrop";
 import KcFace from "../KcFace";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./IsAreSortingApp.module.css";
 
 const QUESTION_COUNT = 12;
 const SHOW_WHY = true;
@@ -104,7 +105,7 @@ const CONFETTI_COLORS = ["#5C5EE6", "#14B79A", "#FFD166", "#FF8A5C", "#C6C9FB", 
 
 export default function IsAreSortingApp() {
   useTrackToolUse("media-english-is-are-sorting");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [i, setI] = useState(0);
@@ -277,9 +278,9 @@ export default function IsAreSortingApp() {
         : "ลองอีกครั้งนะ";
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-sorting-game kc-stage-${stage} ${fullscreenClassName} relative overflow-hidden rounded-2xl ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-sorting-game kc-stage-${stage} relative overflow-hidden rounded-2xl`}
       onMouseOver={hoverSfxDelegate}
       style={{
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
@@ -397,7 +398,7 @@ export default function IsAreSortingApp() {
               <KcFace skin="#EFC49A" hair="#6B4423" shirt="#FFD166" cap capColor="#EF476F" size={64} />
             </div>
           </div>
-          <h1 className="m-0 mb-3 font-bold leading-tight text-[clamp(30px,6vw,46px)]">
+          <h1 className="m-0 mb-3 font-bold leading-tight text-[clamp(30px,6cqi,46px)]">
             แยกให้ถูก
             <span
               style={{
@@ -412,7 +413,7 @@ export default function IsAreSortingApp() {
             </span>
             ?
           </h1>
-          <p className="m-0 mb-[26px] text-[clamp(15px,3.6vw,17px)] leading-[1.75] text-[#5A6273]">
+          <p className="m-0 mb-[26px] text-[clamp(15px,3.6cqi,17px)] leading-[1.75] text-[#5A6273]">
             อ่านประโยค แล้วโยนการ์ดลงตะกร้าที่ถูกต้อง — ตอบถูกติดกันได้คอมโบ ⭐
             พิเศษ! เล่นได้ทั้งบนคอมและมือถือ
           </p>
@@ -433,7 +434,7 @@ export default function IsAreSortingApp() {
             onClick={start}
             className="rounded-full border-none px-11 py-4 font-semibold text-white"
             style={{
-              fontSize: "clamp(17px,4.6vw,20px)",
+              fontSize: "clamp(17px,4.6cqi,20px)",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               animation: "pulseGlow 2.4s ease-in-out infinite",
             }}
@@ -445,7 +446,7 @@ export default function IsAreSortingApp() {
 
       {/* Stage 1: play */}
       {stage === 1 && (
-        <div className="kc-sorting-stage relative mx-auto max-w-[900px] px-4 pb-[60px] pt-1">
+        <div className={`${styles.screen} relative mx-auto w-full max-w-[900px] px-4 pb-6 pt-1`}>
           <div className="mb-3.5 flex items-center gap-3">
             <div
               className="h-3 flex-1 overflow-hidden rounded-full border bg-white"
@@ -481,9 +482,9 @@ export default function IsAreSortingApp() {
             </div>
           </div>
 
-          <div className="mb-[clamp(14px,4vw,26px)] grid grid-cols-2 gap-[clamp(10px,3vw,22px)]">
+          <div className={`${styles.buckets} mb-[clamp(14px,4cqi,26px)] grid grid-cols-2 gap-[clamp(10px,3cqi,22px)]`}>
             <div
-              className="relative rounded-[22px] p-[clamp(12px,3vw,18px)] text-center"
+              className="relative rounded-[22px] p-[clamp(12px,3cqi,18px)] text-center"
               style={{
                 background: hitIs ? "#D6D8FE" : "#F3F4FF",
                 border: `3px dashed ${hitIs ? "#5C5EE6" : "#C6C9FB"}`,
@@ -492,11 +493,11 @@ export default function IsAreSortingApp() {
             >
               <div
                 className="font-bold leading-none"
-                style={{ fontSize: "clamp(26px,7vw,40px)", color: "#3F41C9" }}
+                style={{ fontSize: "clamp(26px,7cqi,40px)", color: "#3F41C9" }}
               >
                 IS
               </div>
-              <div className="mt-1 text-[clamp(11px,2.8vw,13px)] font-semibold text-[#5A6273]">
+              <div className="mt-1 text-[clamp(11px,2.8cqi,13px)] font-semibold text-[#5A6273]">
                 he · she · it · เอกพจน์
               </div>
               <div
@@ -507,7 +508,7 @@ export default function IsAreSortingApp() {
               </div>
             </div>
             <div
-              className="relative rounded-[22px] p-[clamp(12px,3vw,18px)] text-center"
+              className="relative rounded-[22px] p-[clamp(12px,3cqi,18px)] text-center"
               style={{
                 background: hitAre ? "#C9F5EB" : "#EFFBF8",
                 border: `3px dashed ${hitAre ? "#14B79A" : "#B6F3E4"}`,
@@ -516,11 +517,11 @@ export default function IsAreSortingApp() {
             >
               <div
                 className="font-bold leading-none"
-                style={{ fontSize: "clamp(26px,7vw,40px)", color: "#0E8C77" }}
+                style={{ fontSize: "clamp(26px,7cqi,40px)", color: "#0E8C77" }}
               >
                 ARE
               </div>
-              <div className="mt-1 text-[clamp(11px,2.8vw,13px)] font-semibold text-[#5A6273]">
+              <div className="mt-1 text-[clamp(11px,2.8cqi,13px)] font-semibold text-[#5A6273]">
                 we · you · they · พหูพจน์
               </div>
               <div
@@ -532,10 +533,10 @@ export default function IsAreSortingApp() {
             </div>
           </div>
 
-          <div className="relative mb-[clamp(14px,4vw,22px)] flex min-h-[clamp(180px,42vw,230px)] items-center justify-center">
+          <div className={`${styles.cardArea} relative mb-[clamp(14px,4cqi,22px)] flex min-h-[clamp(180px,42cqi,230px)] items-center justify-center`}>
             <div
               key={`q${i}`}
-              className="relative w-full max-w-[560px] overflow-hidden rounded-[26px] border bg-white px-[clamp(16px,5vw,32px)] py-[clamp(20px,5vw,34px)] text-center"
+              className="relative w-full max-w-[560px] overflow-hidden rounded-[26px] border bg-white px-[clamp(16px,5cqi,32px)] py-[clamp(20px,5cqi,34px)] text-center"
               style={{
                 borderColor: "#EEF0F5",
                 animation: anim || "none",
@@ -570,7 +571,7 @@ export default function IsAreSortingApp() {
                   left: "50%",
                   top: "42%",
                   transform: "translate(-50%,-50%)",
-                  fontSize: "clamp(40px,10vw,64px)",
+                  fontSize: "clamp(40px,10cqi,64px)",
                   pointerEvents: "none",
                   zIndex: 6,
                   opacity: fb ? 1 : 0,
@@ -584,7 +585,7 @@ export default function IsAreSortingApp() {
               </div>
               <div
                 className="font-semibold leading-[1.5]"
-                style={{ fontSize: "clamp(21px,5.4vw,34px)" }}
+                style={{ fontSize: "clamp(21px,5.4cqi,34px)" }}
               >
                 <span>{q ? q.b : ""}</span>
                 <span
@@ -598,19 +599,19 @@ export default function IsAreSortingApp() {
                 </span>
                 <span>{q ? q.c : ""}</span>
               </div>
-              <div className="mt-3.5 text-[clamp(13px,3.4vw,15px)] text-[#5A6273]">
+              <div className="mt-3.5 text-[clamp(13px,3.4cqi,15px)] text-[#5A6273]">
                 {q ? q.th : ""}
               </div>
             </div>
           </div>
 
-          <div className="mx-auto grid max-w-[560px] grid-cols-2 gap-[clamp(10px,3vw,20px)]">
+          <div className={`${styles.answers} mx-auto grid w-full max-w-[560px] grid-cols-2 gap-[clamp(10px,3cqi,20px)]`}>
             <button
               type="button"
               onClick={() => pick("is")}
               className="rounded-[20px] border-none font-bold text-white"
               style={{
-                fontSize: "clamp(22px,6vw,30px)",
+                fontSize: "clamp(22px,6cqi,30px)",
                 background: "linear-gradient(135deg,#6E70F0,#3F41C9)",
                 minHeight: 64,
                 padding: "16px 8px",
@@ -624,7 +625,7 @@ export default function IsAreSortingApp() {
               onClick={() => pick("are")}
               className="rounded-[20px] border-none font-bold text-white"
               style={{
-                fontSize: "clamp(22px,6vw,30px)",
+                fontSize: "clamp(22px,6cqi,30px)",
                 background: "linear-gradient(135deg,#28D3B4,#0E8C77)",
                 minHeight: 64,
                 padding: "16px 8px",
@@ -668,14 +669,14 @@ export default function IsAreSortingApp() {
 
       {/* Stage 2: result */}
       {stage === 2 && (
-        <div className="kc-sorting-stage relative mx-auto max-w-[640px] px-[18px] pb-20 pt-2.5 text-center">
+        <div className={`${styles.screen} ${styles.resultScreen} relative mx-auto w-full max-w-[640px] px-[18px] pb-6 pt-2.5 text-center`}>
           <div
-            className="text-[clamp(54px,14vw,80px)]"
+            className="text-[clamp(54px,14cqi,80px)]"
             style={{ animation: "popIn .6s cubic-bezier(.3,1.5,.5,1) both" }}
           >
             {resultEmoji}
           </div>
-          <h2 className="m-0 mb-2 font-bold" style={{ fontSize: "clamp(26px,6vw,36px)" }}>
+          <h2 className="m-0 mb-2 font-bold" style={{ fontSize: "clamp(26px,6cqi,36px)" }}>
             {resultTitle}
           </h2>
           <p className="m-0 mb-[22px] text-base text-[#5A6273]">
@@ -685,7 +686,7 @@ export default function IsAreSortingApp() {
             {[0, 1, 2].map((k) => (
               <div
                 key={k}
-                className="text-[clamp(32px,9vw,44px)]"
+                className="text-[clamp(32px,9cqi,44px)]"
                 style={{
                   opacity: correctCount / Math.max(1, total) > k * 0.33 + 0.32 ? 1 : 0.22,
                 }}
@@ -695,7 +696,7 @@ export default function IsAreSortingApp() {
             ))}
           </div>
           <div
-            className="kc-sorting-results mb-[26px] rounded-[22px] border bg-white p-3.5 text-left"
+            className={`${styles.results} mb-[18px] rounded-[22px] border bg-white p-3.5 text-left`}
             style={{ borderColor: "#E5E8EE", boxShadow: "0 18px 34px -28px rgba(0,0,0,.6)" }}
           >
             {results.map((r, idx) => (
@@ -764,6 +765,7 @@ export default function IsAreSortingApp() {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }

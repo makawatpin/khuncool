@@ -91,6 +91,7 @@ Token ที่มี: `--kc-tap`, `--kc-pad`, `--kc-gap`, `--kc-radius`, `--kc-
 | math-bomb-defusal | ✅ ย้ายแล้ว |
 | coding-maze, digital-sort, typing-defense | ✅ ย้ายแล้ว |
 | asean-matching, law-daily | ✅ ย้ายแล้ว |
-| 7 เกม /media/english | ⬜ (ต้องดึง inline style ออกเป็น CSS Module ก่อน) |
+| is-are-sorting | ✅ ย้ายแล้ว |
+| อีก 6 เกม /media/english | ⬜ |
 
 เกมที่ยังไม่ย้ายใช้ `app/media/english/useFullscreen.ts` ตัวเดิมอยู่ — จะลบทิ้งเมื่อย้ายครบ

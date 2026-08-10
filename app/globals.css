@@ -511,11 +511,6 @@
     grid-template-columns: repeat(6,minmax(0,1fr)) !important;
   }
 
-  .kc-sorting-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sorting-stage {
-    transform: scale(.86);
-    transform-origin: top center;
-  }
-
   .kc-vocab-game.kc-stage-2:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-modes {
     transform: scale(.86);
     transform-origin: top center;
@@ -534,14 +529,12 @@
 
   /* Result reviews use two balanced columns on a 16:9 board. This preserves
      every answer and keeps the replay/navigation buttons visible. */
-  .kc-vocab-game.kc-stage-4:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-result-list,
-  .kc-sorting-game.kc-stage-2:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sorting-results {
+  .kc-vocab-game.kc-stage-4:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-result-list {
     display:grid !important;
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
-  .kc-vocab-game.kc-stage-4:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-result-list > *,
-  .kc-sorting-game.kc-stage-2:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sorting-results > * {
+  .kc-vocab-game.kc-stage-4:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-result-list > * {
     min-width:0;
   }
 }
@@ -566,7 +559,6 @@
   .kc-vocab-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-categories { transform:scale(.94); transform-origin:top center; }
   .kc-vocab-game.kc-stage-2:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-modes { transform:scale(.76); }
   .kc-vocab-game.kc-stage-3:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-play { transform:scale(.91); transform-origin:top center; }
-  .kc-sorting-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sorting-stage { transform:scale(.75); }
 }
 
 /* Native fullscreen is the same canvas enlarged as one unit. Its base size
@@ -673,8 +665,6 @@
 
   .kc-classroom-game.kc-stage-1:fullscreen .kc-classroom-grid,
   .kc-classroom-game.kc-stage-1:-webkit-full-screen .kc-classroom-grid { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
-  .kc-sorting-game.kc-stage-1:fullscreen .kc-sorting-stage,
-  .kc-sorting-game.kc-stage-1:-webkit-full-screen .kc-sorting-stage { transform:scale(.86); transform-origin:top center; }
   .kc-vocab-game.kc-stage-2:fullscreen .kc-vocab-modes,
   .kc-vocab-game.kc-stage-2:-webkit-full-screen .kc-vocab-modes { transform:scale(.86); transform-origin:top center; }
   .kc-bingo-game.kc-stage-0:fullscreen .kc-bingo-intro,
@@ -682,9 +672,7 @@
   .kc-talk-game.kc-stage-0:fullscreen .kc-talk-setup,
   .kc-talk-game.kc-stage-0:-webkit-full-screen .kc-talk-setup { transform:scale(.85); transform-origin:top center; }
   .kc-vocab-game.kc-stage-4:fullscreen .kc-vocab-result-list,
-  .kc-vocab-game.kc-stage-4:-webkit-full-screen .kc-vocab-result-list,
-  .kc-sorting-game.kc-stage-2:fullscreen .kc-sorting-results,
-  .kc-sorting-game.kc-stage-2:-webkit-full-screen .kc-sorting-results { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .kc-vocab-game.kc-stage-4:-webkit-full-screen .kc-vocab-result-list { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); }
 
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-10:fullscreen .kc-family-stage { transform:scale(.82); }
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-1:fullscreen .kc-family-stage { transform:scale(.65); }
@@ -701,7 +689,6 @@
   .kc-game.kc-compact-canvas.kc-vocab-game.kc-stage-1 .kc-vocab-categories { transform:scale(.94); transform-origin:top center; }
   .kc-game.kc-compact-canvas.kc-vocab-game.kc-stage-2 .kc-vocab-modes { transform:scale(.76); }
   .kc-game.kc-compact-canvas.kc-vocab-game.kc-stage-3 .kc-vocab-play { transform:scale(.91); transform-origin:top center; }
-  .kc-game.kc-compact-canvas.kc-sorting-game.kc-stage-1 .kc-sorting-stage { transform:scale(.75); }
 }
 
 /* The Claude Design mockups give nearly every clickable button a
