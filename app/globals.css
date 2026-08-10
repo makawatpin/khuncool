@@ -466,9 +466,13 @@
 }
 
 /* Keep every English game screen on the same 16:9 desktop canvas. Phones
-   remain fluid so controls never become cramped. */
+   remain fluid so controls never become cramped.
+
+   Games that have moved to app/media/_stage keep `kc-game` for its typography
+   and hover rules, but their box belongs to .kc-stage — hence the
+   .kc-stage-body exclusion. This whole block retires with the last migration. */
 @media (min-width: 900px) {
-  .kc-game:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) {
+  .kc-game:not(.kc-stage-body):not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) {
     width:100%;
     aspect-ratio:16 / 9;
     height:auto !important;
