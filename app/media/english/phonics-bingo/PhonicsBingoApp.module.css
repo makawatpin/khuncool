@@ -1,0 +1,89 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces the .kc-bingo-game.kc-stage-N transform:scale() rules in
+   app/globals.css — .72 on the intro, .88 on the play screen, .81 again in
+   fullscreen. Each was shrinking a whole screen, type included, because one
+   element inside it reserved more height than the board had. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro {
+  overflow: auto;
+}
+
+/* The card is the elastic part of the play screen: the round header above it
+   and the draw controls below keep their size, and the card takes what is
+   left. A cell has a content floor — sound, picture and tick — so the card
+   cannot always shrink to fit; when it cannot, it scrolls inside its own area
+   rather than pushing the draw controls off the board. */
+/* Draw panel and card sit side by side (or stacked, when the column does not
+   fit). The board is what shrinks; both columns then bound their own content. */
+.board {
+  display: grid;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.board > * {
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.cardArea {
+  min-height: 0;
+  overflow: auto;
+}
+
+.card {
+  display: grid;
+  width: 100%;
+  max-width: min(100%, 78cqb);
+  margin-inline: auto;
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  /* Upright there is height to spare and width is the constraint, so the card
+     takes the full column. */
+  .card {
+    max-width: 100%;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .card {
+    max-width: min(100%, 62cqb);
+  }
+
+  /* The draw panel sets overflow:hidden inline for its sweep decoration. On a
+     board this shallow that clips its own two buttons instead of scrolling to
+     them, so the panel scrolls here — the decoration still sits inside it. */
+  .board > * {
+    overflow: auto !important;
+  }
+
+  .play {
+    padding-top: 2px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .result,
+  .intro {
+    justify-content: flex-start;
+    overflow: auto;
+  }
+}

@@ -510,12 +510,6 @@
     transform-origin: top center;
   }
 
-  .kc-bingo-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-bingo-intro {
-    min-height: 640px !important;
-    transform: scale(.81);
-    transform-origin: top center;
-  }
-
   .kc-talk-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-setup {
     transform: scale(.85);
     transform-origin: top center;
@@ -546,8 +540,6 @@
 
   .kc-sound-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sound-intro,
   .kc-sound-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-sound-play { transform:scale(.86); transform-origin:top center; }
-  .kc-bingo-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-bingo-intro { transform:scale(.72); }
-  .kc-bingo-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-bingo-play { transform:scale(.88); transform-origin:top center; }
   .kc-talk-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-setup { transform:scale(.75); }
   .kc-talk-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-play { transform:scale(.89); transform-origin:top center; }
   .kc-vocab-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-vocab-categories { transform:scale(.94); transform-origin:top center; }
@@ -659,8 +651,6 @@
 
   .kc-vocab-game.kc-stage-2:fullscreen .kc-vocab-modes,
   .kc-vocab-game.kc-stage-2:-webkit-full-screen .kc-vocab-modes { transform:scale(.86); transform-origin:top center; }
-  .kc-bingo-game.kc-stage-0:fullscreen .kc-bingo-intro,
-  .kc-bingo-game.kc-stage-0:-webkit-full-screen .kc-bingo-intro { min-height:640px !important; transform:scale(.81); transform-origin:top center; }
   .kc-talk-game.kc-stage-0:fullscreen .kc-talk-setup,
   .kc-talk-game.kc-stage-0:-webkit-full-screen .kc-talk-setup { transform:scale(.85); transform-origin:top center; }
   .kc-vocab-game.kc-stage-4:fullscreen .kc-vocab-result-list,
@@ -674,8 +664,6 @@
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-5:fullscreen .kc-family-stage { transform:scale(.68); }
   .kc-game.kc-compact-canvas.kc-sound-game .kc-sound-intro,
   .kc-game.kc-compact-canvas.kc-sound-game .kc-sound-play { transform:scale(.86); transform-origin:top center; }
-  .kc-game.kc-compact-canvas.kc-bingo-game.kc-stage-0 .kc-bingo-intro { transform:scale(.72); }
-  .kc-game.kc-compact-canvas.kc-bingo-game.kc-stage-1 .kc-bingo-play { transform:scale(.88); transform-origin:top center; }
   .kc-game.kc-compact-canvas.kc-talk-game.kc-stage-0 .kc-talk-setup { transform:scale(.75); }
   .kc-game.kc-compact-canvas.kc-talk-game.kc-stage-1 .kc-talk-play { transform:scale(.89); transform-origin:top center; }
   .kc-game.kc-compact-canvas.kc-vocab-game.kc-stage-1 .kc-vocab-categories { transform:scale(.94); transform-origin:top center; }
