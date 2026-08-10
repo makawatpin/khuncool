@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import { CATEGORIES, GAME_DATA, type AseanItem, type CategoryId } from "./gameData";
 import AseanFlag from "./AseanFlag";
 import styles from "./AseanMatchingApp.module.css";
@@ -34,7 +34,7 @@ const CONFETTI = Array.from({ length: 34 }, (_, index) => ({
 
 export default function AseanMatchingApp() {
   useTrackToolUse("asean-matching");
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { ref, isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [stage, setStage] = useState<Stage>("home");
   const [category, setCategory] = useState<CategoryId>("flower");
   const [questions, setQuestions] = useState<AseanItem[]>([]);
@@ -56,7 +56,7 @@ export default function AseanMatchingApp() {
 
   useEffect(() => {
     ref.current?.scrollTo({ top: 0, left: 0 });
-  }, [stage, ref]);
+  }, [stage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const syncTimer = window.setTimeout(() => { setMuted(KcSfx.isMuted()); setBgmLive(KcSfx.isBgm()); }, 0);
@@ -104,7 +104,7 @@ export default function AseanMatchingApp() {
   const toggleBgm = () => { const next = !bgmLive; setBgmLive(next); KcSfx.bgm(next); KcSfx.play("click"); };
   const percent = questions.length ? ((round + 1) / questions.length) * 100 : 0;
 
-  return <div ref={ref} data-category={category} data-stage={stage} className={`${styles.shell} ${fullscreenClassName}`} onMouseOver={hoverSfxDelegate} style={{ "--cat": categoryMeta.color, "--catSoft": `${categoryMeta.color}30` } as React.CSSProperties}>
+  return <div {...stageProps} className="kc-stage"><div data-category={category} data-stage={stage} className={`kc-stage-body ${styles.shell}`} onMouseOver={hoverSfxDelegate} style={{ "--cat": categoryMeta.color, "--catSoft": `${categoryMeta.color}30` } as React.CSSProperties}>
     <div className={styles.mesh}/><div className={`${styles.orb} ${styles.orb1}`}/><div className={`${styles.orb} ${styles.orb2}`}/><div className={`${styles.orb} ${styles.orb3}`}/>
     <header className={styles.topbar}><div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={38} height={38}/><span>เกมจับคู่ภาพอาเซียน</span></div>
       <div className={styles.controls}>
@@ -130,5 +130,5 @@ export default function AseanMatchingApp() {
       {stage === "result" && <section className={styles.result}>{CONFETTI.map((piece, index) => <i key={index} className={styles.confetti} style={{ left: `${piece.left}%`, animationDelay: `${piece.delay}s`, background: piece.color }}/>) }<div className={styles.trophy}>{correctCount >= 9 ? "🏆" : correctCount >= 6 ? "🌟" : "🎯"}</div><h2>ภารกิจสำเร็จ!</h2><p>น้องรู้จักอาเซียนมากขึ้นอีกขั้นแล้ว</p><div className={styles.resultCard}><div className={styles.stat}><strong>{score}</strong><span>คะแนนรวม</span></div><div className={styles.stat}><strong>{correctCount}/11</strong><span>ตอบถูก</span></div><div className={styles.stat}><strong>x{bestStreak}</strong><span>คอมโบสูงสุด</span></div></div><div className={styles.resultActions}><button type="button" className={styles.startBtn} onClick={start}>เล่นหมวดนี้อีกครั้ง 🔄</button><button type="button" className={styles.secondaryBtn} onClick={() => { cancelAdvance(); setStage("home"); KcSfx.play("click"); }}>เลือกหมวดอื่น</button></div></section>}
       {feedback && <div className={`${styles.feedback} ${feedback.type === "good" ? styles.feedbackGood : styles.feedbackBad}`}>{feedback.text}</div>}
     </div>
-  </div>;
+  </div></div>;
 }

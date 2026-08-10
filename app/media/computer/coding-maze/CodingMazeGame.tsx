@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./CodingMazeGame.module.css";
 
 type Direction = 0 | 1 | 2 | 3;
@@ -77,7 +77,7 @@ const LEVELS: Level[] = [
 
 export default function CodingMazeGame() {
   useTrackToolUse("computer-coding-maze");
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [levelIndex, setLevelIndex] = useState(0);
   const [stage, setStage] = useState<Stage>("intro");
   const [queue, setQueue] = useState<Command[]>([]);
@@ -153,7 +153,7 @@ export default function CodingMazeGame() {
     setActiveStep(-1); setCrashCell(null); setBumping(false); setMessage("วางคำสั่ง แล้วกด RUN!"); setStage("intro");
   };
 
-  return <div ref={ref} className={`kc-game kc-computer-game ${styles.shell} ${fullscreenClassName}`} data-stage={stage} data-maze-theme={levelIndex + 1} style={{ "--maze-accent": mazeTheme.accent, "--maze-second": mazeTheme.second, "--maze-deep": mazeTheme.deep, "--maze-path": mazeTheme.path } as React.CSSProperties} onMouseOver={hoverSfxDelegate}>
+  return <div {...stageProps} className="kc-stage"><div className={`kc-stage-body kc-game kc-computer-game ${styles.shell}`} data-stage={stage} data-maze-theme={levelIndex + 1} style={{ "--maze-accent": mazeTheme.accent, "--maze-second": mazeTheme.second, "--maze-deep": mazeTheme.deep, "--maze-path": mazeTheme.path } as React.CSSProperties} onMouseOver={hoverSfxDelegate}>
     <div className={styles.gridGlow}/><div className={styles.orbOne}/><div className={styles.orbTwo}/>
     <style jsx>{`
       .${styles.shell}{background:radial-gradient(circle at 50% 8%,var(--maze-second) 0,var(--maze-deep) 44%,#080a20 100%);transition:background .7s ease}
@@ -168,31 +168,31 @@ export default function CodingMazeGame() {
       .${styles.target}{border-color:var(--maze-accent)!important;box-shadow:0 0 25px color-mix(in srgb,var(--maze-accent) 48%,transparent)}.${styles.cpu}{filter:drop-shadow(0 0 14px var(--maze-accent))}
       .robotMover{position:absolute;z-index:8;left:${robotPoint.left};top:${robotPoint.top};transform:translate(-50%,-50%);transition:left .54s cubic-bezier(.22,.72,.24,1),top .54s cubic-bezier(.22,.72,.24,1);pointer-events:none}
       .robotMover:after{position:absolute;top:50%;left:50%;z-index:-1;width:70%;height:70%;content:"";border-radius:50%;background:var(--maze-accent);opacity:${running ? ".3" : ".12"};filter:blur(10px);transform:translate(-50%,-50%);transition:opacity .2s}
-      .robotSprite{display:block;font-size:clamp(20px,3.3vw,46px);line-height:1;filter:drop-shadow(0 0 11px var(--maze-accent));transform:rotate(${direction * 90}deg);transition:transform .28s cubic-bezier(.34,1.56,.64,1);will-change:transform}
+      .robotSprite{display:block;font-size:max(20px,3.3cqi);line-height:1;filter:drop-shadow(0 0 11px var(--maze-accent));transform:rotate(${direction * 90}deg);transition:transform .28s cubic-bezier(.34,1.56,.64,1);will-change:transform}
       .robotBump{animation:robotBump .42s ease-in-out}
       @keyframes robotBump{35%{transform:translateX(13px) scale(1.12)}70%{transform:translateX(-5px) scale(.94)}}
-      @media(min-width:768px){
+      @container kcstage (aspect-ratio >= 0.9){
         .${styles.brand} b{font-size:19px}.${styles.brand} small{font-size:12px}.${styles.hubMenu},.${styles.roundBtn}{height:42px}.${styles.hubMenu}{padding:0 14px}.${styles.hubMenu} b{font-size:14px}.${styles.roundBtn}{width:42px;font-size:20px}
         .${styles.levelBadge}{padding:7px 14px;font-size:12px}.${styles.introStats} span{padding:8px 13px;font-size:13px}.${styles.startBtn}{min-width:250px;min-height:50px;justify-content:center;padding:12px 24px}.${styles.startBtn} span{font-size:19px}.${styles.startBtn} b{width:30px;height:30px;font-size:18px}
         .${styles.hud} span{font-size:12px}.${styles.hud} b{font-size:20px}.${styles.hud} small{font-size:12px}.${styles.hudMessage}{padding:8px 14px;font-size:13px}
         .${styles.mission}{padding:7px 11px;font-size:13px}.${styles.legend}{font-size:11px}.${styles.robotDot},.${styles.cpuDot}{width:9px;height:9px}
         .${styles.commandPanel}{padding:16px}.${styles.commandHeader} small{font-size:11px}.${styles.commandHeader} h2{font-size:23px}.${styles.commandHeader}>span{padding:7px 10px;font-size:12px}
-        .${styles.commandButtons}{gap:9px}.${styles.commandButtons} button{min-height:76px}.${styles.commandButtons} b{font-size:31px}.${styles.commandButtons} span{font-size:14px}.${styles.commandButtons} small{font-size:10px}
-        .${styles.queue}{gap:8px;padding:10px}.${styles.queue} p{font-size:13px}.${styles.queue}>span{height:34px;padding:0 9px;font-size:20px}.${styles.queue}>span b{font-size:10px}
+        .${styles.commandButtons}{gap:9px}.${styles.commandButtons} button{min-height:76px}.${styles.commandButtons} b{font-size:31px}.${styles.commandButtons} span{font-size:14px}.${styles.commandButtons} small{font-size:11px}
+        .${styles.queue}{gap:8px;padding:10px}.${styles.queue} p{font-size:13px}.${styles.queue}>span{height:34px;padding:0 9px;font-size:20px}.${styles.queue}>span b{font-size:11px}
         .${styles.actions} button{height:46px;font-size:18px}.${styles.actions} button span{font-size:12px}.${styles.runBtn} b{font-size:16px}.${styles.runBtn} span{font-size:18px!important}
         .${styles.resultCard}{width:min(470px,92%);padding:27px}.${styles.resultCard} h2{font-size:31px}.${styles.resultCard} p{font-size:15px}.${styles.outlineBtn}{padding:12px 17px;font-size:15px}
         .${styles.intro}{padding:24px 28px 30px}.${styles.intro} .${styles.levelBadge}{padding:8px 17px;font-size:14px}.${styles.introVisual}{gap:28px;margin:18px 0 8px}.${styles.introVisual} span{width:116px;height:116px;border-radius:31px;font-size:63px}.${styles.introVisual} i{font-size:22px}
-        .${styles.intro} h2{margin:12px 0 8px;font-size:clamp(42px,4.5vw,58px);line-height:1.1}.${styles.intro} p{max-width:760px;font-size:18px;line-height:1.7}.${styles.introStats}{gap:12px;margin:18px 0}.${styles.introStats} span{padding:10px 16px;font-size:15px}.${styles.intro} .${styles.startBtn}{min-width:320px;min-height:58px;padding:14px 27px}.${styles.intro} .${styles.startBtn} span{font-size:22px}.${styles.intro} .${styles.startBtn} b{width:34px;height:34px;font-size:21px}
+        .${styles.intro} h2{margin:12px 0 8px;font-size:max(42px,4.5cqi);line-height:1.1}.${styles.intro} p{max-width:760px;font-size:18px;line-height:1.7}.${styles.introStats}{gap:12px;margin:18px 0}.${styles.introStats} span{padding:10px 16px;font-size:15px}.${styles.intro} .${styles.startBtn}{min-width:320px;min-height:58px;padding:14px 27px}.${styles.intro} .${styles.startBtn} span{font-size:22px}.${styles.intro} .${styles.startBtn} b{width:34px;height:34px;font-size:21px}
         .${styles.mazePanel}{padding:18px 16px 18px 112px}.${styles.maze}{width:min(100%,440px)}
         .${styles.mission}{top:22%;left:12px;z-index:5;width:88px;max-width:88px;transform:none;padding:9px 7px;border:1px solid rgba(125,229,255,.3);border-radius:11px;background:rgba(3,10,31,.92);font-size:11px;line-height:1.45;white-space:normal;overflow-wrap:anywhere;text-align:center}
-        .${styles.legend}{top:49%;bottom:auto;left:12px;z-index:5;display:flex;width:88px;transform:none;flex-direction:column;gap:7px;padding:8px 7px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:rgba(3,10,31,.92);font-size:10px;white-space:normal}
+        .${styles.legend}{top:49%;bottom:auto;left:12px;z-index:5;display:flex;width:88px;transform:none;flex-direction:column;gap:7px;padding:8px 7px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:rgba(3,10,31,.92);font-size:11px;white-space:normal}
         .${styles.legend} span{width:100%;justify-content:flex-start;padding:3px 0;line-height:1.3}.${styles.robotDot},.${styles.cpuDot}{flex:0 0 auto;width:9px;height:9px}
       }
-      @media(max-width:767px){
-        .${styles.brand} b{font-size:14px}.${styles.brand} small{font-size:9px}.${styles.introStats} span{padding:5px 8px;font-size:10px}.${styles.startBtn}{min-width:210px;min-height:44px;justify-content:center;padding:10px 18px}.${styles.startBtn} span{font-size:16px}.${styles.startBtn} b{width:27px;height:27px;font-size:16px}
-        .${styles.hud} span{font-size:10px}.${styles.hud} b{font-size:16px}.${styles.hud} small{font-size:10px}.${styles.hudMessage}{font-size:9px}.${styles.mission}{font-size:9px}.${styles.legend}{font-size:9px}
-        .${styles.commandHeader} small{font-size:9px}.${styles.commandHeader} h2{font-size:17px}.${styles.commandHeader}>span{font-size:11px}.${styles.commandButtons} button{min-height:53px}.${styles.commandButtons} b{font-size:24px}.${styles.commandButtons} span{font-size:10px}
-        .${styles.queue} p{font-size:9.5px}.${styles.queue}>span{height:26px;font-size:15px}.${styles.queue}>span b{font-size:9px}.${styles.actions} button{height:37px;font-size:16px}.${styles.runBtn} b{font-size:13px}.${styles.runBtn} span{font-size:16px!important}
+      @container kcstage (aspect-ratio < 0.9){
+        .${styles.brand} b{font-size:14px}.${styles.brand} small{font-size:11px}.${styles.introStats} span{padding:5px 8px;font-size:11px}.${styles.startBtn}{min-width:210px;min-height:44px;justify-content:center;padding:10px 18px}.${styles.startBtn} span{font-size:16px}.${styles.startBtn} b{width:27px;height:27px;font-size:16px}
+        .${styles.hud} span{font-size:11px}.${styles.hud} b{font-size:16px}.${styles.hud} small{font-size:11px}.${styles.hudMessage}{font-size:11px}.${styles.mission}{font-size:11px}.${styles.legend}{font-size:11px}
+        .${styles.commandHeader} small{font-size:11px}.${styles.commandHeader} h2{font-size:17px}.${styles.commandHeader}>span{font-size:11px}.${styles.commandButtons} button{min-height:53px}.${styles.commandButtons} b{font-size:24px}.${styles.commandButtons} span{font-size:11px}
+        .${styles.queue} p{font-size:9.5px}.${styles.queue}>span{height:26px;font-size:15px}.${styles.queue}>span b{font-size:11px}.${styles.actions} button{height:37px;font-size:16px}.${styles.runBtn} b{font-size:13px}.${styles.runBtn} span{font-size:16px!important}
         .${styles.resultCard} h2{font-size:24px}.${styles.resultCard} p{font-size:13px}.${styles.outlineBtn}{font-size:13px}
       }
     `}</style>
@@ -226,5 +226,5 @@ export default function CodingMazeGame() {
       </div>
       {(stage === "won" || stage === "lost") && <div className={styles.overlay}>{stage === "won" && <div className={styles.confetti}>{CONFETTI.map((piece, index) => <i key={index} style={{ left: piece.left, animationDelay: piece.delay, background: piece.color }}/>)}</div>}<div className={`${styles.resultCard} ${stage === "won" ? styles.winCard : styles.loseCard}`}><div className={styles.resultIcon}>{stage === "won" ? "🏆" : "💥"}</div><div className={styles.levelBadge}>{stage === "won" ? "MISSION COMPLETE" : "DEBUG MODE"}</div><h2>{stage === "won" ? "พิชิต CPU สำเร็จ!" : "เกือบแล้ว! ลอง Debug ดู"}</h2><p>{stage === "won" ? "คุณออกแบบอัลกอริทึมได้ยอดเยี่ยมมาก" : "หุ่นยนต์ชนกำแพง ลองสังเกตทิศทางและเรียงคำสั่งใหม่"}</p><div className={styles.resultActions}>{stage === "won" && <button type="button" className={styles.startBtn} onClick={goNext}><span>{levelIndex + 1 < LEVELS.length ? "ไปด่านถัดไป" : "เล่นอีกครั้ง"}</span><b>▶</b></button>}<button type="button" className={styles.outlineBtn} onClick={() => resetBoard("play")}>{stage === "won" ? "เล่นด่านเดิม" : "ลองใหม่"}</button></div></div></div>}
     </section>}
-  </div>;
+  </div></div>;
 }
