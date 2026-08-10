@@ -145,10 +145,14 @@ export function useFullscreen<T extends HTMLElement>() {
   return {
     ref,
     isFull: isFull || isFallbackFull,
+    // The mobile surface is a plain viewport-sized element, not a measured
+    // canvas that gets scaled, so it must not carry kc-scaled-fullscreen —
+    // that class's rules read --kc-fullscreen-base-width, which this path
+    // never sets.
     fullscreenClassName: isDesktopFallbackFull
       ? "kc-desktop-fallback-fullscreen kc-scaled-fullscreen"
       : isFallbackFull
-      ? "kc-mobile-fullscreen kc-scaled-fullscreen"
+      ? "kc-mobile-fullscreen"
       : isFull
         ? "kc-scaled-fullscreen"
         : "",

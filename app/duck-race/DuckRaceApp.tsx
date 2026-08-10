@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
@@ -126,7 +127,6 @@ export default function DuckRaceApp() {
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
   const [importMsg, setImportMsg] = useState("");
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSettings, setShowSettings] = useState(true);
   const [duckScale, setDuckScale] = useState(100);
   const [sceneTone, setSceneTone] = useState(100);
@@ -259,12 +259,6 @@ export default function DuckRaceApp() {
       /* ignore */
     }
   }, [duckScale, sceneTone, showLabels, effectsOn]);
-
-  useEffect(() => {
-    const sync = () => setIsFullscreen(document.fullscreenElement === frameRef.current);
-    document.addEventListener("fullscreenchange", sync);
-    return () => document.removeEventListener("fullscreenchange", sync);
-  }, []);
 
   // ---- audio ----
   const ac = useCallback((): AudioContext | null => {
@@ -914,15 +908,11 @@ export default function DuckRaceApp() {
     setBulkMode(false);
   }, [bulkText]);
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const {
+    isFull: isFullscreen,
+    fullscreenClassName,
+    toggle: toggleFull,
+  } = useToolFullscreen(frameRef, "duck-race-fs");
 
   const resetGraphics = useCallback(() => {
     setDuckScale(100);
@@ -937,7 +927,7 @@ export default function DuckRaceApp() {
     countdown !== null ? countdown : racing ? "กำลังแข่ง…" : "🦆 ปล่อยเป็ดแข่ง!";
 
   return (
-    <div ref={frameRef} className="duck-race-shell">
+    <div ref={frameRef} className={`duck-race-shell ${fullscreenClassName}`}>
       <div className="duck-race-toolbar">
         <div>
           <span className="duck-race-eyebrow">DUCK RACE STUDIO</span>

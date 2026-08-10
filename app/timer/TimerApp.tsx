@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 
 type Preset = { label: string; sec: number };
 
@@ -273,15 +274,7 @@ export default function TimerApp() {
 
   const toggleSound = useCallback(() => setSoundOn((s) => !s), []);
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   useEffect(() => {
     return () => {
@@ -311,7 +304,7 @@ export default function TimerApp() {
   return (
     <div
       ref={frameRef}
-      className="tool-stage bg-white"
+      className={`tool-stage bg-white ${fullscreenClassName}`}
       style={flashing ? { animation: "flash .5s ease 4" } : undefined}
     >
       <div className="md:grid md:grid-cols-[1fr_360px] md:items-center md:gap-10">
