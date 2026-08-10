@@ -1,0 +1,59 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces six .kc-vocab-game.kc-stage-N rules in app/globals.css — scale(.94)
+   on the category grid, .76 and .86 on the mode picker, .91 on the play screen
+   — plus the two-column override on the results list. Every one of them was
+   shrinking a screen because something inside it was taller than the board. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: auto;
+}
+
+/* The results list is the only screen whose content genuinely has no bound —
+   one row per question. Two columns on a wide board, one upright, and it
+   scrolls inside the screen either way so the replay button stays put. */
+:global(.kc-vocab-result-list) {
+  min-height: 0;
+}
+
+@container kcstage (aspect-ratio >= 0.9) {
+  :global(.kc-vocab-result-list) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.kc-vocab-result-list) > * {
+    min-width: 0;
+  }
+}
+
+/* The question card sizes its picture off the board's width, which on a
+   shallow board leaves nothing for the four answer buttons below it. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-vocab-visual) {
+    width: min(22cqi, 34cqb) !important;
+    height: min(22cqi, 34cqb) !important;
+  }
+
+  :global(.kc-vocab-visual) > span {
+    font-size: min(14cqi, 22cqb) !important;
+  }
+
+  :global(.kc-vocab-card) {
+    padding: 8px 12px !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    min-height: var(--kc-tap);
+    padding-block: 0 !important;
+  }
+}
