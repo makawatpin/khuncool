@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./MathBombGame.module.css";
 
 type Difficulty = "easy" | "medium" | "hard";
@@ -98,7 +98,7 @@ function playTone(kind: "tick" | "win" | "boom" | "cut", muted = false) {
 }
 
 export default function MathBombGame() {
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [screen, setScreen] = useState<"intro" | "setup" | "game">("intro");
   const [muted, setMuted] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
@@ -164,8 +164,8 @@ export default function MathBombGame() {
   const timeBonus = timeLeft * 2;
   const missionGrade = timeLeft >= duration * .7 ? "S" : timeLeft >= duration * .4 ? "A" : "B";
 
-  return <div className={styles.shell}>
-    <div ref={ref} className={`${styles.game} ${status === "won" ? styles.won : status === "lost" ? styles.lost : ""} ${fullscreenClassName}`}>
+  return <div {...stageProps} className={`kc-stage ${styles.shell}`}>
+    <div className={`kc-stage-body ${styles.game} ${status === "won" ? styles.won : status === "lost" ? styles.lost : ""}`}>
       <div className={styles.scanlines} />
       <div className={styles.vignette} />
       <div className={styles.techGrid} />

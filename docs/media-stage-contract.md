@@ -86,9 +86,9 @@ Token ที่มี: `--kc-tap`, `--kc-pad`, `--kc-gap`, `--kc-radius`, `--kc-
 | เกม | สถานะ |
 |---|---|
 | density-lab | ✅ ย้ายแล้ว |
-| motion-lab | ⬜ |
-| science-lab-crisis | ⬜ |
-| math-bomb-defusal | ⬜ |
+| motion-lab | ✅ ย้ายแล้ว |
+| science-lab-crisis | ✅ ย้ายแล้ว |
+| math-bomb-defusal | ✅ ย้ายแล้ว |
 | coding-maze, digital-sort, typing-defense | ⬜ |
 | asean-matching, law-daily | ⬜ |
 | 7 เกม /media/english | ⬜ (ต้องดึง inline style ออกเป็น CSS Module ก่อน) |

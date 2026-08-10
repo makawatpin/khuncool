@@ -86,10 +86,14 @@ function auditStage({ min = 11 } = {}) {
     .map(size);
 
   // 3. Text below the legibility floor.
+  //
+  // font-size: 0 is not small text, it is hidden text — the icon-button idiom
+  // that collapses a label and renders the glyph through ::first-letter. Only
+  // text that actually renders can be too small to read.
   const smallText = [...stage.querySelectorAll("*")]
     .filter((el) => !el.children.length && (el.textContent || "").trim() && !decorative(el))
     .map((el) => ({ text: (el.textContent || "").trim().slice(0, 20), size: parseFloat(getComputedStyle(el).fontSize) }))
-    .filter((row) => row.size < min);
+    .filter((row) => row.size > 0 && row.size < min);
 
   // 4. Horizontal page scroll.
   const pageScrollsSideways = document.documentElement.scrollWidth > window.innerWidth + 1;
