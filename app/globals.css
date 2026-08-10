@@ -504,12 +504,6 @@
     min-height: 650px !important;
     transform: scale(.78);
   }
-
-  .kc-talk-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-setup {
-    transform: scale(.85);
-    transform-origin: top center;
-  }
-
 }
 
 /* Compact desktop/projector windows still use 16:9, but have a shorter
@@ -522,8 +516,6 @@
   .kc-family-game.kc-stage-3:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-family-stage,
   .kc-family-game.kc-stage-4:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-family-stage { transform:scale(.72); }
   .kc-family-game.kc-stage-5:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-family-stage { transform:scale(.68); }
-  .kc-talk-game.kc-stage-0:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-setup { transform:scale(.75); }
-  .kc-talk-game.kc-stage-1:not(:fullscreen):not(:-webkit-full-screen):not(.kc-mobile-fullscreen) .kc-talk-play { transform:scale(.89); transform-origin:top center; }
 }
 
 /* Native fullscreen is the same canvas enlarged as one unit. Its base size
@@ -627,17 +619,12 @@
   .kc-family-game.kc-stage-4:-webkit-full-screen .kc-family-stage { transform:scale(.82); }
   .kc-family-game.kc-stage-5:fullscreen .kc-family-stage,
   .kc-family-game.kc-stage-5:-webkit-full-screen .kc-family-stage { min-height:650px !important; transform:scale(.78); }
-  .kc-talk-game.kc-stage-0:fullscreen .kc-talk-setup,
-  .kc-talk-game.kc-stage-0:-webkit-full-screen .kc-talk-setup { transform:scale(.85); transform-origin:top center; }
-
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-10:fullscreen .kc-family-stage { transform:scale(.82); }
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-1:fullscreen .kc-family-stage { transform:scale(.65); }
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-2:fullscreen .kc-family-stage { transform:scale(.55); }
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-3:fullscreen .kc-family-stage,
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-4:fullscreen .kc-family-stage { transform:scale(.72); }
   .kc-game.kc-compact-canvas.kc-family-game.kc-stage-5:fullscreen .kc-family-stage { transform:scale(.68); }
-  .kc-game.kc-compact-canvas.kc-talk-game.kc-stage-0 .kc-talk-setup { transform:scale(.75); }
-  .kc-game.kc-compact-canvas.kc-talk-game.kc-stage-1 .kc-talk-play { transform:scale(.89); transform-origin:top center; }
 }
 
 /* The Claude Design mockups give nearly every clickable button a

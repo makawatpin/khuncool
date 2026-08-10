@@ -93,7 +93,7 @@ Token ที่มี: `--kc-tap`, `--kc-pad`, `--kc-gap`, `--kc-radius`, `--kc-
 | math-bomb-defusal | ✅ ย้ายแล้ว |
 | coding-maze, digital-sort, typing-defense | ✅ ย้ายแล้ว |
 | asean-matching, law-daily | ✅ ย้ายแล้ว |
-| is-are-sorting, classroom-objects, phonics-bingo, sound-wheel, vocabulary-arcade | ✅ ย้ายแล้ว |
-| อีก 2 เกม /media/english (talk-card, family-tree) | ⬜ |
+| is-are-sorting, classroom-objects, phonics-bingo, sound-wheel, vocabulary-arcade, talk-card | ✅ ย้ายแล้ว |
+| family-tree | ⬜ (เหลือตัวสุดท้าย — มี `window.innerWidth` ใน JS ด้วย) |
 
 เกมที่ยังไม่ย้ายใช้ `app/media/english/useFullscreen.ts` ตัวเดิมอยู่ — จะลบทิ้งเมื่อย้ายครบ

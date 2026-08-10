@@ -1,0 +1,34 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces the .kc-talk-game.kc-stage-N transform:scale() rules in
+   app/globals.css — .75 and .85 on the setup screen, .89 on the play screen —
+   each of them shrinking a whole screen to make one tall child fit. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-talk-setup) {
+    padding-top: 2px !important;
+  }
+
+  /* The question card is overflow:hidden so the flip animation can clip its
+     back face. On a board this shallow the card's own content is taller than
+     the board, so that clip swallowed the listen and example buttons instead
+     of scrolling to them. */
+  :global(.kc-talk-play) [style*="perspective"],
+  :global(.kc-talk-play) > div > div {
+    max-height: 100%;
+    overflow: auto !important;
+  }
+}
