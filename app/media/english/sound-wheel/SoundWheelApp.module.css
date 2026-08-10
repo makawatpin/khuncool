@@ -1,0 +1,70 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces the .kc-sound-game transform:scale(.86) rules in app/globals.css,
+   which shrank the whole intro and play screen — type included — because the
+   wheel inside them reserved more room than the board had. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.screen {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.play {
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* The wheel is a circle: one measurement sets both axes. Sizing it off width
+   alone is what made it overflow a shallow board, so it takes the smaller of
+   the board's width and its height — and never more than the artwork's own
+   680px bitmap deserves. */
+.wheel {
+  width: min(46cqi, 62cqb, 430px);
+  height: min(46cqi, 62cqb, 430px);
+}
+
+/* Upright, the wheel is the main event and the board has height to give. The
+   row becomes a column so the wheel and the word panel stack instead of
+   competing for a width that is not there — side by side they overflow, and a
+   centred overflowing row spills past both edges. */
+@container kcstage (aspect-ratio < 0.9) {
+  .play {
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .play > * {
+    max-width: 100%;
+  }
+
+  .wheel {
+    width: min(78cqi, 42cqb, 430px);
+    height: min(78cqi, 42cqb, 430px);
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .wheel {
+    width: min(40cqi, 56cqb, 430px);
+    height: min(40cqi, 56cqb, 430px);
+  }
+
+  .intro {
+    justify-content: flex-start;
+  }
+}
