@@ -1092,6 +1092,7 @@ export default function PhonicsBingoApp() {
                 />
               </div>
               <div
+                className={styles.listenLabel}
                 style={{
                   fontSize: 12,
                   letterSpacing: ".14em",
@@ -1105,6 +1106,7 @@ export default function PhonicsBingoApp() {
               </div>
               <div
                 key={"c" + call}
+                className={styles.callBlock}
                 style={{
                   position: "relative",
                   display: "flex",
@@ -1143,6 +1145,7 @@ export default function PhonicsBingoApp() {
                   }}
                 />
                 <div
+                  className={styles.callMain}
                   style={{
                     position: "relative",
                     fontWeight: 700,
@@ -1154,6 +1157,7 @@ export default function PhonicsBingoApp() {
                   {shown ? `/${cur!.s}/` : "🎧"}
                 </div>
                 <div
+                  className={styles.callWord}
                   style={{
                     fontSize: "clamp(34px,9cqi,50px)",
                     lineHeight: 1,
@@ -1163,6 +1167,7 @@ export default function PhonicsBingoApp() {
                   {shown ? cur!.e : ""}
                 </div>
                 <div
+                  className={styles.callLabel}
                   style={{
                     fontWeight: 600,
                     fontSize: "clamp(15px,4cqi,19px)",
@@ -1176,6 +1181,7 @@ export default function PhonicsBingoApp() {
               <button
                 type="button"
                 onClick={speakAgain}
+                className={styles.listenBtn}
                 style={{
                   marginTop: 8,
                   display: "inline-flex",
@@ -1196,6 +1202,7 @@ export default function PhonicsBingoApp() {
                 🔊 ฟังอีกครั้ง
               </button>
               <div
+                className={styles.listenFoot}
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
