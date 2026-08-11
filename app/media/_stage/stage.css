@@ -66,8 +66,13 @@
   overscroll-behavior: none;
 }
 
+/* Every game sets `borderRadius: 24` (or similar) inline on .kc-stage-body —
+   that's the established convention, and inline styles always beat a plain
+   class rule regardless of specificity. Without !important this selector
+   never wins, so the body stays rounded in fullscreen and the stage's own
+   #0b1020 backdrop shows through at the four corners. */
 .kc-stage[data-fullscreen] > .kc-stage-body {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 .kc-stage::backdrop,
