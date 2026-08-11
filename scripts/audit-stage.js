@@ -2,8 +2,12 @@
  * Responsive audit for a /media game stage.
  *
  * Paste into the browser console on a game page, or run it through a
- * devtools/CDP eval. Reports the four failures the stage contract exists to
+ * devtools/CDP eval. Reports the failures the stage contract exists to
  * prevent — see docs/media-stage-contract.md.
+ *
+ * `pass` covers only the hard failures. Two fields are advisory and have to
+ * be read, not just checked: `contentHiddenBehindScroll` and
+ * `belowComfortTargets`. A screen can pass and still be bad to play.
  *
  *   auditStage()            // audit the stage as rendered right now
  *   auditStage({ min: 11 }) // custom minimum font size
@@ -111,6 +115,52 @@ function auditStage({ min = 11 } = {}) {
     bodyEl && (bodyBox.height > box.height + 2 || bodyBox.width > box.width + 2),
   );
 
+  // 6. Content parked outside its own scroll region.
+  //
+  // Check 1 clears anything a scroll can reach, which is right for "can the
+  // user get to it at all" but wrong as the only question. Phonics Bingo
+  // passed this audit on a portrait phone while showing 12 of 16 answer
+  // cards: the grid had its own scrollbar, so every hidden card counted as
+  // reachable. A small box scrolling inside a screen has almost no
+  // affordance — a student reads the four rows they can see and plays on,
+  // never learning the rest exist.
+  //
+  // Not a hard failure, because some regions genuinely have no bound (a
+  // results list is one row per question) and scrolling is the honest answer
+  // there. What decides it is WHAT is hidden, so report that: a region
+  // hiding 4 answer buttons needs a layout fix, one hiding the tail of a
+  // paragraph does not. Read this list on every screen a game has.
+  const contentHiddenBehindScroll = [...stage.querySelectorAll("*")]
+    .filter((el) => {
+      const cs = getComputedStyle(el);
+      if (!/auto|scroll/.test(cs.overflowY + cs.overflowX)) return false;
+      return el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1;
+    })
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      const inside = controls.filter((c) => el.contains(c));
+      const hidden = inside.filter((c) => {
+        const cr = c.getBoundingClientRect();
+        return (
+          cr.bottom > r.bottom + 1 ||
+          cr.top < r.top - 1 ||
+          cr.right > r.right + 1 ||
+          cr.left < r.left - 1
+        );
+      });
+      return {
+        region: el === bodyEl ? "kc-stage-body" : el.className.toString().trim() || el.tagName,
+        hiddenPx: Math.max(
+          Math.round(el.scrollHeight - el.clientHeight),
+          Math.round(el.scrollWidth - el.clientWidth),
+        ),
+        hiddenControls: hidden.length,
+        totalControls: inside.length,
+        sample: hidden.slice(0, 3).map(label),
+      };
+    })
+    .filter((row) => row.hiddenControls > 0);
+
   const shape =
     box.width / box.height < 0.9 ? "portrait" : box.height < 440 ? "short" : "wide";
 
@@ -128,6 +178,7 @@ function auditStage({ min = 11 } = {}) {
     unreachable,
     undersizedTargets,
     smallText,
+    contentHiddenBehindScroll, // advisory — judge by what is hidden
     belowComfortTargets, // advisory only
   };
 }
