@@ -1,0 +1,55 @@
+/* Replaces eleven .kc-family-game.kc-stage-N rules in app/globals.css —
+   scale(.55) to scale(.96) depending on stage and viewport, because every one
+   of Family Tree's seven screens is taller than the 16:9 board at typical
+   widths. That block scaled each screen down as one image to make it fit.
+
+   Scaling shrinks buttons and text along with the layout, so a screen with
+   nine drag targets ended up with word-bank chips a child can't read, let
+   alone tap. Scrolling keeps every control at its designed size and lets the
+   one screen that's actually oversized (stage 2's matching board, nine rows
+   fixed at 68px each) be reached instead of shrunk. */
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: auto;
+}
+
+/* Stage 1's family tree and stage 2's matching board are each a fixed-size
+   pixel canvas (an SVG diagram plus absolutely-positioned HTML cards sharing
+   its coordinate space) that must scale as one image rather than reflow —
+   reflowing would separate the cards from the SVG lines that connect them.
+   The old code measured window.innerWidth in JS and wrote a transform:scale
+   inline; both the measurement and the calculation belonged to the stage,
+   not the game.
+
+   This reproduces the same fit exactly, in CSS: .canvasViewport is capped at
+   the canvas's native size via `min(100%, --kc-canvas-w)`, so its own
+   rendered width can never exceed the canvas. .canvasStage then reads that
+   rendered width back as `cqi` — 1% of the nearest container's inline size —
+   and divides it by the canvas's native width to get the scale factor.
+   Dividing a length by a length this way (`100cqi / var(...)`) yields a
+   plain number, which is what `scale()` needs; it's CSS Values 4 syntax, not
+   a hack. The ratio is always <= 1 by construction, since the viewport's
+   width can't exceed --kc-canvas-w. */
+.canvasViewport {
+  container: kcfamilytreecanvas / inline-size;
+  position: relative;
+  width: min(100%, var(--kc-canvas-w));
+  aspect-ratio: var(--kc-canvas-ratio);
+  margin: 0 auto;
+}
+
+.canvasStage {
+  position: absolute;
+  inset: 0;
+  width: var(--kc-canvas-w);
+  height: var(--kc-canvas-h);
+  transform-origin: top left;
+  transform: scale(calc(100cqi / var(--kc-canvas-w)));
+}
