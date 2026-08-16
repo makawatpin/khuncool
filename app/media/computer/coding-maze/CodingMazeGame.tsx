@@ -181,8 +181,8 @@ export default function CodingMazeGame() {
         .${styles.queue}{gap:8px;padding:10px}.${styles.queue} p{font-size:13px}.${styles.queue}>span{height:34px;padding:0 9px;font-size:20px}.${styles.queue}>span b{font-size:11px}
         .${styles.actions} button{height:46px;font-size:18px}.${styles.actions} button span{font-size:12px}.${styles.runBtn} b{font-size:16px}.${styles.runBtn} span{font-size:18px!important}
         .${styles.resultCard}{width:min(470px,92%);padding:27px}.${styles.resultCard} h2{font-size:31px}.${styles.resultCard} p{font-size:15px}.${styles.outlineBtn}{padding:12px 17px;font-size:15px}
-        .${styles.intro}{padding:24px 28px 30px}.${styles.intro} .${styles.levelBadge}{padding:8px 17px;font-size:14px}.${styles.introVisual}{gap:28px;margin:18px 0 8px}.${styles.introVisual} span{width:116px;height:116px;border-radius:31px;font-size:63px}.${styles.introVisual} i{font-size:22px}
-        .${styles.intro} h2{margin:12px 0 8px;font-size:max(42px,4.5cqi);line-height:1.1}.${styles.intro} p{max-width:760px;font-size:18px;line-height:1.7}.${styles.introStats}{gap:12px;margin:18px 0}.${styles.introStats} span{padding:10px 16px;font-size:15px}.${styles.intro} .${styles.startBtn}{min-width:320px;min-height:58px;padding:14px 27px}.${styles.intro} .${styles.startBtn} span{font-size:22px}.${styles.intro} .${styles.startBtn} b{width:34px;height:34px;font-size:21px}
+        .${styles.intro}{padding:18px 28px 22px}.${styles.intro} .${styles.levelBadge}{padding:8px 17px;font-size:14px}.${styles.introVisual}{gap:28px;margin:12px 0 8px}.${styles.introVisual} span{width:116px;height:116px;border-radius:31px;font-size:63px}.${styles.introVisual} i{font-size:22px}
+        .${styles.intro} h2{margin:12px 0 8px;font-size:max(42px,4.5cqi);line-height:1.1}.${styles.intro} p{max-width:760px;font-size:18px;line-height:1.7}.${styles.introStats}{gap:12px;margin:12px 0}.${styles.introStats} span{padding:10px 16px;font-size:15px}.${styles.intro} .${styles.startBtn}{min-width:320px;min-height:58px;padding:14px 27px}.${styles.intro} .${styles.startBtn} span{font-size:22px}.${styles.intro} .${styles.startBtn} b{width:34px;height:34px;font-size:21px}
         .${styles.mazePanel}{padding:18px 16px 18px 112px}.${styles.maze}{width:min(100%,440px)}
         .${styles.mission}{top:22%;left:12px;z-index:5;width:88px;max-width:88px;transform:none;padding:9px 7px;border:1px solid rgba(125,229,255,.3);border-radius:11px;background:rgba(3,10,31,.92);font-size:11px;line-height:1.45;white-space:normal;overflow-wrap:anywhere;text-align:center}
         .${styles.legend}{top:49%;bottom:auto;left:12px;z-index:5;display:flex;width:88px;transform:none;flex-direction:column;gap:7px;padding:8px 7px;border:1px solid rgba(255,255,255,.12);border-radius:11px;background:rgba(3,10,31,.92);font-size:11px;white-space:normal}
@@ -194,6 +194,29 @@ export default function CodingMazeGame() {
         .${styles.commandHeader} small{font-size:11px}.${styles.commandHeader} h2{font-size:17px}.${styles.commandHeader}>span{font-size:11px}.${styles.commandButtons} button{min-height:53px}.${styles.commandButtons} b{font-size:24px}.${styles.commandButtons} span{font-size:11px}
         .${styles.queue} p{font-size:9.5px}.${styles.queue}>span{height:26px;font-size:15px}.${styles.queue}>span b{font-size:11px}.${styles.actions} button{height:37px;font-size:16px}.${styles.runBtn} b{font-size:13px}.${styles.runBtn} span{font-size:16px!important}
         .${styles.resultCard} h2{font-size:24px}.${styles.resultCard} p{font-size:13px}.${styles.outlineBtn}{font-size:13px}
+      }
+      /* The intro at a short stage. This has to live here rather than in the
+         module: a landscape phone still satisfies aspect-ratio >= 0.9, so the
+         wide block above claims it, and styled-jsx scopes every selector with
+         its own class — the module's short-shape rules lose to it on
+         specificity no matter what they say. Ordering after the wide block is
+         what makes these win, since both are plain container queries.
+
+         Steps as in docs/media-stage-contract.md: the robot-to-CPU
+         illustration and the level hint come out, the rest is measured against
+         the stage's height, and the margins collapse to one flat gap. The hint
+         is the only real loss and the play screen's mission line says the same
+         thing. */
+      @container kcstage (aspect-ratio >= 0.9) and (height < 440px){
+        .${styles.introVisual},.${styles.intro} p{display:none}
+        .${styles.intro}{gap:5px;padding:6px 10px}
+        .${styles.intro} h2{margin:0;font-size:clamp(17px,8.5cqb,22px);line-height:1.2}
+        .${styles.intro} .${styles.levelBadge}{padding:4px 10px;font-size:clamp(11px,3.6cqb,12px)}
+        .${styles.introStats}{gap:6px;margin:0}
+        .${styles.introStats} span{padding:4px 8px;font-size:clamp(11px,3.6cqb,12px)}
+        .${styles.intro} .${styles.startBtn}{min-width:0;min-height:0;margin-top:0;padding:8px 20px}
+        .${styles.intro} .${styles.startBtn} span{font-size:clamp(13px,5.5cqb,16px)}
+        .${styles.intro} .${styles.startBtn} b{width:22px;height:22px;font-size:15px}
       }
     `}</style>
     <header className={styles.topbar}>
