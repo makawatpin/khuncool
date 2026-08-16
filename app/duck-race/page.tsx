@@ -3,9 +3,9 @@ import Link from "next/link";
 import DuckRaceApp from "./DuckRaceApp";
 
 export const metadata: Metadata = {
-  title: "เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
+  title: "เกมสุ่มเป็ด แข่งเป็ดสุ่มชื่อเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
   description:
-    "เกมเป็ดสุ่มชื่อและแข่งเป็ดเข้าเส้นชัยออนไลน์ ใส่รายชื่อนักเรียนแล้วเริ่มแข่งได้ทันที ใช้ฟรี ไม่ต้องสมัครสมาชิกหรือติดตั้งโปรแกรม",
+    "เกมสุ่มเป็ดและแข่งเป็ดสุ่มชื่อเข้าเส้นชัยออนไลน์ ใส่รายชื่อนักเรียนแล้วเริ่มแข่งได้ทันที ใช้ฟรี ไม่ต้องสมัครสมาชิกหรือติดตั้งโปรแกรม",
   keywords: [
     "แข่งเป็ด",
     "สุ่มเป็ด",
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    title: "เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
+    title: "เกมสุ่มเป็ด แข่งเป็ดสุ่มชื่อเข้าเส้นชัย ออนไลน์ฟรี | Khuncool",
     description:
-      "ใส่รายชื่อนักเรียนแล้วปล่อยเป็ดแข่งได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
+      "เกมสุ่มเป็ด ใส่รายชื่อนักเรียนแล้วปล่อยเป็ดแข่งได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
     url: "https://www.khuncool.com/duck-race",
     images: ["https://www.khuncool.com/assets/duck-race-cover.webp"],
     locale: "th_TH",
@@ -255,7 +255,7 @@ export default function DuckRacePage() {
       {/* Header */}
       <div className="px-4 pb-3 pt-3 md:px-8 md:pb-4 md:pt-4">
         <h1 className="m-0 mb-1.5 text-[22px] leading-[1.32] md:mb-2 md:text-[28px]">
-          เกมเป็ดสุ่มชื่อ แข่งเป็ดเข้าเส้นชัยฟรี 🦆
+          เกมสุ่มเป็ด แข่งเป็ดสุ่มชื่อเข้าเส้นชัยฟรี 🦆
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
           ใส่รายชื่อนักเรียนแล้วเล่นเกมแข่งเป็ดเข้าเส้นชัยได้ทันที
