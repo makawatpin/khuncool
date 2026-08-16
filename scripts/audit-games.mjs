@@ -269,6 +269,21 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir,
     await page.waitForTimeout(150);
   }
 
+  // Park the pointer before measuring. Playwright leaves the cursor wherever it
+  // last clicked, so after the fullscreen toggle the mouse sits inside the
+  // stage — and whatever is under it is hovered. Digital Sort's software bin
+  // scales 1.06 on hover, which grew its measured box by 56px and reported it
+  // as 12px past the stage in four cells; its actual layout height fitted with
+  // 16px to spare. getBoundingClientRect returns the visual box, transform
+  // included, so a hover effect reads exactly like an overflow.
+  //
+  // The wait is part of the fix rather than padding: that bin transitions its
+  // transform over 0.18s, so moving the pointer away and measuring straight
+  // after still catches the scale part-way back and reports a smaller phantom
+  // overflow instead of none.
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(250);
+
   // Measure from the scroll position a player actually lands on.
   //
   // Playwright scrolls an element into view before clicking it, and a game
