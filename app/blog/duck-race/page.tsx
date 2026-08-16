@@ -3,17 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม | Khuncool",
+  title: "ทำไมครูควรใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียน | Khuncool",
   description:
-    "วิธีใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียนแบบง่าย ๆ พร้อม 6 ไอเดียกิจกรรมสำหรับสุ่มนักเรียน นำเสนองาน แจกรางวัล และสร้างการมีส่วนร่วม",
+    "เกมแข่งเป็ดสุ่มชื่อคืออะไร ทำไมครูควรมีติดห้องเรียน พร้อมเทียบกับวงล้อสุ่มว่าควรเลือกใช้แบบไหนในแต่ละสถานการณ์",
   alternates: {
     canonical: "https://www.khuncool.com/blog/duck-race",
   },
   openGraph: {
     type: "article",
-    title: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม",
+    title: "ทำไมครูควรใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียน",
     description:
-      "เรียนรู้วิธีใช้เกมแข่งเป็ดสุ่มชื่อ พร้อมไอเดียนำไปใช้จริงในห้องเรียน",
+      "เกมแข่งเป็ดสุ่มชื่อคืออะไร ทำไมครูควรมีติดห้องเรียน พร้อมเทียบกับวงล้อสุ่ม",
     images: ["https://www.khuncool.com/assets/duck-race-blog-cover.webp"],
     locale: "th_TH",
   },
@@ -43,14 +43,14 @@ const jsonLd = {
         {
           "@type": "ListItem",
           position: 3,
-          name: "วิธีใช้เกมแข่งเป็ดในห้องเรียน",
+          name: "ทำไมครูควรใช้เกมแข่งเป็ดสุ่มชื่อ",
           item: "https://www.khuncool.com/blog/duck-race",
         },
       ],
     },
     {
       "@type": "Article",
-      headline: "วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม",
+      headline: "ทำไมครูควรใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียน",
       inLanguage: "th",
       datePublished: "2026-07-31",
       author: {
@@ -69,58 +69,6 @@ const summary = [
   "เกมแข่งเป็ดสุ่มชื่อ คือสื่อการสอนออนไลน์ที่สุ่มชื่อนักเรียนผ่านการแข่งขันแบบมีลุ้น",
   "ใช้ฟรี ไม่ต้องติดตั้ง ไม่ต้องสมัครสมาชิก เปิดผ่านเบราว์เซอร์ได้ทันที",
   "เหมาะกับการฉายขึ้นจอโปรเจกเตอร์หรือทีวีในห้องเรียน",
-];
-
-const steps = [
-  {
-    k: "1. ใส่รายชื่อ",
-    v: "พิมพ์หรือวางรายชื่อนักเรียนทั้งห้องจาก Excel/Sheets ระบบสร้างเป็ดให้อัตโนมัติ",
-  },
-  {
-    k: "2. เลือกความยาวสนาม",
-    v: "ปรับความยาวสนามแข่งได้ 5 ระดับ ตั้งแต่สุ่มไวไปจนถึงลุ้นกันนาน ๆ",
-  },
-  {
-    k: "3. กดเริ่มแข่ง",
-    v: "เป็ดทุกตัวว่ายแข่งไปที่เส้นชัยพร้อมนับถอยหลังก่อนออกตัว",
-  },
-  {
-    k: "4. ดูผลบนโพเดียม",
-    v: "ระบบขึ้นอันดับที่ 1-3 พร้อมเวลาเข้าเส้นชัย แข่งใหม่ได้ทันทีโดยไม่ต้องพิมพ์ชื่อซ้ำ",
-  },
-];
-
-const ideas = [
-  {
-    icon: "❓",
-    head: "สุ่มชื่อตอบคำถามในห้องเรียน",
-    body: "แทนการเรียกตามเลขที่ ให้ทุกคนต้องเตรียมพร้อมตอบได้ตลอดเวลา พร้อมความสนุกจากการเชียร์เป็ดแข่ง",
-  },
-  {
-    icon: "🏆",
-    head: "กิจกรรมท้ายคาบให้สนุกขึ้น",
-    body: "ใช้แข่งเป็ดแทนกิจกรรมเดิม ๆ สร้างบรรยากาศลุ้นระทึกก่อนเลิกคาบ",
-  },
-  {
-    icon: "📋",
-    head: "สุ่มลำดับนำเสนองาน",
-    body: "สุ่มว่ากลุ่มไหนออกไปนำเสนอก่อนหลัง ลดปัญหาแย่งกันเป็นกลุ่มสุดท้าย",
-  },
-  {
-    icon: "🎁",
-    head: "สุ่มรางวัลหรือของขวัญ",
-    body: "ใส่รายการรางวัลแทนชื่อคน ใช้แจกของรางวัลท้ายคาบหรือกิจกรรมพิเศษ",
-  },
-  {
-    icon: "🧑‍🤝‍🧑",
-    head: "แบ่งกลุ่มทำกิจกรรม",
-    body: "ใช้ผลอันดับที่ 1-3 กำหนดหัวหน้ากลุ่ม หรือใช้ลำดับเข้าเส้นชัยจัดคิวกิจกรรมต่าง ๆ",
-  },
-  {
-    icon: "🤝",
-    head: "ใช้ในที่ประชุมหรือกิจกรรมทีมงาน",
-    body: "นอกห้องเรียน ยังใช้สุ่มลำดับพูด สุ่มผู้เล่นเกม หรือสุ่มมอบหมายงานในทีมได้เช่นกัน",
-  },
 ];
 
 const tags = [
@@ -203,7 +151,7 @@ export default function BlogDuckRacePage() {
           </div>
 
           <h1 className="m-0 mb-3 text-[26px] leading-[1.32] md:mb-4 md:text-[38px] md:leading-[1.25]">
-            วิธีใช้เกมแข่งเป็ดในห้องเรียน พร้อม 6 ไอเดียกิจกรรม
+            ทำไมครูควรใช้เกมแข่งเป็ดสุ่มชื่อในห้องเรียน
           </h1>
           <p className="m-0 mb-5 text-base leading-[1.75] text-[#434A58] md:mb-6 md:text-[17px]">
             เบื่อการสุ่มชื่อแบบเดิม ๆ ไหมครับ{" "}
@@ -232,46 +180,22 @@ export default function BlogDuckRacePage() {
             ๆ โดยไม่ต้องอาศัยอุปกรณ์เพิ่มเติมนอกจากคอมพิวเตอร์หรือมือถือที่เชื่อมต่ออินเทอร์เน็ต
           </p>
 
-          <h2 className="mt-8 text-xl md:text-2xl">วิธีใช้งาน 4 ขั้นตอน</h2>
-          <div className="overflow-hidden rounded-2xl border border-[#CDEEE3]">
-            <div className="hidden gap-3.5 bg-[#F2FBF8] px-[18px] py-3 text-xs font-bold text-[#0A7A66] md:flex">
-              <span className="w-[170px] flex-none">ขั้นตอน</span>
-              <span className="flex-1">รายละเอียด</span>
-            </div>
-            {steps.map((s) => (
-              <div
-                key={s.k}
-                className="flex gap-2.5 border-t border-[#E3F5EF] p-3 first:border-t-0 md:gap-3.5 md:p-[14px_18px]"
-              >
-                <span className="w-24 flex-none text-xs font-bold text-[#0A7A66] md:w-[170px] md:text-[14.5px] md:font-bold md:text-[#1A1D26]">
-                  {s.k}
-                </span>
-                <span className="flex-1 text-[13px] leading-[1.6] md:text-base md:leading-[1.6]">
-                  {s.v}
-                </span>
-              </div>
-            ))}
-          </div>
+          <h2 className="mt-8 text-xl md:text-2xl">เริ่มเล่นได้ในไม่กี่ขั้นตอน</h2>
+          <p className="m-0 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+            ใส่รายชื่อนักเรียน เลือกความยาวสนามแข่ง แล้วกดเริ่มได้ทันที
+            เป็ดทุกตัวจะว่ายแข่งไปเส้นชัยพร้อมนับถอยหลัง เมื่อจบระบบขึ้นโพเดียมอันดับ 1-3 ให้ทันที
+            ดูขั้นตอนแบบละเอียดพร้อมเล่นได้เลยที่หน้า{" "}
+            <Link href="/duck-race">เกมแข่งเป็ดสุ่มชื่อ</Link>
+          </p>
 
-          <h2 className="mt-8 text-xl md:text-2xl">6 ไอเดียใช้งานจริงในห้องเรียน</h2>
-          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3.5">
-            {ideas.map((u) => (
-              <div
-                key={u.head}
-                className="rounded-2xl border border-border bg-surface-light p-3.5 md:p-4"
-              >
-                <div className="mb-1.5 flex items-center gap-2.5">
-                  <span className="text-lg md:text-[19px]">{u.icon}</span>
-                  <span className="text-sm font-bold md:text-[15.5px]">
-                    {u.head}
-                  </span>
-                </div>
-                <div className="text-[13px] leading-[1.7] text-ink-secondary md:text-sm md:leading-[1.75]">
-                  {u.body}
-                </div>
-              </div>
-            ))}
-          </div>
+          <h2 className="mt-8 text-xl md:text-2xl">อยากได้ไอเดียใช้งานเพิ่ม</h2>
+          <p className="m-0 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">
+            นอกจากสุ่มชื่อตอบคำถามหรือสุ่มลำดับนำเสนอ ยังมีไอเดียใช้เกมแข่งเป็ดในห้องเรียนอีกหลายแบบ
+            อ่านต่อได้ที่{" "}
+            <Link href="/blog/duck-race-classroom-activities">
+              10 กิจกรรมใช้เกมเป็ดสุ่มในห้องเรียน
+            </Link>
+          </p>
 
           <h2 className="mt-8 text-xl md:text-2xl">
             ต่างจากวงล้อสุ่มยังไง
