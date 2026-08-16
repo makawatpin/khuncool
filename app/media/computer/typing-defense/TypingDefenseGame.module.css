@@ -6,3 +6,19 @@
    sideways got the desktop composition on a board with no height. The arena
    keeps the width it needs and the chrome collapses around it. */
 @container kcstage (aspect-ratio >= 0.9) and (height < 440px){.shell{display:flex;flex-direction:column;border-radius:0}.topbar{flex:0 0 auto;height:auto;min-height:0;padding:4px 9px}.brand img{width:30px;height:30px}.brand small{display:none}.brand b{font-size:max(12px,4cqb)}.hubMenu,.iconButton{min-height:var(--kc-tap);min-width:var(--kc-tap)}.hubMenu b{display:none}.home,.select,.result,.play{flex:1 1 auto;height:auto;min-height:0;padding:6px 10px;overflow:auto}.radar{width:min(26cqi,120px);margin:0}.core{font-size:max(18px,7cqb)}.home h2,.result h2{margin:2px 0;font-size:max(17px,7.5cqb)}.home p,.result p{margin:2px 0;font-size:max(11px,3.2cqb);line-height:1.35}.features{margin:4px 0;gap:4px}.features span{padding:2px 6px;font-size:max(11px,2.8cqb)}.startButton{min-height:var(--kc-tap);min-width:0;padding:0 18px;font-size:max(12px,3.4cqb)}.hud{gap:5px}.hud>div{min-height:0;padding:3px 7px}.commandBar{padding:4px 6px}.commandBar input{font-size:max(12px,3.4cqb)}}
+/* The mode picker on a stage that is wide in shape but short in pixels.
+   The same gate as Motion Lab's intro and for the same reason: the failing
+   stage is 960x540 and the passing desktop one is 1096x617, both 16:9, so an
+   aspect query cannot separate them and this reads absolute height instead.
+
+   Seven rows separated by a 14px gap spend 84px on gaps alone, against a 474px
+   host holding 521px of content, and "← กลับหน้าแรก" finished 20px past the
+   stage. Tightening the rhythm covers it without dropping anything: the
+   heading, both pickers and the start button all stay. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px){
+  .modeSelect{gap:7px}
+  .modeSelect h2{font-size:max(20px,5.8cqb)}
+  .modeSelect>p{font-size:max(12px,2.7cqb);line-height:1.4}
+  .modePicker{margin:2px 0}
+  .speedPicker{margin-bottom:2px}
+}
