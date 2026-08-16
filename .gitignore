@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Local AI assistant settings
 .claude/settings.local.json
+
+# stage audit output (screenshots, generated per run)
+/audit-output/
