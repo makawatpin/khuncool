@@ -167,7 +167,7 @@
 
   .intro > div:nth-of-type(2) > * {
     padding: 6px 12px !important;
-    font-size: min(14px, 4.6cqb) !important;
+    font-size: clamp(11px, 4.6cqb, 14px) !important;
   }
 
   .intro > button {
