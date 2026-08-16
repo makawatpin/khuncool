@@ -27,3 +27,67 @@
    hero illustration is the part that survives being dropped, and it comes back
    as soon as the board is tall enough (fullscreen on any phone). */
 @container kcstage (aspect-ratio >= 0.9) and (height < 340px){.intro{grid-template-columns:1fr;gap:0;text-align:center}.heroVisual{display:none}.introCopy{align-items:center}.introCopy h2{font-size:max(16px,7cqb)}.introCopy>p{margin-bottom:5px;line-height:1.3}.topicChips{justify-content:center;margin-bottom:6px;gap:4px}.eyebrow{margin-bottom:2px}}
+
+/* The intro hero on a stage that is wide in shape but short in pixels.
+   ------------------------------------------------------------------
+   A deliberate departure from the contract's three shapes, and worth saying
+   why. The heading is sized from cqi, so it renders at 55px on a 960x540
+   in-page stage and wraps to four lines — 236px of the 399px the copy column
+   has — and the button underneath finishes past the stage. That stage is
+   960x540 and the desktop one is 1096x617: the same 16:9, so every
+   ratio-based rule sees them as identical and no aspect query can separate
+   them. What differs is absolute height, which is what this gate reads.
+
+   580px leaves the 617px desktop stage untouched and catches the 540px tablet
+   and everything shorter, including the 396px tablet-upright case where the
+   short block's own compression was still 19px short. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px){
+  .introCopy h2{font-size:max(24px,7.2cqb);line-height:1.12}
+  .introCopy>p:not(.eyebrow){margin:8px 0;font-size:max(13px,2.9cqb);line-height:1.45}
+  .introCopy .topicChips{margin-bottom:10px}
+}
+
+/* The quiz card on a short stage.
+   -----------------------------
+   Five of the six questions have numeric options — "18 วินาที" — and fit
+   easily. The sixth asks about distance versus displacement and its options
+   are full sentences of about 62 characters. At 17px those wrap to four lines
+   each, the card needs 197px of the 135px the grid can give it, and its own
+   overflow:auto hides two of the four answers. A player cannot choose an
+   option they cannot see, which is the case the contract calls a layout bug
+   rather than acceptable scrolling.
+
+   Sizing the options from the stage's height is what closes it: the numeric
+   questions stay comfortable and the sentence one shrinks only where the room
+   runs out. The chrome above and below the card gives up what it can, though
+   the navigation keeps the 44px tap floor.
+
+   The audit's default seed is chosen to draw this question first, so a run
+   measures the hard case rather than one of the five easy ones. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px){
+  /* The heading over the card is display-sized while the card underneath is
+     the part that has run out of room, so it gives its space up first. */
+  .quizTop{gap:2px}
+  .quizTop>*{margin:0}
+  .quizTop h2{margin:0;font-size:max(13px,4.4cqb)}
+  .quizTop small{font-size:max(11px,2.6cqb)}
+  .quizTop button{padding:5px 12px;font-size:max(11px,3cqb)}
+  /* The card is a two-column grid, icon beside text. Dropping the icon has to
+     collapse the columns as well, or the heading takes the auto column and the
+     options are left in the narrow one, wrapping worse than before the icon
+     was removed — which is exactly what the first attempt here did. */
+  .quiz .questionCard{grid-template-columns:1fr;gap:3px 10px;padding:6px 9px}
+  .quiz .questionIcon{display:none}
+  .quiz .questionCard h3{font-size:max(12px,4cqb);line-height:1.3}
+  /* The options are already at the contract's 11px floor, so the last of the
+     room has to come from the box rather than the type. */
+  .quiz{gap:4px;padding:0.5% 4%}
+  .choices{gap:3px}
+  /* The 60px floor is a comfort size, not the accessibility one. On a stage
+     this short it costs more than it buys, so it drops to the shape's own tap
+     target — still well past the 24x24 minimum, and a long option still grows
+     past it because a min-height is a floor rather than a cap. */
+  .choices button{min-height:var(--kc-tap);padding:3px 7px;font-size:max(11px,3.4cqb);line-height:1.22}
+  .choices button i{width:21px;height:21px;font-size:11px}
+  .quizNav button{padding:6px 14px;font-size:max(11px,3cqb)}
+}
