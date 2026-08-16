@@ -11,6 +11,7 @@
  *   node scripts/audit-games.mjs                    // all configured games
  *   node scripts/audit-games.mjs phonics-bingo       // one game
  *   node scripts/audit-games.mjs phonics-bingo talk-card
+ *   node scripts/audit-games.mjs --seeds=1,2,3,4,5,6 motion-lab
  *
  * Requires the Next dev server running at BASE_URL (default
  * http://localhost:3000) — start it yourself first:
@@ -18,6 +19,21 @@
  *
  * Output: audit-output/<game>/results.json + one PNG per
  * screen x size x mode combo (gitignored, regenerate on demand).
+ *
+ * Randomised content
+ * ------------------
+ * Some games draw their content at random — Motion Lab picks 4 of 6 quiz
+ * questions per load — so the same cell could pass one run and fail the next,
+ * and two runs were not comparable at all. Math.random is therefore seeded
+ * before any page script runs.
+ *
+ * Seeding alone would be a trap: it would freeze one draw forever and a game
+ * could pass every run while still breaking in a classroom the moment a child
+ * drew a longer set. So the default seed is chosen to produce the WORST draw
+ * rather than a convenient one — for Motion Lab that means the question whose
+ * options are full sentences — and --seeds sweeps several draws, failing a
+ * cell if ANY seed fails it. Fix against the worst case, then confirm across
+ * the sweep.
  */
 import { chromium } from "playwright";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
@@ -33,6 +49,55 @@ const AUDIT_STAGE_SRC = await readFile(
   path.join(ROOT, "scripts", "audit-stage.js"),
   "utf8",
 );
+
+/**
+ * Default seed, chosen rather than picked arbitrarily.
+ *
+ * Sweeping seeds 1-40 and recording Motion Lab's first quiz question shows how
+ * wide the spread is: most draws open with an option like "-60 เมตร" at 9
+ * characters, while seeds 15, 17, 24, 27 and 38 open with the conceptual
+ * question whose options are full sentences — 63 characters, seven times
+ * longer. A seed from the common group would have let the game pass every run
+ * forever and still wrap badly in a classroom the first time a child drew the
+ * long set.
+ *
+ * 15 is therefore the default: the baseline run measures the hard draw. Use
+ * --seeds to confirm a fix holds across the others too, and re-run the sweep
+ * if the question pool changes.
+ */
+const DEFAULT_SEED = 15;
+
+/** mulberry32 — small, deterministic, good enough to pick list indices. */
+const seedScript = (seed) => `(() => {
+  let s = ${seed} >>> 0;
+  Math.random = function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+})();`;
+
+/**
+ * Which of two results for the same cell is the one worth keeping when
+ * sweeping seeds: an error beats a failure, a failure beats a pass, and
+ * between two passes the one hiding more controls wins.
+ */
+function severity(row) {
+  if (row.error) return [3, 0];
+  const hidden = (row.contentHiddenBehindScroll || []).reduce(
+    (sum, region) => sum + (region.hiddenControls || 0),
+    0,
+  );
+  return [row.pass === false ? 2 : 1, hidden];
+}
+
+function isWorse(candidate, current) {
+  const a = severity(candidate);
+  const b = severity(current);
+  return a[0] !== b[0] ? a[0] > b[0] : a[1] > b[1];
+}
 
 // 6 sizes x 2 modes, per docs/media-stage-contract.md checklist.
 const SIZES = [
@@ -193,7 +258,7 @@ function slugify(label) {
   return label.replace(/[^a-z0-9-]+/gi, "-");
 }
 
-async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir }) {
+async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir, suffix = "" }) {
   // Force the CSS-fallback fullscreen path (see useStage.ts) instead of the
   // real browser Fullscreen API, which headless Chromium does not reliably
   // enter — the fallback renders identically per the stage contract, and
@@ -224,7 +289,7 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir 
 
   const result = await page.evaluate((min) => window.auditStage({ min }), 11);
 
-  const fileBase = `${screen.name}__${size.label}__${mode}`;
+  const fileBase = `${screen.name}__${size.label}__${mode}${suffix}`;
   const screenshotPath = path.join(outDir, `${fileBase}.png`);
   const stageHandle = await page.$(".kc-stage, .kc-game, [class*='__shell'], [class*='__lab'], [class*='__game']");
   if (stageHandle) {
@@ -249,7 +314,7 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir 
   };
 }
 
-async function auditGame(browser, gameKey, game) {
+async function auditGame(browser, gameKey, game, seed, tagScreenshots) {
   const outDir = path.join(OUT_DIR, gameKey);
   await mkdir(outDir, { recursive: true });
 
@@ -266,6 +331,9 @@ async function auditGame(browser, gameKey, game) {
         "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36",
     });
     const page = await context.newPage();
+    // Before auditStage, and before any page script: the games read Math.random
+    // during their first render.
+    await page.addInitScript(seedScript(seed));
     await page.addInitScript(AUDIT_STAGE_SRC);
 
     await page.goto(`${BASE_URL}${game.path}`, { waitUntil: "networkidle" });
@@ -301,9 +369,11 @@ async function auditGame(browser, gameKey, game) {
       await page.waitForTimeout(200);
 
       for (const mode of ["in-page", "fullscreen"]) {
+        const suffix = tagScreenshots ? `__seed${seed}` : "";
         try {
-          const row = await auditOneScreen({ page, game, gameKey, screen, size, mode, outDir });
+          const row = await auditOneScreen({ page, game, gameKey, screen, size, mode, outDir, suffix });
           if (reachedByForcedScroll) row.reachedByForcedScroll = true;
+          row.seed = seed;
           rows.push(row);
           console.log(
             `${gameKey} / ${screen.name} / ${size.label} / ${mode}: ${row.pass ? "PASS" : "FAIL"}` +
@@ -317,6 +387,7 @@ async function auditGame(browser, gameKey, game) {
             screen: screen.name,
             size: size.label,
             mode,
+            seed,
             error: String(err),
           });
           console.error(`${gameKey} / ${screen.name} / ${size.label} / ${mode}: ERROR ${err}`);
@@ -327,12 +398,41 @@ async function auditGame(browser, gameKey, game) {
     await context.close();
   }
 
+  return rows;
+}
+
+/**
+ * Audit a game across every seed and keep, per cell, the worst result any seed
+ * produced. A game that only survives some draws has not been fixed.
+ */
+async function auditGameAcrossSeeds(browser, gameKey, game, seeds) {
+  const sweeping = seeds.length > 1;
+  const worst = new Map();
+
+  for (const seed of seeds) {
+    if (sweeping) console.log(`-- seed ${seed}`);
+    const rows = await auditGame(browser, gameKey, game, seed, sweeping);
+    for (const row of rows) {
+      const key = `${row.screen}|${row.size}|${row.mode}`;
+      const current = worst.get(key);
+      if (!current || isWorse(row, current)) worst.set(key, row);
+    }
+  }
+
+  const rows = [...worst.values()];
+  const outDir = path.join(OUT_DIR, gameKey);
   await writeFile(path.join(outDir, "results.json"), JSON.stringify(rows, null, 2), "utf8");
   return rows;
 }
 
 async function main() {
-  const requested = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const seedArg = args.find((a) => a.startsWith("--seeds="));
+  const seeds = seedArg
+    ? seedArg.slice("--seeds=".length).split(",").map(Number).filter((n) => Number.isFinite(n))
+    : [DEFAULT_SEED];
+
+  const requested = args.filter((a) => !a.startsWith("--"));
   const gameKeys = requested.length ? requested : Object.keys(GAMES);
 
   for (const key of gameKeys) {
@@ -349,8 +449,8 @@ async function main() {
   const allResults = {};
   try {
     for (const key of gameKeys) {
-      console.log(`\n=== ${key} ===`);
-      allResults[key] = await auditGame(browser, key, GAMES[key]);
+      console.log(`\n=== ${key} ===${seeds.length > 1 ? ` (seeds ${seeds.join(",")}, worst kept)` : ""}`);
+      allResults[key] = await auditGameAcrossSeeds(browser, key, GAMES[key], seeds);
     }
   } finally {
     await browser.close();
