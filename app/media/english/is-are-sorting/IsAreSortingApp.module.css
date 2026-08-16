@@ -70,6 +70,76 @@
   }
 }
 
+/* The intro screen, same squeeze and same answer as Classroom Objects: it
+   sizes from cqi while height is what runs out, so on a 780x304 stage the
+   stack reached 434px and left "เริ่มเล่น" 145px past the edge of an
+   overflow:hidden body. See docs/media-stage-contract.md for the four steps. */
+
+/* Upright there is height to spare and the copy wraps long, so tighten the
+   rhythm and keep every block. */
+@container kcstage (aspect-ratio < 0.9) {
+  .intro {
+    padding-bottom: 12px !important;
+  }
+
+  .intro > h1 {
+    margin-bottom: 8px !important;
+  }
+
+  .intro > p {
+    margin-bottom: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .intro > div:nth-of-type(2) {
+    margin-bottom: 14px !important;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .intro {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    padding: 0 14px 6px !important;
+  }
+
+  .intro > h1,
+  .intro > div:nth-of-type(2) {
+    width: 100%;
+  }
+
+  /* The three faces and the description are the tallest blocks here and
+     neither helps anyone start the game. */
+  .intro > div:first-of-type,
+  .intro > p {
+    display: none !important;
+  }
+
+  .intro > h1 {
+    margin-bottom: 8px !important;
+    font-size: min(clamp(22px, 6cqi, 46px), 13cqb) !important;
+  }
+
+  .intro > div:nth-of-type(2) {
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .intro > div:nth-of-type(2) > * {
+    padding: 6px 12px !important;
+    font-size: min(14px, 4.6cqb) !important;
+  }
+
+  .intro > button {
+    padding: 10px 32px !important;
+    font-size: min(clamp(17px, 4.6cqi, 20px), 7cqb) !important;
+  }
+}
+
 /* A shallow board — a phone held sideways, a tablet upright. The baskets and
    the card stacked vertically need more height than there is, so the baskets
    flatten to a single label row and the card takes what is left. */

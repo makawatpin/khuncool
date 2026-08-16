@@ -386,7 +386,7 @@ export default function IsAreSortingApp() {
 
       {/* Stage 0: intro */}
       {stage === 0 && (
-        <div className="relative mx-auto max-w-[720px] px-5 pb-16 pt-1 text-center">
+        <div className={`${styles.intro} relative mx-auto max-w-[720px] px-5 pb-16 pt-1 text-center`}>
           <div className="mb-[18px] flex items-end justify-center gap-3.5">
             <div style={{ animation: "floatY 2.6s ease-in-out infinite" }}>
               <KcFace skin="#F3CDA6" hair="#D8DCE6" shirt="#7BA7D9" glasses mustache size={64} />
