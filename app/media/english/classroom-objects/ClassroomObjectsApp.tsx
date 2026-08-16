@@ -522,6 +522,7 @@ export default function ClassroomObjectsApp() {
 
       {stage === 0 && (
         <div
+          className={styles.intro}
           style={{
             position: "relative",
             zIndex: 5,

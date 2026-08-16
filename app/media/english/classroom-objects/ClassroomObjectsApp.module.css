@@ -71,6 +71,111 @@
   }
 }
 
+/* ---------------------------------------------------------------
+   The intro screen.
+
+   Everything in it is sized from cqi — the stage's WIDTH — while the thing
+   that runs out is height. On a landscape phone the stage is 780x304: wide
+   enough that every clamp() lands on its maximum, tall enough for none of it.
+   The stack came to 478px against 304px of stage and the start button sat
+   180px below the edge, inside an overflow:hidden body, so the game could not
+   be started at all.
+
+   The play screen below already solves the same squeeze the right way — it
+   drives its sizes from cqb and lets the chrome give up its padding — so the
+   intro follows that lead rather than inventing a second approach:
+
+     1. the decorative card fan and the description are the two blocks with no
+        job at this size, so they go first,
+     2. what is left is measured in cqb, because height is the budget,
+     3. the gaps collapse to fixed pixels — a margin in cqi grows exactly when
+        there is least room for it.
+
+   Scrolling was the other option and is the wrong one: it moves the start
+   button out of sight instead of out of the way, which is the failure
+   contentHiddenBehindScroll exists to report.
+   --------------------------------------------------------------- */
+
+/* Upright there is height to spare but little width, so the text wraps long.
+   Trim the vertical rhythm rather than remove anything. */
+@container kcstage (aspect-ratio < 0.9) {
+  .intro {
+    padding-bottom: 12px !important;
+  }
+
+  .intro > p {
+    margin-bottom: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .intro > h1 {
+    margin-bottom: 8px !important;
+  }
+
+  .intro > div:nth-of-type(2) {
+    margin-bottom: 14px !important;
+  }
+}
+
+/* Short: the card fan and the description come out, and what remains is sized
+   against the stage's height. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  /* Take the leftover height and sit in the middle of it, the same way .play
+     claims the space the chrome does not use. `safe` matters: should the
+     content ever outgrow the box, a plain centre would push its top edge above
+     the stage where nothing can scroll to it, while safe falls back to
+     flex-start and keeps the overflow at the bottom where it is at least
+     visible. */
+  .intro {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    /* Column flex stretches children to full width by default, which turns the
+       start button into a full-bleed bar. Centring keeps each block its own
+       size; the text blocks below ask for the full width back. */
+    align-items: center;
+    justify-content: safe center;
+    margin-top: 0 !important;
+    padding: 0 14px 6px !important;
+  }
+
+  .intro > h1,
+  .intro > div:nth-of-type(2) {
+    width: 100%;
+  }
+
+  /* The card fan is decoration, and it is the single tallest block here. */
+  .intro > div:first-of-type {
+    display: none !important;
+  }
+
+  /* The rules chips say the same thing the board says once play starts. */
+  .intro > p {
+    display: none !important;
+  }
+
+  .intro > h1 {
+    margin-bottom: 8px !important;
+    font-size: min(clamp(22px, 6cqi, 46px), 13cqb) !important;
+  }
+
+  .intro > div:nth-of-type(2) {
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .intro > div:nth-of-type(2) > * {
+    padding: 6px 12px !important;
+    font-size: min(14px, 4.6cqb) !important;
+  }
+
+  .intro > button {
+    padding: 10px 32px !important;
+    font-size: min(clamp(17px, 4.6cqi, 20px), 7cqb) !important;
+  }
+}
+
 /* A shallow board has the width for six across but not the height for two
    rows of 3:4 cards. The rows divide whatever height is left instead, and the
    cards fill their row — the picture and the word still read, the card is just
