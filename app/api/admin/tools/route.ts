@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
+import { fetchAllToolEvents } from "@/lib/admin/fetchAllToolEvents";
 
 const VALID_RANGES = { "7": 7, "30": 30, "90": 90 } as const;
 
@@ -16,12 +17,12 @@ export async function GET(request: Request) {
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 
   const supabase = createServiceRoleClient();
-  const { data, error } = await supabase
-    .from("tool_events")
-    .select("tool, user_id")
-    .gte("created_at", since);
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  let data: { tool: string; user_id: string | null }[];
+  try {
+    data = await fetchAllToolEvents(supabase, since);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "query failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   const byTool = new Map<string, { total: number; guest: number; signedIn: number }>();
