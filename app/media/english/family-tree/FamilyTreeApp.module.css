@@ -544,3 +544,120 @@
     font-size: 18px !important;
   }
 }
+
+/* The tree screen. Every lever here is chrome around the board — none of it
+   touches the hand-written SVG coordinates, which are the riskiest thing in
+   this game to move and go wrong only visibly.
+   
+   As on the matching screen, the board has to be told to take the leftover
+   rather than the screen's whole height: max-height:100% measures the screen,
+   not the space under the owl and above the word bank, so the board sat at
+   412px of a 238px screen and scaled at 0.96 while everything overran. */
+:global(.kc-family-tree) {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+:global(.kc-family-tree) .canvasViewport {
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+/* The hint line explains the drag, which the cursor and the dashed slots
+   already do, and the owl chip is display-sized. The bottom padding is
+   clamp(20px,6cqb,100px) — up to 100px of nothing under the word bank. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-tree) {
+    gap: 3px;
+    padding: 2px 12px 4px !important;
+  }
+
+  :global(.kc-family-tree) > * {
+    margin: 0 !important;
+  }
+
+  :global(.kc-family-tree-help) {
+    display: none !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type {
+    padding: 2px 9px !important;
+    gap: 7px !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type > div:first-child {
+    font-size: 17px !important;
+  }
+
+  :global(.kc-family-tree-bank) {
+    min-height: 0 !important;
+    gap: 5px !important;
+  }
+
+  :global(.kc-family-tree-bank) button {
+    padding: 3px 10px 3px 4px !important;
+    font-size: 12px !important;
+  }
+
+  :global(.kc-family-tree-bank) button > div {
+    zoom: 0.7;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-tree) {
+    gap: 4px;
+    padding: 2px 12px 6px !important;
+  }
+
+  :global(.kc-family-tree) > * {
+    margin: 0 !important;
+  }
+
+  :global(.kc-family-tree-help) {
+    display: none !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type {
+    padding: 4px 10px !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type > div:first-child {
+    font-size: 20px !important;
+  }
+
+  :global(.kc-family-tree-bank) {
+    min-height: 0 !important;
+    gap: 5px !important;
+  }
+
+  :global(.kc-family-tree-bank) button > div {
+    zoom: 0.8;
+  }
+}
+
+/* The word bank was being squashed to 24px around 33px cards, because in a
+   flex column it shrinks like anything else. It holds the cards a child drags,
+   so it keeps its natural height and the board — which scales — absorbs the
+   difference instead. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-tree-bank) {
+    flex: 0 0 auto;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type {
+    flex: 0 0 auto;
+    padding: 1px 8px !important;
+    gap: 6px !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type > div:first-child {
+    font-size: 15px !important;
+  }
+
+  :global(.kc-family-tree) > div:first-of-type > div:last-child {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+}
