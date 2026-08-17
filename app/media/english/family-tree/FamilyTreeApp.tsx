@@ -703,7 +703,7 @@ export default function FamilyTreeApp() {
     });
   }, [fullRef]);
 
-  const pointerDragStart = useCallback((e: React.PointerEvent<HTMLDivElement>, id: WordId) => {
+  const pointerDragStart = useCallback((e: React.PointerEvent<HTMLElement>, id: WordId) => {
     if (e.pointerType === "mouse") return;
     if (e.button !== 0) return;
     KcSfx.unlock();
@@ -717,7 +717,7 @@ export default function FamilyTreeApp() {
     };
   }, []);
 
-  const pointerDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const pointerDragMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const drag = pointerDragRef.current;
     if (!drag || drag.pointerId !== e.pointerId) return;
     if (!drag.dragging && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 6) return;
@@ -734,7 +734,7 @@ export default function FamilyTreeApp() {
   }, [showDragPreview]);
 
   const pointerDragFinish = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (e: React.PointerEvent<HTMLElement>) => {
       const drag = pointerDragRef.current;
       if (!drag || drag.pointerId !== e.pointerId) return;
       pointerDragRef.current = null;
@@ -759,7 +759,7 @@ export default function FamilyTreeApp() {
     setS1((s) => ({ ...s, hoverId: null }));
   }, []);
 
-  const mouseDragStart = useCallback((e: React.MouseEvent<HTMLDivElement>, id: WordId) => {
+  const mouseDragStart = useCallback((e: React.MouseEvent<HTMLElement>, id: WordId) => {
     if (e.button !== 0) return;
     e.preventDefault();
     KcSfx.unlock();
@@ -1359,14 +1359,24 @@ export default function FamilyTreeApp() {
                 const fx = s1.fxId === id;
                 return (
                   <div key={id} style={{ position: "absolute", left, top, width: 104, height: 104 }}>
-                    <div
+                    <button
+                      type="button"
                       data-family-target={id}
                       onClick={() => placeTarget(id)}
+                      aria-label={
+                        t.filled
+                          ? `${w.th} — วางแล้ว: ${w.en}`
+                          : `ช่องว่าง ${w.th} — แตะเพื่อวางคำที่เลือก`
+                      }
                       style={{
                         position: "relative",
                         width: 104,
                         height: 104,
                         borderRadius: 22,
+                        font: "inherit",
+                        color: "inherit",
+                        padding: 0,
+                        textAlign: "center",
                         background: t.filled ? "#F0FFFB" : hovering ? "#EAF4FF" : "#fff",
                         border: `3px ${t.filled ? "solid" : "dashed"} ${
                           shaking ? "#EF476F" : t.filled ? "#14B79A" : hovering || hint ? "#5C5EE6" : "#C6C9FB"
@@ -1455,7 +1465,7 @@ export default function FamilyTreeApp() {
                           </div>
                         </>
                       )}
-                    </div>
+                    </button>
                   </div>
                 );
               })}
@@ -1473,9 +1483,12 @@ export default function FamilyTreeApp() {
               const w = WORD_MAP[id];
               const sel = s1.selected === id;
               return (
-                <div
+                <button
                   key={id}
+                  type="button"
                   data-family-word={id}
+                  aria-pressed={sel}
+                  aria-label={`${w.en} · ${w.th}`}
                   onMouseDown={(e) => mouseDragStart(e, id)}
                   onPointerDown={(e) => pointerDragStart(e, id)}
                   onPointerMove={pointerDragMove}
@@ -1486,6 +1499,8 @@ export default function FamilyTreeApp() {
                   }}
                   className="kc-chip-hover"
                   style={{
+                    font: "inherit",
+                    color: "inherit",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
@@ -1508,7 +1523,7 @@ export default function FamilyTreeApp() {
                 >
                   <FamilyFace {...charOf(id)} size={28} />
                   <span>{w.en}</span>
-                </div>
+                </button>
               );
             })}
           </div>
