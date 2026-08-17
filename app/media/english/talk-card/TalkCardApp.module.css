@@ -22,13 +22,133 @@
     padding-top: 2px !important;
   }
 
-  /* The question card is overflow:hidden so the flip animation can clip its
-     back face. On a board this shallow the card's own content is taller than
-     the board, so that clip swallowed the listen and example buttons instead
-     of scrolling to them. */
-  :global(.kc-talk-play) [style*="perspective"],
-  :global(.kc-talk-play) > div > div {
-    max-height: 100%;
-    overflow: auto !important;
+  /* The play screen spends 28px on two gaps and 18px on padding before any of
+     its three rows get a say. On a 234px board that is a fifth of it. */
+  :global(.kc-talk-play) {
+    gap: 6px !important;
+    padding: 2px 14px 6px !important;
+  }
+
+  /* The card's own content was taller than the board — 307px of it inside an
+     85px card — and this used to answer that by making the card scroll. That
+     only moved the problem: "🔊 ฟังคำถาม" ended up 157px below the stage, and
+     hearing the question read aloud is the point of the screen, not a hint.
+     contentHiddenBehindScroll was added to catch exactly this.
+
+     What actually costs the room is the question, set at 51px from a
+     width-derived size and wrapping to two lines. Bounding it and the
+     translation by the board's height, trimming the kicker, and letting the
+     footer's controls sit at the tap target instead of 88px, brings the stack
+     inside the card with the buttons in it. */
+  /* The card was flex:0 1 auto — it could shrink below its own content but
+     never grow into the space the screen had, so it sat at 90px while holding
+     165px and clipped the difference. It takes what is left instead, and its
+     display padding comes down so the room goes to the question rather than to
+     the margin around it. */
+  :global(.kc-talk-play) > div:nth-child(2) {
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    padding: 6px 14px !important;
+  }
+
+  :global(.kc-talk-play) h2 {
+    font-size: max(15px, 6cqb) !important;
+    line-height: 1.2 !important;
+  }
+
+  :global(.kc-talk-play) p {
+    font-size: max(12px, 3.6cqb) !important;
+    line-height: 1.3 !important;
+  }
+
+  :global(.kc-talk-play) h2 ~ div,
+  :global(.kc-talk-play) h2 + p {
+    margin: 0 !important;
+  }
+
+  /* The kicker is a chip; it does not need display padding here. */
+  :global(.kc-talk-play) h2 ~ div button,
+  :global(.kc-talk-play) > div:last-child button {
+    min-height: var(--kc-tap) !important;
+  }
+
+  :global(.kc-talk-play) h2 ~ div button {
+    padding-block: 4px !important;
+  }
+
+  :global(.kc-talk-play) h2 ~ div {
+    gap: 6px !important;
+  }
+
+  /* The card's first child is a decorative circle, so the face is the second.
+     Its rows carry 33px of gaps and the topic chip 8px of padding, against a
+     card that has about 130px to give. */
+  /* Stacking chip, question, translation and the two buttons is what does not
+     fit: 157px of rows against the 108px the card can give. Trimming each row
+     was not going to close that without making the question unreadable, and the
+     question is the screen.
+
+     So the face turns, the same move the Vocabulary Arcade card needed. A
+     shallow board is short of height and 780px wide, so the text takes the left
+     column and the listen and example buttons sit to its right: the face needs
+     the taller of the two columns instead of their sum. Explicit rows so the
+     buttons can span the full height with 1 / -1. */
+  :global(.kc-talk-play) > div:nth-child(2) > div:nth-child(2) {
+    display: grid !important;
+    min-height: 0 !important;
+    grid-template-rows: repeat(6, min-content);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center !important;
+    column-gap: 12px !important;
+    row-gap: 3px !important;
+  }
+
+  :global(.kc-talk-play) > div:nth-child(2) > div:nth-child(2) > * {
+    min-width: 0;
+    grid-column: 1;
+  }
+
+  :global(.kc-talk-play) > div:nth-child(2) > div:nth-child(2) > div:last-child {
+    grid-row: 1 / -1;
+    grid-column: 2;
+    align-self: center;
+    flex-direction: column !important;
+  }
+
+  :global(.kc-talk-play) > div:nth-child(2) > div:nth-child(2) > div:first-child {
+    padding: 3px 10px !important;
+  }
+
+  /* The timer block sets the footer's height at 79px; its own type and padding
+     are display-sized. */
+  :global(.kc-talk-play) > div:last-child > div {
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :global(.kc-talk-play) > div:last-child > div * {
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  :global(.kc-talk-play) > div:last-child > div button {
+    min-height: 32px !important;
+    padding: 3px 10px !important;
+  }
+
+  /* The footer's next-card button carries 14px of vertical padding at 19px
+     type, which sets a 99px row for the whole strip and takes the room the card
+     needs. At the tap target it is still the largest control on the screen. */
+  :global(.kc-talk-play) > div:last-child {
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  :global(.kc-talk-play) > div:last-child > div {
+    padding: 5px 9px !important;
+  }
+
+  :global(.kc-talk-play) > div:last-child button {
+    padding-block: 5px !important;
+    font-size: max(13px, 4cqb) !important;
   }
 }
