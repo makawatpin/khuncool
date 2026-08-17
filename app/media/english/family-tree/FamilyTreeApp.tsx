@@ -543,10 +543,20 @@ function buildS1(): S1State {
   return { bank, targets, selected: null, shakeId: null, hoverId: null, fxId: null };
 }
 
+/** Pairs per column-pair on the matching board: two groups, 5 then 4. */
+export const S2_GROUP_SIZES = [5, 4];
+
 function buildS2(): S2State {
+  // Group first, then shuffle inside each group. Shuffling all nine across both
+  // sides would let a word sit in the first group on the left and the second on
+  // the right, and its connector would be drawn across the gap between them.
+  const ids = shuffle(WORDS.map((w) => w.id));
+  const groups = S2_GROUP_SIZES.map((n, i) =>
+    ids.slice(S2_GROUP_SIZES.slice(0, i).reduce((a, b) => a + b, 0)).slice(0, n),
+  );
   return {
-    left: shuffle(WORDS.map((w) => w.id)),
-    right: shuffle(WORDS.map((w) => w.id)),
+    left: groups.flatMap((g) => shuffle(g)),
+    right: groups.flatMap((g) => shuffle(g)),
     selectedLeft: null,
     selectedRight: null,
     matched: [],
@@ -918,9 +928,26 @@ export default function FamilyTreeApp() {
   const allDone = s1Done && s2Done && s3.completed && s4AllCorrect;
 
   // ---------- derived layout values ----------
-  const pitch = 68;
+  // 62, not 68: the row gap was 12px between 56px buttons. Six is enough to
+  // read them apart and takes 30px off a five-row board, which is what lifts
+  // the scale from 0.40 to 0.48 and the buttons from 22px to the far side of
+  // the 24px floor. The SVG reads pitch too, so the connectors follow.
+  const pitch = 62;
   const half = 28;
-  const s2Height = WORDS.length * pitch;
+  // Two column-pairs side by side rather than one nine deep. Nine rows made the
+  // board 612px tall, and no scale could fit that into a 238px stage while
+  // keeping the 56px buttons above the 24px tap floor — 0.43 was needed to fit
+  // and 0.43 puts them at 24px with the board still 24px too tall. Five rows
+  // make it 340px, which fits at 0.70 and leaves the buttons at 39px. The width
+  // it costs is width the shallow board had spare.
+  const s2GroupWidth = 496;
+  const s2GroupGap = 48;
+  const s2Height = Math.max(...S2_GROUP_SIZES) * pitch;
+  const s2Width = S2_GROUP_SIZES.length * s2GroupWidth + (S2_GROUP_SIZES.length - 1) * s2GroupGap;
+  const s2Groups = S2_GROUP_SIZES.map((n, i) => {
+    const start = S2_GROUP_SIZES.slice(0, i).reduce((a, b) => a + b, 0);
+    return { start, ids: { left: s2.left.slice(start, start + n), right: s2.right.slice(start, start + n) }, x: i * (s2GroupWidth + s2GroupGap) };
+  });
 
   const showTopRight = stage !== 0;
   const showBackToHub = stage >= 1 && (stage as number) <= 4;
@@ -1582,29 +1609,31 @@ export default function FamilyTreeApp() {
 
           <div
             className={styles.canvasViewport}
-            style={{ "--kc-canvas-w": "496px", "--kc-canvas-h": `${s2Height}px`, "--kc-canvas-ratio": `496 / ${s2Height}` } as React.CSSProperties}
+            style={{ "--kc-canvas-w": `${s2Width}px`, "--kc-canvas-h": `${s2Height}px`, "--kc-canvas-ratio": `${s2Width} / ${s2Height}` } as React.CSSProperties}
           >
             <div className={styles.canvasStage}>
-              <svg viewBox={`0 0 496 ${s2Height}`} style={{ position: "absolute", left: 0, top: 0, width: 496, height: s2Height, pointerEvents: "none", zIndex: 2 }}>
-                {s2.matched.map((id) => {
-                  const y1 = s2.left.indexOf(id) * pitch + half;
-                  const y2 = s2.right.indexOf(id) * pitch + half;
-                  return (
-                    <path
-                      key={id}
-                      d={`M220 ${y1} C 240 ${y1}, 256 ${y2}, 276 ${y2}`}
-                      fill="none"
-                      stroke="#14B79A"
-                      strokeWidth={4}
-                      strokeLinecap="round"
-                      style={{ strokeDasharray: 900, animation: "drawIn .45s ease-out forwards" }}
-                    />
-                  );
-                })}
-              </svg>
-              <div style={{ display: "flex", gap: 56, justifyContent: "center", position: "relative", zIndex: 3 }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 220 }}>
-                  {s2.left.map((id) => {
+              <div className="kc-family-match-groups" style={{ display: "flex", gap: s2GroupGap, justifyContent: "center", position: "relative", zIndex: 3 }}>
+                {s2Groups.map((group) => (
+                <div key={group.start} style={{ display: "flex", gap: 56, width: s2GroupWidth, position: "relative" }}>
+                <svg viewBox={`0 0 ${s2GroupWidth} ${s2Height}`} style={{ position: "absolute", left: 0, top: 0, width: s2GroupWidth, height: s2Height, pointerEvents: "none", zIndex: 2 }}>
+                  {s2.matched.filter((id) => group.ids.left.includes(id)).map((id) => {
+                    const y1 = group.ids.left.indexOf(id) * pitch + half;
+                    const y2 = group.ids.right.indexOf(id) * pitch + half;
+                    return (
+                      <path
+                        key={id}
+                        d={`M220 ${y1} C 240 ${y1}, 256 ${y2}, 276 ${y2}`}
+                        fill="none"
+                        stroke="#14B79A"
+                        strokeWidth={4}
+                        strokeLinecap="round"
+                        style={{ strokeDasharray: 900, animation: "drawIn .45s ease-out forwards" }}
+                      />
+                    );
+                  })}
+                </svg>
+                <div style={{ display: "flex", flexDirection: "column", gap: pitch - 56, width: 220 }}>
+                  {group.ids.left.map((id) => {
                     const w = WORD_MAP[id];
                     const matched = s2.matched.includes(id);
                     const sel = s2.selectedLeft === id;
@@ -1637,8 +1666,8 @@ export default function FamilyTreeApp() {
                     );
                   })}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 220 }}>
-                  {s2.right.map((id) => {
+                <div style={{ display: "flex", flexDirection: "column", gap: pitch - 56, width: 220 }}>
+                  {group.ids.right.map((id) => {
                     const w = WORD_MAP[id];
                     const matched = s2.matched.includes(id);
                     const sel = s2.selectedRight === id;
@@ -1654,7 +1683,9 @@ export default function FamilyTreeApp() {
                           alignItems: "center",
                           gap: 10,
                           fontWeight: 600,
-                          fontSize: 14,
+                          // 16 not 14: the board renders at 0.70 on a shallow
+                          // stage, and 14px would land at 9.8px on screen.
+                          fontSize: 16,
                           padding: "0 12px",
                           borderRadius: 16,
                           background: matched ? "#E4FFF7" : sel ? "#E1E3FD" : "#fff",
@@ -1677,6 +1708,8 @@ export default function FamilyTreeApp() {
                     );
                   })}
                 </div>
+                </div>
+                ))}
               </div>
               {s2.fxId && (
                 <>

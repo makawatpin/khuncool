@@ -38,7 +38,7 @@
    a hack. The ratio is always <= 1 by construction, since the viewport's
    width can't exceed --kc-canvas-w. */
 .canvasViewport {
-  container: kcfamilytreecanvas / inline-size;
+  container: kcfamilytreecanvas / size;
   position: relative;
   width: min(100%, var(--kc-canvas-w));
   aspect-ratio: var(--kc-canvas-ratio);
@@ -51,7 +51,10 @@
   width: var(--kc-canvas-w);
   height: var(--kc-canvas-h);
   transform-origin: top left;
-  transform: scale(calc(100cqi / var(--kc-canvas-w)));
+  /* Contain, not fit-to-width: whichever axis runs out first decides. Width
+     alone left the matching board at 0.75 and 255px tall inside 238px. This
+     needs the viewport to be a size container so cqb resolves. */
+  transform: scale(min(calc(100cqi / var(--kc-canvas-w)), calc(100cqb / var(--kc-canvas-h))));
 }
 
 /* Listening and Fill-in-the-Blank on a shallow board.
@@ -380,5 +383,164 @@
 
   :global(.kc-family-story-lines) > div > div:last-child button {
     padding: 4px 9px !important;
+  }
+}
+
+/* The matching board is two column-pairs side by side, which is what lets a
+   shallow stage fit it at 0.70 with the buttons still 39px. Upright that shape
+   is wrong: 1040px of board in a 343px viewport scales to 0.28 and the buttons
+   land at 16px, under the floor. So upright the two pairs stack instead, and
+   the canvas variables are re-declared to match — the scale formula reads them,
+   so changing them here is enough. Each pair carries its own connector overlay,
+   which is what makes either arrangement draw correctly. */
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-match-groups) {
+    flex-direction: column;
+  }
+
+  .canvasViewport:has(:global(.kc-family-match-groups)) {
+    /* The three are set inline on the element, so overriding them needs the
+       weight. */
+    --kc-canvas-w: 496px !important;
+    --kc-canvas-h: 668px !important;
+    --kc-canvas-ratio: 496 / 668 !important;
+  }
+}
+
+/* The matching board itself now sizes correctly; what did not fit was the
+   chrome above it. On a shallow stage the mascot chip and the subtitle took
+   126px of the 238px, leaving the board too little to scale into. Trimming
+   them hands the room back to the board, and the contain-fit scale picks it up
+   without another number being chosen by hand. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-match) {
+    padding-top: 2px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type {
+    padding: 4px 12px !important;
+    margin-bottom: 4px !important;
+  }
+
+  :global(.kc-family-match) > p {
+    margin: 0 0 4px !important;
+    font-size: 11px !important;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-match) > div:first-of-type {
+    padding: 6px 12px !important;
+    margin-bottom: 6px !important;
+  }
+
+  :global(.kc-family-match) > p {
+    margin: 0 0 6px !important;
+    font-size: 11.5px !important;
+  }
+}
+
+/* max-height:100% on the viewport measures the screen's whole height, not the
+   part left over after the chip and the subtitle above it, so the board kept
+   claiming 233px of a 238px screen and the three rows together overran. Making
+   the screen a column and letting the board take the remainder is what ties the
+   two together — the board then gets what is actually free, and the contain-fit
+   scale reads that. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-match) {
+    display: flex !important;
+    min-height: 0;
+    flex-direction: column;
+  }
+
+  :global(.kc-family-match) .canvasViewport {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-match) {
+    display: flex !important;
+    min-height: 0;
+    flex-direction: column;
+  }
+
+  :global(.kc-family-match) .canvasViewport {
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+}
+
+/* Fitting is not enough on its own: with 106px of chrome above it the board
+   was left 86px, which scales to 0.25 and puts the buttons at 14px — inside
+   the stage but under the floor. The board needs 146px to hold 24px buttons
+   (340 x 24/56), so the chrome has to come under about 90px. The subtitle goes
+   — the chip above it already names the round — and the chip itself tightens. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  /* The row under the chip is the combo counter, not a subtitle, so it stays —
+     what goes is the 45px of margins between the three rows, replaced by one
+     flat gap. */
+  :global(.kc-family-match) {
+    gap: 4px;
+  }
+
+  :global(.kc-family-match) > * {
+    margin: 0 !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type {
+    padding: 3px 10px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type > div:first-child {
+    font-size: 20px !important;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-match) {
+    gap: 6px;
+  }
+
+  :global(.kc-family-match) > * {
+    margin: 0 !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type > div:first-child {
+    font-size: 22px !important;
+  }
+}
+
+/* The screen's own padding is 8px top and a clamp()ed 20px bottom, and the chip
+   is still display-sized. Both are room the board needs to reach the 0.43 that
+   keeps its buttons at 24px. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-match) {
+    padding: 2px 12px 4px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type {
+    padding: 2px 9px !important;
+    gap: 7px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type > div:first-child {
+    font-size: 17px !important;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-match) {
+    padding: 2px 12px 6px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type {
+    padding: 4px 10px !important;
+    gap: 8px !important;
+  }
+
+  :global(.kc-family-match) > div:first-of-type > div:first-child {
+    font-size: 18px !important;
   }
 }
