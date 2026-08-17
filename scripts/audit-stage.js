@@ -161,6 +161,52 @@ function auditStage({ min = 11 } = {}) {
     })
     .filter((row) => row.hiddenControls > 0);
 
+  // 5. Controls the other checks cannot see.
+  //
+  // Every check above starts from button/a/input/[role=button]. A <span
+  // onClick> is invisible to all of them — and to the Tab key and to a screen
+  // reader, which is the actual problem. Sound Wheel has two of these sitting
+  // 114px past the stage: unreachable by pointer AND by keyboard, and no check
+  // reported a thing.
+  //
+  // Reported separately from the layout findings because it is a different
+  // failure: WCAG 2.1.1 Keyboard and 4.1.2 Name, Role, Value, not a box that
+  // does not fit.
+  //
+  // `cursor` inherits, so a pointer container makes every descendant look
+  // clickable. Only the element that ORIGINATES the pointer counts — where the
+  // parent does not already have it. Anything that is or contains a real
+  // control is a wrapper, not a control, and is dropped.
+  const semantic = "button,a[href],input,select,textarea,label,summary,[role='button'],[role='link'],[role='checkbox'],[role='radio'],[role='tab'],[role='option']";
+  const nonSemanticControls = [...stage.querySelectorAll("*")]
+    .filter((el) => {
+      if (decorative(el)) return false;
+      const cs = getComputedStyle(el);
+      if (cs.cursor !== "pointer") return false;
+      const parent = el.parentElement;
+      if (parent && parent !== stage.parentElement && getComputedStyle(parent).cursor === "pointer") return false;
+      if (el.matches(semantic) || el.closest(semantic)) return false;
+      if (el.querySelector(semantic)) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    })
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      const outside =
+        r.bottom > box.bottom + 1 || r.top < box.top - 1 || r.right > box.right + 1 || r.left < box.left - 1;
+      return {
+        control: label(el),
+        tag: el.tagName,
+        // A drag source is expected not to be a button; it still needs a
+        // keyboard path, but it is a different fix from a mislabelled button,
+        // so the two are separated rather than counted together.
+        draggable: el.getAttribute("draggable") === "true",
+        role: el.getAttribute("role") || null,
+        tabbable: el.getAttribute("tabindex") !== null,
+        offStage: outside && !scrollableWithin(el),
+      };
+    });
+
   const shape =
     box.width / box.height < 0.9 ? "portrait" : box.height < 440 ? "short" : "wide";
 
@@ -180,6 +226,7 @@ function auditStage({ min = 11 } = {}) {
     smallText,
     contentHiddenBehindScroll, // advisory — judge by what is hidden
     belowComfortTargets, // advisory only
+    nonSemanticControls, // advisory — accessibility, reported separately
   };
 }
 
