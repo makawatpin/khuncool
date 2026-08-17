@@ -217,6 +217,23 @@ export default function CodingMazeGame() {
         .${styles.intro} .${styles.startBtn}{min-width:0;min-height:0;margin-top:0;padding:8px 20px}
         .${styles.intro} .${styles.startBtn} span{font-size:clamp(13px,5.5cqb,16px)}
         .${styles.intro} .${styles.startBtn} b{width:22px;height:22px;font-size:15px}
+
+        /* The command buttons are the game — without them the robot cannot be
+           given a single instruction — and on a shallow board they were the
+           only thing in the panel allowed to shrink, so they absorbed the
+           whole deficit and collapsed to nothing. The panel's other rows now
+           yield instead (see the module's flex rules), and these two get the
+           buttons down to a size that fits: the 76px floor from the wide block
+           above becomes the shape's tap target, and the English sub-label goes,
+           since the Thai label and the arrow already say which way the robot
+           turns. */
+        .${styles.commandButtons} button{min-height:var(--kc-tap);padding:4px 2px}
+        .${styles.commandButtons} small{display:none}
+        .${styles.commandButtons} b{font-size:clamp(15px,5cqb,21px)}
+        .${styles.commandHeader}{gap:4px}
+        .${styles.commandHeader} h2{font-size:clamp(12px,3.6cqb,15px)}
+        .${styles.commandHeader} small{font-size:11px}
+        .${styles.commandHeader}>span{padding:3px 7px;font-size:11px}
       }
     `}</style>
     <header className={styles.topbar}>
