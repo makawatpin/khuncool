@@ -1793,7 +1793,7 @@ export default function FamilyTreeApp() {
               🔊
             </button>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          <div className="kc-family-options" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
             {s3.questions[s3.qIndex]?.options.map((id) => {
               const w = WORD_MAP[id];
               const q = s3.questions[s3.qIndex];
@@ -1889,7 +1889,7 @@ export default function FamilyTreeApp() {
             </div>
           </div>
           <p style={{ fontSize: 14, color: "#5A6273", margin: "0 0 12px" }}>📔 My Family Story</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="kc-family-story-lines" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {storyBlanks.map((b, idx) => {
               const isCorrect = s4.correct[idx];
               const answered = s4.answers[idx];
