@@ -177,14 +177,19 @@ function auditStage({ min = 11 } = {}) {
   // clickable. Only the element that ORIGINATES the pointer counts — where the
   // parent does not already have it. Anything that is or contains a real
   // control is a wrapper, not a control, and is dropped.
+  // `grab` counts as well as `pointer`. Family Tree's word cards are divs with
+  // pointer handlers and cursor:grab, and a first version of this check that
+  // looked only for `pointer` missed all nine of them — reporting half the
+  // problem, which is worse than reporting none.
+  const INTERACTIVE_CURSORS = ["pointer", "grab", "grabbing"];
   const semantic = "button,a[href],input,select,textarea,label,summary,[role='button'],[role='link'],[role='checkbox'],[role='radio'],[role='tab'],[role='option']";
   const nonSemanticControls = [...stage.querySelectorAll("*")]
     .filter((el) => {
       if (decorative(el)) return false;
       const cs = getComputedStyle(el);
-      if (cs.cursor !== "pointer") return false;
+      if (!INTERACTIVE_CURSORS.includes(cs.cursor)) return false;
       const parent = el.parentElement;
-      if (parent && parent !== stage.parentElement && getComputedStyle(parent).cursor === "pointer") return false;
+      if (parent && parent !== stage.parentElement && INTERACTIVE_CURSORS.includes(getComputedStyle(parent).cursor)) return false;
       if (el.matches(semantic) || el.closest(semantic)) return false;
       if (el.querySelector(semantic)) return false;
       const r = el.getBoundingClientRect();
@@ -192,14 +197,17 @@ function auditStage({ min = 11 } = {}) {
     })
     .map((el) => {
       const r = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
       const outside =
         r.bottom > box.bottom + 1 || r.top < box.top - 1 || r.right > box.right + 1 || r.left < box.left - 1;
       return {
         control: label(el),
         tag: el.tagName,
-        // A drag source is expected not to be a button; it still needs a
-        // keyboard path, but it is a different fix from a mislabelled button,
-        // so the two are separated rather than counted together.
+        // A drag source is legitimately not a button and needs a keyboard path
+        // rather than a relabelling, so the two are counted apart. The cursor
+        // is the reliable signal here: these games drag with pointer events and
+        // never set draggable="true", so that attribute finds nothing.
+        dragAffordance: cs.cursor === "grab" || cs.cursor === "grabbing",
         draggable: el.getAttribute("draggable") === "true",
         role: el.getAttribute("role") || null,
         tabbable: el.getAttribute("tabindex") !== null,
