@@ -114,15 +114,79 @@
 }
 
 @container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  /* The card is square, so capping its width caps its height. 58cqb rather
+     than 62 is what leaves the last row inside the column once the cells stop
+     forcing their own floor. */
   .card {
-    max-width: min(100%, 62cqb);
+    max-width: min(100%, 58cqb);
   }
 
-  /* The draw panel sets overflow:hidden inline for its sweep decoration. On a
-     board this shallow that clips its own two buttons instead of scrolling to
-     them, so the panel scrolls here — the decoration still sits inside it. */
-  .board > * {
-    overflow: auto !important;
+  /* Four of the sixteen cards were below the fold. The width cap was doing its
+     job — the card measured 189px wide — but the height came from the cells,
+     each carrying a 44px inline min-height: four rows of those plus gaps and
+     padding is 242px against the 181px the column has, and the cells were
+     wider than their own grid tracks too, so the card overflowed both ways.
+
+     44px is the shape's comfort target, not the accessibility one. The
+     contract makes that distinction for exactly this case: a dense panel of
+     adjacent buttons may sit below the comfort size, and only 24x24 is a
+     failure. Dropping the floor lets the four rows divide the height that is
+     actually there, which lands the cells near 36px — half again the WCAG
+     minimum, and all sixteen visible.
+
+     A hidden bingo card is not a cosmetic loss. A child reads the rows they
+     can see and calls a line that is not a line. */
+  .card > button {
+    min-height: 24px !important;
+    gap: 1px !important;
+  }
+
+  .card {
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+
+  /* The draw panel used to scroll here. That was the wrong call: it made the
+     reachability check pass while leaving "🔊 ฟังอีกครั้ง" 109px below the
+     stage, which is the failure contentHiddenBehindScroll was added to report.
+     In a listening game, replaying the sound is not optional — a child who
+     misses it cannot answer the question at all.
+
+     The panel wanted 365px of the 181px it had, and both of the big numbers
+     came from cqi: the headphone block's min-height is clamp(90px,24cqi,190px),
+     which is 187px on a 780px-wide board, and the glyph inside it is
+     clamp(32px,9cqi,72px), which is 70px. Width was never the constraint.
+     Bounding both by the board's height brings the stack to 181px, so the
+     panel's own overflow:hidden has nothing left to clip. Inline styles set
+     them, hence !important. */
+  .callBlock {
+    min-height: min(clamp(90px, 24cqi, 190px), 11cqb) !important;
+    gap: 2px !important;
+  }
+
+  .callMain {
+    font-size: min(clamp(32px, 9cqi, 72px), 10cqb) !important;
+  }
+
+  .callLabel {
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  /* The panel's rows carry their own margins, worth about 40px of the 181px
+     between them, and the panel has no class to hang a rule on. One flat gap
+     with the margins zeroed is deterministic where chasing each margin was
+     not. */
+  .board > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    padding: 6px 10px !important;
+  }
+
+  .board > div:first-child > * {
+    margin: 0 !important;
+    flex: 0 0 auto;
   }
 
   .play {
