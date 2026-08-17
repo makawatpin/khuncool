@@ -36,9 +36,53 @@
   }
 }
 
-/* The question card sizes its picture off the board's width, which on a
-   shallow board leaves nothing for the four answer buttons below it. */
+/* The play screen's answer buttons.
+   ================================
+   A different problem from the intro screens, and it needs a different answer.
+   An intro can give up its decoration and its blurb because neither is the
+   game. Here the four options ARE the game: a child who cannot see one cannot
+   choose it, and there is nothing in the card that can be deleted instead.
+
+   The card stacks kicker, picture, prompt and options down a single column, so
+   on a shallow board it wanted 303px of the 238px it had and pushed three of
+   the four answers out. Shrinking the picture was the previous attempt here —
+   the rules below still do some of it — but it cannot find 65px without making
+   the picture too small to read, and in a game about matching a picture that
+   is the one thing that must stay legible.
+
+   So the card turns instead. A shallow board is short of height and generous
+   with width — 780x304 — and stacking is what spends the wrong one. Picture on
+   the left, answers in a 2x2 block on the right, and the card needs the taller
+   of the two columns rather than their sum. Nothing is removed and the picture
+   keeps its size. */
 @container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-vocab-card) > div {
+    display: grid;
+    /* Explicit rows so the options can span the full height with 1 / -1; on a
+       purely implicit grid that line does not resolve and the span collapses
+       to a single row. The count is a ceiling, not a shape — unused rows are
+       min-content and cost nothing. */
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-content: center;
+    column-gap: 14px;
+  }
+
+  :global(.kc-vocab-card) > div > * {
+    min-width: 0;
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div > :global(.kc-vocab-options) {
+    grid-row: 1 / -1;
+    grid-column: 2;
+    align-self: center;
+    /* Two across, two down: the auto-fit track would collapse to a single
+       column in half the width and put the answers back in a tall stack. */
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    margin: 0 !important;
+  }
+
   :global(.kc-vocab-visual) {
     width: min(22cqi, 34cqb) !important;
     height: min(22cqi, 34cqb) !important;
@@ -52,8 +96,27 @@
     padding: 8px 12px !important;
   }
 
+  /* The inline min-height is 82px and a plain class rule loses to it, so the
+     floor this was meant to set never applied. It is wanted now: with the
+     answers beside the picture the button no longer needs to carry the card's
+     height, and 44px is the shape's tap target. */
   :global(.kc-vocab-options) button {
-    min-height: var(--kc-tap);
-    padding-block: 0 !important;
+    min-height: var(--kc-tap) !important;
+    padding-block: 4px !important;
+  }
+}
+
+/* Upright the board is tall enough for the picture but narrow, so auto-fit
+   gives the options one column and three rows of them run past the bottom.
+   Two across costs nothing here — the longest word in any category is
+   "triangle ruler" and it wraps to two lines rather than overflowing. */
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-vocab-options) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    min-height: var(--kc-tap) !important;
+    padding-inline: 6px !important;
   }
 }
