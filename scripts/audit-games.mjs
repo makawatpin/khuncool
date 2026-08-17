@@ -184,6 +184,11 @@ const GAMES = {
   },
   "vocabulary-arcade": {
     path: "/media/english/vocabulary-arcade",
+    // "triangle ruler" is the longest word across all ten categories, at 14
+    // characters against a median of about 5. Every answer gets it, so the
+    // options are measured at the width the game can actually produce rather
+    // than at whatever this run happened to draw.
+    stress: { selector: ".kc-vocab-options button", text: "triangle ruler" },
     screens: [
       { name: "intro" },
       { name: "category-picker", enter: click(/เลือกหมวดคำศัพท์/) },
@@ -302,7 +307,41 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir,
   });
   await page.waitForTimeout(100);
 
-  const result = await page.evaluate((min) => window.auditStage({ min }), 11);
+  let result = await page.evaluate((min) => window.auditStage({ min }), 11);
+
+  // Second pass with the game's longest possible label forced into every
+  // answer. Seeding fixed which items are drawn but not how long they are, and
+  // a game whose vocabulary runs from "bee" to "triangle ruler" can pass every
+  // run on the short words and still overflow the first time a class draws the
+  // long one. The worst of the two passes is what gets reported.
+  if (game.stress) {
+    const applied = await page.evaluate(({ selector, text }) => {
+      const originals = [];
+      for (const el of document.querySelectorAll(selector)) {
+        const span = [...el.querySelectorAll("span")].find(
+          (s) => s.textContent && s.textContent.trim().length,
+        );
+        const target = span || el;
+        originals.push([target, target.textContent]);
+        target.textContent = text;
+      }
+      window.__kcStress = originals;
+      return originals.length;
+    }, game.stress);
+
+    if (applied) {
+      await page.waitForTimeout(150);
+      const stressed = await page.evaluate((min) => window.auditStage({ min }), 11);
+      if (isWorse(stressed, result)) {
+        result = stressed;
+        result.stressedBy = game.stress.text;
+      }
+      await page.evaluate(() => {
+        for (const [el, text] of window.__kcStress || []) el.textContent = text;
+        window.__kcStress = null;
+      });
+    }
+  }
 
   const fileBase = `${screen.name}__${size.label}__${mode}${suffix}`;
   const screenshotPath = path.join(outDir, `${fileBase}.png`);
