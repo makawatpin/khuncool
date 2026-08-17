@@ -1465,9 +1465,19 @@ export default function SoundWheelApp() {
                   borderTop: "1px solid #E5E8EE",
                 }}
               >
-                <span
+                {/* Buttons, not spans with onClick. As spans these were
+                    unreachable by Tab and announced as plain text rather than
+                    as controls, and no audit check could see them either —
+                    every one of them starts from button/a/[role=button]. */}
+                <button
+                  type="button"
                   onClick={newRound}
+                  className="kc-tap"
                   style={{
+                    padding: 0,
+                    border: "none",
+                    background: "none",
+                    font: "inherit",
                     fontSize: 13,
                     fontWeight: 600,
                     color: "#5C5EE6",
@@ -1475,10 +1485,16 @@ export default function SoundWheelApp() {
                   }}
                 >
                   🔀 สลับช่องใหม่
-                </span>
-                <span
+                </button>
+                <button
+                  type="button"
                   onClick={backHome}
+                  className="kc-tap"
                   style={{
+                    padding: 0,
+                    border: "none",
+                    background: "none",
+                    font: "inherit",
                     fontSize: 13,
                     fontWeight: 600,
                     color: "#5A6273",
@@ -1486,7 +1502,7 @@ export default function SoundWheelApp() {
                   }}
                 >
                   ⚙️ เปลี่ยนชุดเสียง
-                </span>
+                </button>
               </div>
             </div>
           </div>
