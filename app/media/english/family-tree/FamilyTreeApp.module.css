@@ -287,3 +287,98 @@
     margin-bottom: 0 !important;
   }
 }
+
+/* Upright, closing the last of it. Nothing here is near a floor — the replay
+   button is 106px across and the answers 94px tall against 24px — so this is
+   spacing and wrapping, not a limit.
+
+   The story lines go back to one column: at 144px wide their sentences wrapped
+   to four lines and each card stood 207px tall, which is worse than the full
+   width they were competing for. */
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+    margin-bottom: 6px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 26px !important;
+  }
+
+  :global(.kc-family-options) {
+    margin-bottom: 6px !important;
+  }
+
+  :global(.kc-family-story-lines) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:last-child button {
+    padding: 5px 10px !important;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-listen) > div:first-of-type,
+  :global(.kc-family-story) > div:first-of-type {
+    padding: 6px 12px !important;
+    margin-bottom: 6px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:first-child,
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 24px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 4px !important;
+  }
+
+  :global(.kc-family-options) button svg {
+    width: 22px !important;
+  }
+}
+
+/* The last of it, and both numbers come from inline pixel sizes rather than
+   anything CSS had a say in: the answer faces are sized from a `size` prop and
+   the replay block reserves a fixed square. Overriding the boxes is what
+   actually moves them — earlier attempts at the svg and at transform:scale
+   changed nothing, the first because there is no svg here and the second
+   because scale does not affect layout. */
+@container kcstage (aspect-ratio < 0.9) {
+  /* zoom, not width/height: the face is an absolutely-positioned inner box,
+     so clamping the wrapper let it spill over the label underneath. zoom is the
+     one that takes the layout box and the drawing with it. */
+  :global(.kc-family-options) button > div {
+    zoom: 0.66;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+    height: 76px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 5px 8px !important;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-family-story-lines) {
+    gap: 5px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 11.5px !important;
+    margin-bottom: 3px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:last-child {
+    gap: 6px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:last-child button {
+    padding: 4px 9px !important;
+  }
+}
