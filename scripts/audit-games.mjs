@@ -129,6 +129,22 @@ const click = (text) => async (page) => {
   await page.getByRole("button", { name: text }).click();
 };
 
+/** Vocabulary Arcade's modes are siblings, reached back through the pickers. */
+const pickVocabMode = (mode) => async (page) => {
+  await page.getByRole("button", { name: /เปลี่ยนหมวด/ }).click();
+  await page.waitForTimeout(200);
+  await page.getByRole("button", { name: /Animals/ }).click();
+  await page.waitForTimeout(200);
+  await page.getByRole("button", { name: mode }).click();
+};
+
+/** Family Tree's minigames are siblings, so each is reached via the hub. */
+const backToHub = (text) => async (page) => {
+  await page.getByRole("button", { name: /มินิเกม/ }).click();
+  await page.waitForTimeout(200);
+  await page.getByRole("button", { name: text }).click();
+};
+
 const GAMES = {
   "phonics-bingo": {
     path: "/media/english/phonics-bingo",
@@ -156,6 +172,16 @@ const GAMES = {
     screens: [
       { name: "home" },
       { name: "select", enter: click(/เริ่มฝึกพิมพ์/) },
+      {
+        name: "play",
+        // The start button runs a countdown before the board appears, so this
+        // waits it out rather than measuring the countdown overlay. The board
+        // itself was never measured before.
+        async enter(page) {
+          await page.getByRole("button", { name: /เริ่มฝึก|เริ่มด่าน/ }).click();
+          await page.waitForTimeout(4200);
+        },
+      },
     ],
   },
   "asean-matching": {
@@ -176,10 +202,17 @@ const GAMES = {
   },
   "family-tree": {
     path: "/media/english/family-tree",
+    // Four minigames hang off the hub, and for a long time this config walked
+    // only the first. The other three were never measured at all, which is why
+    // "0 hard failures" was a narrower claim than it sounded. Each one is
+    // reached by returning to the hub first, so `enter` clicks twice.
     screens: [
       { name: "intro" },
       { name: "hub", enter: click(/เริ่มเล่น/) },
       { name: "plant-tree", enter: click(/ปลูกต้นไม้ครอบครัว/) },
+      { name: "matching", enter: backToHub(/จับคู่คำศัพท์/) },
+      { name: "listening", enter: backToHub(/ฟังแล้วเดา/) },
+      { name: "fill-blank", enter: backToHub(/เติมคำในเรื่อง/) },
     ],
   },
   "vocabulary-arcade": {
@@ -193,7 +226,13 @@ const GAMES = {
       { name: "intro" },
       { name: "category-picker", enter: click(/เลือกหมวดคำศัพท์/) },
       { name: "mode-picker", enter: click(/Animals/) },
-      { name: "play", enter: click(/Picture Match/) },
+      // The four answer modes lay out differently — Word → Picture answers with
+      // pictures, Spelling Builder with letter tiles — so measuring only
+      // Picture Match left three layouts unchecked.
+      { name: "play-picture", enter: click(/Picture Match/) },
+      { name: "play-word", enter: pickVocabMode(/Word → Picture/) },
+      { name: "play-spelling", enter: pickVocabMode(/Spelling Builder/) },
+      { name: "play-mixed", enter: pickVocabMode(/Mixed Challenge/) },
     ],
   },
   "classroom-objects": {
