@@ -7,6 +7,7 @@ import { ErrorCard, ListSkeleton } from "./ErrorCard";
 interface Post {
   slug: string;
   href: string;
+  views: number;
 }
 
 function DocIcon() {
@@ -37,7 +38,7 @@ export default function ContentTab() {
   return (
     <div className="rounded-[--radius-card] border border-border bg-surface-card p-2">
       <p className="px-2 pb-2 pt-1 text-xs text-ink-muted">
-        รายการโพสต์ (ไม่มีข้อมูลยอดวิว — ยังไม่มี analytics ผูกอยู่)
+        รายการโพสต์ เรียงตามยอดวิว
       </p>
       <ul>
         {state.data.posts.map((p) => (
@@ -50,6 +51,9 @@ export default function ContentTab() {
                 <DocIcon />
               </span>
               <span className="min-w-0 flex-1 truncate">{p.href}</span>
+              <span className="flex-none whitespace-nowrap text-xs text-ink-muted">
+                {p.views.toLocaleString("th-TH")} วิว
+              </span>
               <span className="flex-none text-ink-faint">
                 <ArrowIcon />
               </span>
