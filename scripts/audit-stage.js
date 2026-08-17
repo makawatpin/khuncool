@@ -215,6 +215,40 @@ function auditStage({ min = 11 } = {}) {
       };
     });
 
+  // 6. Text cut off by its own box.
+  //
+  // A box with overflow hidden or clip whose content is wider than it fits is
+  // showing a truncated label. Nothing else here catches it: the element is
+  // inside the stage, so unreachable does not fire; its box is not a scroll
+  // region, so contentHiddenBehindScroll does not either; and the font size is
+  // whatever it was, so smallText is quiet. It cost a wrong commit earlier this
+  // week — a set of answer buttons whose faces had been given a smaller wrapper
+  // rendered "M…" and "Gr…" where "Mom" and "Grandma" should have been, and
+  // every check passed.
+  //
+  // Advisory, because ellipsis is sometimes the intended design. What decides
+  // it is which text is cut, so the report names it.
+  const clippedText = [...stage.querySelectorAll("*")]
+    .filter((el) => {
+      if (decorative(el)) return false;
+      const cs = getComputedStyle(el);
+      if (!/hidden|clip/.test(cs.overflowX + cs.overflow)) return false;
+      // A scroll region is the other check’s business, not this one.
+      if (/auto|scroll/.test(cs.overflowX + cs.overflowY)) return false;
+      // Leaves only. A flex row whose children add up wider than it reports the
+      // same overflow without any label being cut, and reporting the whole
+      // toolbar as "clipped" buries the one span that actually is.
+      if (el.children.length) return false;
+      if (!(el.textContent || "").trim()) return false;
+      return el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0;
+    })
+    .map((el) => ({
+      control: label(el),
+      visiblePx: Math.round(el.clientWidth),
+      neededPx: Math.round(el.scrollWidth),
+      cutPx: Math.round(el.scrollWidth - el.clientWidth),
+    }));
+
   const shape =
     box.width / box.height < 0.9 ? "portrait" : box.height < 440 ? "short" : "wide";
 
@@ -235,6 +269,7 @@ function auditStage({ min = 11 } = {}) {
     contentHiddenBehindScroll, // advisory — judge by what is hidden
     belowComfortTargets, // advisory only
     nonSemanticControls, // advisory — accessibility, reported separately
+    clippedText, // advisory — judge by which label is cut
   };
 }
 
