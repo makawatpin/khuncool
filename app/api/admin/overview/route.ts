@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
+import { fetchAllToolEvents } from "@/lib/admin/fetchAllToolEvents";
 
 export async function GET(request: Request) {
   const auth = await requireAdmin(request);
@@ -30,12 +31,12 @@ export async function GET(request: Request) {
     (u) => new Date(u.created_at).getTime() >= startOfToday.getTime()
   ).length;
 
-  const { data: topToolRows, error: topToolError } = await supabase
-    .from("tool_events")
-    .select("tool")
-    .gte("created_at", new Date(sevenDaysAgo).toISOString());
-  if (topToolError) {
-    return NextResponse.json({ error: topToolError.message }, { status: 500 });
+  let topToolRows: { tool: string; user_id: string | null }[];
+  try {
+    topToolRows = await fetchAllToolEvents(supabase, new Date(sevenDaysAgo).toISOString());
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "query failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
   const counts = new Map<string, number>();
   for (const row of topToolRows) {
