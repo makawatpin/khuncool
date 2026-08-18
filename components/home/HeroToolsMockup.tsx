@@ -143,8 +143,42 @@ function ToolFace({ tool }: { tool: HeroMockupTool }) {
     case "timer":
       return (
         <>
-          <p className="mb-2 text-[11px] font-bold text-ink">จับเวลา</p>
-          <p className="text-center font-anuphan text-[26px] font-bold text-ink">05:00</p>
+          <p className="mb-1.5 text-[11px] font-bold text-ink">จับเวลา / นับถอยหลัง</p>
+          <div className="relative mx-auto h-[92px] w-[92px]">
+            <svg viewBox="0 0 92 92" className="h-full w-full -rotate-90">
+              <circle cx="46" cy="46" r="40" fill="none" stroke="#1A1D26" strokeWidth="8" />
+              <circle
+                cx="46"
+                cy="46"
+                r="40"
+                fill="none"
+                stroke="url(#hero-timer-grad)"
+                strokeWidth="8"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 40}
+                className="animate-hero-timer-ring"
+              />
+              <defs>
+                <linearGradient id="hero-timer-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#5C5EE6" />
+                  <stop offset="1" stopColor="#14B79A" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-[#F4F5FA]">
+              <span className="relative h-[16px] w-[46px] font-anuphan text-[15px] font-bold text-ink">
+                {["05:00", "03:00", "01:00", "00:00"].map((t, i) => (
+                  <span
+                    key={t}
+                    className="absolute inset-0 animate-hero-timer-digit text-center"
+                    style={{ animationDelay: `${i * 1.5}s` }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </span>
+            </div>
+          </div>
         </>
       );
     case "attendance":
@@ -221,6 +255,17 @@ export default function HeroToolsMockup() {
           0%, 100% { height: 20%; }
           50% { height: var(--wave-h); }
         }
+        @keyframes hero-timer-ring {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: ${2 * Math.PI * 40}; }
+        }
+        @keyframes hero-timer-digit {
+          0% { opacity: 0; }
+          3% { opacity: 1; }
+          22% { opacity: 1; }
+          25% { opacity: 0; }
+          100% { opacity: 0; }
+        }
         @keyframes hero-pair-cycle {
           0% { opacity: 0; }
           3% { opacity: 1; }
@@ -233,13 +278,19 @@ export default function HeroToolsMockup() {
         .animate-hero-spin { animation: hero-spin 6s linear infinite; }
         .animate-hero-needle { animation: hero-needle 2.6s ease-in-out infinite; }
         .animate-hero-wavebar { animation: hero-wavebar 1.1s ease-in-out infinite; }
+        .animate-hero-timer-ring { animation: hero-timer-ring 6s linear infinite; }
+        .animate-hero-timer-digit { animation: hero-timer-digit 6s ease-in-out infinite; }
         .animate-hero-pair-cycle {
           animation: hero-pair-cycle ${CYCLE_SECONDS * PAIR_COUNT}s ease-in-out infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .animate-hero-float-a, .animate-hero-float-b, .animate-hero-spin,
-          .animate-hero-needle, .animate-hero-wavebar {
+          .animate-hero-needle, .animate-hero-wavebar,
+          .animate-hero-timer-ring, .animate-hero-timer-digit {
             animation: none;
+          }
+          .animate-hero-timer-digit:first-child {
+            opacity: 1;
           }
           .animate-hero-pair-cycle {
             animation: none;
