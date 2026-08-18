@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
 import GameBackdrop from "../GameBackdrop";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./TalkCardApp.module.css";
 
 type Sample = [string, string];
 
@@ -705,7 +706,7 @@ function shuffleArr<T>(a: T[]): T[] {
 
 export default function TalkCardApp() {
   useTrackToolUse("media-english-talk-card");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [sel, setSel] = useState<string[]>(TOPICS.map((t) => t.key));
@@ -901,14 +902,12 @@ export default function TalkCardApp() {
   const bgmLive = bgmOn && !muted;
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-talk-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-talk-game kc-stage-${stage}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        minHeight: "70vh",
-        position: "relative",
-        overflow: "hidden",
+        // position, overflow and height belong to .kc-stage-body.
         background:
           "linear-gradient(168deg,#FFEAF5 0%,#F3ECFD 48%,#E6F7FB 100%)",
         borderRadius: 24,
@@ -964,7 +963,7 @@ export default function TalkCardApp() {
           alignItems: "center",
           gap: 10,
           flexWrap: "wrap",
-          padding: "12px clamp(12px,3vw,26px)",
+          padding: "12px clamp(12px,3cqi,26px)",
           maxWidth: 1140,
           margin: "0 auto",
         }}
@@ -977,7 +976,7 @@ export default function TalkCardApp() {
             style={{ width: 36, height: 36, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
           <div style={{ minWidth: 0 }}>
-          <div className="kc-title" style={{ fontWeight: 700, fontSize: "clamp(15px,3.6vw,19px)" }}>
+          <div className="kc-title" style={{ fontWeight: 700, fontSize: "clamp(15px,3.6cqi,19px)" }}>
             Talk Card
           </div>
           <div style={{ fontSize: 11.5, color: "#987C8E" }}>
@@ -1092,13 +1091,13 @@ export default function TalkCardApp() {
       {/* SETUP */}
       {stage === 0 && (
         <div
-          className="kc-talk-setup"
+          className={`${styles.screen} kc-talk-setup`}
           style={{
             position: "relative",
             zIndex: 2,
             maxWidth: 1000,
             margin: "0 auto",
-            padding: "6px clamp(14px,4vw,26px) clamp(16px,4vh,70px)",
+            padding: "6px clamp(14px,4cqi,26px) clamp(10px,3cqb,28px)",
           }}
         >
           <div
@@ -1117,14 +1116,14 @@ export default function TalkCardApp() {
               <div
                 key={b.emoji}
                 style={{
-                  width: "clamp(34px,8vw,64px)",
-                  height: "clamp(34px,8vw,64px)",
+                  width: "clamp(34px,8cqi,64px)",
+                  height: "clamp(34px,8cqi,64px)",
                   borderRadius: 14,
                   background: b.bg,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "clamp(16px,4vw,30px)",
+                  fontSize: "clamp(16px,4cqi,30px)",
                   boxShadow: "0 16px 26px -18px rgba(122,90,248,.45)",
                   animation: `floatY 2.6s ease-in-out ${(idx * 0.3).toFixed(1)}s infinite`,
                 }}
@@ -1137,7 +1136,7 @@ export default function TalkCardApp() {
             <h1
               style={{
                 fontWeight: 700,
-                fontSize: "clamp(17px,6vw,44px)",
+                fontSize: "clamp(17px,6cqi,44px)",
                 lineHeight: 1.15,
                 margin: "0 0 2px",
               }}
@@ -1157,7 +1156,7 @@ export default function TalkCardApp() {
             </h1>
             <p
               style={{
-                fontSize: "clamp(11px,3.4vw,17px)",
+                fontSize: "clamp(11px,3.4cqi,17px)",
                 color: "#6B5A66",
                 lineHeight: 1.4,
                 margin: "0 auto",
@@ -1217,7 +1216,7 @@ export default function TalkCardApp() {
                 >
                   <span
                     style={{
-                      fontSize: "clamp(15px,4vw,28px)",
+                      fontSize: "clamp(15px,4cqi,28px)",
                       flex: "none",
                       display: "inline-block",
                       animation: on ? "wiggle 1.4s ease-in-out infinite" : "none",
@@ -1226,10 +1225,10 @@ export default function TalkCardApp() {
                     {t.icon}
                   </span>
                   <span style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: "block", fontSize: "clamp(11px,2.8vw,15px)", fontWeight: 700 }}>
+                    <span style={{ display: "block", fontSize: "clamp(11px,2.8cqi,15px)", fontWeight: 700 }}>
                       {t.th}
                     </span>
-                    <span style={{ display: "block", fontSize: "clamp(9px,2.2vw,11.5px)", color: "#8A6480" }}>
+                    <span style={{ display: "block", fontSize: "max(11px,2.2cqi)", color: "#8A6480" }}>
                       {t.en} · {t.qs.length} คำถาม
                     </span>
                   </span>
@@ -1269,7 +1268,7 @@ export default function TalkCardApp() {
                   setLeft(d.v);
                 }}
                 style={{
-                  fontSize: "clamp(12px,3.2vw,14.5px)",
+                  fontSize: "clamp(12px,3.2cqi,14.5px)",
                   fontWeight: 600,
                   padding: "7px 14px",
                   borderRadius: 999,
@@ -1297,7 +1296,7 @@ export default function TalkCardApp() {
                   setCount(c.v);
                 }}
                 style={{
-                  fontSize: "clamp(12px,3.2vw,14.5px)",
+                  fontSize: "clamp(12px,3.2cqi,14.5px)",
                   fontWeight: 600,
                   padding: "7px 14px",
                   borderRadius: 999,
@@ -1317,9 +1316,9 @@ export default function TalkCardApp() {
               onClick={begin}
               disabled={!poolNow.length}
               style={{
-                fontSize: "clamp(14px,4.4vw,21px)",
+                fontSize: "clamp(14px,4.4cqi,21px)",
                 fontWeight: 700,
-                padding: "9px clamp(22px,8vw,46px)",
+                padding: "9px clamp(22px,8cqi,46px)",
                 borderRadius: 999,
                 border: "none",
                 background: "linear-gradient(135deg,#C43F86,#7A5AF8)",
@@ -1340,7 +1339,7 @@ export default function TalkCardApp() {
               borderRadius: 12,
               background: "rgba(255,255,255,.75)",
               border: "1px solid #F3E2EE",
-              fontSize: 10.5,
+              fontSize: 11,
               color: "#6B5A66",
               lineHeight: 1.4,
             }}
@@ -1353,13 +1352,13 @@ export default function TalkCardApp() {
       {/* PLAY */}
       {stage === 1 && (
         <div
-          className="kc-talk-play"
+          className={`${styles.screen} kc-talk-play`}
           style={{
             position: "relative",
             zIndex: 2,
             maxWidth: 1000,
             margin: "0 auto",
-            padding: "4px clamp(12px,4vw,26px) 44px",
+            padding: "4px clamp(12px,4cqi,26px) 14px",
             display: "flex",
             flexDirection: "column",
             gap: 14,
@@ -1397,8 +1396,8 @@ export default function TalkCardApp() {
             style={{
               position: "relative",
               background: "#fff",
-              borderRadius: "clamp(22px,5vw,34px)",
-              padding: "clamp(24px,6vw,48px) clamp(18px,5vw,46px) clamp(22px,5vw,38px)",
+              borderRadius: "clamp(22px,5cqi,34px)",
+              padding: "clamp(24px,6cqi,48px) clamp(18px,5cqi,46px) clamp(22px,5cqi,38px)",
               animation: "cardFlyIn .45s cubic-bezier(.2,1.1,.4,1) both",
               overflow: "hidden",
               textAlign: "center",
@@ -1430,7 +1429,7 @@ export default function TalkCardApp() {
                   background: topic?.chip || "#FCE1EF",
                   padding: "8px 16px",
                   borderRadius: 999,
-                  marginBottom: "clamp(14px,3.5vw,22px)",
+                  marginBottom: "clamp(14px,3.5cqi,22px)",
                 }}
               >
                 <span style={{ fontSize: 16 }}>{topic?.icon}</span>
@@ -1439,7 +1438,7 @@ export default function TalkCardApp() {
               <h2
                 style={{
                   fontWeight: 600,
-                  fontSize: "clamp(26px,6.6vw,52px)",
+                  fontSize: "clamp(26px,6.6cqi,52px)",
                   lineHeight: 1.24,
                   margin: "0 0 12px",
                   color: "#26121F",
@@ -1449,9 +1448,9 @@ export default function TalkCardApp() {
               </h2>
               <p
                 style={{
-                  fontSize: "clamp(15px,3.8vw,20px)",
+                  fontSize: "clamp(15px,3.8cqi,20px)",
                   color: "#7A6572",
-                  margin: "0 0 clamp(18px,4vw,26px)",
+                  margin: "0 0 clamp(18px,4cqi,26px)",
                 }}
               >
                 {q?.th}
@@ -1499,7 +1498,7 @@ export default function TalkCardApp() {
               {hint && q && (
                 <div
                   style={{
-                    margin: "clamp(18px,4vw,24px) auto 0",
+                    margin: "clamp(18px,4cqi,24px) auto 0",
                     maxWidth: 660,
                     background: "#FDF5FA",
                     border: "1.5px dashed #EDC9E0",
@@ -1542,7 +1541,7 @@ export default function TalkCardApp() {
                           🔊
                         </button>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: "clamp(16px,4vw,20px)", color: "#26121F", lineHeight: 1.4 }}>
+                          <div style={{ fontSize: "clamp(16px,4cqi,20px)", color: "#26121F", lineHeight: 1.4 }}>
                             {en}
                           </div>
                           <div style={{ fontSize: 13, color: "#8A6480" }}>{th}</div>
@@ -1661,7 +1660,7 @@ export default function TalkCardApp() {
               style={{
                 flex: "1 1 240px",
                 minHeight: 56,
-                fontSize: "clamp(16px,4.2vw,19px)",
+                fontSize: "clamp(16px,4.2cqi,19px)",
                 fontWeight: 700,
                 padding: "14px 22px",
                 borderRadius: 20,
@@ -1696,13 +1695,13 @@ export default function TalkCardApp() {
       {/* DONE */}
       {stage === 2 && (
         <div
-          className="kc-talk-result"
+          className={`${styles.screen} kc-talk-result`}
           style={{
             position: "relative",
             zIndex: 2,
             maxWidth: 600,
             margin: "0 auto",
-            padding: "24px clamp(14px,4vw,26px) 70px",
+            padding: "16px clamp(14px,4cqi,26px) 16px",
             textAlign: "center",
           }}
         >
@@ -1710,21 +1709,21 @@ export default function TalkCardApp() {
             style={{
               background: "#fff",
               borderRadius: 30,
-              padding: "clamp(28px,7vw,46px)",
+              padding: "clamp(28px,7cqi,46px)",
               animation: "cardFlyIn .5s cubic-bezier(.2,1.1,.4,1) both",
               boxShadow: "0 34px 74px -30px rgba(120,40,90,.5)",
             }}
           >
             <div
               style={{
-                fontSize: "clamp(46px,12vw,64px)",
+                fontSize: "clamp(46px,12cqi,64px)",
                 marginBottom: 10,
                 animation: "floatY 2.6s ease-in-out infinite",
               }}
             >
               🎉
             </div>
-            <h2 style={{ fontWeight: 700, fontSize: "clamp(23px,5.6vw,32px)", margin: "0 0 10px" }}>
+            <h2 style={{ fontWeight: 700, fontSize: "clamp(23px,5.6cqi,32px)", margin: "0 0 10px" }}>
               เก่งมาก! พูดครบทุกใบแล้ว
             </h2>
             <p style={{ fontSize: 15, color: "#6B5A66", lineHeight: 1.8, margin: "0 0 24px" }}>
@@ -1767,6 +1766,7 @@ export default function TalkCardApp() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

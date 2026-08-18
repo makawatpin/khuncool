@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import { SORT_ITEMS, type SortItem, type SortKind } from "./gameData";
 import styles from "./DigitalSortGame.module.css";
 
@@ -30,7 +30,7 @@ const CONFETTI = Array.from({ length: 42 }, (_, index) => ({
 
 export default function DigitalSortGame() {
   useTrackToolUse("computer-digital-sort");
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { ref, isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [stage, setStage] = useState<Stage>("home");
   const [items, setItems] = useState<SortItem[]>([]);
   const [round, setRound] = useState(0);
@@ -58,7 +58,7 @@ export default function DigitalSortGame() {
     setBestStreak(0); setCorrect(0); setFeedback(null); setLocked(false); setStage("play");
   }, []);
 
-  useEffect(() => { ref.current?.scrollTo({ top: 0, left: 0 }); }, [stage, ref]);
+  useEffect(() => { ref.current?.scrollTo({ top: 0, left: 0 }); }, [stage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sort = useCallback((kind: SortKind) => {
     if (!current || locked) return;
@@ -85,7 +85,7 @@ export default function DigitalSortGame() {
   const drop = (event: DragEvent, kind: SortKind) => { event.preventDefault(); sort(kind); };
   const resultTitle = useMemo(() => correct === items.length ? "นักคัดแยกระดับตำนาน!" : correct >= 9 ? "ยอดเยี่ยมมาก!" : correct >= 6 ? "เก่งขึ้นแล้ว!" : "ลองอีกครั้งนะ!", [correct, items.length]);
 
-  return <div ref={ref} className={`kc-game kc-computer-game ${styles.shell} ${fullscreenClassName}`} data-stage={stage} onMouseOver={hoverSfxDelegate}>
+  return <div {...stageProps} className="kc-stage"><div className={`kc-stage-body kc-game kc-computer-game ${styles.shell}`} data-stage={stage} onMouseOver={hoverSfxDelegate}>
     <div className={styles.gridGlow}/><div className={styles.orbOne}/><div className={styles.orbTwo}/>
     <header className={styles.topbar}>
       <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={38} height={38}/><span><b className="kc-title">Digital Sort</b><small>ภารกิจคัดแยกโลกดิจิทัล</small></span></div>
@@ -127,5 +127,5 @@ export default function DigitalSortGame() {
       <div className={styles.resultStats}><div><span>คะแนนรวม</span><b>{score.toLocaleString()}</b></div><div><span>คอมโบสูงสุด</span><b>🔥 {bestStreak}</b></div><div><span>ความแม่นยำ</span><b>{Math.round((correct / items.length) * 100)}%</b></div></div>
       <button className={styles.startBtn} type="button" onClick={start}><span>เล่นอีกครั้ง</span><b>↻</b></button>
     </section>}
-  </div>;
+  </div></div>;
 }

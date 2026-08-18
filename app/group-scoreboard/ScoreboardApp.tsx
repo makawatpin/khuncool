@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 
 const LS_KEY = "khuncool.scoreboard";
 const ROSTER_KEY = "khuncool.roster";
@@ -141,15 +142,7 @@ export default function ScoreboardApp() {
     );
   }, []);
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   const sorted = [...teams].sort((a, b) => b.score - a.score);
   const top = sorted.length ? sorted[0].score : 0;
@@ -171,7 +164,7 @@ export default function ScoreboardApp() {
   const showEmpty = teams.length === 0;
 
   return (
-    <div ref={frameRef} className="tool-stage bg-white">
+    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์

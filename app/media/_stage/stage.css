@@ -1,0 +1,164 @@
+/* =============================================================
+   Shared presentation stage for the /media games.
+
+   The split this file exists to enforce:
+
+     .kc-stage       decides how much room the game gets. This is a page
+                     layout decision, so it is the ONE place allowed to read
+                     the viewport.
+     .kc-stage-body  and everything below it sizes itself from the stage
+                     through container queries and cq units. Nothing inside a
+                     game may use vw, vh, or window.innerWidth — a game must
+                     render the same whether it sits in the page column, in
+                     fullscreen, or in an embed.
+
+   Fullscreen is the stage growing to the viewport, not the game being scaled.
+   Because every measurement inside is relative to the stage, the whole
+   interface re-resolves on its own — which is also why rotating the device
+   while fullscreen needs no code at all.
+   ============================================================= */
+
+.kc-stage {
+  container: kcstage / size;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Phones held upright cannot use a 16:9 board — it would be 200px tall. Give
+   the stage a portrait box instead; the shape queries below then switch the
+   game to its stacked layout. */
+@media (max-width: 700px) and (orientation: portrait) {
+  .kc-stage {
+    aspect-ratio: 9 / 16;
+  }
+}
+
+/* Phones held sideways are limited by height, not width. Fit the stage to the
+   screen so the game is playable without scrolling the page. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .kc-stage {
+    aspect-ratio: auto;
+    height: min(78dvh, 460px);
+    min-height: 260px;
+  }
+}
+
+/* Fullscreen, native or fallback: the stage becomes the viewport. Both paths
+   carry data-fullscreen so there is a single rule to reason about.
+   The safe-area padding is what viewport-fit=cover in app/layout.tsx buys —
+   it keeps the game clear of the notch and home indicator, and because the
+   container query box is the content box, the game re-fits automatically. */
+.kc-stage[data-fullscreen] {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: #0b1020;
+  overscroll-behavior: none;
+}
+
+/* Every game sets `borderRadius: 24` (or similar) inline on .kc-stage-body —
+   that's the established convention, and inline styles always beat a plain
+   class rule regardless of specificity. Without !important this selector
+   never wins, so the body stays rounded in fullscreen and the stage's own
+   #0b1020 backdrop shows through at the four corners. */
+.kc-stage[data-fullscreen] > .kc-stage-body {
+  border-radius: 0 !important;
+}
+
+.kc-stage::backdrop,
+:root::backdrop {
+  background: #0b1020;
+}
+
+/* -------------------------------------------------------------
+   The body carries the design tokens. A container query can style a
+   container's descendants but never the container itself, which is why the
+   tokens live one level in rather than on .kc-stage.
+
+   Every type token is max(floor, relative): a stage can be wide in shape but
+   small in absolute pixels — a phone in landscape, a tablet in portrait — and
+   a purely relative scale would render 9px text there.
+   ------------------------------------------------------------- */
+
+.kc-stage-body {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  /* Wide shape — desktop, projector, tablet landscape. */
+  --kc-tap: 40px;
+  --kc-pad: 2.4cqi;
+  --kc-gap: 1.5cqi;
+  --kc-radius: 1.6cqi;
+  --kc-fs-display: max(28px, 4.6cqi);
+  --kc-fs-title: max(20px, 3cqi);
+  --kc-fs-head: max(16px, 2.1cqi);
+  --kc-fs-body: max(13px, 1.55cqi);
+  --kc-fs-label: max(11px, 1.2cqi);
+}
+
+/* A range track is ~16px tall by default — under WCAG 2.2's 24x24 minimum and
+   not a draggable target with a finger. Give it the shape's full tap height in
+   every shape; the thumb stays centred in the taller box. */
+.kc-stage-body input[type="range"] {
+  min-height: var(--kc-tap);
+}
+
+/* Portrait shape — phone upright, and any fullscreen portrait surface. */
+@container kcstage (aspect-ratio < 0.9) {
+  .kc-stage-body {
+    --kc-tap: 48px;
+    --kc-pad: 4.5cqi;
+    --kc-gap: 3cqi;
+    --kc-radius: 4cqi;
+    --kc-fs-display: max(28px, 8.5cqi);
+    --kc-fs-title: max(20px, 6cqi);
+    --kc-fs-head: max(16px, 4.4cqi);
+    --kc-fs-body: max(13px, 3.5cqi);
+    --kc-fs-label: max(11px, 2.8cqi);
+  }
+}
+
+/* Short shape — phone sideways. Wide enough for side-by-side content but with
+   almost no vertical room, so chrome shrinks and type is driven by height. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .kc-stage-body {
+    --kc-tap: 44px;
+    --kc-pad: 1.6cqi;
+    --kc-gap: 1.1cqi;
+    --kc-radius: 1.4cqi;
+    --kc-fs-display: max(24px, 7cqb);
+    --kc-fs-title: max(18px, 5cqb);
+    --kc-fs-head: max(15px, 3.8cqb);
+    --kc-fs-body: max(12.5px, 3cqb);
+    --kc-fs-label: max(11px, 2.4cqb);
+  }
+}
+
+/* Touch targets are a floor, never a cap: a game may make a control bigger,
+   but nothing inside a stage should be smaller than the current shape's tap
+   size. Applies to controls that opt in with .kc-tap. */
+.kc-stage-body .kc-tap {
+  min-width: var(--kc-tap);
+  min-height: var(--kc-tap);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kc-stage-body *,
+  .kc-stage-body *::before,
+  .kc-stage-body *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

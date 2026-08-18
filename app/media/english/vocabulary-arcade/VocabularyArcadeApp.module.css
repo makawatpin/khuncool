@@ -1,0 +1,214 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces six .kc-vocab-game.kc-stage-N rules in app/globals.css — scale(.94)
+   on the category grid, .76 and .86 on the mode picker, .91 on the play screen
+   — plus the two-column override on the results list. Every one of them was
+   shrinking a screen because something inside it was taller than the board. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+  width: 100%;
+  overflow: auto;
+}
+
+/* The results list is the only screen whose content genuinely has no bound —
+   one row per question. Two columns on a wide board, one upright, and it
+   scrolls inside the screen either way so the replay button stays put. */
+:global(.kc-vocab-result-list) {
+  min-height: 0;
+}
+
+@container kcstage (aspect-ratio >= 0.9) {
+  :global(.kc-vocab-result-list) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.kc-vocab-result-list) > * {
+    min-width: 0;
+  }
+}
+
+/* The play screen's answer buttons.
+   ================================
+   A different problem from the intro screens, and it needs a different answer.
+   An intro can give up its decoration and its blurb because neither is the
+   game. Here the four options ARE the game: a child who cannot see one cannot
+   choose it, and there is nothing in the card that can be deleted instead.
+
+   The card stacks kicker, picture, prompt and options down a single column, so
+   on a shallow board it wanted 303px of the 238px it had and pushed three of
+   the four answers out. Shrinking the picture was the previous attempt here —
+   the rules below still do some of it — but it cannot find 65px without making
+   the picture too small to read, and in a game about matching a picture that
+   is the one thing that must stay legible.
+
+   So the card turns instead. A shallow board is short of height and generous
+   with width — 780x304 — and stacking is what spends the wrong one. Picture on
+   the left, answers in a 2x2 block on the right, and the card needs the taller
+   of the two columns rather than their sum. Nothing is removed and the picture
+   keeps its size. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-vocab-card) > div {
+    display: grid;
+    /* Explicit rows so the options can span the full height with 1 / -1; on a
+       purely implicit grid that line does not resolve and the span collapses
+       to a single row. The count is a ceiling, not a shape — unused rows are
+       min-content and cost nothing. */
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-content: center;
+    column-gap: 14px;
+  }
+
+  :global(.kc-vocab-card) > div > * {
+    min-width: 0;
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div > :global(.kc-vocab-options) {
+    grid-row: 1 / -1;
+    grid-column: 2;
+    align-self: center;
+    /* Two across, two down: the auto-fit track would collapse to a single
+       column in half the width and put the answers back in a tall stack. */
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    margin: 0 !important;
+  }
+
+  :global(.kc-vocab-visual) {
+    width: min(22cqi, 34cqb) !important;
+    height: min(22cqi, 34cqb) !important;
+  }
+
+  :global(.kc-vocab-visual) > span {
+    font-size: min(14cqi, 22cqb) !important;
+  }
+
+  :global(.kc-vocab-card) {
+    padding: 8px 12px !important;
+  }
+
+  /* The inline min-height is 82px and a plain class rule loses to it, so the
+     floor this was meant to set never applied. It is wanted now: with the
+     answers beside the picture the button no longer needs to carry the card's
+     height, and 44px is the shape's tap target. */
+  :global(.kc-vocab-options) button {
+    min-height: var(--kc-tap) !important;
+    padding-block: 4px !important;
+  }
+}
+
+/* Upright the board is tall enough for the picture but narrow, so auto-fit
+   gives the options one column and three rows of them run past the bottom.
+   Two across costs nothing here — the longest word in any category is
+   "triangle ruler" and it wraps to two lines rather than overflowing. */
+@container kcstage (aspect-ratio < 0.9) {
+  :global(.kc-vocab-options) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    min-height: var(--kc-tap) !important;
+    padding-inline: 6px !important;
+  }
+}
+
+/* Spelling Builder and Mixed Challenge answer with letter tiles rather than the
+   option buttons the other two modes use, so the rule above — which moves
+   .kc-vocab-options into the second column — leaves them stacked and they ran
+   364px into a 203px card, hiding all five tiles.
+   
+   Same turn, addressed by what the card does not contain rather than by a new
+   class: the picture and the kicker take the left column, and everything from
+   the answer slots down — slots, tiles, and the undo and hint buttons — goes to
+   the right, so the card needs the taller column instead of the sum. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
+    display: grid;
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-content: center;
+    column-gap: 14px;
+    row-gap: 4px;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > * {
+    min-width: 0;
+    margin-bottom: 0 !important;
+    grid-column: 2;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1),
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    align-self: center;
+  }
+
+  /* Setting only grid-column leaves auto-placement to pick the row, so the two
+     columns end up on different rows and stack exactly as before — 319px of
+     rows for 199px of content. The rows have to be pinned for the columns to
+     sit alongside each other. */
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1) { grid-row: 1; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) { grid-row: 2 / span 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(3) { grid-row: 1 / span 2; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(4) { grid-row: 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(5) { grid-row: 4; }
+}
+
+/* The same turn one shape wider. 960x540 in-page is wide in shape but short
+   in pixels — the case section 5 describes — and the tiles ran past it too.
+/* (original note) Spelling Builder and Mixed Challenge answer with letter tiles rather than the
+   option buttons the other two modes use, so the rule above — which moves
+   .kc-vocab-options into the second column — leaves them stacked and they ran
+   364px into a 203px card, hiding all five tiles.
+   
+   Same turn, addressed by what the card does not contain rather than by a new
+   class: the picture and the kicker take the left column, and everything from
+   the answer slots down — slots, tiles, and the undo and hint buttons — goes to
+   the right, so the card needs the taller column instead of the sum. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
+    display: grid;
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-content: center;
+    column-gap: 14px;
+    row-gap: 4px;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > * {
+    min-width: 0;
+    margin-bottom: 0 !important;
+    grid-column: 2;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1),
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    align-self: center;
+  }
+
+  /* Setting only grid-column leaves auto-placement to pick the row, so the two
+     columns end up on different rows and stack exactly as before — 319px of
+     rows for 199px of content. The rows have to be pinned for the columns to
+     sit alongside each other. */
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1) { grid-row: 1; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) { grid-row: 2 / span 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(3) { grid-row: 1 / span 2; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(4) { grid-row: 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(5) { grid-row: 4; }
+}

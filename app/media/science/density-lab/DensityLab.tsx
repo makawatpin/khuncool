@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./DensityLab.module.css";
 
 type MaterialKey = "wood" | "ice" | "glass" | "aluminum";
@@ -35,7 +35,7 @@ function pickRandomIndices(poolSize: number, count: number): number[] {
 }
 
 export default function DensityLab() {
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [stage, setStage] = useState<Stage>("intro");
   const [materialKey, setMaterialKey] = useState<MaterialKey>("wood");
   const [liquidKey, setLiquidKey] = useState<LiquidKey>("water");
@@ -110,8 +110,8 @@ export default function DensityLab() {
     setLiquidAmount(300 + Math.floor(Math.random() * 7) * 100);
   };
 
-  return <div className={styles.shell}>
-    <div ref={ref} className={`${styles.lab} ${fullscreenClassName}`}>
+  return <div {...stageProps} className={`kc-stage ${styles.shell}`}>
+    <div className={`kc-stage-body ${styles.lab}`}>
       <header className={styles.topbar}>
         <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={42} height={42}/><div><b>Density Lab</b><small>ความหนาแน่น · ม.1</small></div></div>
         <div className={styles.actions}>

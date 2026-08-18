@@ -1,12 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useStage } from "../../_stage/useStage";
 import styles from "./LawDailyEmbed.module.css";
 
+/**
+ * Law Daily runs as a separate document in an iframe, so the stage's container
+ * tokens cannot reach inside it — and do not need to. Within an iframe the
+ * viewport really is the frame, so the embedded game's own vw/vh sizing is
+ * correct there. The stage's job here is the outer half of the contract: it
+ * owns the box and fullscreen, and tells the frame when that changes.
+ */
 export default function LawDailyEmbed() {
-  const shellRef = useRef<HTMLDivElement>(null);
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const [fallbackFull, setFallbackFull] = useState(false);
 
   const publishState = useCallback((active: boolean) => {
     frameRef.current?.contentWindow?.postMessage(
@@ -15,39 +22,9 @@ export default function LawDailyEmbed() {
     );
   }, []);
 
-  const closeFallback = useCallback(() => {
-    setFallbackFull(false);
-    publishState(false);
-  }, [publishState]);
-
-  const toggleFullscreen = useCallback(async () => {
-    const shell = shellRef.current;
-    if (!shell) return;
-
-    if (document.fullscreenElement) {
-      await document.exitFullscreen().catch(() => undefined);
-      closeFallback();
-      return;
-    }
-
-    if (fallbackFull) {
-      closeFallback();
-      return;
-    }
-
-    if (typeof shell.requestFullscreen === "function") {
-      try {
-        await shell.requestFullscreen();
-        publishState(true);
-        return;
-      } catch {
-        // iOS and some in-app browsers expose the API but reject the request.
-      }
-    }
-
-    setFallbackFull(true);
-    publishState(true);
-  }, [closeFallback, fallbackFull, publishState]);
+  useEffect(() => {
+    publishState(isFull);
+  }, [isFull, publishState]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -56,43 +33,26 @@ export default function LawDailyEmbed() {
         event.source !== frameRef.current?.contentWindow ||
         event.data?.type !== "KHUNCOOL_TOGGLE_FULLSCREEN"
       ) return;
-      void toggleFullscreen();
-    };
-    const onFullscreenChange = () => publishState(Boolean(document.fullscreenElement));
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && fallbackFull) closeFallback();
+      void toggle();
     };
     window.addEventListener("message", onMessage);
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("message", onMessage);
-      document.removeEventListener("fullscreenchange", onFullscreenChange);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [closeFallback, fallbackFull, publishState, toggleFullscreen]);
-
-  useEffect(() => {
-    if (!fallbackFull) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [fallbackFull]);
+    return () => window.removeEventListener("message", onMessage);
+  }, [toggle]);
 
   return (
-    <div ref={shellRef} className={`${styles.shell} ${fallbackFull ? styles.fallbackFull : ""}`}>
-      <iframe
-        ref={frameRef}
-        className={styles.frame}
-        src="/games/law-daily/index.html"
-        title="เกมคดีเด็ด เมืองสันติสุข — กฎหมายในชีวิตประจำวัน"
-        loading="eager"
-        allow="fullscreen; autoplay"
-        allowFullScreen
-        scrolling="no"
-      />
+    <div {...stageProps} className={`kc-stage ${styles.shell}`}>
+      <div className={`kc-stage-body ${styles.body}`}>
+        <iframe
+          ref={frameRef}
+          className={styles.frame}
+          src="/games/law-daily/index.html"
+          title="เกมคดีเด็ด เมืองสันติสุข — กฎหมายในชีวิตประจำวัน"
+          loading="eager"
+          allow="fullscreen; autoplay"
+          allowFullScreen
+          scrolling="no"
+        />
+      </div>
     </div>
   );
 }

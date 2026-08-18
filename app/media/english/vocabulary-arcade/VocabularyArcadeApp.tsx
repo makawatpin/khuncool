@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
 import GameBackdrop from "../GameBackdrop";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./VocabularyArcadeApp.module.css";
 
 const LS_KEY = "kc-vocab-v1";
 
@@ -463,7 +464,7 @@ function persist(stars: number, best: Record<string, number>) {
 
 export default function VocabularyArcadeApp() {
   useTrackToolUse("media-english-vocabulary-arcade");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [catI, setCatI] = useState(0);
@@ -759,15 +760,13 @@ export default function VocabularyArcadeApp() {
   const introEmojis = ["🐘", "🍎", "🎒", "🌈", "⚽", "☀️"];
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-vocab-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-vocab-game kc-stage-${stage}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        position: "relative",
-        minHeight: "auto",
+        // position, overflow and height belong to .kc-stage-body.
         borderRadius: 24,
-        overflow: "hidden",
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
       }}
     >
@@ -946,7 +945,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 0: intro */}
       {stage === 0 && (
-        <div className="kc-vocab-intro" style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px clamp(20px,6vh,90px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-vocab-intro`} style={{ position: "relative", maxWidth: 760, margin: "10px auto 0", padding: "0 22px clamp(20px,6cqb,90px)", textAlign: "center" }}>
           <div className="kc-vocab-intro-emojis" style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap", marginBottom: 18 }}>
             {introEmojis.map((ch, i) => (
               <div
@@ -969,7 +968,7 @@ export default function VocabularyArcadeApp() {
               </div>
             ))}
           </div>
-          <h1 style={{ fontWeight: 700, fontSize: "clamp(30px,5.4vw,48px)", margin: "0 0 14px" }}>
+          <h1 style={{ fontWeight: 700, fontSize: "clamp(30px,5.4cqi,48px)", margin: "0 0 14px" }}>
             คลังคำศัพท์
             <span
               style={{
@@ -1010,10 +1009,10 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 1: category picker */}
       {stage === 1 && (
-        <div className="kc-vocab-categories" style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
-          <h2 style={{ fontWeight: 600, fontSize: "clamp(20px,3.4vw,28px)", margin: "0 0 4px" }}>เลือกหมวดคำศัพท์ที่จะเล่น 📚</h2>
+        <div className={`${styles.screen} kc-vocab-categories`} style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "6px 20px clamp(20px,6cqb,100px)", textAlign: "center" }}>
+          <h2 style={{ fontWeight: 600, fontSize: "clamp(20px,3.4cqi,28px)", margin: "0 0 4px" }}>เลือกหมวดคำศัพท์ที่จะเล่น 📚</h2>
           <p style={{ fontSize: 13, color: "#5A6273", margin: "0 0 12px" }}>หมวดละ 20 คำ · แตะการ์ดเพื่อเริ่ม</p>
-          <div className="kc-vocab-category-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(30%,150px),1fr))", gap: "clamp(8px,2vw,14px)" }}>
+          <div className="kc-vocab-category-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(30%,150px),1fr))", gap: "clamp(8px,2cqi,14px)" }}>
             {hydrated &&
               CATS.map((c, i) => {
                 const bestScore = best[c.key] || 0;
@@ -1034,8 +1033,8 @@ export default function VocabularyArcadeApp() {
                       gap: 8,
                       background: c.bg,
                       border: `2px solid ${c.bd}`,
-                      borderRadius: "clamp(14px,4vw,24px)",
-                      padding: "clamp(10px,3vw,22px) clamp(6px,2vw,12px)",
+                      borderRadius: "clamp(14px,4cqi,24px)",
+                      padding: "clamp(10px,3cqi,22px) clamp(6px,2cqi,12px)",
                       position: "relative",
                       overflow: "hidden",
                       cursor: "pointer",
@@ -1055,16 +1054,16 @@ export default function VocabularyArcadeApp() {
                         opacity: 0.55,
                       }}
                     />
-                    {done && <span style={{ position: "absolute", top: 6, right: 8, fontSize: "clamp(13px,3vw,17px)" }}>✅</span>}
-                    <div style={{ fontSize: "clamp(26px,7vw,44px)", position: "relative", animation: `floatY 3.2s ease-in-out infinite ${(i * 0.05).toFixed(2)}s` }}>
+                    {done && <span style={{ position: "absolute", top: 6, right: 8, fontSize: "clamp(13px,3cqi,17px)" }}>✅</span>}
+                    <div style={{ fontSize: "clamp(26px,7cqi,44px)", position: "relative", animation: `floatY 3.2s ease-in-out infinite ${(i * 0.05).toFixed(2)}s` }}>
                       {c.emoji}
                     </div>
-                    <div style={{ fontWeight: 600, fontSize: "clamp(12px,3vw,16px)", position: "relative" }}>{c.en}</div>
-                    <div style={{ fontSize: "clamp(10px,2.4vw,12.5px)", color: "#6C7484", position: "relative" }}>{c.th}</div>
+                    <div style={{ fontWeight: 600, fontSize: "clamp(12px,3cqi,16px)", position: "relative" }}>{c.en}</div>
+                    <div style={{ fontSize: "max(11px,2.4cqi)", color: "#6C7484", position: "relative" }}>{c.th}</div>
                     {bestScore > 0 && (
                       <div
                         style={{
-                          fontSize: "clamp(9px,2.2vw,11px)",
+                          fontSize: "max(11px,2.2cqi)",
                           fontWeight: 600,
                           color: "#0A9380",
                           background: "#D0FBEF",
@@ -1085,7 +1084,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 2: mode + difficulty picker */}
       {stage === 2 && (
-        <div className="kc-vocab-modes" style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-vocab-modes`} style={{ position: "relative", maxWidth: 880, margin: "0 auto", padding: "6px 20px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1135,7 +1134,7 @@ export default function VocabularyArcadeApp() {
               );
             })}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,210px),1fr))", gap: "clamp(10px,3vw,16px)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,210px),1fr))", gap: "clamp(10px,3cqi,16px)" }}>
             {MODES.map((m, i) => (
               <button
                 key={m.key}
@@ -1151,8 +1150,8 @@ export default function VocabularyArcadeApp() {
                   gap: 9,
                   background: m.bg,
                   border: `2px solid ${m.bd}`,
-                  borderRadius: "clamp(16px,4vw,24px)",
-                  padding: "clamp(14px,4vw,26px) clamp(8px,3vw,16px)",
+                  borderRadius: "clamp(16px,4cqi,24px)",
+                  padding: "clamp(14px,4cqi,26px) clamp(8px,3cqi,16px)",
                   position: "relative",
                   overflow: "hidden",
                   cursor: "pointer",
@@ -1172,11 +1171,11 @@ export default function VocabularyArcadeApp() {
                     opacity: 0.5,
                   }}
                 />
-                <div style={{ fontSize: "clamp(30px,7vw,42px)", position: "relative", animation: `floatY 3s ease-in-out infinite ${(i * 0.06).toFixed(2)}s` }}>
+                <div style={{ fontSize: "clamp(30px,7cqi,42px)", position: "relative", animation: `floatY 3s ease-in-out infinite ${(i * 0.06).toFixed(2)}s` }}>
                   {m.emoji}
                 </div>
-                <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,17px)", position: "relative" }}>{m.label}</div>
-                <div style={{ fontSize: "clamp(11px,2.8vw,12.5px)", color: "#6C7484", lineHeight: 1.4, position: "relative" }}>{m.desc}</div>
+                <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6cqi,17px)", position: "relative" }}>{m.label}</div>
+                <div style={{ fontSize: "clamp(11px,2.8cqi,12.5px)", color: "#6C7484", lineHeight: 1.4, position: "relative" }}>{m.desc}</div>
               </button>
             ))}
           </div>
@@ -1185,7 +1184,7 @@ export default function VocabularyArcadeApp() {
 
       {/* stage 3: play */}
       {stage === 3 && q && qMode && (
-        <div className="kc-vocab-play" style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px clamp(20px,6vh,110px)" }}>
+        <div className={`${styles.screen} kc-vocab-play`} style={{ position: "relative", maxWidth: 940, margin: "0 auto", padding: "4px 16px clamp(20px,6cqb,110px)" }}>
           <div className="kc-vocab-progress" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, flexWrap: "wrap" }}>
             <div
               style={{
@@ -1233,7 +1232,7 @@ export default function VocabularyArcadeApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 30,
-              padding: "clamp(18px,3vw,34px) clamp(14px,3vw,30px)",
+              padding: "clamp(18px,3cqi,34px) clamp(14px,3cqi,30px)",
               overflow: "hidden",
               animation:
                 locked && last && !last.ok ? "shake .45s ease" : "bounceIn .35s ease",
@@ -1252,8 +1251,8 @@ export default function VocabularyArcadeApp() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "clamp(120px,22vw,168px)",
-                    height: "clamp(120px,22vw,168px)",
+                    width: "clamp(120px,22cqi,168px)",
+                    height: "clamp(120px,22cqi,168px)",
                     borderRadius: 40,
                     background: cat.bg,
                     border: `3px solid ${cat.bd}`,
@@ -1262,7 +1261,7 @@ export default function VocabularyArcadeApp() {
                 >
                   <span
                     style={{
-                      fontSize: "clamp(62px,12vw,92px)",
+                      fontSize: "clamp(62px,12cqi,92px)",
                       lineHeight: 1,
                       animation: "floatY 3.4s ease-in-out infinite",
                     }}
@@ -1285,7 +1284,7 @@ export default function VocabularyArcadeApp() {
                     marginBottom: 18,
                   }}
                 >
-                  <span style={{ fontWeight: 700, fontSize: "clamp(34px,7vw,54px)" }}>{q.w[0]}</span>
+                  <span style={{ fontWeight: 700, fontSize: "clamp(34px,7cqi,54px)" }}>{q.w[0]}</span>
                   <button
                     type="button"
                     onClick={() => speakEnglish(q.w[0])}
@@ -1339,8 +1338,8 @@ export default function VocabularyArcadeApp() {
                         <div
                           key={i}
                           style={{
-                            width: "clamp(38px,7vw,54px)",
-                            height: "clamp(48px,8.4vw,64px)",
+                            width: "clamp(38px,7cqi,54px)",
+                            height: "clamp(48px,8.4cqi,64px)",
                             borderRadius: 14,
                             border: `2.5px dashed ${bd}`,
                             background: bg,
@@ -1348,7 +1347,7 @@ export default function VocabularyArcadeApp() {
                             alignItems: "center",
                             justifyContent: "center",
                             fontWeight: 700,
-                            fontSize: "clamp(22px,4vw,30px)",
+                            fontSize: "clamp(22px,4cqi,30px)",
                             color: fg,
                           }}
                         >
@@ -1366,14 +1365,14 @@ export default function VocabularyArcadeApp() {
                           if (!t.used) tapTile(i);
                         }}
                         style={{
-                          width: "clamp(46px,8vw,58px)",
-                          height: "clamp(46px,8vw,58px)",
+                          width: "clamp(46px,8cqi,58px)",
+                          height: "clamp(46px,8cqi,58px)",
                           borderRadius: 16,
                           border: `2px solid ${t.used ? "#EDEFF3" : "#C6C9FB"}`,
                           background: t.used ? "#F1F3F7" : "#fff",
                           color: t.used ? "#C9CFDA" : "#3F41C9",
                           fontWeight: 700,
-                          fontSize: "clamp(20px,3.6vw,26px)",
+                          fontSize: "clamp(20px,3.6cqi,26px)",
                           cursor: t.used ? "default" : "pointer",
                           opacity: t.used ? 0.45 : 1,
                           animation: `tilePop .3s ease ${(i * 0.04).toFixed(2)}s both`,
@@ -1483,9 +1482,9 @@ export default function VocabularyArcadeApp() {
                         }}
                       >
                         {qMode === "word" && (
-                          <span style={{ fontSize: "clamp(44px,8vw,62px)", lineHeight: 1 }}>{o[1]}</span>
+                          <span style={{ fontSize: "clamp(44px,8cqi,62px)", lineHeight: 1 }}>{o[1]}</span>
                         )}
-                        <span style={{ fontWeight: 600, fontSize: "clamp(17px,2.6vw,22px)" }}>
+                        <span style={{ fontWeight: 600, fontSize: "clamp(17px,2.6cqi,22px)" }}>
                           {qMode === "word" ? "" : o[0]}
                         </span>
                         <span style={{ fontSize: 12, color: "#7C8494" }}>{locked && isRight ? o[2] : ""}</span>
@@ -1538,9 +1537,9 @@ export default function VocabularyArcadeApp() {
             op: (pct >= 0.4 && i === 0) || (pct >= 0.7 && i === 1) || (pct >= 0.95 && i === 2) ? 1 : 0.22,
           }));
           return (
-            <div className="kc-vocab-result" style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px clamp(20px,6vh,110px)", textAlign: "center" }}>
+            <div className={`${styles.screen} kc-vocab-result`} style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "6px 20px clamp(20px,6cqb,110px)", textAlign: "center" }}>
               <div style={{ fontSize: 74 }}>{resultEmoji}</div>
-              <h2 style={{ fontWeight: 700, fontSize: "clamp(26px,4.6vw,36px)", margin: "6px 0 6px" }}>{resultTitle}</h2>
+              <h2 style={{ fontWeight: 700, fontSize: "clamp(26px,4.6cqi,36px)", margin: "6px 0 6px" }}>{resultTitle}</h2>
               <p style={{ fontSize: 16, color: "#5A6273", margin: "0 0 18px" }}>
                 ตอบถูก {correct} จาก {rTotal} ข้อ · ได้ ⭐ {earned} ดวง
               </p>
@@ -1652,6 +1651,7 @@ export default function VocabularyArcadeApp() {
             </div>
           );
         })()}
+    </div>
     </div>
   );
 }

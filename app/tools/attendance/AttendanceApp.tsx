@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 import {
   ATTENDANCE_STATUS_DEFS,
   printAttendance,
@@ -362,15 +363,7 @@ export default function AttendanceApp() {
     setShowExport(false);
   }, [room, students, statuses]);
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   const total = students.length;
   const checked = statuses.filter((x) => x !== null).length;
@@ -397,7 +390,7 @@ export default function AttendanceApp() {
         };
 
   return (
-    <div ref={frameRef} className="tool-stage bg-white">
+    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
       <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
@@ -770,7 +763,10 @@ export default function AttendanceApp() {
                   <span className="w-[22px] flex-none font-mono text-[11px] text-[#A9B0BE] md:w-[26px] md:text-xs">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-medium md:text-[14.5px]">
+                  {/* The name wraps instead of truncating below md: the status
+                      buttons take the width they need for a 44px touch target,
+                      and a clipped student name would defeat the point. */}
+                  <span className="min-w-0 flex-1 break-words text-[13px] font-medium md:overflow-hidden md:text-ellipsis md:whitespace-nowrap md:text-[14.5px]">
                     {name}
                   </span>
                   <div className="flex flex-none gap-1 md:gap-1.5">
@@ -780,7 +776,7 @@ export default function AttendanceApp() {
                         type="button"
                         onClick={() => setStatus(i, d.key)}
                         style={btnStyle(statuses[i] === d.key, STATUS_COLORS[d.key])}
-                        className="rounded-[9px] border px-[7px] py-[7px] text-[11.5px] font-semibold md:px-2.5 md:py-2 md:text-[12.5px]"
+                        className="min-h-[44px] min-w-[44px] rounded-[9px] border px-[7px] py-[7px] text-[11.5px] font-semibold md:min-h-0 md:min-w-0 md:px-2.5 md:py-2 md:text-[12.5px]"
                       >
                         {d.label}
                       </button>
@@ -791,7 +787,7 @@ export default function AttendanceApp() {
                       type="button"
                       onClick={() => removeStudent(i)}
                       aria-label={`ลบ ${name}`}
-                      className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9]"
+                      className="flex h-11 w-11 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9] md:h-7 md:w-7"
                     >
                       ✕
                     </button>

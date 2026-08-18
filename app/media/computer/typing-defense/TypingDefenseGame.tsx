@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { hoverSfxDelegate, KcSfx } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./TypingDefenseGame.module.css";
 
 type Stage = "home" | "select" | "levelIntro" | "countdown" | "play" | "result";
@@ -30,7 +30,7 @@ const ZONE_NAMES = ["Neon Gateway", "Solar Firewall", "Quantum Vault", "Cyber Oc
 
 export default function TypingDefenseGame() {
   useTrackToolUse("computer-typing-defense");
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [stage, setStage] = useState<Stage>("home");
   const [threats, setThreats] = useState<Threat[]>([]);
   const [blasts, setBlasts] = useState<Blast[]>([]);
@@ -172,7 +172,7 @@ export default function TypingDefenseGame() {
   const accuracy = useMemo(() => attempts ? Math.round((correctAnswers / attempts) * 100) : 0, [attempts, correctAnswers]);
   const wave = Math.min(5, Math.floor((roundSeconds - remaining) / 12) + 1);
 
-  return <div ref={ref} className={`kc-game kc-computer-game ${styles.shell} ${fullscreenClassName}`} data-stage={stage} data-theme={theme} onMouseOver={hoverSfxDelegate} onClick={() => stage === "play" && focusInput()}>
+  return <div {...stageProps} className="kc-stage"><div className={`kc-stage-body kc-game kc-computer-game ${styles.shell}`} data-stage={stage} data-theme={theme} onMouseOver={hoverSfxDelegate} onClick={() => stage === "play" && focusInput()}>
     <div className={styles.gridGlow}/><div className={styles.aurora}/><div className={styles.scanline}/>
     <div className="matrixBackdrop" aria-hidden="true">{Array.from({ length: 32 }, (_, index) => <i key={index} style={{ "--matrix-x": `${1.5 + index * 3.12}%`, "--matrix-delay": `${-(index % 11) * 1.12}s`, "--matrix-speed": `${7 + (index % 7) * 1.15}s`, "--matrix-opacity": `${.15 + (index % 5) * .025}`, "--matrix-scale": `${.82 + (index % 4) * .1}` } as React.CSSProperties}>{index % 4 === 0 ? "01 CODE 10 DATA 01 CPU 101" : index % 4 === 1 ? "SYSTEM 0110 CORE 001 RAM" : index % 4 === 2 ? "101 VIRUS 001 FIREWALL 10" : "ROUTER 01 CYBER 1101 KEY"}</i>)}</div>
     <style jsx>{`
@@ -184,38 +184,38 @@ export default function TypingDefenseGame() {
       .coreEmoji{font-size:27px!important;filter:drop-shadow(0 5px 6px rgba(0,0,0,.42)) drop-shadow(0 0 8px rgba(103,255,233,.5))}
       .keyboardEmoji{font-size:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 4px 10px rgba(0,0,0,.2)}
       .dataRain{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-      .dataDrop{position:absolute;top:-8%;left:var(--drop-x);color:#8effec;font-family:var(--font-fredoka),monospace;font-size:clamp(11px,1.3vw,17px);font-weight:800;text-shadow:0 0 8px #4effe5,0 0 18px rgba(62,234,255,.8);opacity:0;animation:dataFall var(--drop-duration) var(--drop-delay) cubic-bezier(.16,.64,.44,1) forwards}
+      .dataDrop{position:absolute;top:-8%;left:var(--drop-x);color:#8effec;font-family:var(--font-fredoka),monospace;font-size:max(11px,1.3cqi);font-weight:800;text-shadow:0 0 8px #4effe5,0 0 18px rgba(62,234,255,.8);opacity:0;animation:dataFall var(--drop-duration) var(--drop-delay) cubic-bezier(.16,.64,.44,1) forwards}
       .matrixBackdrop{position:absolute;inset:64px 0 0;z-index:0;overflow:hidden;pointer-events:none;opacity:.92;mask-image:linear-gradient(to bottom,transparent 0,#000 10%,#000 82%,transparent 100%)}
       .matrixBackdrop:after{position:absolute;inset:0;content:"";background:radial-gradient(circle at 50% 45%,transparent 0 30%,rgba(5,11,29,.3) 72%,rgba(5,11,29,.62) 100%)}
-      .matrixBackdrop i{position:absolute;top:-72%;left:var(--matrix-x);width:10px;color:#77ffe8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;font-style:normal;font-weight:700;line-height:1.5;letter-spacing:2px;overflow-wrap:anywhere;text-align:center;text-shadow:0 0 7px rgba(83,255,219,.9),0 0 16px rgba(48,210,255,.38);opacity:var(--matrix-opacity);transform:scale(var(--matrix-scale));animation:matrixFall var(--matrix-speed) var(--matrix-delay) linear infinite}
+      .matrixBackdrop i{position:absolute;top:-72%;left:var(--matrix-x);width:10px;color:#77ffe8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;font-style:normal;font-weight:700;line-height:1.5;letter-spacing:2px;overflow-wrap:anywhere;text-align:center;text-shadow:0 0 7px rgba(83,255,219,.9),0 0 16px rgba(48,210,255,.38);opacity:var(--matrix-opacity);transform:scale(var(--matrix-scale));animation:matrixFall var(--matrix-speed) var(--matrix-delay) linear infinite}
       @keyframes virusBob{50%{transform:translateY(-2px) rotate(7deg) scale(1.08)}}
       @keyframes dataFall{0%{opacity:0;transform:translate3d(0,-10px,0) scale(1.35) rotate(0)}15%{opacity:.95}70%{opacity:.72}100%{opacity:0;transform:translate3d(var(--drop-drift),72vh,0) scale(.45) rotate(220deg)}}
       @keyframes matrixFall{to{transform:translateY(570%) scale(var(--matrix-scale))}}
-      @media(min-width:768px){
+      @container kcstage (aspect-ratio >= 0.9){
         .${styles.brand} b{font-size:19px}.${styles.brand} small{font-size:11px}
         .${styles.hubMenu}{height:42px;padding:0 14px}.${styles.hubMenu} b{font-size:14px}.${styles.iconButton}{width:42px;height:42px;font-size:20px}
         .${styles.features} span{padding:7px 13px!important;font-size:13px!important}.featureEmoji{font-size:18px}
         .${styles.startButton}{min-width:280px!important;min-height:50px;padding:12px 19px 12px 25px!important;font-size:19px!important}.${styles.startButton} b{width:30px;height:30px;font-size:20px}
         .${styles.modePicker} button{min-width:245px!important;min-height:78px;padding:13px 17px!important}.${styles.modePicker} button b{font-size:17px!important}.${styles.modePicker} button small{font-size:13px!important}.modeEmoji{width:46px;height:46px;font-size:27px!important}
         .${styles.speedPicker} button,.${styles.stagePill}{padding:8px 15px!important;font-size:14px!important}
-        .${styles.hud}{grid-template-columns:130px 126px 1fr 165px;gap:10px}.${styles.hud}>div{min-height:57px;padding:8px 12px}.${styles.hud} small{font-size:10px}.${styles.hud} b{font-size:20px}
-        .${styles.message}{top:12px;font-size:13px}.${styles.threat}{min-width:94px;padding:7px 10px;border-radius:12px}.${styles.threat} b{font-size:clamp(15px,1.65vw,21px)}.${styles.threat} small{font-size:10px}.virusEmoji{font-size:23px!important}
-        .${styles.base}{width:150px;height:84px}.${styles.base} b{font-size:13px}.${styles.base} small{font-size:9px}.coreEmoji{font-size:32px!important}
+        .${styles.hud}{grid-template-columns:130px 126px 1fr 165px;gap:10px}.${styles.hud}>div{min-height:57px;padding:8px 12px}.${styles.hud} small{font-size:11px}.${styles.hud} b{font-size:20px}
+        .${styles.message}{top:12px;font-size:13px}.${styles.threat}{min-width:94px;padding:7px 10px;border-radius:12px}.${styles.threat} b{font-size:max(15px,1.65cqi)}.${styles.threat} small{font-size:11px}.virusEmoji{font-size:23px!important}
+        .${styles.base}{width:150px;height:84px}.${styles.base} b{font-size:13px}.${styles.base} small{font-size:11px}.coreEmoji{font-size:32px!important}
         .${styles.commandBar}{padding:9px 11px}.${styles.commandBar}>span{width:39px;height:39px}.keyboardEmoji{font-size:22px}.${styles.commandBar} input{font-size:19px}.${styles.commandBar} input::placeholder{font-size:14px}.${styles.commandBar} button{min-width:90px;padding:11px 14px;font-size:14px}
         .${styles.resultStats} div{min-width:125px;padding:12px}.${styles.resultStats} span{font-size:11px}.${styles.resultStats} b{font-size:20px}
       }
-      @media(max-width:767px){
+      @container kcstage (aspect-ratio < 0.9){
         .modeEmoji{width:35px;height:35px;border-radius:11px;font-size:21px!important}.featureEmoji{font-size:14px}.virusEmoji{font-size:18px!important}.coreEmoji{font-size:25px!important}.matrixBackdrop{inset:54px 0 0;opacity:.7}.matrixBackdrop i:nth-child(3n){display:none}
-        .${styles.brand} b{font-size:15px}.${styles.brand} small{font-size:9px}.${styles.iconButton}{font-size:19px}
-        .${styles.features} span{padding:5px 7px!important;font-size:9px!important}
+        .${styles.brand} b{font-size:15px}.${styles.brand} small{font-size:11px}.${styles.iconButton}{font-size:19px}
+        .${styles.features} span{padding:5px 7px!important;font-size:11px!important}
         .${styles.startButton}{min-width:225px;min-height:45px;padding:10px 15px 10px 19px;font-size:16px}.${styles.startButton} b{width:27px;height:27px;font-size:18px}
-        .${styles.modePicker} button{min-width:118px;min-height:55px;padding:6px}.${styles.modePicker} button b{font-size:12px}.${styles.modePicker} button small{font-size:9px}
-        .${styles.speedPicker} button,.${styles.stagePill}{padding:5px 9px;font-size:10px}
-        .${styles.hud}>div{min-height:44px;padding:5px 8px}.${styles.hud} small{font-size:9px}.${styles.hud} b{font-size:15px}
-        .${styles.message}{font-size:9px}.${styles.threat}{min-width:68px;padding:5px 6px}.${styles.threat} b{font-size:12px}.${styles.threat} small{font-size:7px}
-        .${styles.base} b{font-size:11px}.${styles.base} small{font-size:8px}
+        .${styles.modePicker} button{min-width:118px;min-height:55px;padding:6px}.${styles.modePicker} button b{font-size:12px}.${styles.modePicker} button small{font-size:11px}
+        .${styles.speedPicker} button,.${styles.stagePill}{padding:5px 9px;font-size:11px}
+        .${styles.hud}>div{min-height:44px;padding:5px 8px}.${styles.hud} small{font-size:11px}.${styles.hud} b{font-size:15px}
+        .${styles.message}{font-size:11px}.${styles.threat}{min-width:68px;padding:5px 6px}.${styles.threat} b{font-size:12px}.${styles.threat} small{font-size:11px}
+        .${styles.base} b{font-size:11px}.${styles.base} small{font-size:11px}
         .${styles.commandBar}>span{width:32px;height:32px}.keyboardEmoji{font-size:19px}.${styles.commandBar} input{font-size:15px}.${styles.commandBar} input::placeholder{font-size:11px}.${styles.commandBar} button{min-width:58px;padding:9px;font-size:12px}
-        .${styles.resultStats} div{min-width:88px;padding:8px 5px}.${styles.resultStats} span{font-size:8px}.${styles.resultStats} b{font-size:15px}
+        .${styles.resultStats} div{min-width:88px;padding:8px 5px}.${styles.resultStats} span{font-size:11px}.${styles.resultStats} b{font-size:15px}
       }
       @media(prefers-reduced-motion:reduce){.virusEmoji{animation:none}.dataDrop{animation-duration:.01ms}.matrixBackdrop i{animation:none;transform:translateY(55%)}}
     `}</style>
@@ -276,5 +276,5 @@ export default function TypingDefenseGame() {
       <div className={styles.resultStats}><div><span>คะแนนรวม</span><b>{score.toLocaleString()}</b></div><div><span>คอมโบสูงสุด</span><b>🔥 {bestCombo}</b></div><div><span>ความแม่นยำ</span><b>{accuracy}%</b></div></div>
       <button className={styles.startButton} type="button" onClick={() => { if (mode === "adventure" && integrity > 0 && adventureLevel < MAX_ADVENTURE_LEVEL) { setAdventureLevel((value) => value + 1); setStage("levelIntro"); } else if (mode === "adventure" && integrity > 0) { setAdventureLevel(1); setStage("select"); } else start(); }}><span>{mode === "adventure" && integrity > 0 ? (adventureLevel < MAX_ADVENTURE_LEVEL ? "ไปด่านต่อไป" : "เริ่มภารกิจใหม่") : "เล่นอีกครั้ง"}</span><b aria-hidden="true">{mode === "adventure" && integrity > 0 ? "🚀" : "↻"}</b></button>
     </section>}
-  </div>;
+  </div></div>;
 }

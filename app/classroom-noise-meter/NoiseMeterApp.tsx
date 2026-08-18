@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 
 const LS_KEY = "khuncool.noisemeter";
 
@@ -288,15 +289,7 @@ export default function NoiseMeterApp() {
     [persist],
   );
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   useEffect(() => {
     return () => {
@@ -334,7 +327,7 @@ export default function NoiseMeterApp() {
     }`;
 
   return (
-    <div ref={frameRef} className="tool-stage bg-white">
+    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
       {phase === "idle" && (
         <div className="rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]">
           <div className="mx-auto mb-[13px] flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1E3FD] text-[28px] md:mb-4 md:h-[70px] md:w-[70px] md:rounded-[20px] md:text-[34px]">

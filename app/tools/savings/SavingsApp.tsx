@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
+import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
 
 const LS_KEY = "khuncool_savings_v1";
@@ -560,15 +561,7 @@ export default function SavingsApp() {
     setShowExport(false);
   }, [room, students, balances]);
 
-  const toggleFull = useCallback(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    if (document.fullscreenElement) {
-      if (document.exitFullscreen) document.exitFullscreen();
-    } else if (el.requestFullscreen) {
-      el.requestFullscreen().catch(() => {});
-    }
-  }, []);
+  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   const total = students.length;
   const totalBal = balances.reduce((a, b) => a + (b || 0), 0);
@@ -609,7 +602,7 @@ export default function SavingsApp() {
   );
 
   return (
-    <div ref={frameRef} className="tool-stage bg-white">
+    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
       <SyncStatus status={cloudStatus} />
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
@@ -1166,19 +1159,19 @@ export default function SavingsApp() {
                       }}
                       inputMode="numeric"
                       placeholder="บาท"
-                      className="min-w-0 flex-1 rounded-[9px] border-[1.5px] border-[#E5E8EE] bg-surface-light px-2.5 py-2 text-[13px] outline-none focus:border-[#C2500B] focus:bg-white md:w-[78px] md:flex-none md:text-[13.5px]"
+                      className="min-h-[44px] min-w-0 flex-1 rounded-[9px] border-[1.5px] border-[#E5E8EE] bg-surface-light px-2.5 py-2 text-[13px] outline-none focus:border-[#C2500B] focus:bg-white md:min-h-0 md:w-[78px] md:flex-none md:text-[13.5px]"
                     />
                     <button
                       type="button"
                       onClick={() => deposit(i)}
-                      className="flex-none rounded-[9px] bg-[#0A9380] px-3 py-2 text-[12.5px] font-bold text-white hover:brightness-105 md:px-3.5 md:text-[13px]"
+                      className="min-h-[44px] min-w-[44px] flex-none rounded-[9px] bg-[#0A9380] px-3 py-2 text-[12.5px] font-bold text-white hover:brightness-105 md:min-h-0 md:min-w-0 md:px-3.5 md:text-[13px]"
                     >
                       ฝาก
                     </button>
                     <button
                       type="button"
                       onClick={() => withdraw(i)}
-                      className="flex-none rounded-[9px] border border-[#F1C0C0] bg-white px-2.5 py-2 text-[12.5px] font-semibold text-[#DC2626] hover:bg-[#FEF4F4] md:px-3 md:text-[13px]"
+                      className="min-h-[44px] min-w-[44px] flex-none rounded-[9px] border border-[#F1C0C0] bg-white px-2.5 py-2 text-[12.5px] font-semibold text-[#DC2626] hover:bg-[#FEF4F4] md:min-h-0 md:min-w-0 md:px-3 md:text-[13px]"
                     >
                       ถอน
                     </button>
@@ -1187,7 +1180,7 @@ export default function SavingsApp() {
                         type="button"
                         onClick={() => removeStudent(i)}
                         aria-label={`ลบ ${name}`}
-                        className="flex h-8 w-8 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9]"
+                        className="flex h-11 w-11 flex-none items-center justify-center rounded-full border border-[#F1C0C0] bg-[#FEF4F4] text-sm font-bold text-[#DC2626] hover:bg-[#FCE9E9] md:h-8 md:w-8"
                       >
                         ✕
                       </button>

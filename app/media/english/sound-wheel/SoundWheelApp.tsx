@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./SoundWheelApp.module.css";
 
 type WordEntry = [string, string, string];
 
@@ -186,7 +187,7 @@ function makeWheel(setKey: SetKey, size: number): WheelItem[] {
 
 export default function SoundWheelApp() {
   useTrackToolUse("media-english-sound-wheel");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1>(0);
   const [setKey, setSetKey] = useState<SetKey>("letters");
@@ -502,14 +503,13 @@ export default function SoundWheelApp() {
   const fire = streak >= 3 ? "🔥" : "";
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-sound-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-sound-game kc-stage-${stage}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        position: "relative",
+        // position and overflow belong to .kc-stage-body.
         borderRadius: 24,
-        overflow: "hidden",
         background:
           "linear-gradient(170deg,#FFF3E2 0%,#EFF0FE 48%,#E6FBF6 100%)",
       }}
@@ -827,19 +827,20 @@ export default function SoundWheelApp() {
 
       {stage === 0 && (
         <div
-          className="kc-sound-intro"
+          className={`${styles.screen} ${styles.intro}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 720,
             margin: "4px auto 0",
-            padding: "0 20px clamp(16px,4vh,70px)",
+            padding: "0 20px clamp(10px,3cqb,40px)",
             textAlign: "center",
           }}
         >
           <div
             style={{
-              fontSize: "clamp(30px,7vw,56px)",
+              fontSize: "clamp(30px,7cqi,56px)",
               lineHeight: 1,
               marginBottom: 4,
               animation: "wiggle 2.6s ease-in-out infinite",
@@ -851,7 +852,7 @@ export default function SoundWheelApp() {
             style={{
               fontFamily: "var(--font-fredoka)",
               fontWeight: 700,
-              fontSize: "clamp(20px,6.4vw,50px)",
+              fontSize: "clamp(20px,6.4cqi,50px)",
               margin: "0 0 4px",
               letterSpacing: "-.02em",
             }}
@@ -870,7 +871,7 @@ export default function SoundWheelApp() {
           </h1>
           <p
             style={{
-              fontSize: "clamp(12px,3.6vw,17px)",
+              fontSize: "clamp(12px,3.6cqi,17px)",
               lineHeight: 1.4,
               color: "#5A6273",
               margin: "0 0 10px",
@@ -1034,7 +1035,7 @@ export default function SoundWheelApp() {
             style={{
               fontFamily: "var(--font-fredoka)",
               fontWeight: 600,
-              fontSize: "clamp(15px,4.6vw,20px)",
+              fontSize: "clamp(15px,4.6cqi,20px)",
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               border: "none",
@@ -1053,17 +1054,14 @@ export default function SoundWheelApp() {
 
       {stage === 1 && (
         <div
-          className="kc-sound-play"
+          className={`${styles.screen} ${styles.play}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             margin: "0 auto",
-            padding: "6px 16px clamp(10px,3vh,60px)",
-            display: "flex",
-            flexWrap: "wrap",
+            padding: "6px 16px clamp(8px,2cqb,36px)",
             gap: 8,
-            alignItems: "flex-start",
-            justifyContent: "center",
           }}
         >
           <div
@@ -1106,9 +1104,8 @@ export default function SoundWheelApp() {
                 width={680}
                 height={680}
                 onClick={spin}
+                className={styles.wheel}
                 style={{
-                  width: "min(46vw,430px)",
-                  height: "min(46vw,430px)",
                   display: "block",
                   cursor: "pointer",
                   position: "relative",
@@ -1124,7 +1121,7 @@ export default function SoundWheelApp() {
               disabled={spinning}
               style={{
                 marginTop: 6,
-                width: "min(46vw,430px)",
+                width: "min(46cqi,430px)",
                 fontFamily: "var(--font-fredoka)",
                 fontWeight: 600,
                 fontSize: 19,
@@ -1228,7 +1225,7 @@ export default function SoundWheelApp() {
                   background: "#fff",
                   border: `2px solid ${result.color}`,
                   borderRadius: 26,
-                  padding: "clamp(12px,3vh,22px) 18px",
+                  padding: "clamp(12px,3cqb,22px) 18px",
                   textAlign: "center",
                   boxShadow: "0 24px 46px -30px rgba(26,29,38,.7)",
                   animation: cardAnim,
@@ -1371,14 +1368,14 @@ export default function SoundWheelApp() {
                   background: "rgba(255,255,255,.72)",
                   border: "2px dashed #C9CFE0",
                   borderRadius: 26,
-                  padding: "clamp(14px,3vh,30px) 20px",
+                  padding: "clamp(14px,3cqb,30px) 20px",
                   textAlign: "center",
                   animation: "bobIn .4s ease-out",
                 }}
               >
                 <div
                   style={{
-                    fontSize: "clamp(24px,5vh,40px)",
+                    fontSize: "clamp(24px,5cqb,40px)",
                     marginBottom: 4,
                     animation: "floatY 3s ease-in-out infinite",
                   }}
@@ -1468,9 +1465,19 @@ export default function SoundWheelApp() {
                   borderTop: "1px solid #E5E8EE",
                 }}
               >
-                <span
+                {/* Buttons, not spans with onClick. As spans these were
+                    unreachable by Tab and announced as plain text rather than
+                    as controls, and no audit check could see them either —
+                    every one of them starts from button/a/[role=button]. */}
+                <button
+                  type="button"
                   onClick={newRound}
+                  className="kc-tap"
                   style={{
+                    padding: 0,
+                    border: "none",
+                    background: "none",
+                    font: "inherit",
                     fontSize: 13,
                     fontWeight: 600,
                     color: "#5C5EE6",
@@ -1478,10 +1485,16 @@ export default function SoundWheelApp() {
                   }}
                 >
                   🔀 สลับช่องใหม่
-                </span>
-                <span
+                </button>
+                <button
+                  type="button"
                   onClick={backHome}
+                  className="kc-tap"
                   style={{
+                    padding: 0,
+                    border: "none",
+                    background: "none",
+                    font: "inherit",
                     fontSize: 13,
                     fontWeight: 600,
                     color: "#5A6273",
@@ -1489,12 +1502,13 @@ export default function SoundWheelApp() {
                   }}
                 >
                   ⚙️ เปลี่ยนชุดเสียง
-                </span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

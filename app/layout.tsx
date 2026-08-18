@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Sarabun, Anuphan, Fredoka, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -32,6 +32,18 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
 });
+
+/* Games and tools go fullscreen on phones and tablets. `viewport-fit: cover`
+   makes env(safe-area-inset-*) meaningful so those surfaces can keep clear of
+   the notch and home indicator, and `interactiveWidget` keeps the on-screen
+   keyboard from shrinking the layout viewport out from under a 100dvh stage
+   (the typing games open a keyboard while playing). */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-visual",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.khuncool.com"),

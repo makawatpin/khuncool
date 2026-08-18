@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, hoverSfxDelegate } from "@/lib/kcSfx";
 import KcFace from "../KcFace";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./PhonicsBingoApp.module.css";
 
 const INTRO_CAST = [
   { skin: "#F6D3B3", hair: "#3B2A22", shirt: "#5C5EE6", glasses: true, capColor: "#FFD166", dur: 3.2, delay: 0 },
@@ -148,7 +149,7 @@ function bestVoice(): SpeechSynthesisVoice | null {
 
 export default function PhonicsBingoApp() {
   useTrackToolUse("media-english-phonics-bingo");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [set, setSet] = useState<SetKey>(SOUND_SET_DEFAULT);
@@ -510,14 +511,13 @@ export default function PhonicsBingoApp() {
   }));
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-bingo-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-bingo-game kc-stage-${stage}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        position: "relative",
-        minHeight: 480,
-        overflow: "hidden",
+        // position, overflow and height belong to .kc-stage-body; setting them
+        // inline leaves the body in flow and free to outgrow the stage.
         borderRadius: 24,
         background:
           "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
@@ -765,17 +765,15 @@ export default function PhonicsBingoApp() {
 
       {stage === 0 && (
         <div
-          className="kc-bingo-intro"
+          className={`${styles.screen} ${styles.intro}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 760,
             margin: "4px auto 0",
             padding: "0 20px 20px",
             textAlign: "center",
-            minHeight: "min(80vh,648px)",
-            display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
           }}
         >
@@ -797,7 +795,7 @@ export default function PhonicsBingoApp() {
           <h1
             style={{
               fontWeight: 700,
-              fontSize: "clamp(24px,6vw,48px)",
+              fontSize: "clamp(24px,6cqi,48px)",
               margin: "0 0 6px",
             }}
           >
@@ -816,7 +814,7 @@ export default function PhonicsBingoApp() {
           </h1>
           <p
             style={{
-              fontSize: "clamp(13px,3.6vw,17px)",
+              fontSize: "clamp(13px,3.6cqi,17px)",
               lineHeight: 1.4,
               color: "#5A6273",
               margin: "0 0 10px",
@@ -953,7 +951,7 @@ export default function PhonicsBingoApp() {
             onClick={start}
             style={{
               fontWeight: 600,
-              fontSize: "clamp(16px,4.6vw,20px)",
+              fontSize: "clamp(16px,4.6cqi,20px)",
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               border: "none",
@@ -971,13 +969,14 @@ export default function PhonicsBingoApp() {
 
       {stage === 1 && (
         <div
-          className="kc-bingo-play"
+          className={`${styles.screen} ${styles.play}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 920,
             margin: "0 auto",
-            padding: "4px 14px 40px",
+            padding: "4px 14px 12px",
           }}
         >
           <div
@@ -1050,10 +1049,10 @@ export default function PhonicsBingoApp() {
           </div>
 
           <div
+            className={styles.board}
             style={{
-              display: "grid",
               gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))",
-              gap: "clamp(12px,3vw,22px)",
+              gap: "clamp(12px,3cqi,22px)",
               alignItems: "start",
             }}
           >
@@ -1062,7 +1061,7 @@ export default function PhonicsBingoApp() {
                 position: "relative",
                 background: "#fff",
                 borderRadius: 26,
-                padding: "clamp(10px,3vw,24px)",
+                padding: "clamp(10px,3cqi,24px)",
                 textAlign: "center",
                 border: "1px solid #EEF0F5",
                 overflow: "hidden",
@@ -1093,6 +1092,7 @@ export default function PhonicsBingoApp() {
                 />
               </div>
               <div
+                className={styles.listenLabel}
                 style={{
                   fontSize: 12,
                   letterSpacing: ".14em",
@@ -1106,6 +1106,7 @@ export default function PhonicsBingoApp() {
               </div>
               <div
                 key={"c" + call}
+                className={styles.callBlock}
                 style={{
                   position: "relative",
                   display: "flex",
@@ -1113,7 +1114,7 @@ export default function PhonicsBingoApp() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 6,
-                  minHeight: "clamp(90px,24vw,190px)",
+                  minHeight: "clamp(90px,24cqi,190px)",
                   animation: "popIn .45s cubic-bezier(.3,1.5,.5,1) both",
                 }}
               >
@@ -1144,10 +1145,11 @@ export default function PhonicsBingoApp() {
                   }}
                 />
                 <div
+                  className={styles.callMain}
                   style={{
                     position: "relative",
                     fontWeight: 700,
-                    fontSize: "clamp(32px,9vw,72px)",
+                    fontSize: "clamp(32px,9cqi,72px)",
                     lineHeight: 1.05,
                     color: shown ? "#3F41C9" : "#5C5EE6",
                   }}
@@ -1155,8 +1157,9 @@ export default function PhonicsBingoApp() {
                   {shown ? `/${cur!.s}/` : "🎧"}
                 </div>
                 <div
+                  className={styles.callWord}
                   style={{
-                    fontSize: "clamp(34px,9vw,50px)",
+                    fontSize: "clamp(34px,9cqi,50px)",
                     lineHeight: 1,
                     opacity: shown ? 1 : 0.55,
                   }}
@@ -1164,9 +1167,10 @@ export default function PhonicsBingoApp() {
                   {shown ? cur!.e : ""}
                 </div>
                 <div
+                  className={styles.callLabel}
                   style={{
                     fontWeight: 600,
-                    fontSize: "clamp(15px,4vw,19px)",
+                    fontSize: "clamp(15px,4cqi,19px)",
                     color: "#0E8C77",
                     opacity: shown ? 1 : 0.55,
                   }}
@@ -1177,6 +1181,7 @@ export default function PhonicsBingoApp() {
               <button
                 type="button"
                 onClick={speakAgain}
+                className={styles.listenBtn}
                 style={{
                   marginTop: 8,
                   display: "inline-flex",
@@ -1197,6 +1202,7 @@ export default function PhonicsBingoApp() {
                 🔊 ฟังอีกครั้ง
               </button>
               <div
+                className={styles.listenFoot}
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -1229,16 +1235,16 @@ export default function PhonicsBingoApp() {
               </div>
             </div>
 
-            <div style={{ position: "relative" }}>
+            <div className={styles.cardArea} style={{ position: "relative" }}>
               <div
+                className={styles.card}
                 style={{
-                  display: "grid",
                   gridTemplateColumns: `repeat(${n},1fr)`,
-                  gap: "clamp(6px,1.6vw,12px)",
+                  gap: "clamp(6px,1.6cqi,12px)",
                   background: "#fff",
                   border: "1px solid #E5E8EE",
                   borderRadius: 24,
-                  padding: "clamp(8px,2vw,14px)",
+                  padding: "clamp(8px,2cqi,14px)",
                   boxShadow: "0 24px 44px -30px rgba(26,29,38,.55)",
                 }}
               >
@@ -1290,7 +1296,7 @@ export default function PhonicsBingoApp() {
                       <span
                         style={{
                           fontWeight: 700,
-                          fontSize: "clamp(17px,4.4vw,30px)",
+                          fontSize: "clamp(17px,4.4cqi,30px)",
                           lineHeight: 1,
                           color: on ? "#0E8C77" : "#3F41C9",
                         }}
@@ -1299,7 +1305,7 @@ export default function PhonicsBingoApp() {
                       </span>
                       <span
                         style={{
-                          fontSize: "clamp(12px,3vw,20px)",
+                          fontSize: "clamp(12px,3cqi,20px)",
                           lineHeight: 1,
                           opacity: on ? 0.25 : 0.85,
                         }}
@@ -1313,7 +1319,7 @@ export default function PhonicsBingoApp() {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: "clamp(24px,6vw,40px)",
+                          fontSize: "clamp(24px,6cqi,40px)",
                           opacity: on ? 1 : 0,
                           animation:
                             hitIdx === i
@@ -1345,7 +1351,7 @@ export default function PhonicsBingoApp() {
               key={bingo}
               style={{
                 fontWeight: 700,
-                fontSize: "clamp(52px,15vw,120px)",
+                fontSize: "clamp(52px,15cqi,120px)",
                 color: "#FFB020",
                 textShadow: "0 6px 0 #fff,0 12px 30px rgba(0,0,0,.25)",
                 opacity: 0,
@@ -1362,13 +1368,14 @@ export default function PhonicsBingoApp() {
 
       {stage === 2 && (
         <div
-          className="kc-bingo-result"
+          className={`${styles.screen} ${styles.result}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 620,
             margin: "0 auto",
-            padding: "10px 18px 40px",
+            padding: "10px 18px 12px",
             textAlign: "center",
           }}
         >
@@ -1377,14 +1384,14 @@ export default function PhonicsBingoApp() {
               background: "#fff",
               border: "1px solid #E5E8EE",
               borderRadius: 30,
-              padding: "clamp(24px,6vw,40px) clamp(18px,5vw,32px)",
+              padding: "clamp(24px,6cqi,40px) clamp(18px,5cqi,32px)",
               boxShadow: "0 30px 60px -34px rgba(26,29,38,.6)",
               animation: "popIn .5s cubic-bezier(.3,1.5,.5,1) both",
             }}
           >
             <div
               style={{
-                fontSize: "clamp(52px,14vw,76px)",
+                fontSize: "clamp(52px,14cqi,76px)",
                 lineHeight: 1,
                 animation: "floatY 3s ease-in-out infinite",
               }}
@@ -1394,7 +1401,7 @@ export default function PhonicsBingoApp() {
             <h2
               style={{
                 fontWeight: 700,
-                fontSize: "clamp(26px,6vw,36px)",
+                fontSize: "clamp(26px,6cqi,36px)",
                 margin: "10px 0 6px",
               }}
             >
@@ -1414,7 +1421,7 @@ export default function PhonicsBingoApp() {
               {resultStars.map((s, i) => (
                 <span
                   key={i}
-                  style={{ fontSize: "clamp(34px,9vw,46px)", opacity: s.o }}
+                  style={{ fontSize: "clamp(34px,9cqi,46px)", opacity: s.o }}
                 >
                   ⭐
                 </span>
@@ -1467,6 +1474,7 @@ export default function PhonicsBingoApp() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

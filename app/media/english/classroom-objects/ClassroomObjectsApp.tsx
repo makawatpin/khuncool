@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
 import GameBackdrop from "../GameBackdrop";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./ClassroomObjectsApp.module.css";
 
 type Word = { emoji: string; en: string; th: string };
 
@@ -110,7 +111,7 @@ const RULES = [
 
 export default function ClassroomObjectsApp() {
   useTrackToolUse("media-english-classroom-objects");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
 
   const [stage, setStage] = useState<0 | 1 | 2>(0);
   const [pairs, setPairs] = useState<Word[]>([]);
@@ -356,13 +357,13 @@ export default function ClassroomObjectsApp() {
   }));
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-classroom-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-classroom-game kc-stage-${stage}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        position: "relative",
-        overflow: "hidden",
+        // position and overflow belong to .kc-stage-body — setting them inline
+        // here left the body in flow, free to grow past the stage it sits in.
         borderRadius: 24,
         background:
           "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
@@ -379,6 +380,7 @@ export default function ClassroomObjectsApp() {
       />
       {/* top bar */}
       <div
+        className={styles.topbar}
         style={{
           position: "relative",
           zIndex: 5,
@@ -520,6 +522,7 @@ export default function ClassroomObjectsApp() {
 
       {stage === 0 && (
         <div
+          className={styles.intro}
           style={{
             position: "relative",
             zIndex: 5,
@@ -534,7 +537,7 @@ export default function ClassroomObjectsApp() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              gap: "clamp(8px,3vw,18px)",
+              gap: "clamp(8px,3cqi,18px)",
               marginBottom: 20,
             }}
           >
@@ -542,15 +545,15 @@ export default function ClassroomObjectsApp() {
               <div
                 key={i}
                 style={{
-                  width: "clamp(56px,15vw,86px)",
-                  height: "clamp(72px,19vw,110px)",
+                  width: "clamp(56px,15cqi,86px)",
+                  height: "clamp(72px,19cqi,110px)",
                   borderRadius: 18,
                   background: "#fff",
                   border: "1px solid #EEF0F5",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "clamp(28px,7vw,42px)",
+                  fontSize: "clamp(28px,7cqi,42px)",
                   transform: `rotate(${p.rot}deg)`,
                   animation: `floatY ${p.dur}s ease-in-out infinite ${p.delay}s`,
                   boxShadow: "0 18px 30px -20px rgba(26,29,38,.6)",
@@ -563,7 +566,7 @@ export default function ClassroomObjectsApp() {
           <h1
             style={{
               fontWeight: 700,
-              fontSize: "clamp(30px,6vw,46px)",
+              fontSize: "clamp(30px,6cqi,46px)",
               margin: "0 0 12px",
             }}
           >
@@ -583,7 +586,7 @@ export default function ClassroomObjectsApp() {
           </h1>
           <p
             style={{
-              fontSize: "clamp(15px,3.6vw,17px)",
+              fontSize: "clamp(15px,3.6cqi,17px)",
               lineHeight: 1.75,
               color: "#5A6273",
               margin: "0 0 26px",
@@ -627,7 +630,7 @@ export default function ClassroomObjectsApp() {
             onClick={start}
             style={{
               fontWeight: 600,
-              fontSize: "clamp(17px,4.6vw,20px)",
+              fontSize: "clamp(17px,4.6cqi,20px)",
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
               border: "none",
@@ -644,13 +647,14 @@ export default function ClassroomObjectsApp() {
 
       {stage === 1 && (
         <div
-          className="kc-classroom-stage kc-classroom-play"
+          className={styles.play}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 880,
             margin: "0 auto",
-            padding: "4px 14px 40px",
+            padding: "4px 14px 12px",
           }}
         >
           <div
@@ -734,7 +738,7 @@ export default function ClassroomObjectsApp() {
                 left: "50%",
                 top: `${reactTop}%`,
                 transform: "translate(-50%,-50%)",
-                fontSize: "clamp(40px,10vw,64px)",
+                fontSize: "clamp(40px,10cqi,64px)",
                 pointerEvents: "none",
                 zIndex: 6,
                 opacity: fb ? 1 : 0,
@@ -758,13 +762,12 @@ export default function ClassroomObjectsApp() {
                 animation: fb && fb.ok ? "ringBurst .7s ease-out forwards" : "none",
               }}
             />
+            {/* The column count is a property of the board's shape, not of the
+                card count, so CSS owns it. `cols` stays the sensible default
+                for any deck size the module does not name. */}
             <div
-              className="kc-classroom-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${cols},minmax(0,1fr))`,
-                gap: "clamp(7px,2vw,14px)",
-              }}
+              className={styles.grid}
+              style={{ "--kc-cols": cols } as React.CSSProperties}
             >
               {cards.map((c, i) => {
                 const shaking = shakeIds.indexOf(c.id) >= 0;
@@ -815,7 +818,7 @@ export default function ClassroomObjectsApp() {
                           position: "absolute",
                           inset: 0,
                           backfaceVisibility: "hidden",
-                          borderRadius: "clamp(12px,3vw,18px)",
+                          borderRadius: "clamp(12px,3cqi,18px)",
                           background:
                             "linear-gradient(150deg,#6E70F0,#3F41C9 55%,#14B79A)",
                           display: "flex",
@@ -828,7 +831,7 @@ export default function ClassroomObjectsApp() {
                         <span
                           style={{
                             fontWeight: 700,
-                            fontSize: "clamp(20px,5.5vw,30px)",
+                            fontSize: "clamp(20px,5.5cqi,30px)",
                             color: "rgba(255,255,255,.92)",
                           }}
                         >
@@ -841,7 +844,7 @@ export default function ClassroomObjectsApp() {
                           inset: 0,
                           backfaceVisibility: "hidden",
                           transform: "rotateY(180deg)",
-                          borderRadius: "clamp(12px,3vw,18px)",
+                          borderRadius: "clamp(12px,3cqi,18px)",
                           background: faceBg,
                           border: `2.5px solid ${faceBorder}`,
                           display: "flex",
@@ -858,8 +861,8 @@ export default function ClassroomObjectsApp() {
                           style={{
                             fontSize:
                               c.kind === "pic"
-                                ? "clamp(64px,20vw,124px)"
-                                : "clamp(15px,4.4vw,26px)",
+                                ? "clamp(64px,20cqi,124px)"
+                                : "clamp(15px,4.4cqi,26px)",
                             lineHeight: 1.05,
                             textAlign: "center",
                             fontWeight: 700,
@@ -870,7 +873,7 @@ export default function ClassroomObjectsApp() {
                         </div>
                         <div
                           style={{
-                            fontSize: "clamp(9px,2.4vw,13px)",
+                            fontSize: "max(11px,2.4cqi)",
                             color: "#5A6273",
                             textAlign: "center",
                             lineHeight: 1.25,
@@ -956,19 +959,20 @@ export default function ClassroomObjectsApp() {
 
       {stage === 2 && (
         <div
-          className="kc-classroom-stage kc-classroom-result"
+          className={`${styles.play} ${styles.result}`}
           style={{
             position: "relative",
             zIndex: 5,
+            width: "100%",
             maxWidth: 640,
             margin: "0 auto",
-            padding: "10px 18px 40px",
+            padding: "10px 18px 12px",
             textAlign: "center",
           }}
         >
           <div
             style={{
-              fontSize: "clamp(54px,14vw,80px)",
+              fontSize: "clamp(54px,14cqi,80px)",
               animation: "popIn .6s cubic-bezier(.3,1.5,.5,1) both",
             }}
           >
@@ -977,7 +981,7 @@ export default function ClassroomObjectsApp() {
           <h2
             style={{
               fontWeight: 700,
-              fontSize: "clamp(26px,6vw,36px)",
+              fontSize: "clamp(26px,6cqi,36px)",
               margin: "6px 0 8px",
             }}
           >
@@ -998,7 +1002,7 @@ export default function ClassroomObjectsApp() {
             {resultStars.map((s, i) => (
               <div
                 key={i}
-                style={{ fontSize: "clamp(32px,9vw,44px)", opacity: s.o }}
+                style={{ fontSize: "clamp(32px,9cqi,44px)", opacity: s.o }}
               >
                 ⭐
               </div>
@@ -1118,6 +1122,7 @@ export default function ClassroomObjectsApp() {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }

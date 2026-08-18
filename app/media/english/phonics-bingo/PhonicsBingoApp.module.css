@@ -1,0 +1,202 @@
+/* Layout that has to respond to the stage's shape. The rest of this game's
+   styling is static colour and spacing and stays inline on the elements.
+
+   Replaces the .kc-bingo-game.kc-stage-N transform:scale() rules in
+   app/globals.css — .72 on the intro, .88 on the play screen, .81 again in
+   fullscreen. Each was shrinking a whole screen, type included, because one
+   element inside it reserved more height than the board had. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body > .screen {
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro {
+  overflow: auto;
+}
+
+/* The card is the elastic part of the play screen: the round header above it
+   and the draw controls below keep their size, and the card takes what is
+   left. A cell has a content floor — sound, picture and tick — so the card
+   cannot always shrink to fit; when it cannot, it scrolls inside its own area
+   rather than pushing the draw controls off the board. */
+/* Draw panel and card sit side by side (or stacked, when the column does not
+   fit). The board is what shrinks; both columns then bound their own content. */
+.board {
+  display: grid;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.board > * {
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.cardArea {
+  min-height: 0;
+  overflow: auto;
+}
+
+.card {
+  display: grid;
+  width: 100%;
+  max-width: min(100%, 78cqb);
+  margin-inline: auto;
+}
+
+@container kcstage (aspect-ratio < 0.9) {
+  /* Upright there is height to spare and width is the constraint, so the card
+     takes the full column. */
+  .card {
+    max-width: 100%;
+  }
+}
+
+/* Phones held upright get an in-page stage fixed at 9:16 of their own width
+   (stage.css), so a 375px-wide phone gets ~610px of stage regardless of the
+   device's real screen height. A tablet in portrait is far wider — and so
+   just as far taller, same ratio — so it never hits this; height is what
+   actually tells the two apart, not aspect-ratio alone.
+
+   At that height, the listen panel's generous spacing plus a full-width
+   square answer grid don't both fit, and the grid is what the student needs
+   to see in full to play. Compact the panel instead: font floors and gaps
+   come down, but nothing here is a tap target, so there's no 24px floor to
+   protect. The !important is needed because every value it touches is set
+   inline for its cqi-driven clamp() on wider stages. */
+@container kcstage (aspect-ratio < 0.9) and (height < 700px) {
+  .listenLabel {
+    margin: 2px 0 2px !important;
+  }
+
+  .callBlock {
+    min-height: clamp(44px, 14cqi, 120px) !important;
+    gap: 0 !important;
+  }
+
+  .callMain {
+    font-size: clamp(22px, 9cqi, 72px) !important;
+  }
+
+  .callWord {
+    font-size: clamp(24px, 9cqi, 50px) !important;
+  }
+
+  .callLabel {
+    font-size: clamp(13px, 4cqi, 19px) !important;
+  }
+
+  .listenBtn {
+    margin-top: 4px !important;
+    min-height: 36px !important;
+    padding: 6px 16px !important;
+  }
+
+  .listenFoot {
+    margin-top: 4px !important;
+  }
+
+  .card {
+    max-width: min(100%, 38cqb) !important;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  /* The card is square, so capping its width caps its height. 58cqb rather
+     than 62 is what leaves the last row inside the column once the cells stop
+     forcing their own floor. */
+  .card {
+    max-width: min(100%, 58cqb);
+  }
+
+  /* Four of the sixteen cards were below the fold. The width cap was doing its
+     job — the card measured 189px wide — but the height came from the cells,
+     each carrying a 44px inline min-height: four rows of those plus gaps and
+     padding is 242px against the 181px the column has, and the cells were
+     wider than their own grid tracks too, so the card overflowed both ways.
+
+     44px is the shape's comfort target, not the accessibility one. The
+     contract makes that distinction for exactly this case: a dense panel of
+     adjacent buttons may sit below the comfort size, and only 24x24 is a
+     failure. Dropping the floor lets the four rows divide the height that is
+     actually there, which lands the cells near 36px — half again the WCAG
+     minimum, and all sixteen visible.
+
+     A hidden bingo card is not a cosmetic loss. A child reads the rows they
+     can see and calls a line that is not a line. */
+  .card > button {
+    min-height: 24px !important;
+    gap: 1px !important;
+  }
+
+  .card {
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+
+  /* The draw panel used to scroll here. That was the wrong call: it made the
+     reachability check pass while leaving "🔊 ฟังอีกครั้ง" 109px below the
+     stage, which is the failure contentHiddenBehindScroll was added to report.
+     In a listening game, replaying the sound is not optional — a child who
+     misses it cannot answer the question at all.
+
+     The panel wanted 365px of the 181px it had, and both of the big numbers
+     came from cqi: the headphone block's min-height is clamp(90px,24cqi,190px),
+     which is 187px on a 780px-wide board, and the glyph inside it is
+     clamp(32px,9cqi,72px), which is 70px. Width was never the constraint.
+     Bounding both by the board's height brings the stack to 181px, so the
+     panel's own overflow:hidden has nothing left to clip. Inline styles set
+     them, hence !important. */
+  .callBlock {
+    min-height: min(clamp(90px, 24cqi, 190px), 11cqb) !important;
+    gap: 2px !important;
+  }
+
+  .callMain {
+    font-size: min(clamp(32px, 9cqi, 72px), 10cqb) !important;
+  }
+
+  .callLabel {
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  /* The panel's rows carry their own margins, worth about 40px of the 181px
+     between them, and the panel has no class to hang a rule on. One flat gap
+     with the margins zeroed is deterministic where chasing each margin was
+     not. */
+  .board > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    padding: 6px 10px !important;
+  }
+
+  .board > div:first-child > * {
+    margin: 0 !important;
+    flex: 0 0 auto;
+  }
+
+  .play {
+    padding-top: 2px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .result,
+  .intro {
+    justify-content: flex-start;
+    overflow: auto;
+  }
+}

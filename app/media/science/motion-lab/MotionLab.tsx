@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useFullscreen } from "../../english/useFullscreen";
+import { useStage } from "../../_stage/useStage";
 import styles from "./MotionLab.module.css";
 
 type Stage = "intro" | "lab" | "quiz";
@@ -62,7 +62,7 @@ function pickRandomIndices(poolSize: number, count: number): number[] {
 }
 
 export default function MotionLab() {
-  const { ref, isFull, fullscreenClassName, toggle } = useFullscreen<HTMLDivElement>();
+  const { isFull, stageProps, toggle } = useStage<HTMLDivElement>();
   const [stage, setStage] = useState<Stage>("intro");
   const [routeKey, setRouteKey] = useState<RouteKey>("return");
   const [speed, setSpeed] = useState(20);
@@ -227,8 +227,8 @@ export default function MotionLab() {
 
   const changeRoute = (key: RouteKey) => { reset(); setRouteKey(key); };
 
-  return <div className={styles.shell}>
-    <div ref={ref} className={`${styles.lab} ${fullscreenClassName}`}>
+  return <div {...stageProps} className={`kc-stage ${styles.shell}`}>
+    <div className={`kc-stage-body ${styles.lab}`}>
       <header className={styles.topbar}>
         <div className={styles.brand}><Image src="/assets/khuncool-logo.webp" alt="KhunCool" width={42} height={42}/><div><b>Motion Lab</b><small>การเคลื่อนที่และแรง · ม.2</small></div></div>
         <div className={styles.actions}><Link href="/media/science" title="กลับหน้าสื่อวิทยาศาสตร์">☰ <span>เมนู</span></Link>{stage === "quiz" && <button type="button" onClick={() => { reset(); setStage("lab"); }} title="ตั้งค่าการทดลอง">⚙ <span>ตั้งค่า</span></button>}<button type="button" onClick={() => setMuted(value => !value)} aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"} title="เสียงเอฟเฟกต์">{muted ? "🔇" : "🔊"}</button><button type="button" onClick={toggle} aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"} title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"} aria-pressed={isFull}>⛶</button></div>

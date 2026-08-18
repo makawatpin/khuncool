@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { KcSfx, speakEnglish, hoverSfxDelegate } from "@/lib/kcSfx";
 import GameBackdrop from "../GameBackdrop";
-import { useFullscreen } from "../useFullscreen";
+import { useStage } from "../../_stage/useStage";
+import styles from "./FamilyTreeApp.module.css";
 
 const LEAF_COLORS = ["#9BE3CE", "#C6C9FB", "#FFD9A8", "#FFC3D4"];
 const LEAVES = Array.from({ length: 14 }, (_, i) => ({
@@ -542,10 +543,20 @@ function buildS1(): S1State {
   return { bank, targets, selected: null, shakeId: null, hoverId: null, fxId: null };
 }
 
+/** Pairs per column-pair on the matching board: two groups, 5 then 4. */
+export const S2_GROUP_SIZES = [5, 4];
+
 function buildS2(): S2State {
+  // Group first, then shuffle inside each group. Shuffling all nine across both
+  // sides would let a word sit in the first group on the left and the second on
+  // the right, and its connector would be drawn across the gap between them.
+  const ids = shuffle(WORDS.map((w) => w.id));
+  const groups = S2_GROUP_SIZES.map((n, i) =>
+    ids.slice(S2_GROUP_SIZES.slice(0, i).reduce((a, b) => a + b, 0)).slice(0, n),
+  );
   return {
-    left: shuffle(WORDS.map((w) => w.id)),
-    right: shuffle(WORDS.map((w) => w.id)),
+    left: groups.flatMap((g) => shuffle(g)),
+    right: groups.flatMap((g) => shuffle(g)),
     selectedLeft: null,
     selectedRight: null,
     matched: [],
@@ -576,7 +587,7 @@ function buildStoryBlanks(): StoryItem[] {
 
 export default function FamilyTreeApp() {
   useTrackToolUse("media-english-family-tree");
-  const { ref: fullRef, isFull, fullscreenClassName, toggle: toggleFull } = useFullscreen<HTMLDivElement>();
+  const { ref: fullRef, isFull, stageProps, toggle: toggleFull } = useStage<HTMLDivElement>();
   const pointerDragRef = useRef<{
     id: WordId;
     pointerId: number;
@@ -596,7 +607,6 @@ export default function FamilyTreeApp() {
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4 | 5 | 10>(0);
   const [stars, setStars] = useState(0);
   const [confetti] = useState<ConfettiPiece[]>(() => makeConfetti());
-  const [vw, setVw] = useState(1200);
 
   const [storyBlanks, setStoryBlanks] = useState<StoryItem[]>(() => buildStoryBlanks());
   const [s1, setS1] = useState<S1State>(() => buildS1());
@@ -620,13 +630,6 @@ export default function FamilyTreeApp() {
   useEffect(() => () => {
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current.clear();
-  }, []);
-
-  useEffect(() => {
-    const onResize = () => setVw(window.innerWidth);
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   const resetAll = useCallback(() => {
@@ -710,7 +713,7 @@ export default function FamilyTreeApp() {
     });
   }, [fullRef]);
 
-  const pointerDragStart = useCallback((e: React.PointerEvent<HTMLDivElement>, id: WordId) => {
+  const pointerDragStart = useCallback((e: React.PointerEvent<HTMLElement>, id: WordId) => {
     if (e.pointerType === "mouse") return;
     if (e.button !== 0) return;
     KcSfx.unlock();
@@ -724,7 +727,7 @@ export default function FamilyTreeApp() {
     };
   }, []);
 
-  const pointerDragMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const pointerDragMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const drag = pointerDragRef.current;
     if (!drag || drag.pointerId !== e.pointerId) return;
     if (!drag.dragging && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 6) return;
@@ -741,7 +744,7 @@ export default function FamilyTreeApp() {
   }, [showDragPreview]);
 
   const pointerDragFinish = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (e: React.PointerEvent<HTMLElement>) => {
       const drag = pointerDragRef.current;
       if (!drag || drag.pointerId !== e.pointerId) return;
       pointerDragRef.current = null;
@@ -766,7 +769,7 @@ export default function FamilyTreeApp() {
     setS1((s) => ({ ...s, hoverId: null }));
   }, []);
 
-  const mouseDragStart = useCallback((e: React.MouseEvent<HTMLDivElement>, id: WordId) => {
+  const mouseDragStart = useCallback((e: React.MouseEvent<HTMLElement>, id: WordId) => {
     if (e.button !== 0) return;
     e.preventDefault();
     KcSfx.unlock();
@@ -925,12 +928,26 @@ export default function FamilyTreeApp() {
   const allDone = s1Done && s2Done && s3.completed && s4AllCorrect;
 
   // ---------- derived layout values ----------
-  const treeScale = Math.min(1, (vw - 24) / 780, vw < 640 ? 0.58 : 1);
-  const treeH = Math.round(430 * treeScale);
-  const matchScale = Math.min(1, (vw - 24) / 496, vw < 640 ? 0.62 : 1);
-  const pitch = 68;
+  // 62, not 68: the row gap was 12px between 56px buttons. Six is enough to
+  // read them apart and takes 30px off a five-row board, which is what lifts
+  // the scale from 0.40 to 0.48 and the buttons from 22px to the far side of
+  // the 24px floor. The SVG reads pitch too, so the connectors follow.
+  const pitch = 62;
   const half = 28;
-  const s2Height = WORDS.length * pitch;
+  // Two column-pairs side by side rather than one nine deep. Nine rows made the
+  // board 612px tall, and no scale could fit that into a 238px stage while
+  // keeping the 56px buttons above the 24px tap floor — 0.43 was needed to fit
+  // and 0.43 puts them at 24px with the board still 24px too tall. Five rows
+  // make it 340px, which fits at 0.70 and leaves the buttons at 39px. The width
+  // it costs is width the shallow board had spare.
+  const s2GroupWidth = 496;
+  const s2GroupGap = 48;
+  const s2Height = Math.max(...S2_GROUP_SIZES) * pitch;
+  const s2Width = S2_GROUP_SIZES.length * s2GroupWidth + (S2_GROUP_SIZES.length - 1) * s2GroupGap;
+  const s2Groups = S2_GROUP_SIZES.map((n, i) => {
+    const start = S2_GROUP_SIZES.slice(0, i).reduce((a, b) => a + b, 0);
+    return { start, ids: { left: s2.left.slice(start, start + n), right: s2.right.slice(start, start + n) }, x: i * (s2GroupWidth + s2GroupGap) };
+  });
 
   const showTopRight = stage !== 0;
   const showBackToHub = stage >= 1 && (stage as number) <= 4;
@@ -938,16 +955,13 @@ export default function FamilyTreeApp() {
   const introCast: WordId[] = ["grandpa", "grandma", "dad", "mom", "sister"];
 
   return (
+    <div {...stageProps} className="kc-stage">
     <div
-      ref={fullRef}
-      className={`kc-game kc-family-game kc-stage-${stage} ${fullscreenClassName} ${stage === 0 ? "kc-game-intro" : ""}`}
+      className={`kc-stage-body ${styles.body} kc-game kc-family-game kc-stage-${stage} ${stage === 0 ? "kc-game-intro" : ""}`}
       onMouseOver={hoverSfxDelegate}
       style={{
-        minHeight: 480,
         borderRadius: 24,
         background: "linear-gradient(170deg,#EAF1FF 0%,#EFF0FE 45%,#E6FBF6 100%)",
-        position: "relative",
-        overflow: "hidden",
       }}
     >
       <GameBackdrop
@@ -1029,7 +1043,7 @@ export default function FamilyTreeApp() {
           />
           <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
           <Link
             href="/media/english"
             style={{
@@ -1157,7 +1171,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 0: INTRO */}
       {stage === 0 && (
-        <div className="kc-family-stage kc-family-intro" style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6vh,90px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-intro`} style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6cqb,90px)", textAlign: "center" }}>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 22 }}>
             {introCast.map((id, i) => (
               <div
@@ -1171,7 +1185,7 @@ export default function FamilyTreeApp() {
               </div>
             ))}
           </div>
-          <h1 style={{ fontWeight: 700, fontSize: "clamp(32px,5vw,48px)", margin: "0 0 14px" }}>
+          <h1 style={{ fontWeight: 700, fontSize: "clamp(32px,5cqi,48px)", margin: "0 0 14px" }}>
             มาเรียนรู้คำศัพท์
             <span
               style={{
@@ -1213,10 +1227,10 @@ export default function FamilyTreeApp() {
 
       {/* HUB (stage 10) */}
       {stage === 10 && (
-        <div className="kc-family-stage kc-family-menu" style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-menu`} style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <h2 style={{ fontWeight: 600, fontSize: 26, margin: "0 0 8px" }}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
           <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 28px" }}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3vw,18px)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3cqi,18px)" }}>
             {[
               { n: 1 as const, emoji: "🌳", label: "ปลูกต้นไม้ครอบครัว", desc: "ลาก & วางคำศัพท์", done: s1Done, blob: "#D5FBEF" },
               { n: 2 as const, emoji: "🔗", label: "จับคู่คำศัพท์", desc: "Matching", done: s2Done, blob: "#E1E3FD" },
@@ -1234,8 +1248,8 @@ export default function FamilyTreeApp() {
                   gap: 10,
                   background: g.done ? "#F5FFFC" : "#fff",
                   border: `2px solid ${g.done ? "#14B79A" : "#E9ECF3"}`,
-                  borderRadius: "clamp(16px,4vw,22px)",
-                  padding: "clamp(14px,4vw,26px) clamp(8px,3vw,16px)",
+                  borderRadius: "clamp(16px,4cqi,22px)",
+                  padding: "clamp(14px,4cqi,26px) clamp(8px,3cqi,16px)",
                   position: "relative",
                   overflow: "hidden",
                   cursor: "pointer",
@@ -1254,10 +1268,10 @@ export default function FamilyTreeApp() {
                     opacity: 0.5,
                   }}
                 />
-                {g.done && <span style={{ position: "absolute", top: 8, right: 10, fontSize: "clamp(14px,3.4vw,18px)" }}>✅</span>}
-                <div style={{ fontSize: "clamp(30px,7vw,44px)", position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
-                <div style={{ fontWeight: 600, fontSize: "clamp(13px,3.4vw,16px)", position: "relative" }}>{g.label}</div>
-                <div style={{ fontSize: "clamp(10.5px,2.6vw,12px)", color: "#7C8494", position: "relative" }}>{g.desc}</div>
+                {g.done && <span style={{ position: "absolute", top: 8, right: 10, fontSize: "clamp(14px,3.4cqi,18px)" }}>✅</span>}
+                <div style={{ fontSize: "clamp(30px,7cqi,44px)", position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
+                <div style={{ fontWeight: 600, fontSize: "clamp(13px,3.4cqi,16px)", position: "relative" }}>{g.label}</div>
+                <div style={{ fontSize: "clamp(11px,2.6cqi,12px)", color: "#7C8494", position: "relative" }}>{g.desc}</div>
               </button>
             ))}
           </div>
@@ -1287,7 +1301,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 1: DRAG & DROP */}
       {stage === 1 && (
-        <div className="kc-family-stage kc-family-tree" style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-tree`} style={{ position: "relative", maxWidth: 960, margin: "0 auto", padding: "8px 16px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1301,17 +1315,20 @@ export default function FamilyTreeApp() {
               boxShadow: "0 12px 24px -16px rgba(0,0,0,.4)",
             }}
           >
-            <div style={{ fontSize: "clamp(28px,7vw,46px)", animation: "floatY 3s ease-in-out infinite" }}>🦉</div>
+            <div style={{ fontSize: "clamp(28px,7cqi,46px)", animation: "floatY 3s ease-in-out infinite" }}>🦉</div>
             <div style={{ textAlign: "left" }}>
               <div style={{ fontSize: 11, letterSpacing: ".14em", color: "#5C5EE6", fontWeight: 600, marginBottom: 4 }}>
                 ด่านที่ 1 · DRAG &amp; DROP · {WORDS.length - s1.bank.length} / {WORDS.length}
               </div>
-              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,20px)" }}>ลากคำศัพท์ไปวางบนต้นไม้ครอบครัวให้ถูกตำแหน่ง 🌳</div>
+              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6cqi,20px)" }}>ลากคำศัพท์ไปวางบนต้นไม้ครอบครัวให้ถูกตำแหน่ง 🌳</div>
             </div>
           </div>
 
-          <div className="kc-family-tree-viewport" style={{ width: "100%", height: treeH, display: "flex", justifyContent: "center" }}>
-            <div className="kc-family-tree-canvas" style={{ position: "relative", width: 780, height: 430, flex: "none", transform: `scale(${treeScale})`, transformOrigin: "top center" }}>
+          <div
+            className={`kc-family-tree-viewport ${styles.canvasViewport}`}
+            style={{ "--kc-canvas-w": "780px", "--kc-canvas-h": "430px", "--kc-canvas-ratio": "780 / 430" } as React.CSSProperties}
+          >
+            <div className={`kc-family-tree-canvas ${styles.canvasStage}`}>
               <svg viewBox="0 0 780 430" style={{ position: "absolute", inset: 0, width: 780, height: 430 }}>
                 <g stroke="#8FDCC9" strokeWidth={4} strokeLinecap="round" fill="none">
                   <path d="M382 58 H398" stroke="#FFB4C6" strokeWidth={6} />
@@ -1369,14 +1386,24 @@ export default function FamilyTreeApp() {
                 const fx = s1.fxId === id;
                 return (
                   <div key={id} style={{ position: "absolute", left, top, width: 104, height: 104 }}>
-                    <div
+                    <button
+                      type="button"
                       data-family-target={id}
                       onClick={() => placeTarget(id)}
+                      aria-label={
+                        t.filled
+                          ? `${w.th} — วางแล้ว: ${w.en}`
+                          : `ช่องว่าง ${w.th} — แตะเพื่อวางคำที่เลือก`
+                      }
                       style={{
                         position: "relative",
                         width: 104,
                         height: 104,
                         borderRadius: 22,
+                        font: "inherit",
+                        color: "inherit",
+                        padding: 0,
+                        textAlign: "center",
                         background: t.filled ? "#F0FFFB" : hovering ? "#EAF4FF" : "#fff",
                         border: `3px ${t.filled ? "solid" : "dashed"} ${
                           shaking ? "#EF476F" : t.filled ? "#14B79A" : hovering || hint ? "#5C5EE6" : "#C6C9FB"
@@ -1421,7 +1448,7 @@ export default function FamilyTreeApp() {
                           >
                             ?
                           </div>
-                          <div style={{ fontSize: 10.5, color: "#AEB4C8", padding: "0 6px", lineHeight: 1.3 }}>{w.th}</div>
+                          <div style={{ fontSize: 11, color: "#AEB4C8", padding: "0 6px", lineHeight: 1.3 }}>{w.th}</div>
                         </div>
                       )}
                       {fx && (
@@ -1465,7 +1492,7 @@ export default function FamilyTreeApp() {
                           </div>
                         </>
                       )}
-                    </div>
+                    </button>
                   </div>
                 );
               })}
@@ -1483,9 +1510,12 @@ export default function FamilyTreeApp() {
               const w = WORD_MAP[id];
               const sel = s1.selected === id;
               return (
-                <div
+                <button
                   key={id}
+                  type="button"
                   data-family-word={id}
+                  aria-pressed={sel}
+                  aria-label={`${w.en} · ${w.th}`}
                   onMouseDown={(e) => mouseDragStart(e, id)}
                   onPointerDown={(e) => pointerDragStart(e, id)}
                   onPointerMove={pointerDragMove}
@@ -1496,6 +1526,8 @@ export default function FamilyTreeApp() {
                   }}
                   className="kc-chip-hover"
                   style={{
+                    font: "inherit",
+                    color: "inherit",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
@@ -1507,7 +1539,7 @@ export default function FamilyTreeApp() {
                     boxShadow: sel ? "0 14px 24px -12px rgba(92,94,230,.9)" : "0 6px 14px -10px rgba(0,0,0,.5)",
                     transform: sel ? "translateY(-6px) scale(1.05)" : "none",
                     fontWeight: 600,
-                    fontSize: "clamp(13px,3.4vw,15px)",
+                    fontSize: "clamp(13px,3.4cqi,15px)",
                     transition: "transform .18s",
                     fontFamily: "var(--font-fredoka), var(--font-anuphan), sans-serif",
                     userSelect: "none",
@@ -1518,7 +1550,7 @@ export default function FamilyTreeApp() {
                 >
                   <FamilyFace {...charOf(id)} size={28} />
                   <span>{w.en}</span>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -1547,7 +1579,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 2: MATCHING */}
       {stage === 2 && (
-        <div className="kc-family-stage kc-family-match" style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-match`} style={{ position: "relative", maxWidth: 760, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1575,28 +1607,33 @@ export default function FamilyTreeApp() {
             <span style={{ fontSize: 16 }}>{s2.combo >= 5 ? "🔥" : s2.combo >= 3 ? "⚡" : "✨"}</span>
           </div>
 
-          <div style={{ height: Math.round(s2Height * matchScale), display: "flex", justifyContent: "center" }}>
-            <div style={{ position: "relative", width: 496, height: s2Height, flex: "none", transform: `scale(${matchScale})`, transformOrigin: "top center" }}>
-              <svg viewBox={`0 0 496 ${s2Height}`} style={{ position: "absolute", left: 0, top: 0, width: 496, height: s2Height, pointerEvents: "none", zIndex: 2 }}>
-                {s2.matched.map((id) => {
-                  const y1 = s2.left.indexOf(id) * pitch + half;
-                  const y2 = s2.right.indexOf(id) * pitch + half;
-                  return (
-                    <path
-                      key={id}
-                      d={`M220 ${y1} C 240 ${y1}, 256 ${y2}, 276 ${y2}`}
-                      fill="none"
-                      stroke="#14B79A"
-                      strokeWidth={4}
-                      strokeLinecap="round"
-                      style={{ strokeDasharray: 900, animation: "drawIn .45s ease-out forwards" }}
-                    />
-                  );
-                })}
-              </svg>
-              <div style={{ display: "flex", gap: 56, justifyContent: "center", position: "relative", zIndex: 3 }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 220 }}>
-                  {s2.left.map((id) => {
+          <div
+            className={styles.canvasViewport}
+            style={{ "--kc-canvas-w": `${s2Width}px`, "--kc-canvas-h": `${s2Height}px`, "--kc-canvas-ratio": `${s2Width} / ${s2Height}` } as React.CSSProperties}
+          >
+            <div className={styles.canvasStage}>
+              <div className="kc-family-match-groups" style={{ display: "flex", gap: s2GroupGap, justifyContent: "center", position: "relative", zIndex: 3 }}>
+                {s2Groups.map((group) => (
+                <div key={group.start} style={{ display: "flex", gap: 56, width: s2GroupWidth, position: "relative" }}>
+                <svg viewBox={`0 0 ${s2GroupWidth} ${s2Height}`} style={{ position: "absolute", left: 0, top: 0, width: s2GroupWidth, height: s2Height, pointerEvents: "none", zIndex: 2 }}>
+                  {s2.matched.filter((id) => group.ids.left.includes(id)).map((id) => {
+                    const y1 = group.ids.left.indexOf(id) * pitch + half;
+                    const y2 = group.ids.right.indexOf(id) * pitch + half;
+                    return (
+                      <path
+                        key={id}
+                        d={`M220 ${y1} C 240 ${y1}, 256 ${y2}, 276 ${y2}`}
+                        fill="none"
+                        stroke="#14B79A"
+                        strokeWidth={4}
+                        strokeLinecap="round"
+                        style={{ strokeDasharray: 900, animation: "drawIn .45s ease-out forwards" }}
+                      />
+                    );
+                  })}
+                </svg>
+                <div style={{ display: "flex", flexDirection: "column", gap: pitch - 56, width: 220 }}>
+                  {group.ids.left.map((id) => {
                     const w = WORD_MAP[id];
                     const matched = s2.matched.includes(id);
                     const sel = s2.selectedLeft === id;
@@ -1629,8 +1666,8 @@ export default function FamilyTreeApp() {
                     );
                   })}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, width: 220 }}>
-                  {s2.right.map((id) => {
+                <div style={{ display: "flex", flexDirection: "column", gap: pitch - 56, width: 220 }}>
+                  {group.ids.right.map((id) => {
                     const w = WORD_MAP[id];
                     const matched = s2.matched.includes(id);
                     const sel = s2.selectedRight === id;
@@ -1646,7 +1683,9 @@ export default function FamilyTreeApp() {
                           alignItems: "center",
                           gap: 10,
                           fontWeight: 600,
-                          fontSize: 14,
+                          // 16 not 14: the board renders at 0.70 on a shallow
+                          // stage, and 14px would land at 9.8px on screen.
+                          fontSize: 16,
                           padding: "0 12px",
                           borderRadius: 16,
                           background: matched ? "#E4FFF7" : sel ? "#E1E3FD" : "#fff",
@@ -1669,6 +1708,8 @@ export default function FamilyTreeApp() {
                     );
                   })}
                 </div>
+                </div>
+                ))}
               </div>
               {s2.fxId && (
                 <>
@@ -1728,7 +1769,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 3: LISTENING QUIZ */}
       {stage === 3 && (
-        <div className="kc-family-stage kc-family-listen" style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-listen`} style={{ position: "relative", maxWidth: 640, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1785,7 +1826,7 @@ export default function FamilyTreeApp() {
               🔊
             </button>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          <div className="kc-family-options" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
             {s3.questions[s3.qIndex]?.options.map((id) => {
               const w = WORD_MAP[id];
               const q = s3.questions[s3.qIndex];
@@ -1858,7 +1899,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 4: FILL IN THE BLANK */}
       {stage === 4 && (
-        <div className="kc-family-stage kc-family-story" style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px clamp(20px,6vh,100px)", textAlign: "center" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-story`} style={{ position: "relative", maxWidth: 680, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
           <div
             style={{
               display: "inline-flex",
@@ -1872,16 +1913,16 @@ export default function FamilyTreeApp() {
               boxShadow: "0 12px 24px -16px rgba(0,0,0,.4)",
             }}
           >
-            <div style={{ fontSize: "clamp(28px,7vw,46px)", animation: "floatY 3s ease-in-out infinite .1s" }}>🐨</div>
+            <div style={{ fontSize: "clamp(28px,7cqi,46px)", animation: "floatY 3s ease-in-out infinite .1s" }}>🐨</div>
             <div style={{ textAlign: "left" }}>
               <div style={{ fontSize: 11, letterSpacing: ".14em", color: "#5C5EE6", fontWeight: 600, marginBottom: 4 }}>
                 ด่านที่ 4 · FILL IN THE BLANK
               </div>
-              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6vw,20px)" }}>เลือกคำที่ใช่เติมในเรื่องราวครอบครัวของเรา 📖</div>
+              <div style={{ fontWeight: 600, fontSize: "clamp(14px,3.6cqi,20px)" }}>เลือกคำที่ใช่เติมในเรื่องราวครอบครัวของเรา 📖</div>
             </div>
           </div>
           <p style={{ fontSize: 14, color: "#5A6273", margin: "0 0 12px" }}>📔 My Family Story</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="kc-family-story-lines" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {storyBlanks.map((b, idx) => {
               const isCorrect = s4.correct[idx];
               const answered = s4.answers[idx];
@@ -1973,7 +2014,7 @@ export default function FamilyTreeApp() {
 
       {/* STAGE 5: CELEBRATION */}
       {stage === 5 && (
-        <div className="kc-family-stage kc-family-result" style={{ position: "relative", minHeight: "72vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+        <div className={`${styles.screen} kc-family-stage kc-family-result`} style={{ position: "relative", minHeight: "72cqb", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
           {confetti.map((c) => (
             <div
               key={c.id}
@@ -2047,6 +2088,7 @@ export default function FamilyTreeApp() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
