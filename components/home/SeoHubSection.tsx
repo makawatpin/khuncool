@@ -80,6 +80,8 @@ export default function SeoHubSection() {
           <span aria-hidden="true">·</span>
           <Link href="/blog/duck-race-classroom-activities">10 กิจกรรมเกมเป็ดสุ่ม</Link>
           <span aria-hidden="true">·</span>
+          <Link href="/blog/duck-race-roll-number">สุ่มเลขที่นักเรียนด้วยเกมเป็ดสุ่ม</Link>
+          <span aria-hidden="true">·</span>
           <Link href="/blog/english-vocabulary-games">15 เกมคำศัพท์ภาษาอังกฤษ</Link>
         </div>
       </div>

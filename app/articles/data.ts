@@ -66,6 +66,18 @@ export const ALL_ARTICLES: Article[] = [
     linksTool: { label: "เปรียบเทียบเครื่องมือ", href: "/blog/wheel-vs-duck-race" },
   },
   {
+    title: "สุ่มเลขที่นักเรียนด้วยเกมเป็ดสุ่ม (Duck Race) ใช้ยังไง ให้สนุกกว่าเรียกชื่อทีละคน",
+    cat: "สื่อการสอน",
+    date: "18 ส.ค. 2569",
+    dateISO: "2026-08-18",
+    readTime: "6 นาที",
+    img: "/assets/duck-race-roll-number-cover.webp",
+    alt: "สุ่มเลขที่นักเรียนด้วยเกมเป็ดสุ่ม Duck Race",
+    href: "/blog/duck-race-roll-number",
+    excerpt: "วิธีใส่เลขที่นักเรียนแทนชื่อในเกมเป็ดสุ่ม พร้อมเทียบว่าเมื่อไรควรสุ่มด้วยเลขที่ เมื่อไรควรสุ่มด้วยชื่อ",
+    linksTool: { label: "เปิดเกมเป็ดสุ่ม", href: "/duck-race" },
+  },
+  {
     title: "15 เกมคำศัพท์ภาษาอังกฤษในห้องเรียน เด็กประถมเล่นได้",
     cat: "สื่อการสอน",
     date: "5 ส.ค. 2569",
