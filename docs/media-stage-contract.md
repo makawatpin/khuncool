@@ -275,6 +275,11 @@ document.querySelectorAll("*").forEach(el => { el.scrollTop = 0; el.scrollLeft =
 
 ---
 
+งานที่ยังเหลือของเฟสนี้ (Tier A ที่ค้าง, หน้าผลลัพธ์ที่ยังไม่ได้ตรวจ, ข้อจำกัดที่รู้ตัว)
+อยู่ที่ [`media-stage-remaining.md`](./media-stage-remaining.md)
+
+---
+
 ## สถานะการย้ายเข้าระบบ
 
 | เกม | สถานะ |
