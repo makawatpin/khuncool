@@ -120,3 +120,95 @@
     padding-inline: 6px !important;
   }
 }
+
+/* Spelling Builder and Mixed Challenge answer with letter tiles rather than the
+   option buttons the other two modes use, so the rule above — which moves
+   .kc-vocab-options into the second column — leaves them stacked and they ran
+   364px into a 203px card, hiding all five tiles.
+   
+   Same turn, addressed by what the card does not contain rather than by a new
+   class: the picture and the kicker take the left column, and everything from
+   the answer slots down — slots, tiles, and the undo and hint buttons — goes to
+   the right, so the card needs the taller column instead of the sum. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
+    display: grid;
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-content: center;
+    column-gap: 14px;
+    row-gap: 4px;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > * {
+    min-width: 0;
+    margin-bottom: 0 !important;
+    grid-column: 2;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1),
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    align-self: center;
+  }
+
+  /* Setting only grid-column leaves auto-placement to pick the row, so the two
+     columns end up on different rows and stack exactly as before — 319px of
+     rows for 199px of content. The rows have to be pinned for the columns to
+     sit alongside each other. */
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1) { grid-row: 1; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) { grid-row: 2 / span 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(3) { grid-row: 1 / span 2; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(4) { grid-row: 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(5) { grid-row: 4; }
+}
+
+/* The same turn one shape wider. 960x540 in-page is wide in shape but short
+   in pixels — the case section 5 describes — and the tiles ran past it too.
+/* (original note) Spelling Builder and Mixed Challenge answer with letter tiles rather than the
+   option buttons the other two modes use, so the rule above — which moves
+   .kc-vocab-options into the second column — leaves them stacked and they ran
+   364px into a 203px card, hiding all five tiles.
+   
+   Same turn, addressed by what the card does not contain rather than by a new
+   class: the picture and the kicker take the left column, and everything from
+   the answer slots down — slots, tiles, and the undo and hint buttons — goes to
+   the right, so the card needs the taller column instead of the sum. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
+    display: grid;
+    grid-template-rows: repeat(8, min-content);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-content: center;
+    column-gap: 14px;
+    row-gap: 4px;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > * {
+    min-width: 0;
+    margin-bottom: 0 !important;
+    grid-column: 2;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1),
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    grid-column: 1;
+  }
+
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) {
+    align-self: center;
+  }
+
+  /* Setting only grid-column leaves auto-placement to pick the row, so the two
+     columns end up on different rows and stack exactly as before — 319px of
+     rows for 199px of content. The rows have to be pinned for the columns to
+     sit alongside each other. */
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(1) { grid-row: 1; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(2) { grid-row: 2 / span 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(3) { grid-row: 1 / span 2; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(4) { grid-row: 3; }
+  :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(5) { grid-row: 4; }
+}
