@@ -1,9 +1,10 @@
 import Link from "next/link";
+import HeroToolsMockup from "@/components/home/HeroToolsMockup";
 
 export default function HeroSection() {
   return (
     <section
-      className="px-4 pb-5 pt-[22px] md:px-6 md:pb-7 md:pt-[34px] lg:px-8 lg:pb-9 lg:pt-12"
+      className="px-4 pb-5 pt-[22px] md:px-6 md:pb-7 md:pt-[34px] lg:flex lg:items-center lg:justify-between lg:gap-6 lg:px-8 lg:pb-9 lg:pt-12"
       style={{
         background: "radial-gradient(120% 90% at 100% 0%, #EFF0FE, #fff)",
       }}
@@ -42,6 +43,7 @@ export default function HeroSection() {
           </Link>
         </div>
       </div>
+      <HeroToolsMockup />
     </section>
   );
 }
