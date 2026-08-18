@@ -111,10 +111,15 @@ function ToolFace({ tool }: { tool: HeroMockupTool }) {
       return (
         <>
           <p className="mb-2 text-[11px] font-bold text-ink">เกมเป็ดสุ่มชื่อ</p>
-          <div className="flex items-end justify-between gap-1 px-1">
-            <Image src="/assets/duck-race/duck2.png" alt="" width={40} height={65} className="h-[52px] w-auto -translate-y-1" />
-            <Image src="/assets/duck-race/duck1.png" alt="" width={40} height={65} className="h-[62px] w-auto" />
-            <Image src="/assets/duck-race/duck3.png" alt="" width={40} height={65} className="h-[46px] w-auto translate-y-1.5" />
+          <div
+            className="relative flex items-end justify-between gap-1 overflow-hidden rounded-xl px-2 pt-2"
+            style={{ background: "linear-gradient(180deg, #BFEFFF 0%, #D0FBEF 55%, #FFEAD5 100%)" }}
+          >
+            <div className="absolute inset-x-0 bottom-0 h-[14px] bg-[#F7C873]" />
+            <div className="absolute inset-x-0 bottom-[6px] h-[2px] bg-[repeating-linear-gradient(90deg,#fff_0_6px,transparent_6px_12px)]" />
+            <Image src="/assets/duck-race/duck2.png" alt="" width={40} height={65} className="relative z-[1] h-[52px] w-auto -translate-y-1" />
+            <Image src="/assets/duck-race/duck1.png" alt="" width={40} height={65} className="relative z-[1] h-[62px] w-auto" />
+            <Image src="/assets/duck-race/duck3.png" alt="" width={40} height={65} className="relative z-[1] h-[46px] w-auto translate-y-1.5" />
           </div>
           <p className="mt-1.5 text-center text-[10.5px] text-ink-secondary">
             🏁 <b className="text-ink">น้องพลอย ถึงก่อน!</b>
