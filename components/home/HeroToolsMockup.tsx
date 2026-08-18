@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import { HERO_MOCKUP_PAIRS, type HeroMockupTool } from "@/components/home/heroToolsMockupData";
 
 const CYCLE_SECONDS = 8;
@@ -110,10 +111,10 @@ function ToolFace({ tool }: { tool: HeroMockupTool }) {
       return (
         <>
           <p className="mb-2 text-[11px] font-bold text-ink">เกมเป็ดสุ่มชื่อ</p>
-          <div className="flex items-center justify-between text-[20px]">
-            <span>🦆</span>
-            <span>🦆</span>
-            <span>🦆</span>
+          <div className="flex items-end justify-between gap-1 px-1">
+            <Image src="/assets/duck-race/duck2.png" alt="" width={40} height={65} className="h-[52px] w-auto -translate-y-1" />
+            <Image src="/assets/duck-race/duck1.png" alt="" width={40} height={65} className="h-[62px] w-auto" />
+            <Image src="/assets/duck-race/duck3.png" alt="" width={40} height={65} className="h-[46px] w-auto translate-y-1.5" />
           </div>
           <p className="mt-1.5 text-center text-[10.5px] text-ink-secondary">
             🏁 <b className="text-ink">น้องพลอย ถึงก่อน!</b>
