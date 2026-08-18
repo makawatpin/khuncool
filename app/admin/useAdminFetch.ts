@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabase } from "@/lib/supabase/client";
 
 type State<T> =
   | { status: "loading" }
@@ -17,6 +17,7 @@ export function useAdminFetch<T>(path: string): State<T> {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      const supabase = await getSupabase();
       const { data: sessionData } = await supabase.auth.getSession();
       const token = sessionData.session?.access_token;
       if (!token) {
