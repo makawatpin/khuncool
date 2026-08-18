@@ -199,6 +199,10 @@ const RELATED_TOOLS = [
 
 const RELATED_ARTICLES = [
   {
+    title: "สุ่มเลขที่นักเรียนด้วยเกมเป็ดสุ่ม ใช้ยังไง",
+    href: "/blog/duck-race-roll-number",
+  },
+  {
     title: "10 กิจกรรมเกมเป็ดสุ่มชื่อในห้องเรียน",
     href: "/blog/duck-race-classroom-activities",
   },
