@@ -199,9 +199,6 @@ export default function HeroToolsMockup() {
       aria-hidden="true"
       className="relative hidden h-[300px] w-full max-w-[420px] overflow-hidden rounded-[20px] lg:block"
     >
-      <span className="pointer-events-none absolute left-3 top-3 z-[3] rounded-full border border-border-strong/60 bg-white px-2.5 py-1 text-[10px] font-bold text-primary shadow-sm">
-        สลับอัตโนมัติ
-      </span>
       {HERO_MOCKUP_PAIRS.map((pair, i) => (
         <div
           key={i}
