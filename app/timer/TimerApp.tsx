@@ -90,8 +90,10 @@ function pad2(n: number): string {
 
 export default function TimerApp() {
   useTrackToolUse("timer");
+  const [mode, setMode] = useState<"down" | "up">("down");
   const [total, setTotal] = useState(300);
   const [remaining, setRemaining] = useState(300);
+  const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const [flashing, setFlashing] = useState(false);
@@ -111,8 +113,14 @@ export default function TimerApp() {
   }, [soundOn]);
 
   const drawAll = useCallback(() => {
-    canvasRefs.current.forEach((c) => drawTimer(c, total, remaining));
-  }, [total, remaining]);
+    if (mode === "up") {
+      const cycle = 60;
+      const rem = cycle - (elapsed % cycle);
+      canvasRefs.current.forEach((c) => drawTimer(c, cycle, rem));
+    } else {
+      canvasRefs.current.forEach((c) => drawTimer(c, total, remaining));
+    }
+  }, [mode, total, remaining, elapsed]);
 
   useEffect(() => {
     if (!running) drawAll();
@@ -143,10 +151,15 @@ export default function TimerApp() {
         el.width = size;
         el.height = size;
         canvasRefs.current.push(el);
-        drawTimer(el, total, remaining);
+        if (mode === "up") {
+          const cycle = 60;
+          drawTimer(el, cycle, cycle - (elapsed % cycle));
+        } else {
+          drawTimer(el, total, remaining);
+        }
       }
     },
-    [total, remaining],
+    [mode, total, remaining, elapsed],
   );
 
   const ac = useCallback((): AudioContext | null => {
@@ -205,6 +218,15 @@ export default function TimerApp() {
   const tickRef = useRef<() => void>(() => {});
   useEffect(() => {
     tickRef.current = () => {
+      if (mode === "up") {
+        const el = Math.max(0, (performance.now() - endRef.current) / 1000);
+        const e = Math.floor(el);
+        setElapsed((cur) => (e !== cur ? e : cur));
+        const cycle = 60;
+        canvasRefs.current.forEach((c) => drawTimer(c, cycle, cycle - (e % cycle)));
+        rafRef.current = requestAnimationFrame(() => tickRef.current());
+        return;
+      }
       const rem = Math.max(0, (endRef.current - performance.now()) / 1000);
       const r = Math.ceil(rem);
       setRemaining((cur) => (r !== cur ? r : cur));
@@ -215,12 +237,24 @@ export default function TimerApp() {
       }
       rafRef.current = requestAnimationFrame(() => tickRef.current());
     };
-  }, [total, finish]);
+  }, [mode, total, finish]);
 
   const toggleRun = useCallback(() => {
-    if (total <= 0) return;
     const context = ac();
     if (context && context.state === "suspended") context.resume();
+    if (mode === "up") {
+      if (running) {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        setRunning(false);
+      } else {
+        endRef.current = performance.now() - elapsed * 1000;
+        setRunning(true);
+        setFlashing(false);
+        rafRef.current = requestAnimationFrame(() => tickRef.current());
+      }
+      return;
+    }
+    if (total <= 0) return;
     if (running) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       setRunning(false);
@@ -233,14 +267,26 @@ export default function TimerApp() {
       setFlashing(false);
       rafRef.current = requestAnimationFrame(() => tickRef.current());
     }
-  }, [total, remaining, running, ac]);
+  }, [mode, total, remaining, running, elapsed, ac]);
 
   const reset = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     setRunning(false);
-    setRemaining(total);
     setFlashing(false);
-  }, [total]);
+    if (mode === "up") {
+      setElapsed(0);
+    } else {
+      setRemaining(total);
+    }
+  }, [mode, total]);
+
+  const switchMode = useCallback((m: "down" | "up") => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    setRunning(false);
+    setFlashing(false);
+    setElapsed(0);
+    setMode(m);
+  }, []);
 
   const addMinute = useCallback(() => {
     setTotal((t) => t + 60);
@@ -290,22 +336,37 @@ export default function TimerApp() {
     };
   }, []);
 
-  const clockMm = pad2(Math.floor(remaining / 60));
-  const clockSs = pad2(remaining % 60);
-  const low = remaining <= 10;
-  const done = remaining === 0;
-  const statusText = running
-    ? "กำลังนับถอยหลัง"
-    : done
-      ? "หมดเวลา!"
-      : "พร้อมเริ่ม";
+  const displaySec = mode === "up" ? elapsed : remaining;
+  const clockMm = pad2(Math.floor(displaySec / 60));
+  const clockSs = pad2(displaySec % 60);
+  const low = mode === "down" && remaining <= 10;
+  const done = mode === "down" && remaining === 0;
+  const statusText =
+    mode === "up"
+      ? running
+        ? "กำลังนับเวลา"
+        : elapsed > 0
+          ? "หยุดชั่วคราว"
+          : "พร้อมเริ่ม"
+      : running
+        ? "กำลังนับถอยหลัง"
+        : done
+          ? "หมดเวลา!"
+          : "พร้อมเริ่ม";
   const timeColor = done ? "#DC2626" : low && running ? "#F97316" : "#1A1D26";
-  const runLabel = running
-    ? "หยุดชั่วคราว"
-    : remaining > 0 && remaining < total
-      ? "เล่นต่อ"
-      : "▶ เริ่มจับเวลา";
-  const startDisabled = total <= 0;
+  const runLabel =
+    mode === "up"
+      ? running
+        ? "หยุดชั่วคราว"
+        : elapsed > 0
+          ? "เล่นต่อ"
+          : "▶ เริ่มจับเวลา"
+      : running
+        ? "หยุดชั่วคราว"
+        : remaining > 0 && remaining < total
+          ? "เล่นต่อ"
+          : "▶ เริ่มจับเวลา";
+  const startDisabled = mode === "down" && total <= 0;
   const startBg = startDisabled ? "#B9BCC7" : running ? "#F97316" : "#5C5EE6";
 
   return (
@@ -348,18 +409,45 @@ export default function TimerApp() {
 
         {/* Controls */}
         <div>
-          <div className="mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px]">
-            {PRESETS.map((p) => (
-              <button
-                key={p.sec}
-                type="button"
-                onClick={() => setPreset(p.sec)}
-                className="whitespace-nowrap rounded-[11px] border border-border bg-white px-1 py-[11px] font-sans text-[13px] font-semibold text-ink-secondary hover:border-[#C6C9FB] hover:bg-surface-light md:rounded-xl md:px-1 md:py-[13px] md:text-sm"
-              >
-                {p.label}
-              </button>
-            ))}
+          <div className="mb-3.5 grid grid-cols-2 gap-2 md:mb-[18px]">
+            <button
+              type="button"
+              onClick={() => switchMode("down")}
+              className={`whitespace-nowrap rounded-[11px] border px-3 py-[11px] font-sans text-[13px] font-semibold md:rounded-xl md:py-[13px] md:text-sm ${
+                mode === "down"
+                  ? "border-primary bg-primary text-white"
+                  : "border-border bg-white text-ink-secondary hover:bg-surface-light"
+              }`}
+            >
+              นับถอยหลัง
+            </button>
+            <button
+              type="button"
+              onClick={() => switchMode("up")}
+              className={`whitespace-nowrap rounded-[11px] border px-3 py-[11px] font-sans text-[13px] font-semibold md:rounded-xl md:py-[13px] md:text-sm ${
+                mode === "up"
+                  ? "border-primary bg-primary text-white"
+                  : "border-border bg-white text-ink-secondary hover:bg-surface-light"
+              }`}
+            >
+              นับเวลาขึ้น
+            </button>
           </div>
+
+          {mode === "down" && (
+            <div className="mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px]">
+              {PRESETS.map((p) => (
+                <button
+                  key={p.sec}
+                  type="button"
+                  onClick={() => setPreset(p.sec)}
+                  className="whitespace-nowrap rounded-[11px] border border-border bg-white px-1 py-[11px] font-sans text-[13px] font-semibold text-ink-secondary hover:border-[#C6C9FB] hover:bg-surface-light md:rounded-xl md:px-1 md:py-[13px] md:text-sm"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="mb-3.5 flex gap-[9px] md:mb-0 md:flex-col md:gap-3">
             <button
@@ -375,13 +463,15 @@ export default function TimerApp() {
               {runLabel}
             </button>
             <div className="hidden gap-2.5 md:flex">
-              <button
-                type="button"
-                onClick={addMinute}
-                className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-3 py-[13px] font-sans text-[15px] font-semibold text-ink hover:bg-surface-light"
-              >
-                +1:00
-              </button>
+              {mode === "down" && (
+                <button
+                  type="button"
+                  onClick={addMinute}
+                  className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-3 py-[13px] font-sans text-[15px] font-semibold text-ink hover:bg-surface-light"
+                >
+                  +1:00
+                </button>
+              )}
               <button
                 type="button"
                 onClick={reset}
@@ -390,13 +480,15 @@ export default function TimerApp() {
                 รีเซ็ต
               </button>
             </div>
-            <button
-              type="button"
-              onClick={addMinute}
-              className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-1.5 py-[15px] font-sans text-sm font-semibold text-ink hover:bg-surface-light md:hidden"
-            >
-              +1:00
-            </button>
+            {mode === "down" && (
+              <button
+                type="button"
+                onClick={addMinute}
+                className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-1.5 py-[15px] font-sans text-sm font-semibold text-ink hover:bg-surface-light md:hidden"
+              >
+                +1:00
+              </button>
+            )}
             <button
               type="button"
               onClick={reset}
@@ -406,44 +498,46 @@ export default function TimerApp() {
             </button>
           </div>
 
-          <div className="mt-3.5 rounded-2xl border border-border bg-surface-light p-[15px] md:mt-5 md:rounded-2xl md:p-[18px]">
-            <div className="mb-2.5 text-[13px] font-semibold md:mb-[11px] md:text-[13.5px]">
-              <span className="md:hidden">ตั้งเวลาเอง</span>
-              <span className="hidden md:inline">
-                ตั้งเวลาเอง (นาที : วินาที)
-              </span>
+          {mode === "down" && (
+            <div className="mt-3.5 rounded-2xl border border-border bg-surface-light p-[15px] md:mt-5 md:rounded-2xl md:p-[18px]">
+              <div className="mb-2.5 text-[13px] font-semibold md:mb-[11px] md:text-[13.5px]">
+                <span className="md:hidden">ตั้งเวลาเอง</span>
+                <span className="hidden md:inline">
+                  ตั้งเวลาเอง (นาที : วินาที)
+                </span>
+              </div>
+              <div className="flex items-center gap-2 md:gap-[9px]">
+                <input
+                  value={mm}
+                  onChange={(e) => setMm(e.target.value)}
+                  type="number"
+                  min={0}
+                  max={99}
+                  className="w-[70px] rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white p-2.5 text-center font-mono text-base outline-none focus:border-primary md:w-[76px] md:p-[11px] md:text-[17px]"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                />
+                <span className="text-lg font-bold text-ink-faint md:text-xl">
+                  :
+                </span>
+                <input
+                  value={ss}
+                  onChange={(e) => setSs(e.target.value)}
+                  type="number"
+                  min={0}
+                  max={59}
+                  className="w-[70px] rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white p-2.5 text-center font-mono text-base outline-none focus:border-primary md:w-[76px] md:p-[11px] md:text-[17px]"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                />
+                <button
+                  type="button"
+                  onClick={applyCustom}
+                  className="flex-1 whitespace-nowrap rounded-[10px] border-none bg-primary px-3 py-[11px] font-sans text-[13.5px] font-semibold text-white hover:bg-primary-hover md:py-3 md:text-sm"
+                >
+                  ตั้งเวลา
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-2 md:gap-[9px]">
-              <input
-                value={mm}
-                onChange={(e) => setMm(e.target.value)}
-                type="number"
-                min={0}
-                max={99}
-                className="w-[70px] rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white p-2.5 text-center font-mono text-base outline-none focus:border-primary md:w-[76px] md:p-[11px] md:text-[17px]"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-              />
-              <span className="text-lg font-bold text-ink-faint md:text-xl">
-                :
-              </span>
-              <input
-                value={ss}
-                onChange={(e) => setSs(e.target.value)}
-                type="number"
-                min={0}
-                max={59}
-                className="w-[70px] rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white p-2.5 text-center font-mono text-base outline-none focus:border-primary md:w-[76px] md:p-[11px] md:text-[17px]"
-                style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-              />
-              <button
-                type="button"
-                onClick={applyCustom}
-                className="flex-1 whitespace-nowrap rounded-[10px] border-none bg-primary px-3 py-[11px] font-sans text-[13.5px] font-semibold text-white hover:bg-primary-hover md:py-3 md:text-sm"
-              >
-                ตั้งเวลา
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
