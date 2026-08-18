@@ -6,14 +6,18 @@ import { getSupabase } from "@/lib/supabase/client";
 /** Fire-and-forget usage log. Never throws, never blocks the caller — a
  *  failed insert (offline, RLS misconfig, etc.) must not affect the tool. */
 export function trackToolEvent(tool: string, event: string = "use") {
-  getSupabase().then((supabase) =>
-    supabase
-      .from("tool_events")
-      .insert({ tool, event })
-      .then(({ error }) => {
-        if (error) console.warn("trackToolEvent failed:", error.message);
-      })
-  );
+  getSupabase()
+    .then((supabase) =>
+      supabase
+        .from("tool_events")
+        .insert({ tool, event })
+        .then(({ error }) => {
+          if (error) console.warn("trackToolEvent failed:", error.message);
+        })
+    )
+    .catch(() => {
+      console.warn("trackToolEvent failed: Supabase client unavailable");
+    });
 }
 
 /** Logs one 'use' event the first time a tool page mounts client-side. */

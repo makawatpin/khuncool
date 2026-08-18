@@ -17,14 +17,14 @@ export function useAdminFetch<T>(path: string): State<T> {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const supabase = await getSupabase();
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) {
-        if (!cancelled) setState({ status: "error", error: "ไม่มีเซสชัน" });
-        return;
-      }
       try {
+        const supabase = await getSupabase();
+        const { data: sessionData } = await supabase.auth.getSession();
+        const token = sessionData.session?.access_token;
+        if (!token) {
+          if (!cancelled) setState({ status: "error", error: "ไม่มีเซสชัน" });
+          return;
+        }
         const res = await fetch(path, {
           headers: { Authorization: `Bearer ${token}` },
         });

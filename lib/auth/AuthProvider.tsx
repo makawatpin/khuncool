@@ -101,25 +101,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let mounted = true;
     let unsubscribe: (() => void) | undefined;
 
-    getSupabase().then((supabase) => {
-      if (!mounted) return;
-
-      supabase.auth.getSession().then(({ data }) => {
+    getSupabase()
+      .then((supabase) => {
         if (!mounted) return;
-        setSession(data.session ?? null);
-        setUser(data.session?.user ?? null);
-        setReady(true);
-      });
 
-      const { data: subscription } = supabase.auth.onAuthStateChange(
-        (_event, nextSession) => {
-          setSession(nextSession ?? null);
-          setUser(nextSession?.user ?? null);
+        supabase.auth.getSession().then(({ data }) => {
+          if (!mounted) return;
+          setSession(data.session ?? null);
+          setUser(data.session?.user ?? null);
           setReady(true);
-        }
-      );
-      unsubscribe = () => subscription.subscription.unsubscribe();
-    });
+        });
+
+        const { data: subscription } = supabase.auth.onAuthStateChange(
+          (_event, nextSession) => {
+            setSession(nextSession ?? null);
+            setUser(nextSession?.user ?? null);
+            setReady(true);
+          }
+        );
+        unsubscribe = () => subscription.subscription.unsubscribe();
+      })
+      .catch(() => {
+        // Client unavailable (offline, missing env). Treat as signed-out and
+        // let the UI render rather than leaving `ready` false forever.
+        if (mounted) setReady(true);
+      });
 
     return () => {
       mounted = false;
