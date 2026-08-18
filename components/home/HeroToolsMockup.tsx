@@ -79,13 +79,30 @@ function ToolFace({ tool }: { tool: HeroMockupTool }) {
     case "familyTree":
       return (
         <>
-          <p className="mb-2 text-[11px] font-bold text-ink">Family Tree</p>
-          <div className="flex flex-col items-center gap-1.5 text-[9.5px] font-semibold text-ink-secondary">
-            <div className="rounded-lg bg-[#FFEAD5] px-3 py-1">Grandpa · Grandma</div>
-            <div className="h-2 w-px bg-border-strong" />
-            <div className="rounded-lg bg-[#E1E3FD] px-3 py-1">Father · Mother</div>
-            <div className="h-2 w-px bg-border-strong" />
-            <div className="rounded-lg bg-[#D0FBEF] px-3 py-1">Me</div>
+          <p className="mb-1.5 text-[11px] font-bold text-ink">Family Tree Explorer 🌳</p>
+          <div className="relative mx-auto h-[74px] w-[168px]">
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              viewBox="0 0 168 74"
+              fill="none"
+            >
+              <path
+                d="M42 12 V26 H126 V12 M84 26 V38 M42 38 V50 M126 38 V50"
+                stroke="#B8C0D9"
+                strokeWidth="1.5"
+                strokeDasharray="3 3"
+              />
+            </svg>
+            <div className="absolute left-[26px] top-0 flex h-[20px] w-[32px] items-center justify-center rounded-md border border-border-strong/60 bg-white text-[9px] text-ink-secondary/60">?</div>
+            <div className="absolute left-[110px] top-0 flex h-[20px] w-[32px] items-center justify-center rounded-md border border-border-strong/60 bg-white text-[9px] text-ink-secondary/60">?</div>
+            <div className="absolute left-[68px] top-[26px] flex h-[20px] w-[32px] items-center justify-center rounded-md bg-[#FFEAD5] text-[9px] font-semibold text-ink-secondary">Dad</div>
+            <div className="absolute left-[26px] top-[50px] flex h-[20px] w-[32px] items-center justify-center rounded-md border border-border-strong/60 bg-white text-[9px] text-ink-secondary/60">?</div>
+            <div className="absolute left-[68px] top-[50px] flex h-[20px] w-[32px] items-center justify-center rounded-md bg-primary text-[9px] font-semibold text-white">Me</div>
+            <div className="absolute left-[110px] top-[50px] flex h-[20px] w-[32px] items-center justify-center rounded-md border border-border-strong/60 bg-white text-[9px] text-ink-secondary/60">?</div>
+          </div>
+          <div className="mt-1.5 flex items-center justify-center gap-1.5">
+            <span className="rounded-full bg-[#D0FBEF] px-2 py-[3px] text-[9px] font-semibold text-ink-secondary">Mom</span>
+            <span className="rounded-full bg-[#E1E3FD] px-2 py-[3px] text-[9px] font-semibold text-ink-secondary">Grandma</span>
           </div>
         </>
       );
