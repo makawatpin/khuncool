@@ -356,11 +356,17 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir,
   if (game.stress) {
     const applied = await page.evaluate(({ selector, text }) => {
       const originals = [];
+      // Only swap a real word. The picture-answer mode leaves its label span
+      // empty, so "first span with any text" picked the emoji and the pass
+      // replaced a picture with a word the game never shows there, reporting
+      // an overflow that cannot happen. Two or more letters is a label.
+      const LABEL = /[A-Za-z฀-๿]{2,}/;
       for (const el of document.querySelectorAll(selector)) {
-        const span = [...el.querySelectorAll("span")].find(
-          (s) => s.textContent && s.textContent.trim().length,
+        const span = [...el.querySelectorAll("span")].find((s) =>
+          LABEL.test((s.textContent || "").trim()),
         );
-        const target = span || el;
+        if (!span) continue;
+        const target = span;
         originals.push([target, target.textContent]);
         target.textContent = text;
       }
