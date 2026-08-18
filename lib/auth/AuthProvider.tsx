@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabase } from "@/lib/supabase/client";
 import { getKhuncoolLocalStorageKeys } from "@/lib/khuncoolLocalKeys";
 
 /* ---------------------------------------------------------------------- */
@@ -99,31 +99,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
+    let unsubscribe: (() => void) | undefined;
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setSession(data.session ?? null);
-      setUser(data.session?.user ?? null);
-      setReady(true);
-    });
+    getSupabase()
+      .then((supabase) => {
+        if (!mounted) return;
 
-    const { data: subscription } = supabase.auth.onAuthStateChange(
-      (_event, nextSession) => {
-        setSession(nextSession ?? null);
-        setUser(nextSession?.user ?? null);
-        setReady(true);
-      }
-    );
+        supabase.auth.getSession().then(({ data }) => {
+          if (!mounted) return;
+          setSession(data.session ?? null);
+          setUser(data.session?.user ?? null);
+          setReady(true);
+        });
+
+        const { data: subscription } = supabase.auth.onAuthStateChange(
+          (_event, nextSession) => {
+            setSession(nextSession ?? null);
+            setUser(nextSession?.user ?? null);
+            setReady(true);
+          }
+        );
+        unsubscribe = () => subscription.subscription.unsubscribe();
+      })
+      .catch(() => {
+        // Client unavailable (offline, missing env). Treat as signed-out and
+        // let the UI render rather than leaving `ready` false forever.
+        if (mounted) setReady(true);
+      });
 
     return () => {
       mounted = false;
-      subscription.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, []);
 
   const signUp = useCallback(
     async (email: string, password: string, meta?: ProfileMeta): Promise<AuthResult> => {
       try {
+        const supabase = await getSupabase();
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -151,6 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(
     async (email: string, password: string): Promise<AuthResult> => {
       try {
+        const supabase = await getSupabase();
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -168,6 +182,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInGoogle = useCallback(async (): Promise<AuthResult | void> => {
     try {
+      const supabase = await getSupabase();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: { redirectTo: typeof window !== "undefined" ? window.location.href : undefined },
@@ -180,6 +195,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
     try {
+      const supabase = await getSupabase();
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: typeof window !== "undefined" ? window.location.href : undefined,
       });
@@ -192,6 +208,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = useCallback(async (meta: ProfileMeta): Promise<AuthResult> => {
     try {
+      const supabase = await getSupabase();
       const { data, error } = await supabase.auth.updateUser({
         data: { full_name: meta.fullName || "", school: meta.school || "" },
       });
@@ -205,6 +222,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async (keepLocal = true) => {
     try {
+      const supabase = await getSupabase();
       await supabase.auth.signOut();
     } catch {
       // best-effort: clear local state regardless of network failure
