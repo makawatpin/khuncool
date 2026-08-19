@@ -90,6 +90,12 @@
   .choices button{min-height:var(--kc-tap);padding:3px 7px;font-size:max(11px,3.4cqb);line-height:1.22}
   .choices button i{width:21px;height:21px;font-size:11px}
   .quizNav button{padding:6px 14px;font-size:max(11px,3cqb)}
+  /* The explain panel: new coverage, only appears with the last question
+     answered, so nothing here had ever compacted it. Below ~400px of stage it
+     was still 13-17px short of fitting even with the two-column collapse and
+     the choices grid already at their floor above, hiding two of the four
+     answer buttons behind the card's own scroll. */
+  .explain{padding:4px 7px;font-size:max(11px,2.8cqb);line-height:1.25}
 }
 
 /* The controls panel, and the three buttons at the foot of it.
@@ -219,6 +225,54 @@
 }
 
 @container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  /* The quiz card, on the last of its 4 questions.
+     --------------------------------------------
+     New coverage — the quiz screen had only ever been measured on its FIRST
+     question, picked=null, no explain panel. The last question with an answer
+     picked is a different screen: the explain panel now occupies the second
+     grid column, and `.quiz{grid-template-rows:auto 1fr auto}` has no floor on
+     that middle row, so a long question heading wrapping to two lines can push
+     the row past its fair share and take the trailing quizNav row with it —
+     found on a 960x540 stage with both nav buttons 18px past the board.
+
+     `minmax(0,1fr)` is the actual fix: it lets the row shrink to what is
+     available rather than growing to fit content, the same technique the
+     `height<440` block already uses one band down. Everything below is what
+     makes the shrunk space still readable rather than merely not-overflowing. */
+  .quiz {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .questionCard {
+    padding: clamp(12px, 2cqi, 24px);
+    gap: 8px 14px;
+    overflow: auto;
+  }
+
+  .questionIcon {
+    font-size: clamp(36px, 5cqi, 60px);
+  }
+
+  .questionCard h3 {
+    font-size: clamp(20px, 2.4cqi, 32px);
+  }
+
+  .choices button {
+    min-height: 48px;
+    padding: 8px;
+    font-size: clamp(13px, 1.2cqi, 17px);
+  }
+
+  /* Below 440px this loses to the more aggressive `.explain` rule in the
+     other short-shape block regardless of which is declared first — CSS
+     resolves the tie there by height, not by source order, so it is written
+     once, at the height that actually needed it, rather than twice with the
+     weaker copy silently shadowing the stronger one. That silent shadowing is
+     exactly what happened here on the first pass: this rule and the other
+     one both matched a 304px stage, equal specificity, and this one being
+     later in the file was what won — closing 0 of the 16px actually needed. */
+
   /* 30% of a 780px stage leaves each of the three route buttons about 63px, and
      "ข้ามจุดเริ่ม" needs 66px on one line. Three px short of fitting is what
      made every label wrap and every button 71px tall, so the column gets the
