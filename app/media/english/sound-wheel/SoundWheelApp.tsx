@@ -660,19 +660,8 @@ export default function SoundWheelApp() {
       </div>
 
       {/* top bar */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 5,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 10,
-          padding: "14px 16px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div className={styles.topbar}>
+        <div className={styles.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
@@ -686,6 +675,7 @@ export default function SoundWheelApp() {
             }}
           />
           <div
+            className={styles.brandName}
             style={{
               fontFamily: "var(--font-fredoka)",
               fontWeight: 600,
@@ -696,7 +686,7 @@ export default function SoundWheelApp() {
             Sound Wheel
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div className={styles.tools}>
           <Link
             href="/media/english"
             style={{
@@ -761,7 +751,7 @@ export default function SoundWheelApp() {
                 />
               ))}
             </span>
-            <span>{bgm ? "เพลง" : "ปิดเพลง"}</span>
+            <span className={styles.bgmLabel}>{bgm ? "เพลง" : "ปิดเพลง"}</span>
           </button>
           <button
             type="button"
@@ -1055,35 +1045,10 @@ export default function SoundWheelApp() {
       {stage === 1 && (
         <div
           className={`${styles.screen} ${styles.play}`}
-          style={{
-            position: "relative",
-            zIndex: 5,
-            width: "100%",
-            margin: "0 auto",
-            padding: "6px 16px clamp(8px,2cqb,36px)",
-            gap: 8,
-          }}
+          style={{ position: "relative", zIndex: 5 }}
         >
-          <div
-            style={{
-              flex: "1 1 340px",
-              minWidth: 300,
-              maxWidth: 520,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                paddingTop: 4,
-              }}
-            >
+          <div className={styles.wheelCol}>
+            <div className={styles.wheelWrap}>
               <div
                 style={{
                   position: "absolute",
@@ -1119,100 +1084,28 @@ export default function SoundWheelApp() {
               type="button"
               onClick={spin}
               disabled={spinning}
+              className={styles.spinBtn}
               style={{
-                marginTop: 6,
-                width: "min(46cqi,430px)",
-                fontFamily: "var(--font-fredoka)",
-                fontWeight: 600,
-                fontSize: 19,
-                color: "#fff",
                 background: spinBg,
-                border: "none",
-                borderRadius: 999,
-                padding: 16,
                 cursor: spinning ? "default" : "pointer",
                 boxShadow: "0 14px 28px -10px rgba(240,83,43,.6)",
-                transition: "transform .18s",
               }}
             >
               {spinLabel}
             </button>
           </div>
 
-          <div
-            style={{
-              flex: "1 1 320px",
-              minWidth: 290,
-              maxWidth: 440,
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-            }}
-          >
-            <div style={{ display: "flex", gap: 10 }}>
-              <div
-                style={{
-                  flex: 1,
-                  background: "#fff",
-                  border: "1px solid #E5E8EE",
-                  borderRadius: 18,
-                  padding: "8px 10px",
-                  textAlign: "center",
-                  boxShadow: "0 12px 26px -22px rgba(0,0,0,.7)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 11,
-                    letterSpacing: ".12em",
-                    textTransform: "uppercase",
-                    color: "#9AA3B2",
-                    fontWeight: 700,
-                  }}
-                >
-                  หมุนแล้ว
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 700,
-                    fontSize: 26,
-                    color: "#5C5EE6",
-                  }}
-                >
+          <div className={styles.panel}>
+            <div className={styles.stats}>
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>หมุนแล้ว</div>
+                <div className={styles.statValue} style={{ color: "#5C5EE6" }}>
                   {spins}
                 </div>
               </div>
-              <div
-                style={{
-                  flex: 1,
-                  background: "#fff",
-                  border: "1px solid #E5E8EE",
-                  borderRadius: 18,
-                  padding: "8px 10px",
-                  textAlign: "center",
-                  boxShadow: "0 12px 26px -22px rgba(0,0,0,.7)",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 11,
-                    letterSpacing: ".12em",
-                    textTransform: "uppercase",
-                    color: "#9AA3B2",
-                    fontWeight: 700,
-                  }}
-                >
-                  ถูกต่อเนื่อง
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 700,
-                    fontSize: 26,
-                    color: "#14B79A",
-                  }}
-                >
+              <div className={styles.statCard}>
+                <div className={styles.statLabel}>ถูกต่อเนื่อง</div>
+                <div className={styles.statValue} style={{ color: "#14B79A" }}>
                   {streak} {fire}
                 </div>
               </div>
@@ -1220,122 +1113,62 @@ export default function SoundWheelApp() {
 
             {result ? (
               <div
+                className={styles.resultCard}
                 style={{
-                  position: "relative",
-                  background: "#fff",
                   border: `2px solid ${result.color}`,
-                  borderRadius: 26,
-                  padding: "clamp(12px,3cqb,22px) 18px",
-                  textAlign: "center",
-                  boxShadow: "0 24px 46px -30px rgba(26,29,38,.7)",
                   animation: cardAnim,
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 14,
-                    right: 16,
-                    fontSize: 11,
-                    letterSpacing: ".12em",
-                    textTransform: "uppercase",
-                    color: "#9AA3B2",
-                    fontWeight: 700,
-                  }}
-                >
-                  {SETS[setKey].label}
+                <div className={styles.resultTag}>{SETS[setKey].label}</div>
+                <div className={styles.resultHead}>
+                  <div
+                    className={styles.resultCircle}
+                    style={{ background: result.soft }}
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: "50%",
+                        border: `3px solid ${result.color}`,
+                        animation: "soundPulse 1.8s ease-out infinite",
+                      }}
+                    />
+                    <span
+                      className={styles.resultSound}
+                      style={{ color: result.color }}
+                    >
+                      {result.sound}
+                    </span>
+                  </div>
+                  <div className={styles.resultText}>
+                    <div className={styles.resultLabel}>ตัวอย่างคำ</div>
+                    <div className={styles.resultWord}>
+                      {result.emoji} {result.word}
+                    </div>
+                  </div>
                 </div>
-                <div
-                  style={{
-                    position: "relative",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 118,
-                    height: 118,
-                    borderRadius: "50%",
-                    background: result.soft,
-                    marginBottom: 10,
-                  }}
-                >
-                  <span
+                <div className={styles.resultActions}>
+                  <button
+                    type="button"
+                    onClick={speakAgain}
+                    className={styles.listenBtn}
                     style={{
-                      position: "absolute",
-                      inset: 0,
-                      borderRadius: "50%",
-                      border: `3px solid ${result.color}`,
-                      animation: "soundPulse 1.8s ease-out infinite",
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: "var(--font-fredoka)",
-                      fontWeight: 700,
-                      fontSize: 54,
-                      color: result.color,
-                      lineHeight: 1,
+                      background: result.color,
+                      cursor: "pointer",
+                      boxShadow: "0 12px 24px -12px rgba(0,0,0,.5)",
                     }}
                   >
-                    {result.sound}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    color: "#5A6273",
-                    marginBottom: 4,
-                  }}
-                >
-                  ตัวอย่างคำ
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 700,
-                    fontSize: 30,
-                    letterSpacing: "-.01em",
-                    marginBottom: 14,
-                  }}
-                >
-                  {result.emoji} {result.word}
-                </div>
-                <button
-                  type="button"
-                  onClick={speakAgain}
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    color: "#fff",
-                    background: result.color,
-                    border: "none",
-                    borderRadius: 999,
-                    padding: "12px 26px",
-                    cursor: "pointer",
-                    boxShadow: "0 12px 24px -12px rgba(0,0,0,.5)",
-                    transition: "transform .18s",
-                  }}
-                >
-                  🔊 ฟังเสียงอีกครั้ง
-                </button>
-                <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                    🔊 ฟังเสียงอีกครั้ง
+                  </button>
                   <button
                     type="button"
                     onClick={markWrong}
                     style={{
-                      flex: 1,
-                      fontFamily: "var(--font-fredoka)",
-                      fontWeight: 600,
-                      fontSize: 15,
                       color: "#B4331A",
                       background: "#FFE7E0",
                       border: "2px solid #FFC9BB",
-                      borderRadius: 16,
-                      padding: 13,
                       cursor: "pointer",
-                      transition: "transform .18s",
                     }}
                   >
                     ลองอีกครั้ง
@@ -1344,18 +1177,11 @@ export default function SoundWheelApp() {
                     type="button"
                     onClick={markRight}
                     style={{
-                      flex: 1,
-                      fontFamily: "var(--font-fredoka)",
-                      fontWeight: 600,
-                      fontSize: 15,
                       color: "#fff",
                       background: "linear-gradient(135deg,#14B79A,#0E9C84)",
                       border: "none",
-                      borderRadius: 16,
-                      padding: 13,
                       cursor: "pointer",
                       boxShadow: "0 12px 24px -12px rgba(20,183,154,.8)",
-                      transition: "transform .18s",
                     }}
                   >
                     ออกเสียงถูก ⭐
@@ -1364,75 +1190,25 @@ export default function SoundWheelApp() {
               </div>
             ) : (
               <div
-                style={{
-                  background: "rgba(255,255,255,.72)",
-                  border: "2px dashed #C9CFE0",
-                  borderRadius: 26,
-                  padding: "clamp(14px,3cqb,30px) 20px",
-                  textAlign: "center",
-                  animation: "bobIn .4s ease-out",
-                }}
+                className={styles.placeholder}
+                style={{ animation: "bobIn .4s ease-out" }}
               >
                 <div
-                  style={{
-                    fontSize: "clamp(24px,5cqb,40px)",
-                    marginBottom: 4,
-                    animation: "floatY 3s ease-in-out infinite",
-                  }}
+                  className={styles.placeholderIcon}
+                  style={{ animation: "floatY 3s ease-in-out infinite" }}
                 >
                   👆
                 </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-fredoka)",
-                    fontWeight: 600,
-                    fontSize: 18,
-                    marginBottom: 4,
-                  }}
-                >
-                  กดวงล้อเพื่อหมุน
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: "#5A6273",
-                    lineHeight: 1.4,
-                  }}
-                >
+                <div className={styles.placeholderTitle}>กดวงล้อเพื่อหมุน</div>
+                <div className={styles.placeholderHint}>
                   ให้นักเรียนผลัดกันหมุน แล้วออกเสียงพร้อมกันทั้งห้อง
                 </div>
               </div>
             )}
 
-            <div
-              style={{
-                background: "#fff",
-                border: "1px solid #E5E8EE",
-                borderRadius: 22,
-                padding: "14px 16px",
-                boxShadow: "0 12px 26px -24px rgba(0,0,0,.7)",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  letterSpacing: ".12em",
-                  textTransform: "uppercase",
-                  color: "#9AA3B2",
-                  fontWeight: 700,
-                  marginBottom: 10,
-                }}
-              >
-                เสียงที่ออกแล้ว
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 7,
-                  minHeight: 34,
-                }}
-              >
+            <div className={styles.histCard}>
+              <div className={styles.histLabel}>เสียงที่ออกแล้ว</div>
+              <div className={styles.chipRow}>
                 {history.map((h, i) => (
                   <span
                     key={`${h.sound}-${i}`}
@@ -1445,6 +1221,7 @@ export default function SoundWheelApp() {
                       background: h.soft,
                       color: h.color,
                       animation: "popIn .3s ease-out",
+                      height: "fit-content",
                     }}
                   >
                     {h.sound}
@@ -1456,33 +1233,20 @@ export default function SoundWheelApp() {
                   </span>
                 )}
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 14,
-                  marginTop: 14,
-                  paddingTop: 12,
-                  borderTop: "1px solid #E5E8EE",
-                }}
-              >
+              <div className={styles.navRow}>
                 {/* Buttons, not spans with onClick. As spans these were
                     unreachable by Tab and announced as plain text rather than
                     as controls, and no audit check could see them either —
-                    every one of them starts from button/a/[role=button]. */}
+                    every one of them starts from button/a/[role=button].
+
+                    Pinned below the chip list rather than following it. Sitting
+                    last in the tallest column, they were the two controls the
+                    Tier A rows kept reporting off the bottom of the stage. */}
                 <button
                   type="button"
                   onClick={newRound}
                   className="kc-tap"
-                  style={{
-                    padding: 0,
-                    border: "none",
-                    background: "none",
-                    font: "inherit",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "#5C5EE6",
-                    cursor: "pointer",
-                  }}
+                  style={{ color: "#5C5EE6" }}
                 >
                   🔀 สลับช่องใหม่
                 </button>
@@ -1490,16 +1254,7 @@ export default function SoundWheelApp() {
                   type="button"
                   onClick={backHome}
                   className="kc-tap"
-                  style={{
-                    padding: 0,
-                    border: "none",
-                    background: "none",
-                    font: "inherit",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "#5A6273",
-                    cursor: "pointer",
-                  }}
+                  style={{ color: "#5A6273" }}
                 >
                   ⚙️ เปลี่ยนชุดเสียง
                 </button>
