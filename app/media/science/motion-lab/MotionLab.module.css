@@ -40,8 +40,17 @@
 
    580px leaves the 617px desktop stage untouched and catches the 540px tablet
    and everything shorter, including the 396px tablet-upright case where the
-   short block's own compression was still 19px short. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 580px){
+   short block's own compression was still 19px short.
+
+   Floored at 340px, because the `height<340` block further down sizes the same
+   heading again for the tightest boards ("below ~340px the intro's two columns
+   cannot both fit"). `height<340` is a subset of this range and `.introCopy h2`
+   ties on specificity, so without the floor this block — being earlier in the
+   file — would still lose to it, but `.introCopy>p` would not: that one is
+   written `:not(.eyebrow)` here and bare there, so this block outranks it on
+   specificity and was overriding the tighter margins on a 304px stage. One
+   bound settles both. */
+@container kcstage (aspect-ratio >= 0.9) and (height >= 340px) and (height < 580px){
   .introCopy h2{font-size:max(24px,7.2cqb);line-height:1.12}
   .introCopy>p:not(.eyebrow){margin:8px 0;font-size:max(13px,2.9cqb);line-height:1.45}
   .introCopy .topicChips{margin-bottom:10px}
@@ -237,11 +246,12 @@
 
      `minmax(0,1fr)` is the actual fix: it lets the row shrink to what is
      available rather than growing to fit content, the same technique the
-     `height<440` block already uses one band down. Everything below is what
-     makes the shrunk space still readable rather than merely not-overflowing. */
+     `height<440` block already uses one band down.
+
+     Sizing that competes with the tighter band lives in its own block below,
+     not here — see the note there. */
   .quiz {
     grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 8px;
   }
 
   .questionCard {
@@ -258,26 +268,17 @@
     font-size: clamp(20px, 2.4cqi, 32px);
   }
 
-  .choices button {
-    min-height: 48px;
-    padding: 8px;
-    font-size: clamp(13px, 1.2cqi, 17px);
-  }
-
-  /* Below 440px this loses to the more aggressive `.explain` rule in the
-     other short-shape block regardless of which is declared first — CSS
-     resolves the tie there by height, not by source order, so it is written
-     once, at the height that actually needed it, rather than twice with the
-     weaker copy silently shadowing the stronger one. That silent shadowing is
-     exactly what happened here on the first pass: this rule and the other
-     one both matched a 304px stage, equal specificity, and this one being
-     later in the file was what won — closing 0 of the 16px actually needed. */
-
   /* 30% of a 780px stage leaves each of the three route buttons about 63px, and
      "ข้ามจุดเริ่ม" needs 66px on one line. Three px short of fitting is what
      made every label wrap and every button 71px tall, so the column gets the
      width instead — the simulator beside it is a track drawing with width to
-     spare. */
+     spare.
+
+     Deliberately supersedes the 30% in the `height<440` block: `height<440` is
+     a subset of this range, both selectors tie on specificity, and this block
+     is later, so 34% wins everywhere the older rule applied. That is the
+     intent here — 34% was measured on the 780x304 stage, which is one of
+     those. The 30% declaration up there is now dead. */
   .workspace {
     grid-template-columns: 34% 1fr;
   }
@@ -328,6 +329,40 @@
      names. The cheapest thing here to lose. */
   .controls > div:first-child > small {
     display: none;
+  }
+}
+
+/* The quiz card's sizing, for this band only — 440px up to 580px.
+   ---------------------------------------------------------------
+   These two rules exist for the 960x540 stage, and they must NOT reach the
+   stages below 440px, which have their own tighter values in the `height<440`
+   block (`.choices button` at the 11px floor with 3px 7px padding, `.quiz` at
+   a 4px gap). `height<440` is a subset of `height<580`, the selectors tie on
+   specificity, and source order decides — so written unbanded here, later in
+   the file, these would win on exactly the stages that need the tight values,
+   handing back room the block up there took real effort to find. Measured on
+   an 844x390 viewport that is what happened: `.choices button` resolved to
+   48px/8px/13px instead of var(--kc-tap)/3px 7px/max(11px,3.4cqb), and `.quiz`
+   to an 8px gap instead of 4px.
+
+   The lower bound is the fix. It says the range these values were measured
+   for, instead of relying on where the block happens to sit in the file.
+
+   Not a new trap: the same shadowing hit `.explain` earlier in this branch,
+   and that one was fixed by deleting the weaker copy. Four sibling selectors
+   were missed at the time; this is them. `.questionCard` and its descendants
+   are not among them — the `height<440` block scopes those as
+   `.quiz .questionCard`, which outranks the bare selector on specificity and
+   wins regardless of order. */
+@container kcstage (aspect-ratio >= 0.9) and (height >= 440px) and (height < 580px) {
+  .quiz {
+    gap: 8px;
+  }
+
+  .choices button {
+    min-height: 48px;
+    padding: 8px;
+    font-size: clamp(13px, 1.2cqi, 17px);
   }
 }
 
