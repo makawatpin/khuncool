@@ -91,3 +91,228 @@
   .choices button i{width:21px;height:21px;font-size:11px}
   .quizNav button{padding:6px 14px;font-size:max(11px,3cqb)}
 }
+
+/* The controls panel, and the three buttons at the foot of it.
+   ----------------------------------------------------------
+   Tier A listed five rows here — reset, run and the quiz link scrolled out of
+   the panel on both phone shapes and on an upright tablet. The panel carries
+   `overflow:auto`, so all three counted as reachable and no hard check fired.
+
+   Two things were wrong underneath, and only one of them was the height.
+
+   1. Nothing in the panel was allowed to keep its size. `.controls` is a flex
+      column, so every child shrinks by default, and the route note — the one
+      block of prose in it — was squeezed to a 10px box holding 21px of text on
+      a landscape phone and 39px on an upright tablet. It has `overflow:visible`
+      and no clipping, so the sentence simply rendered on top of the buttons
+      below it. Nothing in the audit can see text lying over a button: the note
+      is inside the stage, its box is not a scroll region, and its font size
+      never changed. It was found by measuring scrollHeight against clientHeight
+      and asking whether the two boxes met.
+
+   2. The three route buttons stack their icon over their label, and two of the
+      three labels wrap at this width. Grid rows are equal, so all three took
+      the tallest one's 91px — 40% of a 230px panel spent on three buttons.
+
+   So: every child keeps its height, the note becomes the one part that gives
+   ground (it holds no controls, which is what makes scrolling it the honest
+   answer per the contract), the buttons lie down into a row, and the footer is
+   pinned. The panel itself no longer scrolls, so anything that still does not
+   fit fails loudly as an unreachable control rather than quietly as a hidden
+   one. */
+
+/* Part 1 — the squeeze, fixed at every size because it is a defect at every
+   size, not a small-screen compromise. Only the note may give ground, and it
+   scrolls its own text instead of rendering it over the buttons. */
+
+.controls {
+  /* The panel no longer absorbs overflow silently. Anything that still does
+     not fit now reports as an unreachable control, which is a hard failure and
+     easy to see, rather than as three buttons quietly below the fold. */
+  overflow: hidden;
+}
+
+.controls > * {
+  flex: none;
+}
+
+.routeNote {
+  /* `0 1 auto`, not `1 1 auto`: it may shrink when the panel is tight but must
+     not grow into the space the footer's `margin-top:auto` is using. */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.controlFooter {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+/* Part 2 — compaction, only where the room has actually run out. The rules are
+   written twice rather than once with a comma: a comma-separated container
+   query list with the container name repeated is rejected by this toolchain
+   ("Unexpected token Comma"), and naming the container is what makes these
+   read against the stage rather than the nearest ancestor. */
+
+@container kcstage (aspect-ratio < 0.9) {
+  /* The panel had a fixed 39% of the workspace and its contents needed 253px
+     of the 220px that came to. A share of the board is the wrong way to size a
+     column of six fixed things: `auto` gives the panel what it needs and the
+     simulator — which is artwork and genuinely elastic — keeps the rest, with
+     a floor so it can never be squeezed away. */
+  .workspace {
+    grid-template-rows: auto minmax(120px, 1fr);
+  }
+
+  /* The simulator gives up 18px of track so the insight line under it stays on
+     the board. Sized from the controls panel taking what it needs above, the
+     simulator's four rows wanted 306px of the 298px left, and the last of them
+     — the sentence explaining distance against displacement — finished 11px
+     below the stage. The track keeps sky, road and car at 112px.
+
+     (The slider is not a candidate: stage.css floors every range input at
+     --kc-tap, which is the WCAG target size and not ours to shave.) */
+  .simulator {
+    grid-template-rows: auto minmax(112px, 1fr) auto auto;
+  }
+
+  .routeButtons button {
+    display: flex;
+    min-height: var(--kc-tap);
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .routeButtons button span {
+    font-size: 17px;
+  }
+
+  .controlFooter {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .controlFooter > .controlActions {
+    flex: 2 1 auto;
+    margin-top: 0;
+  }
+
+  .controlFooter > .quizLink {
+    flex: 1 1 auto;
+    min-height: var(--kc-tap);
+    margin-top: 0;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: #eef4ff;
+    padding: 0 6px;
+    line-height: 1.15;
+  }
+
+  .controls > div:first-child > small {
+    display: none;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  /* 30% of a 780px stage leaves each of the three route buttons about 63px, and
+     "ข้ามจุดเริ่ม" needs 66px on one line. Three px short of fitting is what
+     made every label wrap and every button 71px tall, so the column gets the
+     width instead — the simulator beside it is a track drawing with width to
+     spare. */
+  .workspace {
+    grid-template-columns: 34% 1fr;
+  }
+
+  /* Icon over label, but the label may not wrap: stacked and wrapping, two of
+     the three labels ran to four lines, and grid rows are equal, so all three
+     took the tallest one's height — 91px of a 230px panel for three buttons. */
+  .routeButtons button {
+    display: grid;
+    min-height: var(--kc-tap);
+    align-content: center;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .routeButtons button span {
+    font-size: 16px;
+  }
+
+  .routeButtons button b {
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  /* The quiz link keeps its own row here. Sharing one with reset and run gave
+     it about 82px for a 24-character label, which wrapped to four lines and
+     cost more than the row saved; full width it is one line and 44px. */
+  .controlFooter {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .controlFooter > .controlActions {
+    margin-top: 0;
+  }
+
+  .controlFooter > .quizLink {
+    min-height: var(--kc-tap);
+    margin-top: 0;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: #eef4ff;
+    padding: 0 6px;
+    line-height: 1.15;
+  }
+
+  /* The step number over the panel heading names a step the heading already
+     names. The cheapest thing here to lose. */
+  .controls > div:first-child > small {
+    display: none;
+  }
+}
+
+/* Shorter than the route note can be read in.
+   ------------------------------------------
+   At 304px of stage the panel has 216px for six blocks that need 222px, and
+   the note is the only one that is neither a control nor a heading. Left in it
+   would shrink to a 10px slot scrolling a 21px sentence, which is not reading
+   it — it is hiding it while claiming otherwise. The route buttons carry the
+   names ("ไปแล้วกลับ", "ข้ามจุดเริ่ม") and the track beside them shows the path,
+   so the sentence goes and comes back the moment the board is taller. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  .routeNote {
+    display: none;
+  }
+
+  /* With the note gone the panel still wanted 38px more than it had, and every
+     remaining block is either a heading or a control sitting on the 44px tap
+     floor — there is nothing left to shave without going under it. So the
+     height comes out of the layout instead: a wider column lets reset, run and
+     the quiz link stand in one row rather than two, which is worth 54px on its
+     own. The simulator loses width it was spending on empty track. */
+  .workspace {
+    grid-template-columns: 40% 1fr;
+  }
+
+  .controlFooter {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .controlFooter > .controlActions {
+    flex: 2 1 0;
+  }
+
+  .controlFooter > .quizLink {
+    flex: 1 1 0;
+    padding: 0 4px;
+    font-size: 12px;
+  }
+}
