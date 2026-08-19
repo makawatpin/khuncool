@@ -931,6 +931,7 @@ export default function TalkCardApp() {
             left: `${b.left}%`,
             fontSize: b.size,
             opacity: 0.55,
+            pointerEvents: "none",
             animation: `bubbleUp ${b.dur}s linear ${b.delay}s infinite`,
           }}
         >
@@ -949,6 +950,7 @@ export default function TalkCardApp() {
             background: c.color,
             borderRadius: 2,
             zIndex: 60,
+            pointerEvents: "none",
             animation: `confettiFall ${c.dur}s linear ${c.delay}s forwards`,
           }}
         />
