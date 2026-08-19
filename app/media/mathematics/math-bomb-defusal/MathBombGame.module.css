@@ -76,4 +76,66 @@
   .bombRig {
     transform: scale(0.88);
   }
+
+  /* The result overlay, on a shape that never had it measured.
+     ------------------------------------------------------
+     `.overlay{inset:12% 0 0}` assumes the topbar keeps a fixed 12% of the
+     game box, true in the base grid layout and in the 9% portrait override —
+     both keep the topbar's height as a percentage too, so the two numbers
+     move together. This block turns the topbar into `flex:0 0 auto`, content-
+     sized rather than percentage-sized, and nothing here ever updated the
+     overlay to match: measured, the topbar renders 51px tall against the 37px
+     (12% of 304) the overlay assumed, so the overlay's own top edge started
+     14px inside the topbar and the failure icon rendered half-hidden behind
+     it — found by screenshot, not by any check, since nothing here audits
+     panel-versus-panel overlap.
+
+     54px is the topbar's measured height plus a small buffer, pinned rather
+     than left as a percentage for the same reason the topbar itself no longer
+     is one: content-sized chrome does not resize proportionally with the
+     board the way the old grid model assumed. */
+  .overlay {
+    inset: 54px 0 0;
+  }
+
+  .readyCard,
+  .resultCard {
+    padding: 8px 12px;
+  }
+
+  /* The emoji's own line-box renders roughly three times its font-size tall
+     in this font stack (130px measured against a 47px font-size) — an emoji
+     metrics quirk, not something to fix by shrinking the font, which would
+     shrink the glyph along with it. Capping the box directly keeps the icon's
+     size and stops its line metrics from setting the card's height. */
+  .readyCard > span,
+  .resultCard > span {
+    height: 34px;
+    line-height: 34px;
+    overflow: hidden;
+  }
+
+  .readyCard h2,
+  .resultCard h2 {
+    margin: 3px 0;
+    font-size: max(15px, 6cqb);
+  }
+
+  .readyCard p,
+  .resultCard p {
+    margin: 3px 0 6px;
+    font-size: max(11px, 3cqb);
+  }
+
+  .lifeReport {
+    margin: 4px 0 8px;
+    font-size: max(11px, 3cqb);
+  }
+
+  .overlay button {
+    min-height: var(--kc-tap);
+    min-width: 0;
+    padding: 0 16px;
+    font-size: max(11px, 3.2cqb);
+  }
 }
