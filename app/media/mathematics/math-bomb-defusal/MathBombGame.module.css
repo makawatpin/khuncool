@@ -139,3 +139,14 @@
     font-size: max(11px, 3.2cqb);
   }
 }
+
+/* The streak suffix on the score pill — new coverage, only appears with a
+   streak greater than 0, which nothing had ever reached before (`won`, this
+   session's new screen, is the first path that finishes 10 correct answers
+   in a row). `<small>` carries a UA-stylesheet default of `font-size:smaller`
+   (~80%) that nothing here overrode, so at the pill's own 11px floor the
+   streak text rendered at 8.8px — under the contract's legibility floor by a
+   margin nothing else in this file left unguarded. */
+.scorePill small {
+  font-size: inherit;
+}
