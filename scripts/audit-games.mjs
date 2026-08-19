@@ -37,6 +37,7 @@
  */
 import { chromium } from "playwright";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -49,6 +50,34 @@ const AUDIT_STAGE_SRC = await readFile(
   path.join(ROOT, "scripts", "audit-stage.js"),
   "utf8",
 );
+
+/**
+ * Science Lab Crisis's `won` screen — 10 correct answers in a row — needs to
+ * know which option is correct each round, and every question's options are
+ * re-shuffled per round (`optionOrder`), so "click index 0" only works before
+ * the first shuffle. What holds across every shuffle is the option's TEXT:
+ * `source.answer` is 0 for all 30 questions in this file (checked directly,
+ * not assumed), so the correct option is always whichever button's text
+ * matches that question's first-listed option in the source. Read from the
+ * source rather than transcribed by hand — 30 Thai strings copied by eye is
+ * exactly the kind of place a typo hides, and re-reading the source survives
+ * the question bank changing later where a hardcoded list would not.
+ */
+const SCIENCE_LAB_ANSWERS = (() => {
+  const src = readFileSync(
+    path.join(ROOT, "app/media/science/science-lab-crisis/ScienceLabGame.tsx"),
+    "utf8",
+  );
+  const re = /situation:"([^"]*)",question:"[^"]*",options:\[("[^"]*"(?:,"[^"]*")*)\],answer:(\d)/g;
+  const map = new Map();
+  let m;
+  while ((m = re.exec(src))) {
+    const [, situation, optionsRaw, answerIndex] = m;
+    const options = JSON.parse(`[${optionsRaw}]`);
+    map.set(situation, options[Number(answerIndex)]);
+  }
+  return map;
+})();
 
 /**
  * Default seed, chosen rather than picked arbitrarily.
@@ -145,10 +174,7 @@ const FULLSCREEN_LABEL = "เต็มจอ";
  */
 // `enter` steps click by a regex substring match on accessible name — button
 // text is often split across sibling text/icon nodes, which makes the exact
-// accessible name unpredictable (spacing, icon placement). Screens that only
-// exist after real gameplay (finishing a round, answering all questions, a
-// timer elapsing) are intentionally left out — this config only automates
-// screens reachable by clicking through setup/menus.
+// accessible name unpredictable (spacing, icon placement).
 const click = (text) => async (page) => {
   await page.getByRole("button", { name: text }).click();
 };
@@ -169,6 +195,48 @@ const backToHub = (text) => async (page) => {
   await page.getByRole("button", { name: text }).click();
 };
 
+/**
+ * Result screens reached by finishing a round, not by clicking through a menu.
+ * media-stage-remaining.md §2 costed these out in two groups.
+ *
+ * Group A — any answer, right or wrong, advances the round, so which button
+ * gets clicked does not matter. `clickFirst` just clicks the first match in
+ * `selector` on a fixed schedule: `count` times, `waitMs` after each for the
+ * round's own timeout to fire (chosen from the game's slower branch, plus a
+ * buffer) — until the round counter reaches the game's own length and the
+ * result screen replaces the selector's targets. Reused across asean-matching,
+ * digital-sort, is-are-sorting and talk-card because all four share this
+ * shape; only the selector, count and wait differ.
+ */
+const clickFirst = (selector, count, waitMs) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    await page.locator(selector).first().click({ force: true });
+    if (waitMs) await page.waitForTimeout(waitMs);
+  }
+};
+
+/**
+ * Group B — losing is easier than winning (3 lives, 10 missions to win all of
+ * them), and per-round the `lost` screen already appears after a single wrong
+ * answer — the 3 lives only decide whether the NEXT click goes to another
+ * mission or to the final "gameover" summary. So the shortcut is not "lose
+ * three times", it is "answer wrong once", and clicking the same option every
+ * round gets there: Math.random is seeded per the audit's default, so which
+ * option sits first is fixed for a given seed but not guaranteed wrong, and a
+ * win just costs one extra round while the loop tries again. Verified this
+ * reaches `lost` well inside the 10-mission cap at the default seed before
+ * relying on it.
+ */
+const loseOnFirstWrong = ({ optionSelector, verifyWaitMs, lostSelector, advanceName }) => async (page) => {
+  for (let round = 0; round < 10; round++) {
+    await page.locator(optionSelector).first().click({ force: true });
+    await page.waitForTimeout(verifyWaitMs);
+    if (await page.locator(lostSelector).count()) return;
+    await page.getByRole("button", { name: advanceName }).click();
+    await page.waitForTimeout(250);
+  }
+};
+
 const GAMES = {
   "phonics-bingo": {
     path: "/media/english/phonics-bingo",
@@ -182,6 +250,11 @@ const GAMES = {
     screens: [
       { name: "home" },
       { name: "play", enter: click(/เริ่มภารกิจ/) },
+      // Either bin sorts the current card and advances — correct or wrong,
+      // both call `sort()`, and the two bin buttons are themselves the click
+      // targets (`onClick={() => sort(kind)}`), so no drag simulation is
+      // needed despite the tool needed for it. 12 cards, matching ROUND_SIZE.
+      { name: "result", enter: clickFirst('[class*="__bin"]', 12, 1500) },
     ],
   },
   "coding-maze": {
@@ -189,6 +262,41 @@ const GAMES = {
     screens: [
       { name: "intro" },
       { name: "play", enter: click(/เริ่มภารกิจ/) },
+      {
+        name: "lost",
+        // Every level's solution turns at least once (buildLevel always bakes
+        // in a direction change), and this level's very first path segment
+        // already matches the robot's starting facing — so a queue of nothing
+        // but "forward" follows the correct path for exactly one step and
+        // then walks into a wall on the second. Queuing more than needed is
+        // harmless; excess commands past the crash are simply never run.
+        async enter(page) {
+          for (let i = 0; i < 3; i++) {
+            await page.getByRole("button", { name: /เดินหน้า/ }).click({ force: true });
+          }
+          await page.getByRole("button", { name: /RUN/ }).click();
+          await page.waitForTimeout(2000);
+        },
+      },
+      {
+        name: "won",
+        // Level 1's path, read off its own definition (buildLevel("ด่าน 1", 5,
+        // [{dir:1,steps:1},{dir:2,steps:2},{dir:1,steps:2},{dir:2,steps:2}])):
+        // the robot starts facing dir 1, so the first segment costs no turn,
+        // then each direction change is one command (`(dir-from+4)%4` of 1
+        // turns right, 3 turns left — never the 2-cost U-turn here). Resets
+        // first: the `lost` screen above ends with the robot crashed.
+        async enter(page) {
+          await page.getByRole("button", { name: /ลองใหม่/ }).click();
+          await page.waitForTimeout(300);
+          const seq = ["เดินหน้า", "เลี้ยวขวา", "เดินหน้า", "เดินหน้า", "เลี้ยวซ้าย", "เดินหน้า", "เดินหน้า", "เลี้ยวขวา", "เดินหน้า", "เดินหน้า"];
+          for (const label of seq) {
+            await page.getByRole("button", { name: new RegExp(label) }).click();
+          }
+          await page.getByRole("button", { name: /RUN/ }).click();
+          await page.waitForTimeout(5500);
+        },
+      },
     ],
   },
   "typing-defense": {
@@ -213,6 +321,9 @@ const GAMES = {
     screens: [
       { name: "home" },
       { name: "play", enter: click(/เริ่มภารกิจ/) },
+      // Any of the four choices advances — `choose()` runs the same timeout
+      // either way — so the first is clicked every round. 11 questions.
+      { name: "result", enter: clickFirst('[class*="__answers"] button', 11, 1500) },
     ],
   },
   "law-daily": {
@@ -271,6 +382,9 @@ const GAMES = {
     screens: [
       { name: "intro" },
       { name: "play", enter: click(/เริ่มเล่น/) },
+      // IS or ARE, either advances via `next()` on the same schedule.
+      // QUESTION_COUNT = 12.
+      { name: "result", enter: clickFirst('[class*="__answers"] button', 12, 2200) },
     ],
   },
   "talk-card": {
@@ -278,6 +392,20 @@ const GAMES = {
     screens: [
       { name: "setup" },
       { name: "play", enter: click(/เริ่มสุ่มการ์ด/) },
+      // `go(1)` advances synchronously — no round timeout to wait out, just the
+      // card's own animation. Default deck size is 10 (`count` state). The
+      // next/finish button carries no CSS-module class (inline styles only),
+      // so it is found by accessible name rather than by `clickFirst`'s
+      // selector-based lookup.
+      {
+        name: "result",
+        async enter(page) {
+          for (let i = 0; i < 10; i++) {
+            await page.getByRole("button", { name: /การ์ดใบถัดไป|จบเกม/ }).click();
+            await page.waitForTimeout(400);
+          }
+        },
+      },
     ],
   },
   "sound-wheel": {
@@ -309,6 +437,61 @@ const GAMES = {
       { name: "intro" },
       { name: "setup", enter: click(/ตั้งค่าภารกิจ/) },
       { name: "game", enter: click(/เริ่ม 10 ภารกิจ/) },
+      // `won` needs 10 correct missions in a row and is the expensive branch;
+      // `lost` needs exactly one wrong wire, which is what this measures.
+      {
+        name: "lost",
+        enter: loseOnFirstWrong({
+          optionSelector: '[class*="__wireCard"]',
+          // 1550ms verify sequence + a .65s "explode" keyframe that starts the
+          // moment the overlay appears — measuring before it settles catches
+          // the icon transiently scaled to 1.45x, inflating the card's height
+          // and reporting overflow that is not there at rest.
+          verifyWaitMs: 2500,
+          lostSelector: '[class*="__failure"]',
+          advanceName: /ภารกิจต่อไป|ดูผลภารกิจ/,
+        }),
+      },
+      {
+        name: "won",
+        // 10 correct missions in a row — unlike Science Lab Crisis's fixed
+        // answer index, correctness here is arithmetic: each wire shows an
+        // equation and the mission prompt says whether the target wire's
+        // value is the largest or the smallest of the four. Computed from
+        // what is on screen each round rather than from the source, since the
+        // wire ORDER is shuffled per round (`wireOrder`) but the equations
+        // and the prompt are exactly what a player reads.
+        async enter(page) {
+          // `lost` above leaves the game mid-run, and the button back to
+          // setup (`.changeButton`) is `display:none` in portrait — a full
+          // reload sidesteps that rather than depending on a control this
+          // shape hides on purpose.
+          await page.reload({ waitUntil: "networkidle" });
+          await page.getByRole("button", { name: /ตั้งค่าภารกิจ/ }).click();
+          await page.waitForTimeout(200);
+          await page.getByRole("button", { name: /เริ่ม 10 ภารกิจ/ }).click();
+          await page.waitForTimeout(200);
+          for (let round = 0; round < 10; round++) {
+            const wantMax = /มากที่สุด/.test(await page.locator('[class*="__mission"] strong').textContent());
+            // Direct child only: `.wireCard` also has a decorative, empty
+            // `<b/>` two levels down inside its aria-hidden `.cutter` icon.
+            const equations = await page.locator('[class*="__wireCard"] > b').allTextContents();
+            const values = equations.map((eq) => {
+              const [, a, op, b] = eq.match(/(-?\d+)\s*([×÷+−-])\s*(-?\d+)/);
+              const x = Number(a), y = Number(b);
+              return { "×": x * y, "÷": x / y, "+": x + y, "−": x - y, "-": x - y }[op];
+            });
+            const targetIndex = values.reduce(
+              (best, v, i) => ((wantMax ? v > values[best] : v < values[best]) ? i : best),
+              0,
+            );
+            await page.locator('[class*="__wireCard"]').nth(targetIndex).click();
+            await page.waitForTimeout(2500); // verify sequence + explode settle, per the `lost` screen's own note
+            await page.getByRole("button", { name: /ภารกิจต่อไป|ดูผลภารกิจ/ }).click();
+            await page.waitForTimeout(300);
+          }
+        },
+      },
     ],
   },
   "science-lab-crisis": {
@@ -317,6 +500,45 @@ const GAMES = {
       { name: "intro" },
       { name: "setup", enter: click(/รับบัตรนักวิจัย/) },
       { name: "game", enter: click(/เริ่ม 10 ภารกิจ/) },
+      {
+        name: "lost",
+        enter: loseOnFirstWrong({
+          optionSelector: '[class*="__options"] button',
+          verifyWaitMs: 1200, // 900ms verify + buffer
+          lostSelector: '[class*="__fail"]',
+          advanceName: /ภารกิจต่อไป|ดูสรุปภารกิจ/,
+        }),
+      },
+      {
+        name: "won",
+        // The doc's costing calls this "won" but means all 10 missions
+        // correct — the final summary screen, not a single round's overlay.
+        // The `lost` screen above leaves the previous mission wrong (2/3
+        // lives), so this restarts clean.
+        async enter(page) {
+          // `lost` above leaves the game mid-run, past the setup screen, so
+          // "รับบัตรนักวิจัย" (the intro's own start button) is gone; the
+          // in-game settings button returns to setup instead. By text rather
+          // than accessible name/role — role-based lookup intermittently
+          // missed this exact button (present in a plain text search every
+          // time it was checked, absent from getByRole often enough to be a
+          // real flake rather than a one-off), and was not worth chasing
+          // further when the plain-text path is reliable.
+          await page.locator("button", { hasText: "ตั้งค่า" }).click();
+          await page.waitForTimeout(200);
+          await page.getByRole("button", { name: /เริ่ม 10 ภารกิจ/ }).click();
+          await page.waitForTimeout(200);
+          for (let round = 0; round < 10; round++) {
+            const situation = await page.locator('[class*="__missionLine"] strong').textContent();
+            const correctText = SCIENCE_LAB_ANSWERS.get(situation.trim());
+            if (!correctText) throw new Error(`No answer on file for situation: "${situation}"`);
+            await page.locator('[class*="__options"] button', { hasText: correctText }).click();
+            await page.waitForTimeout(1200);
+            await page.getByRole("button", { name: /ภารกิจต่อไป|ดูสรุปภารกิจ/ }).click();
+            await page.waitForTimeout(250);
+          }
+        },
+      },
     ],
   },
   "motion-lab": {
@@ -325,6 +547,22 @@ const GAMES = {
       { name: "intro" },
       { name: "lab", enter: click(/เข้าสู่ห้องทดลอง/) },
       { name: "quiz", enter: click(/โจทย์จากการทดลอง/) },
+      // The last of the 4 quiz questions, with an answer picked: the only
+      // state where the explanation panel is visible and the nav button reads
+      // "ปรับการทดลองใหม่" instead of "ข้อต่อไป" — a different layout that the
+      // first-question screen above never exercises. "ข้อต่อไป" carries no
+      // `disabled` tied to whether an answer was picked, so advancing needs no
+      // choice made along the way.
+      {
+        name: "quiz-last",
+        async enter(page) {
+          for (let i = 0; i < 3; i++) {
+            await page.getByRole("button", { name: "ข้อต่อไป →", exact: true }).click();
+            await page.waitForTimeout(150);
+          }
+          await page.locator('[class*="__choices"] button').first().click();
+        },
+      },
     ],
   },
   "density-lab": {
