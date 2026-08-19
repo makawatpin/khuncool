@@ -90,7 +90,10 @@ function severity(row) {
     (sum, region) => sum + (region.hiddenControls || 0),
     0,
   );
-  return [row.pass === false ? 2 : 1, hidden];
+  // Content shoved above the stage top counts too: it is strictly worse than
+  // content behind a scrollbar, since nothing can scroll up to it at all.
+  const above = (row.contentAboveStage || []).length;
+  return [row.pass === false ? 2 : 1, hidden + above];
 }
 
 function isWorse(candidate, current) {
@@ -118,6 +121,27 @@ const FULLSCREEN_LABEL = "เต็มจอ";
  * `screens` — ordered sub-screens to capture. Each has a `name` and an
  * optional `enter(page)` step that clicks/advances from the previous screen
  * (screens run in order, state carries over — same as a real play session).
+ * `warmup(page)` — optional, runs after `enter` and before measuring, to drive
+ * the screen to the tallest state it can reach. See below.
+ *
+ * Warmup: measure the worst state, not the first one
+ * --------------------------------------------------
+ * `enter` lands on a screen and the audit measured it right there, which is
+ * the screen at its emptiest: no answer given yet, no result card, no history.
+ * That is the SHORTEST a play screen is ever going to be, and it is the one
+ * state a class never sees for more than a few seconds.
+ *
+ * Sound Wheel is what showed this up. Measured cold, its play screen hid 2 of
+ * 3 controls and the wheel was already clipped 18px off the top of the stage.
+ * Spun to the history cap of 12 — a normal few minutes of class — it hid 5 of
+ * 6, and the three it added are the ones that score the round: listen again,
+ * try again, and got it right. Every number the audit had ever reported for
+ * that screen was of a state nobody plays in.
+ *
+ * So a screen whose height grows with play declares how to grow it. This costs
+ * real time (the warmup runs once per viewport, and Sound Wheel's spin
+ * animation alone is ~5s), which is the price of the numbers describing the
+ * game rather than its first frame.
  */
 // `enter` steps click by a regex substring match on accessible name — button
 // text is often split across sibling text/icon nodes, which makes the exact
@@ -260,7 +284,23 @@ const GAMES = {
     path: "/media/english/sound-wheel",
     screens: [
       { name: "setup" },
-      { name: "play", enter: click(/เริ่มเล่น/) },
+      {
+        name: "play",
+        enter: click(/เริ่มเล่น/),
+        // The result card only exists after a spin, and the history grows one
+        // chip per spin to a cap of 12. Both sit in the right-hand column, so
+        // the column measured on arrival is the shortest it ever is. Spin to
+        // the cap: that is the state the screen spends the lesson in.
+        async warmup(page) {
+          for (let i = 0; i < 12; i++) {
+            await page
+              .getByRole("button", { name: /หมุนวงล้อ|หมุนอีกครั้ง/ })
+              .click({ force: true });
+            // spin runs 4200-5100ms, then a 260ms timer speaks the word
+            await page.waitForTimeout(5400);
+          }
+        },
+      },
     ],
   },
   "math-bomb-defusal": {
@@ -466,6 +506,11 @@ async function auditGame(browser, gameKey, game, seed, tagScreenshots) {
         await screen.enter(page);
       }
       await page.waitForTimeout(200);
+
+      // Grow the screen to its tallest reachable state before anything is
+      // measured, so both modes below see the state a class actually plays in
+      // rather than the frame the screen opens on.
+      if (screen.warmup) await screen.warmup(page);
 
       for (const mode of ["in-page", "fullscreen"]) {
         const suffix = tagScreenshots ? `__seed${seed}` : "";
