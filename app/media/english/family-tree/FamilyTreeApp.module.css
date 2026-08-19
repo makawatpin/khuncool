@@ -661,3 +661,27 @@
     line-height: 1.25 !important;
   }
 }
+
+/* Wide in shape, short in pixels — the gap the two blocks above leave open.
+   ---------------------------------------------------------------------
+   A tablet in landscape gives a 960x540 stage in the page column: not portrait,
+   and not under the 440px the short block reads, so neither set of compaction
+   applied and the screen finished nine pixels over. Nine, on a screen whose
+   heading is 87px and whose board is 252px — the hint line alone is 17px, which
+   is where they come from. It says "drag a card from below, or tap one and tap
+   a slot", and both blocks above already drop it on the same reasoning: the
+   cursor and the dashed slots say it first.
+
+   580px is the same gate motion-lab and typing-defense use, and for the same
+   reason — 960x540 and the 1096x617 desktop stage are both 16:9, so no
+   ratio-based query can tell them apart, and the desktop one fits as it is.
+
+   Only one card was ever reported hidden, but sweeping ten shuffles of the word
+   bank shows it is a different card each time and the same nine pixels every
+   time: the bank is always two rows of nine cards, so the overflow is the
+   layout's, not any particular draw's. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  :global(.kc-family-tree-bank) {
+    flex: 0 0 auto;
+  }
+}
