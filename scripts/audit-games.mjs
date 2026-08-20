@@ -51,6 +51,17 @@ const AUDIT_STAGE_SRC = await readFile(
   "utf8",
 );
 
+const AUDIT_COVERED_SRC = await readFile(
+  path.join(ROOT, "scripts", "audit-covered.js"),
+  "utf8",
+);
+
+// Cross-check every covered-control finding against Playwright's own
+// actionability check. Off by default because a trial click per finding costs
+// a round trip; run it whenever the check or the games change enough that its
+// agreement with the real thing is worth re-establishing.
+const VERIFY_COVERED = process.argv.includes("--verify-covered");
+
 /**
  * Science Lab Crisis's `won` screen — 10 correct answers in a row — needs to
  * know which option is correct each round, and every question's options are
@@ -810,6 +821,68 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir,
     await page.screenshot({ path: screenshotPath, fullPage: false });
   }
 
+
+  // Can each control actually be pressed?
+  // -------------------------------------
+  // Runs after the screenshot, because unlike every check in auditStage() this
+  // one has to scroll controls into view — that is the whole point of it, see
+  // the header of scripts/audit-covered.js — and the screenshot has to show the
+  // screen at the reset scroll position.
+  //
+  // Both preconditions matter and both were found by getting them wrong:
+  // the mouse has to be parked, or a hovered button lifts out from under
+  // whatever covers it and the pass under-reports; and the scroll has to be
+  // back at the reset position, so the pass starts from the same place the
+  // screenshot and the other checks describe.
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => {
+    document.querySelectorAll("*").forEach((el) => {
+      if (el.scrollTop) el.scrollTop = 0;
+      if (el.scrollLeft) el.scrollLeft = 0;
+    });
+  });
+  await page.waitForTimeout(120);
+  const covered = await page.evaluate(() => window.auditCoveredControls());
+
+  if (VERIFY_COVERED && covered.coveredControls?.length) {
+    // Ask Playwright the same question about the same elements. A finding it
+    // disagrees with is a false positive, and the last attempt at this check
+    // died of thirty-five of them.
+    const tagged = await page.evaluate(async () => {
+      const marked = [];
+      for (const el of document.querySelectorAll("[data-kc-covered]")) el.removeAttribute("data-kc-covered");
+      // Async since it samples over time; without the await this is a Promise
+      // and the loop below throws "not iterable" — which turned every row that
+      // HAD a finding into an ERROR row and hid the findings entirely.
+      const r = await window.auditCoveredControls();
+      // Re-derive the same set, this time leaving a marker on each element so a
+      // locator can address it.
+      const stage = document.querySelector(".kc-stage") || document.querySelector(".kc-game");
+      const controls = [...stage.querySelectorAll("button,a[href],input,select,textarea,[role='button']")];
+      let i = 0;
+      for (const row of r.coveredControls) {
+        const el = controls.find(
+          (c) => !c.hasAttribute("data-kc-covered") &&
+            (c.textContent || c.getAttribute("aria-label") || c.tagName).trim().slice(0, 24) === row.control,
+        );
+        if (el) { el.setAttribute("data-kc-covered", String(i)); marked.push(i); }
+        i++;
+      }
+      return marked;
+    });
+    covered.playwrightVerdict = [];
+    for (const i of tagged) {
+      const loc = page.locator(`[data-kc-covered="${i}"]`);
+      let agrees;
+      try { await loc.click({ trial: true, timeout: 1500 }); agrees = false; }
+      catch { agrees = true; }
+      covered.playwrightVerdict.push({ index: i, playwrightAlsoRefuses: agrees });
+    }
+    await page.evaluate(() => {
+      for (const el of document.querySelectorAll("[data-kc-covered]")) el.removeAttribute("data-kc-covered");
+    });
+  }
+
   if (mode === "fullscreen") {
     const exitBtn = page.getByRole("button", { name: "ออกจากเต็มจอ", exact: true });
     if (await exitBtn.count()) await exitBtn.click();
@@ -823,6 +896,11 @@ async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir,
     mode,
     screenshot: path.relative(ROOT, screenshotPath),
     ...result,
+    controlsTested: covered.controlsTested ?? null,
+    coveredControls: covered.coveredControls || [],
+    coveredByBlocker: covered.coveredByBlocker || [],
+    notOnScreenAfterScroll: covered.notOnScreenAfterScroll || [],
+    ...(covered.playwrightVerdict ? { coveredPlaywrightVerdict: covered.playwrightVerdict } : {}),
   };
 }
 
@@ -847,6 +925,7 @@ async function auditGame(browser, gameKey, game, seed, tagScreenshots) {
     // during their first render.
     await page.addInitScript(seedScript(seed));
     await page.addInitScript(AUDIT_STAGE_SRC);
+    await page.addInitScript(AUDIT_COVERED_SRC);
 
     await page.goto(`${BASE_URL}${game.path}`, { waitUntil: "networkidle" });
 
@@ -942,6 +1021,17 @@ async function auditGame(browser, gameKey, game, seed, tagScreenshots) {
             `${gameKey} / ${screen.name} / ${size.label} / ${mode}: ${row.pass ? "PASS" : "FAIL"}` +
               (row.contentHiddenBehindScroll?.length
                 ? ` (contentHiddenBehindScroll: ${row.contentHiddenBehindScroll.length})`
+                : ""),
+              (row.coveredControls?.length
+                ? ` (coveredControls: ${row.coveredControls.length}` +
+                  // A blocker carrying its own buttons is a surface meant to be
+                  // used instead of what is behind it. Said on the line so a
+                  // result overlay does not read like a broken screen — the
+                  // rows themselves are reported either way.
+                  row.coveredByBlocker
+                    .map((x) => ` — ${x.controlsCovered} by ${x.blocker}${x.ownControls ? ` (has ${x.ownControls} controls of its own)` : ""}`)
+                    .join("") +
+                  ")"
                 : ""),
           );
         } catch (err) {
