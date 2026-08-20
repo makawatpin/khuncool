@@ -165,17 +165,22 @@ Check ใหม่ (เพิ่มตอนแก้ sound-wheel, commit `260b7
 
 ---
 
-## 6. บั๊กเล็กที่รู้แล้วแต่ยังไม่แก้
+## 6. จอสรุปของ science-lab-crisis — แก้บั๊กแล้ว เหลือช่องว่างเชิง design
 
-### `styles.final` ของ science-lab-crisis ไม่มีอยู่จริง
+`ScienceLabGame.tsx` เคยเขียน ``className={`${styles.result} ${styles.final}`}`` แต่ CSS module
+ไม่มีคลาส `.final` (มีแต่ `.success`, `.fail`, `.finalButtons`) การ์ดจึงออกไปเป็น
+`class="...__result undefined"` — คำว่า `undefined` หลุดเป็นชื่อคลาสจริงใน production
 
-`ScienceLabGame.tsx` เขียน ``className={`${styles.result} ${styles.final}`}`` แต่ CSS module
-ไม่มีคลาส `.final` (มีแต่ `.finalButtons`) การ์ดสรุปจึงออกไปเป็น
-`class="ScienceLabGame-module__XXX__result undefined"` — คำว่า `undefined` หลุดเป็นชื่อคลาสจริงใน production
-และ styling ที่ตั้งใจให้จอสรุป "ผ่านครบ 10 ด่าน" ไม่เคยถูกใช้
+**แก้แล้วที่ `4b68a4b`** — ลบ reference ที่ไม่มีปลายทางออก ไม่ได้แต่งคลาสขึ้นมาใหม่
+หน้าตาไม่เปลี่ยนแม้แต่พิกเซลเดียว (คลาสที่ไม่ตรงกับ rule ไหนก็ไม่ได้ทำอะไรอยู่แล้ว และตรวจแล้วว่า
+ทั้งแอปไม่มี `.undefined` rule ที่จะไปชน) ยืนยันบนการ์ดจริง: คลาสเหลือ `__result` ตัวเดียว
+กว้าง 570px ขอบและเงาเท่าเดิมทุกค่า
 
-โผล่มาเพราะ `expect` ตัวแรกที่ผมเขียนเล็ง `__final` แล้วหาไม่เจอ — ตอนนี้ selector เล็ง `__result` แทน
-**ยังไม่แก้ตัวเกม** เพราะต้องรู้ก่อนว่า design ตั้งใจให้จอนี้ต่างจาก `.success`/`.fail` ยังไง
+**ที่ยังเหลือคือเรื่อง design ไม่ใช่บั๊ก:** `.result` เป็นฐาน `.success`/`.fail` เป็น accent modifier
+จอสรุป "ผ่านครบ 10 ด่าน" จึงเป็นตัวเดียวที่ไม่มี accent ของตัวเอง เกมพี่น้อง math-bomb
+ทำจอเดียวกันด้วย `.finalCard` (กว้าง 620px + accent ทอง `#ffe069`) ซึ่งเป็นสีกลางพอใช้ได้ทั้ง
+`🏆 ALL SYSTEMS SECURED` และ `🚨 LAB SHUTDOWN` ที่ใช้การ์ดใบเดียวกัน — **แต่จะเอาแบบไหน
+เป็นการตัดสินใจของ design ไม่ควรลอกจากเกมอื่นมาเงียบๆ**
 
 ---
 
@@ -234,7 +239,8 @@ Check ใหม่ (เพิ่มตอนแก้ sound-wheel, commit `260b7
    ถ้าไม่คุ้ม ทางเลือกที่ถูกกว่า: ให้ทุกเกมมี walk แล้วพึ่ง `clickFirst` ที่ไม่ force ซึ่งจับได้อยู่แล้ว
 2. **coding-maze `contentAboveStage` 76 แถว** — สัดส่วนสูงสุดของที่เหลือ
 3. gate `contentAboveStage` ด้วย `controlsInside > 0` หรือรอ animation นิ่ง (ข้อ 4) ไม่งั้น check นี้จะถูกมองข้าม
-4. `styles.final` ของ science-lab (ข้อ 6) — ต้องถาม design ก่อน
+4. accent ของจอสรุป science-lab (ข้อ 6) — บั๊ก `undefined` แก้แล้ว เหลือแค่ว่าจะให้จอนี้
+   มี accent ของตัวเองไหม เป็นคำถาม design ล้วนๆ ไม่ใช่งานค้าง
 5. `belowComfortTargets` 2675 แถว — ไม่เคยวิเคราะห์เลยว่าเป็นรูปแบบซ้ำๆ กี่แบบ (น่าจะเป็นปุ่ม toolbar
    34-42px ซ้ำกันหลายเกม เหมือนที่เจอตอนแก้ motion-lab) หรือกระจายจริง
 6. ลอง phonics-bingo ผ่านปุ่มดูเฉลย ตามไอเดียข้อ 8
