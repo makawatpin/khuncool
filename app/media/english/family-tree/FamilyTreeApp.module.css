@@ -685,3 +685,32 @@
     flex: 0 0 auto;
   }
 }
+
+/* The tree, the word bank and the minigames all sit inside `.screen`, capped
+   at 780px — 41% of a 1920px stage in fullscreen. The family tree is a diagram
+   read from a distance, so it is exactly what should take the extra width. */
+@container kcstage (min-width: 1150px) {
+  :global(.kc-family-stage) {
+    max-width: min(1400px, 92cqi) !important;
+  }
+}
+
+/* ...and the canvas screens need one more thing before they use that width.
+   ------------------------------------------------------------------------
+   The tree and the matching board are laid out at fixed pixel coordinates and
+   then scaled to fit, and `.canvasViewport` caps at `var(--kc-canvas-w)` — the
+   canvas's own natural width. That makes the scale factor `min(…)` of two
+   ratios that can never exceed 1, so these two screens shrink to fit a small
+   board but never grow to use a large one. Widening `.screen` alone did
+   nothing for them: the matching board still drew 1040px wide inside 1400px.
+
+   Letting the viewport run past the canvas width lets the existing scale
+   formula resolve above 1. Nothing else has to change, and the formula's other
+   half still stops it: `100cqb / --kc-canvas-h` keeps a tall board from
+   growing past the height it has. The 1.5 is a ceiling on how far a diagram
+   drawn for a laptop should be enlarged, not a target. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.5));
+  }
+}
