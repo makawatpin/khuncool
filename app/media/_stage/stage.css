@@ -153,6 +153,39 @@
   min-height: var(--kc-tap);
 }
 
+/* A smaller floor for the toolbar, because chrome competes with the game.
+   ----------------------------------------------------------------------
+   `.kc-tap` above floors a control at the shape's full comfort size — 40 wide,
+   44 short, 48 portrait. That is right for something the player aims at over
+   and over. It is wrong for the menu/music/sound/fullscreen row, which is
+   persistent, pressed rarely, and sits in a bar that takes its height straight
+   out of the board.
+
+   Measured rather than assumed. Putting `.kc-tap` on those buttons grew the bar
+   12px on a 375x812 phone and broke two screens outright: Classroom Objects'
+   "เริ่มเล่น" ended 6px past the bottom of an overflow:hidden stage, and Family
+   Tree's matching board — a fixed-coordinate canvas scaled to fit — lost enough
+   height that its word cards fell to 23.7px, under WCAG 2.2 2.5.8's 24px
+   minimum. Trading 4px on chrome for the primary start button and the game's
+   own cards is the wrong trade.
+
+   40px in every shape costs 4px instead of 12, clears both of those screens
+   with room left, and is still comfortably above the 24px minimum. It also
+   matches what the games with hand-written toolbars already ship: coding-maze
+   and math-bomb-defusal render theirs at 42px.
+
+   One game is deliberately not using this. Sound Wheel's play screen at
+   375x812 has no vertical slack left — its panel already compresses to fit —
+   and the extra 4px pushed "สลับช่องใหม่" and "เปลี่ยนชุดเสียง" behind a
+   scroll on the screen the class actually plays on. Trading two in-game
+   controls for four pixels on chrome is the same bad trade in miniature, so
+   its toolbar keeps the size it had. */
+.kc-stage-body .kc-tap-chrome {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   .kc-stage-body *,
   .kc-stage-body *::before,

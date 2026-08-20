@@ -1004,6 +1004,7 @@ export default function TalkCardApp() {
           ☰ เมนู
         </Link>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleBgm}
           style={{
@@ -1040,6 +1041,7 @@ export default function TalkCardApp() {
           <span>{bgmLive ? "เพลง" : "ปิดเพลง"}</span>
         </button>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleMute}
           aria-label="เปิด/ปิดเสียง"
@@ -1055,6 +1057,7 @@ export default function TalkCardApp() {
           {muted ? "🔇" : "🔊"}
         </button>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleFull}
           aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
@@ -1072,6 +1075,7 @@ export default function TalkCardApp() {
         </button>
         {stage !== 0 && (
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={goSetup}
             style={{

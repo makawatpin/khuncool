@@ -664,6 +664,7 @@ export default function PhonicsBingoApp() {
             ☰ เมนู
           </Link>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleBgm}
             title="เพลงประกอบ"
@@ -709,6 +710,7 @@ export default function PhonicsBingoApp() {
             <span>{bgmOn ? "เพลง" : "ปิดเพลง"}</span>
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleMute}
             title="เสียงเอฟเฟกต์"
@@ -725,6 +727,7 @@ export default function PhonicsBingoApp() {
             {muted ? "🔇" : "🔊"}
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleFull}
             aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
