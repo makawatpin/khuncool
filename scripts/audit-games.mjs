@@ -152,6 +152,10 @@ const FULLSCREEN_LABEL = "เต็มจอ";
  * (screens run in order, state carries over — same as a real play session).
  * `warmup(page)` — optional, runs after `enter` and before measuring, to drive
  * the screen to the tallest state it can reach. See below.
+ * `expect` — optional selector that must match once `enter`/`warmup` are done.
+ * Required in practice for any screen reached by playing rather than by
+ * clicking a menu, since those depend on constants that can drift; without it
+ * a drifted walk measures the wrong screen under the right name and passes.
  *
  * Warmup: measure the worst state, not the first one
  * --------------------------------------------------
@@ -254,7 +258,11 @@ const GAMES = {
       // both call `sort()`, and the two bin buttons are themselves the click
       // targets (`onClick={() => sort(kind)}`), so no drag simulation is
       // needed despite the tool needed for it. 12 cards, matching ROUND_SIZE.
-      { name: "result", enter: clickFirst('[class*="__bin"]', 12, 1500) },
+      {
+        name: "result",
+        enter: clickFirst('[class*="__bin"]', 12, 1500),
+        expect: '[data-stage="result"]',
+      },
     ],
   },
   "coding-maze": {
@@ -277,6 +285,7 @@ const GAMES = {
           await page.getByRole("button", { name: /RUN/ }).click();
           await page.waitForTimeout(2000);
         },
+        expect: '[data-stage="lost"]',
       },
       {
         name: "won",
@@ -296,6 +305,7 @@ const GAMES = {
           await page.getByRole("button", { name: /RUN/ }).click();
           await page.waitForTimeout(5500);
         },
+        expect: '[data-stage="won"]',
       },
     ],
   },
@@ -323,7 +333,11 @@ const GAMES = {
       { name: "play", enter: click(/เริ่มภารกิจ/) },
       // Any of the four choices advances — `choose()` runs the same timeout
       // either way — so the first is clicked every round. 11 questions.
-      { name: "result", enter: clickFirst('[class*="__answers"] button', 11, 1500) },
+      {
+        name: "result",
+        enter: clickFirst('[class*="__answers"] button', 11, 1500),
+        expect: '[data-stage="result"]',
+      },
     ],
   },
   "law-daily": {
@@ -384,7 +398,11 @@ const GAMES = {
       { name: "play", enter: click(/เริ่มเล่น/) },
       // IS or ARE, either advances via `next()` on the same schedule.
       // QUESTION_COUNT = 12.
-      { name: "result", enter: clickFirst('[class*="__answers"] button', 12, 2200) },
+      {
+        name: "result",
+        enter: clickFirst('[class*="__answers"] button', 12, 2200),
+        expect: '[class*="__resultScreen"]',
+      },
     ],
   },
   "talk-card": {
@@ -405,6 +423,7 @@ const GAMES = {
             await page.waitForTimeout(400);
           }
         },
+        expect: ".kc-talk-result",
       },
     ],
   },
@@ -451,6 +470,7 @@ const GAMES = {
           lostSelector: '[class*="__failure"]',
           advanceName: /ภารกิจต่อไป|ดูผลภารกิจ/,
         }),
+        expect: '[class*="__failure"]',
       },
       {
         name: "won",
@@ -491,6 +511,11 @@ const GAMES = {
             await page.waitForTimeout(300);
           }
         },
+        // The all-10 summary card, not a single mission's win overlay: answer
+        // one wire wrong and the run ends on `.finalCard` too, but reading
+        // MISSION FAILED. Both the card and the text, so a silently-lost run
+        // cannot pass as a won one.
+        expect: '[class*="__finalCard"]:has-text("MISSION COMPLETE")',
       },
     ],
   },
@@ -508,6 +533,7 @@ const GAMES = {
           lostSelector: '[class*="__fail"]',
           advanceName: /ภารกิจต่อไป|ดูสรุปภารกิจ/,
         }),
+        expect: '[class*="__fail"]',
       },
       {
         name: "won",
@@ -538,6 +564,16 @@ const GAMES = {
             await page.waitForTimeout(250);
           }
         },
+        // Same shape as math-bomb's: the summary card is also where a lost run
+        // ends, so the win banner is what separates them.
+        //
+        // Matched on `__result`, not `__final`, because `styles.final` does not
+        // exist in this game's CSS module — only `.finalButtons` does. The JSX
+        // still writes `${styles.result} ${styles.final}`, so the card ships
+        // with the literal class `undefined` and the intended modifier never
+        // applied. Worth fixing in the game; this selector just has to match
+        // what is actually rendered.
+        expect: '[class*="__result"]:has-text("ALL SYSTEMS SECURED")',
       },
     ],
   },
@@ -562,6 +598,10 @@ const GAMES = {
           }
           await page.locator('[class*="__choices"] button').first().click();
         },
+        // The nav button only reads this on the last question — on any earlier
+        // one it is still "ข้อต่อไป", which is exactly the screen this row is
+        // meant to be different from. `.explain` confirms an answer is picked.
+        expect: 'button:has-text("ปรับการทดลองใหม่")',
       },
     ],
   },
@@ -721,34 +761,80 @@ async function auditGame(browser, gameKey, game, seed, tagScreenshots) {
       // click, a player cannot. Record that, because a later screen passing
       // its own checks means little if nobody can get there.
       let reachedByForcedScroll = false;
-      if (screen.enter) {
-        reachedByForcedScroll = await page.evaluate(() => {
-          const stage = document.querySelector(".kc-stage");
-          if (!stage) return false;
-          const box = stage.getBoundingClientRect();
-          const blocked = [...stage.querySelectorAll("button,a[href],[role='button']")].some((el) => {
-            const cs = getComputedStyle(el);
-            if (cs.pointerEvents === "none" || cs.visibility === "hidden" || cs.display === "none") return false;
-            const r = el.getBoundingClientRect();
-            if (!r.width) return false;
-            const outside = r.bottom > box.bottom + 1 || r.top < box.top - 1;
-            if (!outside) return false;
-            for (let p = el.parentElement; p && p !== stage.parentElement; p = p.parentElement) {
-              const pcs = getComputedStyle(p);
-              if (/auto|scroll/.test(pcs.overflowY + pcs.overflowX) && p.scrollHeight > p.clientHeight) return false;
-            }
-            return true;
+      // Getting onto the screen is its own failure surface, separate from
+      // measuring it. A throw here used to escape the per-mode try/catch below
+      // and abort the entire run — one bad locator in one game losing every
+      // game queued behind it. Both modes get an error row and the walk moves
+      // on to the next screen instead.
+      try {
+        if (screen.enter) {
+          reachedByForcedScroll = await page.evaluate(() => {
+            const stage = document.querySelector(".kc-stage");
+            if (!stage) return false;
+            const box = stage.getBoundingClientRect();
+            const blocked = [...stage.querySelectorAll("button,a[href],[role='button']")].some((el) => {
+              const cs = getComputedStyle(el);
+              if (cs.pointerEvents === "none" || cs.visibility === "hidden" || cs.display === "none") return false;
+              const r = el.getBoundingClientRect();
+              if (!r.width) return false;
+              const outside = r.bottom > box.bottom + 1 || r.top < box.top - 1;
+              if (!outside) return false;
+              for (let p = el.parentElement; p && p !== stage.parentElement; p = p.parentElement) {
+                const pcs = getComputedStyle(p);
+                if (/auto|scroll/.test(pcs.overflowY + pcs.overflowX) && p.scrollHeight > p.clientHeight) return false;
+              }
+              return true;
+            });
+            return blocked;
           });
-          return blocked;
-        });
-        await screen.enter(page);
-      }
-      await page.waitForTimeout(200);
+          await screen.enter(page);
+        }
+        await page.waitForTimeout(200);
 
-      // Grow the screen to its tallest reachable state before anything is
-      // measured, so both modes below see the state a class actually plays in
-      // rather than the frame the screen opens on.
-      if (screen.warmup) await screen.warmup(page);
+        // Grow the screen to its tallest reachable state before anything is
+        // measured, so both modes below see the state a class actually plays in
+        // rather than the frame the screen opens on.
+        if (screen.warmup) await screen.warmup(page);
+
+        // Prove we are where we say we are.
+        //
+        // Everything above drives the game by clicking and waiting on fixed
+        // schedules built from constants read out of the source: round counts,
+        // a maze's move sequence, which option is correct. When one of those
+        // drifts the walk does not crash — it lands somewhere else and the
+        // screen gets measured and reported under the name it was supposed to
+        // reach. `loseOnFirstWrong` is the sharpest case: it returns as soon as
+        // it sees a loss, but answer correctly ten times and it falls out of
+        // the loop on the game's WIN summary, which would then be filed as the
+        // `lost` row, passing.
+        //
+        // So a screen that is driven rather than clicked to declares a selector
+        // that only exists once it is really there. Cheap, and it converts the
+        // whole class of silent mislabelling into a loud error row — which
+        // matters because every "0 hard fails across N cells" claim this
+        // harness makes is only worth the accuracy of these labels.
+        if (screen.expect) {
+          const found = await page.locator(screen.expect).count();
+          if (!found) {
+            throw new Error(
+              `screen "${screen.name}" was not reached: nothing matches ${screen.expect}`,
+            );
+          }
+        }
+      } catch (err) {
+        for (const mode of ["in-page", "fullscreen"]) {
+          rows.push({
+            game: gameKey,
+            screen: screen.name,
+            size: size.label,
+            mode,
+            seed,
+            error: String(err),
+          });
+          console.error(`${gameKey} / ${screen.name} / ${size.label} / ${mode}: ERROR ${err}`);
+        }
+        continue;
+      }
 
       for (const mode of ["in-page", "fullscreen"]) {
         const suffix = tagScreenshots ? `__seed${seed}` : "";
