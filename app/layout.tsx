@@ -63,9 +63,32 @@ export default function RootLayout({
       className={`${sarabun.variable} ${anuphan.variable} ${fredoka.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Skip past the site navigation.
+            ------------------------------
+            Measured on the games: reaching a game's own start button took 27
+            tab presses on one and 35 on another, because every link in the
+            header comes first. Somebody playing with a keyboard pays that on
+            every screen they open.
+
+            The target is an empty anchor placed after the header rather than an
+            id on each page's <main>. 48 of the 65 pages have a <main> and 17 do
+            not, so the id approach means editing 48 files and still leaving a
+            broken skip link on the rest. This is one file and covers every
+            page. It is also layout-safe: pages render their <main> as a direct
+            flex child of <body> with flex-1, so wrapping {children} in a div
+            would break that, while a 0x0 flex item next to it changes nothing.
+
+            Hidden until focused, so it costs sighted mouse users nothing. */}
+        <a
+          href="#kc-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-[#3F41C9] focus:shadow-lg focus:outline focus:outline-2 focus:outline-[#5C5EE6]"
+        >
+          ข้ามไปที่เนื้อหา
+        </a>
         <AuthProvider>
           <AccountSheetProvider>
             <Header />
+            <span id="kc-content" tabIndex={-1} />
             {children}
             <Footer />
             <AccountSheetOverlay />
