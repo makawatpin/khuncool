@@ -17,3 +17,33 @@
 /* Classroom legibility: larger topbar controls on TV/desktop displays. */
 @container kcstage (aspect-ratio >= 0.9){.brand b{font-size:19px}.hubMenu,.roundBtn{height:42px}.hubMenu{padding:0 14px}.hubMenu b{font-size:14px}.roundBtn{width:42px;font-size:20px}}
 @container kcstage (aspect-ratio >= 0.9) and (height < 440px){.shell{border-radius:0}.topbar{height:44px;padding:5px 9px}.brand img{width:32px;height:32px}.brand small{display:none}.intro,.play{inset:44px 0 0}.intro{padding:6px}.introVisual{margin:2px}.introVisual span{width:50px;height:50px;font-size:27px}.intro h2{margin:2px;font-size:22px}.intro p{font-size:11px}.introStats{margin:4px}.startBtn{padding:7px 17px}.play{padding:5px 10px}.gameGrid{grid-template-columns:1.2fr .8fr;grid-template-rows:1fr;gap:7px;margin-top:5px}.mazePanel{padding:28px 10px 19px}.maze{width:min(63%,260px);gap:3px;padding:6px}.robot,.cpu{font-size:27px}.commandPanel{display:flex;flex-direction:column;min-height:0;padding:7px}.commandHeader h2{font-size:max(12px,4cqb)}.commandButtons{flex:0 0 auto;margin-top:4px}.commandButtons button{min-height:var(--kc-tap)}.commandButtons span{font-size:max(11px,2.9cqb)}.queue{flex:1 1 auto;min-height:26px;overflow:auto;margin-top:4px}.actions{flex:0 0 auto;margin-top:4px}.actions button{height:var(--kc-tap);min-width:var(--kc-tap)}.overlay{padding:5px}.resultCard{padding:9px}.resultIcon{font-size:37px}.resultCard h2{margin:1px;font-size:20px}.resultActions{margin-top:8px}}@media(prefers-reduced-motion:reduce){.shell *{animation:none!important;transition:none!important}}
+
+/* The backdrop layers are scenery and must not take taps.
+   ------------------------------------------------------
+   `.gridGlow`, `.orbOne` and `.orbTwo` are three empty divs rendered before
+   everything else: a perspective grid and two blurred colour blobs. They carry
+   no text and no children, and they are deliberately larger than the stage —
+   the grid is `inset:0` then `scale(1.5) translateY(27%)`, and the orbs sit at
+   `top:-25%` and `bottom:-36%` — because bleeding past the edge is the effect.
+   The stage clips them, which is what the stage is for.
+
+   What they were missing is the marking that says so. `.confetti` in this same
+   file already has it, and the same omission was fixed on talk-card in cd7d797.
+   Two things follow from adding it here.
+
+   The audit stops reporting them. scripts/audit-stage.js treats
+   `pointer-events:none` as the signal for "decoration allowed to bleed", and
+   without it these three accounted for 76 of the 86 `contentAboveStage` rows
+   across the whole suite — noise that makes a real finding easy to miss.
+
+   And a latent hazard goes away. `.gridGlow` renders 1212x709 with
+   `pointer-events:auto` and geometrically overlaps four toolbar buttons. It
+   does not intercept them today, measured rather than assumed — the buttons
+   come later in the DOM and win on paint order — but that is the only thing
+   holding, and it is one z-index away from the bug that had math-bomb's
+   spinning ring eating taps on the wire cards. */
+.gridGlow,
+.orbOne,
+.orbTwo {
+  pointer-events: none;
+}
