@@ -145,3 +145,56 @@
 @container kcstage (aspect-ratio < 0.9){
   .prompt{font-size:13px}.answerText{font-size:12px}.round,.score{font-size:12px}.score strong{font-size:18px}.startBtn{min-height:46px;font-size:16px}
 }
+
+/* A big board deserves a big game.
+   -------------------------------
+   `.game` is capped at 1020px and centred, which is right on a laptop — past
+   about that width a two-column board starts to feel spread out. On a 1920px
+   stage in fullscreen it is 53% of the board, and the other 47% is empty
+   gradient down both sides. Fullscreen on a desktop is the projector case:
+   the whole class is reading this from the back of the room, so the flags and
+   the picture are exactly what should get bigger.
+
+   Raised rather than removed, and expressed against the stage (`cqi`) so it
+   tracks the board instead of jumping at one breakpoint. 1560px keeps the
+   answer grid at a sane card size on an ultrawide monitor rather than letting
+   four flags stretch to a third of a metre each.
+
+   Type moves with it. A card that doubles in size while its label stays at
+   16px reads as a bigger picture of the same small game — the label is the
+   part the back row is actually trying to read. */
+@container kcstage (min-width: 1150px) {
+  .game {
+    width: min(1560px, 94cqi);
+  }
+
+  .home {
+    width: min(1240px, 92cqi);
+  }
+
+  .answerText {
+    padding: 7px 16px;
+    font-size: clamp(16px, 1.15cqi, 22px);
+  }
+
+  .answerName {
+    font-size: clamp(28px, 2.5cqi, 46px);
+  }
+
+  .prompt {
+    font-size: clamp(13px, 0.95cqi, 18px);
+  }
+
+  /* The picture IS the question. Capped at 310px it sat in the middle of a
+     550px column with dead space above and below it, smaller than any of the
+     four flags the child is comparing it against. */
+  .foodFrame,
+  .currencyFrame,
+  .shell[data-category="flower"] .currencyFrame {
+    width: min(96%, 470px);
+  }
+
+  .costumeFrame {
+    max-width: 470px;
+  }
+}
