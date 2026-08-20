@@ -1079,7 +1079,16 @@ export default function SoundWheelApp() {
                   filter: "drop-shadow(0 3px 4px rgba(0,0,0,.28))",
                 }}
               />
+              {/* Scenery as far as assistive tech is concerned. Clicking the
+                  wheel spins it, but it calls the same spin() as the labelled
+                  button directly below, which is one Tab away and works from
+                  the keyboard (verified by playing it that way). The letters
+                  are painted into the bitmap, so there is nothing here a screen
+                  reader could read even if it stopped on it — and stopping on
+                  it would only offer a second, unlabelled route to something
+                  the next control already does. */}
               <canvas
+                aria-hidden="true"
                 ref={canvasRef}
                 width={WHEEL_PX}
                 height={WHEEL_PX}
@@ -1126,8 +1135,13 @@ export default function SoundWheelApp() {
               </div>
             </div>
 
+            {/* The result of a spin is the whole point of the screen and it
+               used to appear silently: nothing on this stage was a live region,
+               so pressing the spin button announced nothing at all. */}
             {result ? (
               <div
+                role="status"
+                aria-live="polite"
                 className={styles.resultCard}
                 style={{
                   border: `2px solid ${result.color}`,
