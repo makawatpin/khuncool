@@ -150,3 +150,26 @@
 .scorePill small {
   font-size: inherit;
 }
+
+/* The energy ring is scenery and must not take taps.
+   -------------------------------------------------
+   `.energyRing` is an ellipse at `inset:-21%` around the bomb, spinning on a 9s
+   `orbitSpin` loop, holding three decorative dots and nothing else. Every other
+   ambient layer in this file — vignette, hudCorners, outcomeFx, techGrid,
+   alarmBeams, sparkField, dustField — is already excluded from hit-testing.
+   This one was not.
+
+   On a portrait board that ellipse measures 445x589 and overlaps the four wire
+   cards, so as it rotates it takes turns sitting on top of each of them: 24
+   hit-test samples over six seconds found only four moments when all four
+   cards were clear. A child tapping a wire at the wrong instant hits the ring
+   and the tap does nothing.
+
+   Nothing caught this before. It is inside the stage, unclipped, full size —
+   so audit-stage.js passes it — and it is intermittent, so Playwright's own
+   click does not fail either: it retries until the ring rotates clear. It took
+   the covered-control pass in scripts/audit-covered.js, which is why that pass
+   samples over time rather than once. */
+.energyRing {
+  pointer-events: none;
+}
