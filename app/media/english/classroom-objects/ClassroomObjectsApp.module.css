@@ -298,3 +298,19 @@
     display: none !important;
   }
 }
+
+/* Fullscreen on a desktop is the projector case.
+   ---------------------------------------------
+   `.play` is capped at 880px, which is right on a laptop and 46% of a 1920px
+   stage in fullscreen — the memory cards a class is reading from the back of
+   the room end up smaller than they are on a tablet.
+
+   The cards are already bounded on the other axis (`max-height:30cqb`), so
+   raising the width does not make them sprawl: it lets six 3:4 cards reach
+   that height cap instead of being squeezed by the column width, and then
+   they stop. 1530px is where the sixth card hits it. */
+@container kcstage (min-width: 1150px) {
+  .play {
+    max-width: min(1530px, 92cqi) !important;
+  }
+}
