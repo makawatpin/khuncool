@@ -225,3 +225,49 @@
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr) !important;
   }
 }
+
+/* The win screen on a shallow board.
+   ---------------------------------
+   This screen had never been measured. It was left out of the audit because
+   winning means hearing a sound and tapping the right square, which the harness
+   cannot do — until the game's own "ครูดูเฉลย" button turned out to be a way in.
+   The first run with it covered found this: at 844x390 the celebration stack
+   needs 415px inside a 236px box, and BOTH buttons — "เล่นอีกครั้ง" and
+   "ตั้งค่าใหม่" — sit entirely below the fold, 201px of content hidden. A class
+   finishes the game and has no visible way to start another one.
+
+   Everything on this screen is inline-styled, so the compaction needs
+   `!important` to reach it. The trophy and the three stars are the expensive
+   parts — 76px and 69px of display type that say the same thing at half the
+   size — and the margins between the blocks were tuned for a board with room.
+   The buttons keep the tap floor; they are the reason for the exercise. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .result > div > div:nth-of-type(1) {
+    font-size: max(30px, 11cqb) !important;
+  }
+
+  .result > div > h2 {
+    margin: 2px 0 3px !important;
+    font-size: max(18px, 7cqb) !important;
+  }
+
+  .result > div > p {
+    margin: 0 0 5px !important;
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  .result > div > div:nth-of-type(2) {
+    margin-bottom: 6px !important;
+    font-size: max(18px, 7cqb) !important;
+  }
+
+  .result > div > div:nth-of-type(2) span {
+    font-size: max(18px, 7cqb) !important;
+  }
+
+  .result > div > div:nth-of-type(3) button {
+    min-height: var(--kc-tap);
+    padding: 0 14px !important;
+    font-size: max(12px, 3.6cqb) !important;
+  }
+}
