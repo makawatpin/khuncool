@@ -277,3 +277,40 @@
     padding: 8px !important;
   }
 }
+
+/* Fullscreen on a desktop, for a screen that is mostly one sentence.
+   -----------------------------------------------------------------
+   Same reasoning as talk-card, and the same restraint: the sentence with the
+   blank in it is the whole screen, and stretching it across a 1920px board
+   makes it harder to read, not easier. So the screen widens only to about the
+   point where a line of text stops gaining anything, and the extra size comes
+   from the type instead — which is the part a class at the back is straining
+   at.
+
+   One width for the whole column, not one per block. An earlier pass gave the
+   baskets the full 1180px while the card and the IS/ARE buttons stayed at
+   880px, and the mismatch read as two unrelated screens stacked on each other.
+   The card carries a Tailwind cap of 560px, so it still needs overriding to
+   reach the column's edge; a plain 100% lets it follow the screen rather than
+   pinning a second number that then has to be kept in step with the first. */
+@container kcstage (min-width: 1150px) {
+  .screen {
+    max-width: min(940px, 88cqi) !important;
+  }
+
+  .cardArea > div {
+    max-width: 100% !important;
+  }
+
+  .cardArea > div > :nth-child(4) {
+    font-size: clamp(34px, 2.9cqi, 52px) !important;
+  }
+
+  .cardArea > div > :nth-child(5) {
+    font-size: clamp(15px, 1.25cqi, 22px) !important;
+  }
+
+  .answers > * {
+    font-size: clamp(30px, 2.4cqi, 44px) !important;
+  }
+}
