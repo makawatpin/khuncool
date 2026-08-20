@@ -258,6 +258,67 @@ const clickFirst = (selector, count, waitMs) => async (page) => {
   }
 };
 
+
+/**
+ * Phonics Bingo's win screen — written off earlier as un-drivable because
+ * winning means hearing a sound and tapping the right square, and the harness
+ * has no ears. The way in is the game's own "👀 ครูดูเฉลย" button: it is there
+ * so a teacher can see which sound was called, and with it on, the called
+ * sound is rendered as /xx/ in the panel and can simply be read.
+ *
+ * The card is only finished when EVERY square is marked, not on one line, so
+ * this fills all sixteen. Two details the first attempt got wrong and that the
+ * comment exists to save the next person:
+ *
+ *   - a square counts as marked by its border colour, not by its markup. Every
+ *     square carries the same three children whether it is marked or not, so a
+ *     structural test reports the whole card as finished on the first frame.
+ *   - the called sound is sometimes not on the card, or is one already marked.
+ *     There is no "skip" control; tapping any unmarked square is what advances
+ *     to the next call, at the cost of a wrong answer nobody is scoring.
+ *
+ * Measured at the default seed: sixteen squares in 19 taps and 4 of those
+ * forced skips, comfortably inside the cap.
+ */
+const fillBingoCard = () => async (page) => {
+  const CELLS = '[class*="__card"] button';
+  const MARKED = /rgb\(255, 176, 32\)|rgb\(182, 243, 228\)/;
+
+  await page.getByRole("button", { name: /ครูดูเฉลย/ }).click();
+  await page.waitForTimeout(400);
+
+  for (let step = 0; step < 90; step++) {
+    const s = await page.evaluate(
+      ({ cells, marked }) => {
+        const body = document.querySelector(".kc-stage-body");
+        if (body.querySelector('[class*="__result"]')) return { won: true };
+        const call = [...body.querySelectorAll("*")]
+          .map((e) => (e.children.length ? "" : (e.textContent || "").trim()))
+          .find((t) => /^\/[a-z]+\/$/.test(t));
+        const buttons = [...body.querySelectorAll(cells)];
+        return {
+          won: false,
+          call,
+          letters: buttons.map((b) => (b.textContent || "").trim().replace(/[^a-z]/gi, "")),
+          marked: buttons.map((b) => new RegExp(marked).test(getComputedStyle(b).borderTopColor)),
+        };
+      },
+      { cells: CELLS, marked: MARKED.source },
+    );
+    if (s.won) return;
+    if (!s.call) throw new Error("phonics-bingo: no sound is revealed — did the peek button toggle off?");
+
+    const want = s.call.replace(/\//g, "");
+    let idx = s.letters.findIndex((t, i) => t === want && !s.marked[i]);
+    if (idx < 0) idx = s.marked.findIndex((m) => !m);
+    if (idx < 0) throw new Error("phonics-bingo: every square is marked but no result screen appeared");
+
+    await page.locator(CELLS).nth(idx).click();
+    await page.waitForTimeout(850);
+  }
+  throw new Error("phonics-bingo: did not finish the card within 90 taps");
+};
+
 /**
  * Group B — losing is easier than winning (3 lives, 10 missions to win all of
  * them), and per-round the `lost` screen already appears after a single wrong
@@ -286,6 +347,7 @@ const GAMES = {
     screens: [
       { name: "intro" },
       { name: "play", enter: click(/เริ่มเล่น/) },
+      { name: "won", enter: fillBingoCard(), expect: '[class*="__result"]' },
     ],
   },
   "digital-sort": {
