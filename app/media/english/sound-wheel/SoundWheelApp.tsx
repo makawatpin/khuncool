@@ -138,6 +138,14 @@ const SETS: Record<SetKey, { label: string; items: WordEntry[] }> = {
   },
 };
 
+/* The wheel is drawn in a fixed 680x680 coordinate space, and the backing
+   store is that space multiplied by WHEEL_SS. The fullscreen rules let the
+   wheel reach 760 CSS pixels on a projector; at the old 1:1 backing store
+   that would have been an upscale of a 680px bitmap, and the letters a class
+   is reading from the back of the room are exactly what goes soft first. */
+const WHEEL_SS = 1.5;
+const WHEEL_PX = 680 * WHEEL_SS;
+
 type WheelItem = {
   sound: string;
   word: string;
@@ -244,6 +252,13 @@ export default function SoundWheelApp() {
     if (!cv || !w.length) return;
     const ctx = cv.getContext("2d");
     if (!ctx) return;
+    // Every coordinate below is written in the wheel's own 680x680 space. The
+    // backing store is larger than that, so the wheel stays sharp when the
+    // fullscreen rules draw it bigger than 680 CSS pixels; this transform is
+    // what keeps the drawing code unaware of the difference. It is set before
+    // the first save() so the save/restore pairs inside the segment loop
+    // inherit it too.
+    ctx.setTransform(WHEEL_SS, 0, 0, WHEEL_SS, 0, 0);
     const C = 340;
     const R = 300;
     const n = w.length;
@@ -1066,8 +1081,8 @@ export default function SoundWheelApp() {
               />
               <canvas
                 ref={canvasRef}
-                width={680}
-                height={680}
+                width={WHEEL_PX}
+                height={WHEEL_PX}
                 onClick={spin}
                 className={styles.wheel}
                 style={{

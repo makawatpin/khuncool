@@ -680,3 +680,26 @@
     display: none;
   }
 }
+
+/* Fullscreen on a desktop is the projector case.
+   ---------------------------------------------
+   The wheel is capped at 430px and its column at 520px, so on a 1920px stage
+   the thing the whole class is watching spin occupies 22% of the board. The
+   caps exist so the wheel does not outgrow its bitmap on a big screen. That
+   bitmap is now drawn at 1.5x (see WHEEL_SS in the component), so the ceiling
+   moves with it: 760px is still inside 1020px of backing store. Height is in
+   the min() as well because the spin button has to stay on the board. */
+@container kcstage (min-width: 1150px) {
+  .wheel {
+    width: min(46cqi, 70cqb, 760px);
+    height: min(46cqi, 70cqb, 760px);
+  }
+
+  .wheelCol {
+    max-width: 820px;
+  }
+
+  .panel {
+    max-width: 560px;
+  }
+}
