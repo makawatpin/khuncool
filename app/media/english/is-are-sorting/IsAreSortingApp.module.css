@@ -161,9 +161,14 @@
   }
 
   /* The baskets keep their letter and their count; the rule reminder under it
-     is the part that can go, and it is the tallest line of the three. */
+     is the part that can go, and it is the tallest line of the three.
+
+     Padding measured from the board's height rather than left at 6px: at
+     780x304 the baskets were taking 73px of the 238px available while the
+     question card — the thing being read — was left with 46px. Running tally
+     against the sentence a child is trying to answer is the wrong way round. */
   .buckets > * {
-    padding: 6px 8px;
+    padding: max(3px, 1.2cqb) 8px;
   }
 
   .buckets > * > :nth-child(2) {
@@ -180,6 +185,55 @@
     flex: 1 1 auto;
     min-height: 40px;
     margin-bottom: 6px;
+  }
+
+  /* The card inside it has to fit, not just be told there is less room.
+     -----------------------------------------------------------------
+     `.cardArea` is `align-items:center` with `overflow:visible`, so a child
+     taller than the area does not clip or scroll — it spills out of BOTH ends.
+     The card measured 189px against the 46px the area actually gets on a
+     780x304 stage, and 66px of that landed on top of a 64px-tall answer row:
+     the IS/ARE buttons were completely covered and the game could not be
+     played at this size at all. Playwright names the culprit outright —
+     ".cardArea subtree intercepts pointer events" — but nothing in the audit
+     saw it, because the buttons are inside the stage, unclipped and full size.
+     They were merely underneath something.
+
+     The card was 189px because every dimension on it is sized from `cqi`: at
+     780px of container width `5cqi` is 39px, so its padding pinned to the 34px
+     ceiling top and bottom, and the sentence to its 34px one. Width-derived
+     sizing on a board that is short, not narrow — the trap the contract writes
+     up, and the same one behind motion-lab's intro heading.
+
+     So the card is sized from `cqb` here instead, which is the axis that is
+     actually scarce. `align-items:stretch` is the structural half: the card
+     fills the area rather than centring in it, so it can never spill again
+     even if some future content grows. */
+  .cardArea {
+    align-items: stretch;
+  }
+
+  .cardArea > div {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: max(6px, 2.5cqb) 14px !important;
+  }
+
+  /* "เติมคำในช่องว่าง" over a sentence with a blank in it. The blank says it. */
+  .cardArea > div > :nth-child(3) {
+    display: none;
+  }
+
+  .cardArea > div > :nth-child(4) {
+    font-size: max(17px, 6cqb) !important;
+    line-height: 1.3 !important;
+  }
+
+  .cardArea > div > :nth-child(5) {
+    margin-top: max(2px, 1cqb) !important;
+    font-size: max(12px, 3.6cqb) !important;
   }
 
   .answers {

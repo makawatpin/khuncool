@@ -211,10 +211,19 @@ const backToHub = (text) => async (page) => {
  * result screen replaces the selector's targets. Reused across asean-matching,
  * digital-sort, is-are-sorting and talk-card because all four share this
  * shape; only the selector, count and wait differ.
+ *
+ * Deliberately NOT `{ force: true }`. Force skips the actionability check and
+ * dispatches at the element's centre point regardless of what is on top of it,
+ * so a control covered by another element takes the click silently and the
+ * walk just does not advance. That is precisely how is-are-sorting hid a
+ * question card sitting on top of both answer buttons at 844x390 — the game
+ * was unplayable at that size and twelve force-clicks left the round counter
+ * at 1/12 without a word. Unforced, Playwright refuses and names the
+ * intercepting element, which is the bug report writing itself.
  */
 const clickFirst = (selector, count, waitMs) => async (page) => {
   for (let round = 0; round < count; round++) {
-    await page.locator(selector).first().click({ force: true });
+    await page.locator(selector).first().click();
     if (waitMs) await page.waitForTimeout(waitMs);
   }
 };
