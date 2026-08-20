@@ -33,10 +33,35 @@
 
 /* The results screen leads with a celebration emoji sized for a projector.
    It is the part that gives when the board is short, so the replay button
-   below the word list stays reachable. */
+   below the word list stays reachable.
+
+   Shrinking the emoji was not enough on its own: measured on a 780x304 stage
+   the screen still wanted 142px more than it had, and what fell off the bottom
+   was "เล่นอีกครั้ง" — the one control on the screen. So the word list, which is
+   the part that genuinely has no fixed size, takes the scroll and the button
+   under it is pinned.
+
+   `safe center` rather than `center`, for the reason the contract gives in §5:
+   centring content taller than its box pushes the overflow out of BOTH ends,
+   and the half above the start cannot be scrolled back to. `safe` degrades to
+   flex-start exactly when that would happen. */
 .result {
-  justify-content: center;
-  overflow: auto;
+  justify-content: safe center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The word review list: one row per word the round covered, so its height is
+   the game's to decide, not the board's. */
+.result > div:nth-last-child(2) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* The replay row. Never scrolls away — it is how the round is left. */
+.result > div:last-child {
+  flex: 0 0 auto;
 }
 
 .result > :first-child {
@@ -208,5 +233,68 @@
 
   .play > :last-child {
     margin-top: 6px !important;
+  }
+}
+
+/* The results screen on a board with no height to spare.
+   ----------------------------------------------------
+   New coverage — this screen had never been measured. Pinning the replay
+   button and letting the word list scroll was not enough on its own: the
+   fixed blocks above the list already came to 193px against the 238px a
+   780x304 stage leaves, so with the button's 57px the screen was over before
+   the list contributed a single pixel, and the button finished 126px past the
+   board.
+
+   Everything here is chrome around a result a class reads in about three
+   seconds: the headline, the run summary and the star row. Sized from the
+   board's height so the list keeps something to show and the button keeps its
+   tap target. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .result > h2 {
+    margin: 2px 0 !important;
+    font-size: max(15px, 6cqb) !important;
+    line-height: 1.2 !important;
+  }
+
+  .result > p {
+    margin: 0 0 4px !important;
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  /* The three stars, sized for a projector. */
+  .result > div:nth-of-type(2) {
+    margin: 0 0 4px !important;
+    gap: 4px !important;
+    font-size: max(14px, 5cqb) !important;
+  }
+
+  .result > div:nth-of-type(2) > * {
+    font-size: max(14px, 5cqb) !important;
+  }
+
+  .result > div:nth-last-child(2) {
+    margin-bottom: 6px !important;
+    padding: 6px !important;
+  }
+
+  .result > div:last-child > button {
+    min-height: var(--kc-tap);
+    padding: 0 18px !important;
+    font-size: max(12px, 3.4cqb) !important;
+  }
+}
+
+/* Below ~340px of board the review list has nothing left to show.
+   --------------------------------------------------------------
+   Measured on a 780x304 stage: with the headline, summary, stars and the
+   replay button all at their floors, the list is handed a box near zero and
+   reports all six of its rows outside it. A scroll region showing none of its
+   contents is not a list, it is a gap with a scrollbar — and the words were on
+   screen seconds ago as cards. It comes back the moment the board is taller. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  /* Inline styles set display on these blocks, so the override needs the
+     same weight the rest of this file uses against them. */
+  .result > div:nth-last-child(2) {
+    display: none !important;
   }
 }
