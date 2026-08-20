@@ -200,3 +200,28 @@
     overflow: auto;
   }
 }
+
+/* See classroom-objects: 920px of a 1920px stage is 48%, and a bingo card is
+   the one thing in this game the whole room is reading at once. */
+@container kcstage (min-width: 1150px) {
+  .screen {
+    max-width: min(1420px, 92cqi) !important;
+  }
+}
+
+/* ...and the split between the two columns, once there is room to split.
+   ---------------------------------------------------------------------
+   The play screen is a grid of equal columns: the sound being called on the
+   left, the bingo card on the right. Equal is right on a laptop, but on a
+   1920px board it gives 685px to a panel whose content stops after 370px and
+   the same 685px to the card the class is actually reading. The card is also
+   capped at 78cqb, so on a tall board it has headroom it never gets to use.
+
+   Weighting the split 5:7 hands that headroom to the card without taking the
+   called sound below its natural height. Left alone are the alignment and the
+   gap, which are inline on the element and correct as they are. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  .board {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr) !important;
+  }
+}
