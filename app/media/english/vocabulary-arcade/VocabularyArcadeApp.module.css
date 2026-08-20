@@ -301,3 +301,57 @@
     display: none !important;
   }
 }
+
+/* Fullscreen on a desktop is the projector case.
+   ---------------------------------------------
+   `.screen` caps at 940px — 49% of a 1920px stage — and the answer grid at
+   700px inside it. The picture and the four options are what a class is
+   reading together, so both take the extra width, and the option labels scale
+   with them: a bigger card whose word stays at its laptop size is a bigger
+   picture of the same small game. */
+@container kcstage (min-width: 1150px) {
+  .screen {
+    max-width: min(1400px, 92cqi) !important;
+  }
+
+  :global(.kc-vocab-options) {
+    max-width: min(1060px, 72cqi) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    font-size: clamp(18px, 1.35cqi, 28px);
+  }
+}
+
+/* ...and the height, on a board that has plenty of it.
+   ---------------------------------------------------
+   Widening alone left the projector case still looking like a small game
+   printed on a large sheet: the picture a child is being asked to name caps at
+   168px, the emoji inside it at 92px, and on a 1080px board the whole card
+   finished around y=530 with half the screen empty underneath. Both caps come
+   from `cqi`, so widening the screen could not move them — they were already
+   pinned at their ceilings.
+
+   So this block sizes the picture from `cqb` instead, the axis that actually
+   has the room. The height guard matters: on a stage that is wide but shallow
+   the earlier compaction rules are the ones that should win, and they still do
+   because this never matches there. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-vocab-visual) {
+    width: min(420px, 38cqb) !important;
+    height: min(420px, 38cqb) !important;
+    margin-bottom: min(28px, 2.6cqb) !important;
+  }
+
+  :global(.kc-vocab-visual) > span {
+    font-size: min(250px, 23cqb) !important;
+  }
+
+  :global(.kc-vocab-kicker) {
+    font-size: clamp(13px, 1.5cqb, 20px) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    min-height: min(120px, 11cqb);
+  }
+}
