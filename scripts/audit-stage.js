@@ -274,11 +274,29 @@ function auditStage({ min = 11 } = {}) {
   //
   // Reported outermost-first: the block that escaped is the useful name, not
   // each of its forty descendants.
+  // The tolerance is 12px, not a rounding allowance.
+  //
+  // At 4px this check flapped: phonics-bingo's intro read 3 rows, then 4, then
+  // 4 on identical code, because two elements sit 4-5px above the edge while an
+  // entry animation runs and the sample lands wherever it lands. Measuring the
+  // whole suite showed why 12 is safe: the rows are 4, 5, then nothing until
+  // 21, 22, 25, 36, 38, 43, 68. There is no real finding between a rounding
+  // wobble and two centimetres of content, and the case this check was written
+  // for — Sound Wheel losing 167px of a 256px wheel — is nowhere near the line.
+  //
+  // What this check must NOT do is gate on `controlsInside > 0`. That is the
+  // obvious way to cut the noise and it would disable the check outright: all
+  // nine remaining rows across sixteen games have zero controls inside,
+  // including a typing-defense element that is 100% hidden, and the wheel that
+  // prompted the check in the first place is artwork with no controls either.
+  // What escapes the top of a stage is usually exactly that — artwork, a
+  // heading, a badge — and it is still gone.
+  const ABOVE_TOLERANCE_PX = 12;
   const aboveTop = [...stage.querySelectorAll("*")].filter((el) => {
     if (decorative(el)) return false;
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height) return false;
-    return r.top < box.top - 4;
+    return r.top < box.top - ABOVE_TOLERANCE_PX;
   });
   const aboveSet = new Set(aboveTop);
   const contentAboveStage = aboveTop
