@@ -80,6 +80,25 @@ const SCIENCE_LAB_ANSWERS = (() => {
 })();
 
 /**
+ * Classroom Objects' word list, for solving its memory game.
+ *
+ * Read from the source for the same reason Science Lab's answers are: a
+ * hand-copied list of 47 Thai/English/emoji triples is where a typo hides, and
+ * re-reading survives the list changing later.
+ */
+const CLASSROOM_WORDS = (() => {
+  const src = readFileSync(
+    path.join(ROOT, "app/media/english/classroom-objects/ClassroomObjectsApp.tsx"),
+    "utf8",
+  );
+  const re = /\{ emoji: "([^"]*)", en: "([^"]*)", th: "([^"]*)" \}/g;
+  const out = [];
+  let m;
+  while ((m = re.exec(src))) out.push({ emoji: m[1], en: m[2], th: m[3] });
+  return out;
+})();
+
+/**
  * Default seed, chosen rather than picked arbitrarily.
  *
  * Sweeping seeds 1-40 and recording Motion Lab's first quiz question shows how
@@ -391,6 +410,26 @@ const GAMES = {
       { name: "play-word", enter: pickVocabMode(/Word → Picture/) },
       { name: "play-spelling", enter: pickVocabMode(/Spelling Builder/) },
       { name: "play-mixed", enter: pickVocabMode(/Mixed Challenge/) },
+      // 20 questions, any answer advances — `next()` runs on the same ~1.2s
+      // schedule whether the pick was right or wrong, so no solving needed,
+      // only patience.
+      //
+      // Restarts in Picture Match rather than carrying on from play-mixed:
+      // Mixed Challenge rotates the answer UI per question, and the spelling
+      // rounds have letter tiles instead of `.kc-vocab-options`, so the walk
+      // stalls the first time one comes up. One mode all the way through keeps
+      // a single selector valid for all 20.
+      {
+        name: "result",
+        async enter(page) {
+          await pickVocabMode(/Picture Match/)(page);
+          await page.waitForTimeout(400);
+          await clickFirst(".kc-vocab-options button", 20, 1400)(page);
+        },
+        // A global class, not a CSS-module one — this screen is `.screen
+        // kc-vocab-result`, so `[class*="__result"]` matches nothing.
+        expect: ".kc-vocab-result",
+      },
     ],
   },
   "classroom-objects": {
@@ -398,6 +437,53 @@ const GAMES = {
     screens: [
       { name: "intro" },
       { name: "play", enter: click(/เริ่มเล่น/) },
+      {
+        name: "result",
+        // A memory game, solved rather than brute-forced. Every card's face
+        // text is already in the DOM while it is face down — the flip is a CSS
+        // transform, not a render swap — so the whole board can be read before
+        // touching it, and the pairs matched with zero wrong flips.
+        //
+        // The two halves of a pair share no text: one card shows the English
+        // word, the other the emoji and the Thai. Pairing therefore comes from
+        // the game's own word list, matched on EXACT equality after stripping
+        // the card-back letter. Not `includes` — the list holds book/notebook,
+        // pen/pencil and paper/paper clip, so substring matching pairs the
+        // wrong cards and the round never ends.
+        async enter(page) {
+          const cardSel = '[class*="__grid"] > button';
+          const texts = (await page.locator(cardSel).allTextContents()).map((t) => t.trim());
+          const byWord = new Map();
+          texts.forEach((t, i) => {
+            const w = CLASSROOM_WORDS.findIndex(
+              (x) => t.slice(1) === x.en || t.slice(1) === x.emoji + x.th,
+            );
+            if (w < 0) return;
+            if (!byWord.has(w)) byWord.set(w, []);
+            byWord.get(w).push(i);
+          });
+          // Re-queried on every click: React replaces the card nodes as they
+          // flip, so element handles detach and nth() shifts underneath.
+          const clickByText = async (want) => {
+            const all = page.locator(cardSel);
+            const now = await all.allTextContents();
+            const i = now.findIndex((t) => t.trim() === want);
+            if (i >= 0) await all.nth(i).click();
+          };
+          for (const [, pair] of byWord) {
+            if (pair.length !== 2) continue;
+            // The board empties the moment the last pair lands, and the loop
+            // must not keep clicking into the result screen.
+            if (!(await page.locator(cardSel).count())) break;
+            await clickByText(texts[pair[0]]);
+            await page.waitForTimeout(220);
+            await clickByText(texts[pair[1]]);
+            await page.waitForTimeout(900);
+          }
+          await page.waitForTimeout(1200);
+        },
+        expect: '[class*="__result"]',
+      },
     ],
   },
   "is-are-sorting": {
