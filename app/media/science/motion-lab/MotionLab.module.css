@@ -405,3 +405,39 @@
     font-size: 12px;
   }
 }
+
+/* The intro's compaction rules were never winning on a shallow board.
+   ------------------------------------------------------------------
+   The base rule for the description paragraph is
+
+       .introCopy > p:not(.eyebrow) { margin: 18px 0 }
+
+   which scores (0,2,1) — `:not()` contributes the class inside it. Both
+   short-shape blocks try to tighten that with `.introCopy > p { margin-bottom:
+   … }`, which scores (0,1,1) and loses, so the paragraph kept 18px above and
+   18px below no matter how little room the board had. The portrait block picked
+   the right selector and does work; only the wide-and-short ones were silent.
+
+   Nothing reported it. The audit measures boxes, not whether a rule you wrote
+   is being applied, and the screen still passed at the sizes in the suite — but
+   only just. scripts/audit-headroom.mjs is what surfaced it: this screen
+   survived losing 8px of viewport height before "เข้าสู่ห้องทดลอง" left the
+   board entirely, the thinnest margin of any screen in any game, and a phone
+   held sideways in a real browser loses far more than that to the URL bar.
+
+   Matching the base rule's specificity is the whole fix. It is worth 25px here,
+   which takes the same screen from surviving an 8px loss to surviving 46px.
+   Same family as the bug in 2cc843a — a compaction rule that reads correctly
+   and does nothing — except that one lost on source order and this one on
+   specificity. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .introCopy > p:not(.eyebrow) {
+    margin: 8px 0;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  .introCopy > p:not(.eyebrow) {
+    margin: 4px 0;
+  }
+}
