@@ -152,3 +152,43 @@
     font-size: max(13px, 4cqb) !important;
   }
 }
+
+/* Fullscreen on a desktop, for a screen that is mostly one sentence.
+   -----------------------------------------------------------------
+   The board is capped at 1000px — 52% of a 1920px stage — so fullscreen
+   leaves a wide empty margin. The fix here is deliberately NOT the one the
+   card games get: a question stretched across 1900px is a worse read, not a
+   better one, because the eye has to track that far to the start of the next
+   line. Past roughly 1200px a line of text stops gaining anything.
+
+   So the card widens only a little, and the size comes from the type instead.
+   That is what the back of the room actually needs. */
+@container kcstage (min-width: 1150px) {
+  .screen {
+    max-width: min(1260px, 88cqi) !important;
+  }
+}
+
+/* ...and the height, on a board that has plenty of it.
+   ---------------------------------------------------
+   The question is the entire point of this screen and it caps at 52px, which
+   on a 1080px board left the card finishing halfway down and the rest of the
+   screen empty. That cap is `6.6cqi`, already at its ceiling once the stage is
+   this wide, so widening the card could not move it.
+
+   Height is what is spare here, so the question is sized from `cqb`. Note this
+   does NOT contradict the width restraint above: a bigger word on a bounded
+   line is easier to read from the back of a room; a longer line is not.
+
+   Guarded on height as well as width so the shallow-board rules keep winning
+   where they should. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-talk-play) h2 {
+    font-size: min(96px, 9cqb) !important;
+    margin-bottom: min(20px, 1.8cqb) !important;
+  }
+
+  :global(.kc-talk-play) h2 + p {
+    font-size: min(34px, 3.2cqb) !important;
+  }
+}
