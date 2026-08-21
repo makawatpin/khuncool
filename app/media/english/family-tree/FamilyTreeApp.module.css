@@ -1397,3 +1397,146 @@
     font-size: 24px !important;
   }
 }
+
+/* Fill in the Blank on a stage with height to spare.
+   ========================================================================
+   The worst of the four by a distance: 1920x1080 fullscreen ended at y=373 of
+   1080 — 33% used — with English sentences a child is meant to READ set at
+   15px and the word buttons at 14px, on a screen 1920px wide. A tablet held
+   upright sat at 42% for the same reason the listening screen did: the
+   desktop gate starts at 1150px and an upright tablet never reaches it.
+
+   Same three gates and the same budgeting as the listening screen. The story
+   lines are already two across on any non-upright shape, so the height goes
+   into type and padding rather than into rearranging them. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-story) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-story-lines) {
+    align-self: stretch;
+  }
+
+  :global(.kc-family-story) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-story) > div:first-of-type {
+    padding: 12px 24px !important;
+    margin-bottom: 18px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 36px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 15px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 27px !important;
+  }
+
+  :global(.kc-family-story-lines) {
+    gap: 20px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 20px 24px !important;
+  }
+
+  /* The sentence is the thing being read. */
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 24px !important;
+    margin-bottom: 14px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 20px !important;
+    padding: 12px 26px !important;
+  }
+}
+
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-story) > div:first-of-type {
+    padding: 16px 30px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 46px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 18px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 34px !important;
+  }
+
+  :global(.kc-family-story-lines) {
+    gap: 28px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 28px 32px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 32px !important;
+    margin-bottom: 20px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 26px !important;
+    padding: 15px 32px !important;
+  }
+}
+
+/* A tablet held upright keeps the lines in one column, so they get the full
+   width each and the type grows without the sentences wrapping further. */
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-story) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-story-lines) {
+    align-self: stretch;
+    gap: 18px !important;
+  }
+
+  :global(.kc-family-story) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 38px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 28px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 18px 22px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 22px !important;
+    margin-bottom: 12px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 19px !important;
+    padding: 11px 24px !important;
+  }
+}
