@@ -714,3 +714,141 @@
     width: min(100%, calc(var(--kc-canvas-w) * 1.5));
   }
 }
+
+/* The shared top bar.
+   ------------------------------------------------------------------------
+   Every rule below used to be an inline style on the TSX, which is why the
+   bar could not respond to the stage at all: a container query can only
+   reach a class, and an inline declaration outranks anything a query could
+   have said anyway.
+
+   Measured on a 343px stage (375px viewport, in page, inside a minigame) it
+   wrapped to THREE rows 168px tall — 27% of a 610px stage spent on chrome —
+   and the wrapped rows sat flush right, because the control group carries
+   `justify-content: flex-end` and wrapping inherits it. */
+.topBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.barControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Geometry only — colour and state stay inline, where they read next to the
+   state that drives them. Height is 40px rather than the 36px the inline
+   styles asked for because `.kc-tap-chrome` was already forcing 40px via
+   min-height; this writes down what was actually rendering. */
+.barPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.barIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.barChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+/* Narrow stages: one row of icons instead of three rows of labelled pills.
+   ------------------------------------------------------------------------
+   This gates on width rather than on one of the three standard shapes
+   (contract 3) on purpose, and the number is measured rather than guessed:
+   what makes the bar wrap is the stage's inline size against seven
+   fixed-width controls, not its aspect ratio. The 343px and 375px stages
+   wrap; the 704px and 780px ones already fit on one row at 68px and are
+   deliberately left alone, so the gate sits between them.
+
+   Dropping the labels is contract 7 step 3 — chrome that repeats what the
+   UI already says. The emoji carry the meaning, and every control keeps its
+   accessible name through an explicit `aria-label`, so the label is hidden
+   from sight only: a screen reader still hears "มินิเกม", and so does the
+   audit walk, which finds that button by accessible name. */
+/* First tier: drop the wordmark, keep every label. Measured — at 704px the
+   brand costs 216px of the 736px the bar needs, and losing it is the whole
+   difference between one row at 68px and two at 104px. The game's own intro
+   heading names it on the way in, so this is the same repeat-of-what-the-UI-
+   already-says as the labels below, just cheaper. */
+@container kcstage (max-width: 900px) {
+  .brandName {
+    display: none;
+  }
+}
+
+@container kcstage (max-width: 620px) {
+  .barLabel {
+    display: none;
+  }
+
+  .topBar {
+    gap: 8px;
+    padding: 10px 12px;
+    justify-content: center;
+  }
+
+  .barControls {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .barPill {
+    width: 40px;
+    padding: 0;
+  }
+}
+
+/* Short stages have width to spare and none to spare vertically, so the bar
+   keeps its labels and gives back padding instead. 8px a side returns 12px
+   to the game on the 390px-tall stage the contract calls the tightest one. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .topBar {
+    padding: 8px 16px;
+  }
+}

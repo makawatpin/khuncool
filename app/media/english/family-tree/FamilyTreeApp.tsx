@@ -1020,45 +1020,32 @@ export default function FamilyTreeApp() {
           <span>{WORD_MAP[dragPreview.id].en}</span>
         </div>
       )}
-      {/* top bar */}
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 10,
-          padding: "14px 16px",
-          maxWidth: 1000,
-          margin: "0 auto",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      {/* top bar — geometry lives in the CSS module so container queries can
+          reach it; see the .topBar block there for what it costs when it
+          cannot. Colour and state stay here. */}
+      <div className={styles.topBar}>
+        <div className={styles.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
             alt="KhunCool"
             style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
-          <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
+          <div className={`kc-title ${styles.brandName}`} style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <div className={styles.barControls}>
           <Link
             href="/media/english"
+            className={`kc-tap-chrome ${styles.barPill}`}
+            aria-label="เมนู"
+            title="เมนู"
             style={{
-              fontWeight: 600,
-              fontSize: 14,
-              lineHeight: 1.2,
-              whiteSpace: "nowrap",
               color: "#5C5EE6",
               background: "#E1E3FD",
-              borderRadius: 999,
-              padding: "9px 16px",
               textDecoration: "none",
             }}
           >
-            ☰ เมนู
+            ☰<span className={styles.barLabel}>เมนู</span>
           </Link>
           {showTopRight && (
           <>
@@ -1066,37 +1053,28 @@ export default function FamilyTreeApp() {
               <button
                 type="button"
                 onClick={() => goStage(10)}
+                className={`kc-tap-chrome ${styles.barPill}`}
+                aria-label="มินิเกม"
+                title="มินิเกม"
                 style={{
-                  fontWeight: 600,
-                  fontSize: 14,
                   color: "#5C5EE6",
                   background: "#E1E3FD",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "8px 16px",
-                  cursor: "pointer",
                 }}
               >
-                🎮 มินิเกม
+                🎮<span className={styles.barLabel}>มินิเกม</span>
               </button>
             )}
             <button
-              className="kc-tap-chrome"
+              className={`kc-tap-chrome ${styles.barPill}`}
               type="button"
               onClick={toggleBgm}
+              aria-label={bgm ? "ปิดเพลง" : "เปิดเพลง"}
+              title={bgm ? "ปิดเพลง" : "เปิดเพลง"}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 7,
-                height: 36,
-                padding: "0 14px",
-                borderRadius: 999,
                 border: "1px solid #E5E8EE",
                 background: bgm ? "#E1E3FD" : "#fff",
                 color: bgm ? "#4A46D6" : "#8A93A5",
-                fontWeight: 600,
                 fontSize: 13,
-                cursor: "pointer",
               }}
             >
               <span style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 14 }}>
@@ -1114,35 +1092,26 @@ export default function FamilyTreeApp() {
                   />
                 ))}
               </span>
-              <span>{bgm ? "เพลง" : "ปิดเพลง"}</span>
+              <span className={styles.barLabel}>{bgm ? "เพลง" : "ปิดเพลง"}</span>
             </button>
             <button
-              className="kc-tap-chrome"
+              className={`kc-tap-chrome ${styles.barIcon}`}
               type="button"
               onClick={toggleMute}
+              aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"}
+              title={muted ? "เปิดเสียง" : "ปิดเสียง"}
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
                 border: "1px solid #E5E8EE",
                 background: muted ? "#F1F3F7" : "#fff",
-                fontSize: 16,
-                cursor: "pointer",
               }}
             >
               {muted ? "🔇" : "🔊"}
             </button>
             <div
+              className={styles.barChip}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
                 background: "#fff",
                 border: "1px solid #E5E8EE",
-                borderRadius: 999,
-                padding: "7px 14px",
-                fontWeight: 600,
-                fontSize: 15,
                 color: "#C2500B",
               }}
             >
@@ -1152,19 +1121,14 @@ export default function FamilyTreeApp() {
           </>
         )}
           <button
-            className="kc-tap-chrome"
+            className={`kc-tap-chrome ${styles.barIcon}`}
             type="button"
             onClick={toggleFull}
             aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
             title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
               border: "1px solid #E5E8EE",
               background: isFull ? "#E1E3FD" : "#fff",
-              fontSize: 16,
-              cursor: "pointer",
             }}
           >
             ⛶
