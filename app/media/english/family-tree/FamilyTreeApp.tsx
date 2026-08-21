@@ -190,27 +190,13 @@ function FamilyFace({
   bowColor,
   size = 64,
 }: Chars & { size?: number }) {
-  const scale = size / 64;
+  // The size arrives as a prop but is published as a custom property, so a
+  // container query can raise it for a big stage. A JS number could not be:
+  // contract 1 forbids the game reading the viewport, and the caller has no
+  // other way to know how much room it has. The prop stays the default.
   return (
-    <div
-      style={{
-        position: "relative",
-        width: size,
-        height: 74 * scale,
-        flex: "none",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 64,
-          height: 74,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
+    <div className={styles.face} style={{ ["--kc-face" as string]: `${size}px` }}>
+      <div className={styles.faceScale}>
         <div
           style={{
             position: "relative",

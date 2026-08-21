@@ -326,6 +326,15 @@
     width: 64px !important;
     height: 64px !important;
     font-size: 26px !important;
+    /* Re-centre after shrinking. The button is absolutely placed at
+       `left: 12px; top: 12px` inline, which centres a 96px button in its
+       120px box — and leaves a 64px one 16px left of centre and hard against
+       the top. That is the "speaker not in the middle" this screen was
+       reported for, on every portrait stage. `translate` rather than
+       `transform`, so the wiggle animation keeps its own transform. */
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
   }
 
   :global(.kc-family-options) {
@@ -370,11 +379,15 @@
    changed nothing, the first because there is no svg here and the second
    because scale does not affect layout. */
 @container kcstage (aspect-ratio < 0.9) {
-  /* zoom, not width/height: the face is an absolutely-positioned inner box,
-     so clamping the wrapper let it spill over the label underneath. zoom is the
-     one that takes the layout box and the drawing with it. */
+  /* Was `zoom: 0.66`, chosen because the face is an absolutely-positioned
+     inner box and clamping the wrapper let the drawing spill over the label
+     underneath — zoom took the layout box and the drawing together. The face
+     now publishes its size as `--kc-face` and does both from one number, so
+     the property that was reached for as a workaround is no longer needed.
+     50px * 0.66 = 33px, i.e. the same rendered size as before.
+     `!important` because the prop's default arrives as an inline style. */
   :global(.kc-family-options) button > div {
-    zoom: 0.66;
+    --kc-face: 33px !important;
   }
 
   :global(.kc-family-listen) > div:nth-of-type(2) {
@@ -1142,5 +1155,245 @@
   .introCta {
     font-size: 26px;
     padding: 20px 56px;
+  }
+}
+
+/* FamilyFace, sized from CSS.
+   ========================================================================
+   The faces are drawn once at 64x74 and scaled, and the scale used to come
+   from a JS `size` prop — which meant a face could never respond to the
+   stage, because contract 1 forbids the game reading the viewport and the
+   caller has no other way to know how much room it has. The prop now sets
+   `--kc-face` instead, so it is still the default and a container query can
+   raise it.
+
+   `calc(var(--kc-face) / 64px)` divides a length by a length to get a plain
+   number, the same CSS Values 4 syntax `.canvasStage` already relies on. */
+.face {
+  position: relative;
+  width: var(--kc-face, 64px);
+  height: calc(var(--kc-face, 64px) * 74 / 64);
+  flex: none;
+}
+
+.faceScale {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 74px;
+  transform: scale(calc(var(--kc-face, 64px) / 64px));
+  transform-origin: top left;
+}
+
+/* Listening Quiz on a stage with height to spare.
+   ========================================================================
+   Measured before: 1920x1080 fullscreen ended at y=546 of 1080 and used 70%
+   of the width, with the answer labels at 16px and the faces at 50px — the
+   sizes they were drawn at for a phone. 768x1024 fullscreen was worse, 36%
+   of the height, because the existing desktop gate starts at 1150px wide and
+   a tablet held upright never reaches it.
+
+   So two gates, for the two shapes that have height going spare. The tall one
+   starts at 900px so a 812px phone in fullscreen is not caught by it — that
+   stage has no room and the contract is explicit about not spending it.
+
+   Centring needs `align-items: center` rather than the default stretch: the
+   mascot chip is an inline-flex pill, and a stretched flex child would run
+   the full width of the screen. The answer grid is told to stretch back. */
+/* Written out twice rather than as one comma-separated query list: the
+   PostCSS build in this project fails to parse a list of container queries
+   ("Unexpected token Comma"), and a stylesheet that does not compile is a
+   worse trade than eight repeated lines. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-listen) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-options) {
+    align-self: stretch;
+  }
+
+  /* Without this the speaker measured 200x0.
+     ---------------------------------------------------------------------
+     Its only child is absolutely positioned, so as a flex item its automatic
+     minimum size resolves to zero and it is the first thing flex shrinks
+     when the column runs long — an explicit `height` does not protect it.
+     Overflowing is the honest failure here: it is a shape the audit reports,
+     where a silently collapsed control is not. */
+  :global(.kc-family-listen) > * {
+    flex: none;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-listen) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-options) {
+    align-self: stretch;
+  }
+
+  :global(.kc-family-listen) > * {
+    flex: none;
+  }
+}
+
+/* A desktop at 1280x800 gives this screen 675px to work in, a projector at
+   1920x1080 gives it 939px, and both clear the same 1150px gate — so the
+   sizes are split rather than shared. Sized to the budget, not to taste:
+   the first set totals 649px, the second 861px. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-listen) > div:first-of-type {
+    padding: 12px 24px !important;
+    margin-bottom: 18px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 36px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 15px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 27px !important;
+  }
+
+  /* The replay button is the entire interaction of this screen, and it was
+     the same 96px on a 1080px stage as on a 390px one. */
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+    width: 150px !important;
+    height: 150px !important;
+    margin-bottom: 24px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 120px !important;
+    height: 120px !important;
+    font-size: 48px !important;
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
+  }
+
+  :global(.kc-family-options) {
+    gap: 20px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 20px !important;
+    gap: 8px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 72px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 22px !important;
+  }
+}
+
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-listen) > div:first-of-type {
+    padding: 16px 30px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 46px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 18px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 34px !important;
+  }
+
+    width: 200px !important;
+    height: 200px !important;
+    margin-bottom: 30px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 160px !important;
+    height: 160px !important;
+    font-size: 64px !important;
+  }
+
+  :global(.kc-family-options) {
+    gap: 26px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 28px !important;
+    gap: 12px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 96px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 28px !important;
+  }
+}
+
+/* A tablet held upright: narrower, so the answers grow less, but it has more
+   height going spare than the projector does. */
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 38px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 16px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 28px !important;
+  }
+
+    width: 170px !important;
+    height: 170px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 136px !important;
+    height: 136px !important;
+    font-size: 54px !important;
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
+  }
+
+  :global(.kc-family-options) {
+    gap: 22px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 24px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 78px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 24px !important;
   }
 }
