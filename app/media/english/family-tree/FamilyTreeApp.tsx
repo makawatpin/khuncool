@@ -1139,12 +1139,13 @@ export default function FamilyTreeApp() {
       {/* STAGE 0: INTRO */}
       {stage === 0 && (
         <div className={`${styles.screen} kc-family-stage kc-family-intro`} style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6cqb,90px)", textAlign: "center" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 22 }}>
+          <div className={styles.introCast}>
             {introCast.map((id, i) => (
               <div
                 key={id}
+                className={styles.introCastItem}
                 style={{
-                  animation: `floatY ${(2.8 + i * 0.2).toFixed(1)}s ease-in-out infinite`,
+                  animationDuration: `${(2.8 + i * 0.2).toFixed(1)}s`,
                   animationDelay: `${(i * 0.15).toFixed(2)}s`,
                 }}
               >
@@ -1152,7 +1153,7 @@ export default function FamilyTreeApp() {
               </div>
             ))}
           </div>
-          <h1 style={{ fontWeight: 700, fontSize: "clamp(32px,5cqi,48px)", margin: "0 0 14px" }}>
+          <h1 className={styles.introTitle}>
             มาเรียนรู้คำศัพท์
             <span
               style={{
@@ -1167,21 +1168,17 @@ export default function FamilyTreeApp() {
             </span>
             กันเถอะ!
           </h1>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "#5A6273", margin: "0 0 34px" }}>
+          <p className={styles.introLead}>
             ลากคำศัพท์ปลูกต้นไม้ครอบครัว จับคู่คำกับรูปภาพ ฟังเสียงแล้วเดา และเติมคำในเรื่องราวของเรา — 4
             ด่านสนุก ครบจบในหน้าเดียว!
           </p>
           <button
             type="button"
             onClick={() => goStage(10)}
+            className={styles.introCta}
             style={{
-              fontWeight: 600,
-              fontSize: 19,
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
-              border: "none",
-              borderRadius: 999,
-              padding: "16px 42px",
               animation: "pulseGlow 2.4s ease-in-out infinite",
               cursor: "pointer",
               boxShadow: "0 12px 26px -8px rgba(92,94,230,.6)",

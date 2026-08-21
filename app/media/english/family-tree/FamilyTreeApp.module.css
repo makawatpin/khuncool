@@ -1035,3 +1035,93 @@
     font-size: 18px;
   }
 }
+
+/* The intro.
+   ========================================================================
+   Same two problems as the hub, plus one of its own: the cast of faces
+   floats, and it floated the wrong way.
+
+   `floatY` runs 0 to -10px, so the row's animated extreme is UPWARDS, into
+   the only thing above it. Measured with the animation pinned at its peak,
+   the drawn top of the cast sits 12px under the bottom of the top bar — at
+   every stage size and in both modes, because the gap comes from the screen's
+   fixed 24px top margin rather than from anything that scales. It never
+   crosses the stage edge, so nothing in the audit could have said a word
+   about it, but 12px between a moving illustration and a row of controls
+   reads as a collision.
+
+   Bobbing down instead of up costs no height at all — the 22px below the row
+   already absorbs it — and it works on the shallow stages too, where there is
+   no spare height to solve it by spacing. */
+@keyframes castBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(9px);
+  }
+}
+
+.introCast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+/* Duration and delay stay inline: they are per-face, and staggering them is
+   what stops the row moving as one block. */
+.introCastItem {
+  animation-name: castBob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.introTitle {
+  font-weight: 700;
+  font-size: clamp(32px, 5cqi, 48px);
+  margin: 0 0 14px;
+}
+
+.introLead {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #5a6273;
+  margin: 0 0 34px;
+}
+
+.introCta {
+  font-weight: 600;
+  font-size: 19px;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 42px;
+}
+
+/* Projector and desktop fullscreen. The intro ended at y=405 of 1080 with the
+   lead paragraph still at the 17px it uses on a phone, which is the size it
+   was written at and not a size anyone reads from the back of a room. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-intro) {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+  }
+
+  .introCast {
+    margin-bottom: 34px;
+  }
+
+  .introLead {
+    font-size: 24px;
+    margin: 0 0 44px;
+  }
+
+  .introCta {
+    font-size: 26px;
+    padding: 20px 56px;
+  }
+}
