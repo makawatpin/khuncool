@@ -47,10 +47,29 @@
 
 .canvasStage {
   position: absolute;
-  inset: 0;
+  /* Centred rather than pinned left, which is what `inset: 0` used to do.
+     ---------------------------------------------------------------------
+     The scale below is `min()` of the two axes, so whenever HEIGHT is the
+     binding constraint the scaled board comes out narrower than the viewport
+     — and with `transform-origin: top left` the whole of that difference
+     landed on the right-hand side as blank space. Measured on the family
+     tree, off-centre by 116px on a 1096px stage, 122px at 1280 fullscreen,
+     207px on a tablet in page and 283px on a 780px shallow stage; the
+     matching board is the same mechanism and drifted the same way.
+
+     The three cases that looked right were the ones where the WIDTH ratio
+     won, so the board filled the viewport and had nowhere to drift to. That
+     is why this reads as random until it is measured.
+
+     Placing the unscaled box centred and scaling about its top centre keeps
+     it centred at every ratio. Nothing about the fit changes — the scale
+     factor is untouched. */
+  top: 0;
+  left: 50%;
   width: var(--kc-canvas-w);
   height: var(--kc-canvas-h);
-  transform-origin: top left;
+  margin-left: calc(var(--kc-canvas-w) / -2);
+  transform-origin: top center;
   /* Contain, not fit-to-width: whichever axis runs out first decides. Width
      alone left the matching board at 0.75 and 255px tall inside 238px. This
      needs the viewport to be a size container so cqb resolves. */
