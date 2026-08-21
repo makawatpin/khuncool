@@ -1195,9 +1195,9 @@ export default function FamilyTreeApp() {
       {/* HUB (stage 10) */}
       {stage === 10 && (
         <div className={`${styles.screen} kc-family-stage kc-family-menu`} style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
-          <h2 style={{ fontWeight: 600, fontSize: 26, margin: "0 0 8px" }}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
-          <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 28px" }}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3cqi,18px)" }}>
+          <h2 className={styles.hubTitle}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
+          <p className={styles.hubLead}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
+          <div className={styles.hubGrid}>
             {[
               { n: 1 as const, emoji: "🌳", label: "ปลูกต้นไม้ครอบครัว", desc: "ลาก & วางคำศัพท์", done: s1Done, blob: "#D5FBEF" },
               { n: 2 as const, emoji: "🔗", label: "จับคู่คำศัพท์", desc: "Matching", done: s2Done, blob: "#E1E3FD" },
@@ -1208,37 +1208,17 @@ export default function FamilyTreeApp() {
                 key={g.n}
                 type="button"
                 onClick={() => goStage(g.n)}
+                className={styles.hubCard}
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
                   background: g.done ? "#F5FFFC" : "#fff",
                   border: `2px solid ${g.done ? "#14B79A" : "#E9ECF3"}`,
-                  borderRadius: "clamp(16px,4cqi,22px)",
-                  padding: "clamp(14px,4cqi,26px) clamp(8px,3cqi,16px)",
-                  position: "relative",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  boxShadow: "0 10px 22px -16px rgba(0,0,0,.5)",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: -40,
-                    right: -30,
-                    width: 110,
-                    height: 110,
-                    borderRadius: "50%",
-                    background: g.blob,
-                    opacity: 0.5,
-                  }}
-                />
-                {g.done && <span style={{ position: "absolute", top: 8, right: 10, fontSize: "clamp(14px,3.4cqi,18px)" }}>✅</span>}
-                <div style={{ fontSize: "clamp(30px,7cqi,44px)", position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
-                <div style={{ fontWeight: 600, fontSize: "clamp(13px,3.4cqi,16px)", position: "relative" }}>{g.label}</div>
-                <div style={{ fontSize: "clamp(11px,2.6cqi,12px)", color: "#7C8494", position: "relative" }}>{g.desc}</div>
+                <div className={styles.hubBlob} style={{ background: g.blob }} />
+                {g.done && <span className={styles.hubDone}>✅</span>}
+                <div className={styles.hubEmoji} style={{ animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
+                <div className={styles.hubLabel}>{g.label}</div>
+                <div className={styles.hubDesc}>{g.desc}</div>
               </button>
             ))}
           </div>

@@ -852,3 +852,186 @@
     padding: 8px 16px;
   }
 }
+
+/* The hub — the screen a child has to choose from.
+   ========================================================================
+   Same story as the top bar: every size below was an inline `clamp()`, so no
+   container query could reach any of it, and the caps were set for a laptop.
+   The base block reproduces exactly what was rendering; the query blocks are
+   the new part. `animation` stays inline, because CSS Modules rewrites
+   animation names and `floatY` is declared globally.
+
+   Two different problems, so two different answers, per contract 5:
+   the shallow board is short of height and the projector has height going
+   spare. Neither number is a guess — both are what measured. */
+.hubTitle {
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
+.hubLead {
+  font-size: 15px;
+  color: #5a6273;
+  margin: 0 0 28px;
+}
+
+.hubGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(45%, 200px), 1fr));
+  gap: clamp(10px, 3cqi, 18px);
+}
+
+.hubCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: clamp(16px, 4cqi, 22px);
+  padding: clamp(14px, 4cqi, 26px) clamp(8px, 3cqi, 16px);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -16px rgba(0, 0, 0, 0.5);
+}
+
+/* Illustration only, so it does not take the tap — contract 4.5. It sits
+   inside the button and could not have swallowed a click, but the rule is
+   also the signal audit-stage.js reads to tell decoration from content. */
+.hubBlob {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hubDone {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: clamp(14px, 3.4cqi, 18px);
+}
+
+.hubEmoji {
+  font-size: clamp(30px, 7cqi, 44px);
+  position: relative;
+}
+
+.hubLabel {
+  font-weight: 600;
+  font-size: clamp(13px, 3.4cqi, 16px);
+  position: relative;
+}
+
+.hubDesc {
+  font-size: clamp(11px, 2.6cqi, 12px);
+  color: #7c8494;
+  position: relative;
+}
+
+/* Shallow board: four across on one row.
+   ------------------------------------------------------------------------
+   `auto-fit` with a 200px floor gives three columns on a 780px stage, so the
+   four cards became two rows — 546px of content in a 304px stage, with 276px
+   of it behind a scroll the game gives no sign of. The contract is explicit
+   that hidden option cards are a layout bug rather than an advisory: a child
+   who sees two of four choices picks from two.
+
+   Width is what this shape has spare, so the fix spends width: four fixed
+   columns, and the trims come off padding and type, in that order. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  .hubTitle {
+    font-size: 18px;
+    margin: 0 0 2px;
+  }
+
+  .hubLead {
+    font-size: 12px;
+    margin: 0 0 8px;
+  }
+
+  .hubGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hubCard {
+    gap: 4px;
+    border-radius: 14px;
+    padding: 8px 6px;
+  }
+
+  .hubEmoji {
+    font-size: 26px;
+  }
+
+  .hubLabel {
+    font-size: 13px;
+  }
+
+  .hubDesc {
+    font-size: 11px;
+  }
+}
+
+/* Projector and desktop fullscreen: use the height that is going spare.
+   ------------------------------------------------------------------------
+   Measured at 1920x1080 fullscreen, the four cards were 325x184 and the whole
+   screen ended at y=358 of 1080 — 67% of the stage left blank, with the one
+   thing a child has to read sitting in a thin strip along the top edge. Every
+   size was already at its `clamp()` ceiling, so the stage growing changed
+   nothing.
+
+   `safe center` rather than `center`, per contract 5: if the content ever
+   does outgrow the box, the overflow goes below where it can still be
+   reached, instead of half of it going above the stage where it cannot. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-menu) {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+  }
+
+  .hubTitle {
+    font-size: 40px;
+    margin: 0 0 12px;
+  }
+
+  .hubLead {
+    font-size: 22px;
+    margin: 0 0 40px;
+  }
+
+  .hubGrid {
+    gap: 28px;
+  }
+
+  .hubCard {
+    gap: 18px;
+    border-radius: 28px;
+    padding: 44px 20px;
+  }
+
+  .hubBlob {
+    top: -60px;
+    right: -46px;
+    width: 180px;
+    height: 180px;
+  }
+
+  .hubEmoji {
+    font-size: 84px;
+  }
+
+  .hubLabel {
+    font-size: 26px;
+  }
+
+  .hubDesc {
+    font-size: 18px;
+  }
+}
