@@ -1540,3 +1540,39 @@
     padding: 11px 24px !important;
   }
 }
+
+/* The matching board on a projector.
+   ========================================================================
+   Unlike the other three this screen is the scaled canvas, so its cards and
+   its text grow together with one number and there is nothing to re-type.
+   What held it back was not the 1.5x ceiling on `.canvasViewport` — measured
+   at 1920x1080 fullscreen it was drawing at 1.3x, well under it — but the
+   1400px cap on `.kc-family-stage`, which is a laptop's width and left the
+   board using 70% of a 1920px stage and 57% of its height.
+
+   Only the projector gets this. At 1280x800 fullscreen the screen is already
+   at 92cqi and the board at 88% of the width, so there is nothing to give;
+   raising the ceiling there would do nothing at all.
+
+   The ceiling is raised for THIS screen only. The family tree shares
+   `.canvasViewport`, but its viewport carries an `aspect-ratio`, so a wider
+   viewport is also a taller one — at 2x the tree would stand 860px in a
+   1012px screen that also has to hold a mascot chip and a word bank. The
+   matching board is 1040x310 and has the height to spare; the tree does not. */
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-match) {
+    max-width: 92cqi !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-match) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-match) .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.75));
+  }
+}
