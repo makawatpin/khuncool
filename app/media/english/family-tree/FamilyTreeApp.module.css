@@ -1576,3 +1576,71 @@
     width: min(100%, calc(var(--kc-canvas-w) * 1.75));
   }
 }
+
+/* The intro on a shallow board — the start button was under the fold.
+   ========================================================================
+   The audit reported `hiddenControls: 1 of 1` with the sample "เริ่มเล่น 🚀"
+   at 844x390 in page (124px hidden), 844x390 fullscreen (46px) and 768x1024
+   in page (30px). It is reachable by scrolling, so it is an advisory and not
+   a hard failure — but it is the one control on the screen, and contract 5
+   records that the button to the next screen going under the fold is the
+   single most common way these games fail. A child holding a phone sideways
+   sees an intro with no way in.
+
+   Contract 5's four steps, stopping as soon as it fits. Nothing is cut:
+
+     1  margins to fixed px           22/14/34 -> 8/6/10   ~46px
+     2  the title measured against the axis that ran out    ~20px
+     3  the cast sized down through --kc-face, which the
+        face component only learned to accept this round     ~28px
+
+   Which leaves the lead paragraph and every face on screen. Measured after:
+   194px of content in the 248px an 844x390 stage gives. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+  :global(.kc-family-intro) .introCast {
+    margin-bottom: 8px;
+  }
+
+  :global(.kc-family-intro) .introCastItem > div {
+    --kc-face: 40px !important;
+  }
+
+  .introTitle {
+    font-size: clamp(22px, 9cqb, 30px);
+    margin: 0 0 6px;
+  }
+
+  .introLead {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+
+  .introCta {
+    font-size: 16px;
+    padding: 11px 30px;
+  }
+}
+
+/* Four choices in one row on any board that is not upright.
+   ========================================================================
+   `auto-fit` decides the column count from a floor, and on a 960x540 stage
+   it chose three: the screen caps at 780px, leaving 732px, and four cards at
+   the 200px floor plus three 18px gaps need 734px. Two pixels short, so the
+   fourth card wrapped to a second row and went under the fold — the audit
+   reported "1 of 4 controls hidden" at 1024x768 in page, and the sample was
+   the fourth minigame.
+
+   Lowering the floor to 165px would also have fitted, and would have been
+   exactly the kind of pass-by-a-hair the contract keeps warning about: the
+   next label to grow by a character puts it back. Asking for four columns
+   outright says what is actually meant — a wide board shows all four choices
+   at once — and holds whatever the cards are sized at.
+
+   Upright boards are untouched and stay two by two; there is no width there
+   to spread four across. */
+@container kcstage (aspect-ratio >= 0.9) {
+  .hubGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
