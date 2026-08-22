@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabase } from "@/lib/supabase/client";
 
 export type CloudSyncStatus = "local-only" | "syncing" | "synced" | "error";
 
@@ -75,6 +75,7 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
     (async () => {
       setStatus("syncing");
       try {
+        const supabase = await getSupabase();
         const { data, error } = await supabase
           .from(TABLE)
           .select("data,updated_at")
@@ -131,6 +132,7 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
       (async () => {
         setStatus("syncing");
         try {
+          const supabase = await getSupabase();
           // Read-modify-write merge of this key into the shared row's JSONB
           // `data` column, done client-side rather than via a single SQL
           // merge (e.g. `data = data || jsonb_build_object(...)`).

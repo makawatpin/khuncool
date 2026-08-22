@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { getSupabase } from "@/lib/supabase/client";
 
 /** Fire-and-forget usage log. Never throws, never blocks the caller — a
  *  failed insert (offline, RLS misconfig, etc.) must not affect the tool. */
 export function trackToolEvent(tool: string, event: string = "use") {
-  supabase
-    .from("tool_events")
-    .insert({ tool, event })
-    .then(({ error }) => {
-      if (error) console.warn("trackToolEvent failed:", error.message);
+  getSupabase()
+    .then((supabase) =>
+      supabase
+        .from("tool_events")
+        .insert({ tool, event })
+        .then(({ error }) => {
+          if (error) console.warn("trackToolEvent failed:", error.message);
+        })
+    )
+    .catch(() => {
+      console.warn("trackToolEvent failed: Supabase client unavailable");
     });
 }
 
