@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์ ประถม ใช้ฟรี | khuncool",
   description:
     "รวมสื่อและเกมภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ Phonics Vocabulary Grammar และ Speaking เปิดเล่นบนจอหน้าชั้นได้ทันที ไม่ต้องติดตั้ง ไม่ต้องสมัครสมาชิก",
-  alternates: {
+  keywords: ["สื่อการสอนภาษาอังกฤษ", "เกมภาษาอังกฤษ", "เกมภาษาอังกฤษในห้องเรียน", "เกมภาษาอังกฤษ ประถม", "สอนคำศัพท์ภาษาอังกฤษ", "Phonics", "Vocabulary", "กิจกรรมภาษาอังกฤษ"], alternates: {
     canonical: "https://www.khuncool.com/media/english",
   },
   openGraph: {

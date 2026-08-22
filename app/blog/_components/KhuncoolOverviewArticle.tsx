@@ -130,7 +130,7 @@ export function KhuncoolOverviewArticle({ config }: { config: OverviewArticleCon
           <p className="m-0 mb-4 text-[14.5px] leading-[1.78] text-[#2E3440] md:text-[15.5px] md:leading-[1.85]">{config.toolsIntro}</p>
           <div className="flex flex-col gap-3 md:gap-3.5">
             {config.tools.map((tool, index) => (
-              <div key={tool.href} className="rounded-2xl border border-[#E5E8EE] p-4 md:p-[18px_20px]">
+              <div key={`${tool.href}-${index}`} className="rounded-2xl border border-[#E5E8EE] p-4 md:p-[18px_20px]">
                 <div className="mb-1.5 flex items-start gap-3">
                   <span className="flex h-8 w-8 flex-none items-center justify-center rounded-[10px] bg-[#ECEDFE] text-base">{tool.icon}</span>
                   <div>

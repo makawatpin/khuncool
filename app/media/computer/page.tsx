@@ -8,7 +8,7 @@ import { CASES, EEAT_CARDS, FAQS, MEDIA, RELATED_SUBJECTS, RELATED_TOOLS, SKILLS
 export const metadata: Metadata = {
   title: "สื่อการสอนคอมพิวเตอร์ วิทยาการคำนวณ ประถม ใช้ฟรี | khuncool",
   description: "รวมเกมและสื่อการสอนคอมพิวเตอร์ วิทยาการคำนวณ สำหรับครูประถม ฝึก Coding การพิมพ์ ความปลอดภัยดิจิทัล และฮาร์ดแวร์ ใช้ฟรีผ่านเบราว์เซอร์",
-  alternates: { canonical: "https://www.khuncool.com/media/computer" },
+  keywords: ["สื่อการสอนวิทยาการคำนวณ", "เกมวิทยาการคำนวณ", "วิทยาการคำนวณ ป.4", "วิทยาการคำนวณ ป.5", "วิทยาการคำนวณ ป.6", "สื่อการสอนคอมพิวเตอร์", "เกม Coding สำหรับเด็ก", "เกมฝึกพิมพ์ดีด", "ฮาร์ดแวร์และซอฟต์แวร์"], alternates: { canonical: "https://www.khuncool.com/media/computer" },
   openGraph: { type: "website", title: "สื่อการสอนคอมพิวเตอร์และวิทยาการคำนวณ | khuncool", description: "เกม Coding และทักษะดิจิทัลสำหรับนักเรียนประถม ใช้ฟรี เล่นได้ทั้งห้อง", url: "https://www.khuncool.com/media/computer", locale: "th_TH" },
   twitter: { card: "summary_large_image" },
 };

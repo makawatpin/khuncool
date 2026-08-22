@@ -7,7 +7,7 @@ import { CASES, FAQS, MEDIA, RELATED_ARTICLES, RELATED_TOOLS, SUBJECTS, TOPICS, 
 export const metadata: Metadata = {
   title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool",
   description: "รวมสื่อและเกมสังคมศึกษาออนไลน์สำหรับครูประถม เรียนรู้อาเซียน ภูมิศาสตร์ ประวัติศาสตร์ และหน้าที่พลเมือง เปิดใช้บนจอหน้าชั้นได้ทันที",
-  alternates: { canonical: "https://www.khuncool.com/media/social-studies" },
+  keywords: ["สื่อการสอนสังคมศึกษา", "เกมสังคมศึกษา", "เกมอาเซียน", "สื่อการสอนอาเซียน", "หน้าที่พลเมือง", "กฎหมายในชีวิตประจำวัน", "สื่อการสอนสังคม ประถม"], alternates: { canonical: "https://www.khuncool.com/media/social-studies" },
   openGraph: { type: "website", title: "สื่อการสอนสังคมศึกษา ประถม ใช้ฟรีออนไลน์ | khuncool", description: "รวมสื่อสังคมศึกษาออนไลน์สำหรับครูประถม แยกตามสาระและเปิดใช้บนจอหน้าชั้นได้", url: "https://www.khuncool.com/media/social-studies", locale: "th_TH", images: [{ url: "https://www.khuncool.com/assets/khuncool-logo.webp", alt: "khuncool สื่อการสอนสังคมศึกษา" }] },
   twitter: { card: "summary_large_image" },
 };
