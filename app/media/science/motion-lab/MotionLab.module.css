@@ -20,7 +20,7 @@
 /* Short shape — wide but shallow: a phone held sideways, a tablet upright, a
    short desktop window. The two-column composition survives at this width, so
    vertical room comes out of the chrome and type follows the stage height. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){.lab{display:flex;flex-direction:column;border-width:2px;border-radius:16px}.topbar{flex:0 0 auto;height:auto;min-height:0;padding:4px 2.3%}.brand img{width:30px;height:30px}.brand b{font-size:max(13px,4.2cqb)}.brand small{display:none}.actions{gap:6px}.actions a,.actions button{min-height:var(--kc-tap);min-width:var(--kc-tap);padding:0 10px;font-size:max(11px,2.9cqb);box-shadow:0 2px 0 var(--navy)}.actions span{display:none}.intro,.workspace,.quiz{flex:1 1 auto;height:auto;min-height:0}.intro{gap:4%;padding:2% 4%}.eyebrow{margin-bottom:4px;font-size:max(11px,2.8cqb)}.introCopy h2{font-size:max(20px,9cqb);line-height:1.15}.introCopy>p{margin-bottom:8px;font-size:max(11px,3.3cqb);line-height:1.4}.topicChips{gap:5px;margin-bottom:10px}.topicChips>*{padding:4px 9px;font-size:max(11px,2.9cqb)}.primary{min-height:var(--kc-tap);padding:0 18px;font-size:max(12px,3.6cqb)}.workspace{padding:1%;gap:1.2%;grid-template-columns:30% 1fr}.controls{min-height:0;overflow:auto;padding:7px}.controls h2{margin:0 0 4px;font-size:max(14px,5cqb)}.controls label{gap:3px;margin-top:6px}.controls label>span{font-size:max(11px,3cqb)}.routeButtons button{padding:5px 3px}.routeNote{min-height:0;margin:6px 0 5px;padding:5px;font-size:max(11px,3cqb)}.runButton,.controls>button{min-height:var(--kc-tap);font-size:max(11px,3.2cqb)}.simulator{gap:5px;padding:7px}.simHeader h2{margin:0;font-size:max(14px,5cqb)}.quiz{gap:6px;padding:1.5% 4%;grid-template-rows:auto minmax(0,1fr) auto}.quiz section{align-self:stretch;overflow:auto}}
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){.lab{display:flex;flex-direction:column;border-width:2px;border-radius:16px}.topbar{flex:0 0 auto;height:auto;min-height:0;padding:4px 2.3%}.brand img{width:30px;height:30px}.brand b{font-size:max(13px,4.2cqb)}.brand small{display:none}.actions{gap:6px}.actions a,.actions button{min-height:var(--kc-tap);min-width:var(--kc-tap);padding:0 10px;font-size:max(11px,2.9cqb);box-shadow:0 2px 0 var(--navy)}.actions span{display:none}.intro,.workspace,.quiz{flex:1 1 auto;height:auto;min-height:0}.intro{gap:4%;padding:2% 4%}.eyebrow{margin-bottom:4px;font-size:max(11px,2.8cqb)}.introCopy h2{font-size:max(20px,9cqb);line-height:1.15}.introCopy>p{margin-bottom:8px;font-size:max(11px,3.3cqb);line-height:1.4}.topicChips{gap:5px;margin-bottom:10px}.topicChips>*{padding:4px 9px;font-size:max(11px,2.9cqb)}.primary{min-height:var(--kc-tap);padding:0 18px;font-size:max(12px,3.6cqb)}.workspace{padding:1%;gap:1.2%;grid-template-columns:30% 1fr}.controls{min-height:0;overflow:auto;padding:7px}.controls h2{margin:0 0 4px;font-size:max(14px,5cqb)}.controls label{gap:3px;margin-top:6px}.controls label>span{font-size:max(11px,3cqb)}.routeButtons button{padding:5px 3px}.routeNote{min-height:0;margin:6px 0 5px;padding:5px;font-size:max(11px,3cqb)}.runButton,.controls>button{min-height:var(--kc-tap);font-size:max(11px,3.2cqb)}.simulator{gap:5px;padding:7px}.simHeader h2{margin:0;font-size:max(14px,5cqb)}.quiz{gap:6px;padding:1.5% 4%;grid-template-rows:auto minmax(0,1fr) auto}.quiz section{align-self:stretch;overflow:auto}}
 
 /* Below ~340px the intro's two columns cannot both fit: the copy alone needs
    more height than the board has. Give the copy the full width instead — the
@@ -40,8 +40,17 @@
 
    580px leaves the 617px desktop stage untouched and catches the 540px tablet
    and everything shorter, including the 396px tablet-upright case where the
-   short block's own compression was still 19px short. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 580px){
+   short block's own compression was still 19px short.
+
+   Floored at 340px, because the `height<340` block further down sizes the same
+   heading again for the tightest boards ("below ~340px the intro's two columns
+   cannot both fit"). `height<340` is a subset of this range and `.introCopy h2`
+   ties on specificity, so without the floor this block — being earlier in the
+   file — would still lose to it, but `.introCopy>p` would not: that one is
+   written `:not(.eyebrow)` here and bare there, so this block outranks it on
+   specificity and was overriding the tighter margins on a 304px stage. One
+   bound settles both. */
+@container kcstage (aspect-ratio >= 0.9) and (height >= 340px) and (height < 580px){
   .introCopy h2{font-size:max(24px,7.2cqb);line-height:1.12}
   .introCopy>p:not(.eyebrow){margin:8px 0;font-size:max(13px,2.9cqb);line-height:1.45}
   .introCopy .topicChips{margin-bottom:10px}
@@ -64,7 +73,7 @@
 
    The audit's default seed is chosen to draw this question first, so a run
    measures the hard case rather than one of the five easy ones. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){
   /* The heading over the card is display-sized while the card underneath is
      the part that has run out of room, so it gives its space up first. */
   .quizTop{gap:2px}
@@ -90,4 +99,401 @@
   .choices button{min-height:var(--kc-tap);padding:3px 7px;font-size:max(11px,3.4cqb);line-height:1.22}
   .choices button i{width:21px;height:21px;font-size:11px}
   .quizNav button{padding:6px 14px;font-size:max(11px,3cqb)}
+  /* The explain panel: new coverage, only appears with the last question
+     answered, so nothing here had ever compacted it. Below ~400px of stage it
+     was still 13-17px short of fitting even with the two-column collapse and
+     the choices grid already at their floor above, hiding two of the four
+     answer buttons behind the card's own scroll. */
+  .explain{padding:4px 7px;font-size:max(11px,2.8cqb);line-height:1.25}
+}
+
+/* The controls panel, and the three buttons at the foot of it.
+   ----------------------------------------------------------
+   Tier A listed five rows here — reset, run and the quiz link scrolled out of
+   the panel on both phone shapes and on an upright tablet. The panel carries
+   `overflow:auto`, so all three counted as reachable and no hard check fired.
+
+   Two things were wrong underneath, and only one of them was the height.
+
+   1. Nothing in the panel was allowed to keep its size. `.controls` is a flex
+      column, so every child shrinks by default, and the route note — the one
+      block of prose in it — was squeezed to a 10px box holding 21px of text on
+      a landscape phone and 39px on an upright tablet. It has `overflow:visible`
+      and no clipping, so the sentence simply rendered on top of the buttons
+      below it. Nothing in the audit can see text lying over a button: the note
+      is inside the stage, its box is not a scroll region, and its font size
+      never changed. It was found by measuring scrollHeight against clientHeight
+      and asking whether the two boxes met.
+
+   2. The three route buttons stack their icon over their label, and two of the
+      three labels wrap at this width. Grid rows are equal, so all three took
+      the tallest one's 91px — 40% of a 230px panel spent on three buttons.
+
+   So: every child keeps its height, the note becomes the one part that gives
+   ground (it holds no controls, which is what makes scrolling it the honest
+   answer per the contract), the buttons lie down into a row, and the footer is
+   pinned. The panel itself no longer scrolls, so anything that still does not
+   fit fails loudly as an unreachable control rather than quietly as a hidden
+   one. */
+
+/* Part 1 — the squeeze, fixed at every size because it is a defect at every
+   size, not a small-screen compromise. Only the note may give ground, and it
+   scrolls its own text instead of rendering it over the buttons. */
+
+.controls {
+  /* The panel no longer absorbs overflow silently. Anything that still does
+     not fit now reports as an unreachable control, which is a hard failure and
+     easy to see, rather than as three buttons quietly below the fold. */
+  overflow: hidden;
+}
+
+.controls > * {
+  flex: none;
+}
+
+.routeNote {
+  /* `0 1 auto`, not `1 1 auto`: it may shrink when the panel is tight but must
+     not grow into the space the footer's `margin-top:auto` is using. */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.controlFooter {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+/* Part 2 — compaction, only where the room has actually run out. The rules are
+   written twice rather than once with a comma: a comma-separated container
+   query list with the container name repeated is rejected by this toolchain
+   ("Unexpected token Comma"), and naming the container is what makes these
+   read against the stage rather than the nearest ancestor. */
+
+@container kcstage (aspect-ratio < 0.9) {
+  /* The panel had a fixed 39% of the workspace and its contents needed 253px
+     of the 220px that came to. A share of the board is the wrong way to size a
+     column of six fixed things: `auto` gives the panel what it needs and the
+     simulator — which is artwork and genuinely elastic — keeps the rest, with
+     a floor so it can never be squeezed away. */
+  .workspace {
+    grid-template-rows: auto minmax(120px, 1fr);
+  }
+
+  /* The simulator gives up 18px of track so the insight line under it stays on
+     the board. Sized from the controls panel taking what it needs above, the
+     simulator's four rows wanted 306px of the 298px left, and the last of them
+     — the sentence explaining distance against displacement — finished 11px
+     below the stage. The track keeps sky, road and car at 112px.
+
+     (The slider is not a candidate: stage.css floors every range input at
+     --kc-tap, which is the WCAG target size and not ours to shave.) */
+  .simulator {
+    grid-template-rows: auto minmax(112px, 1fr) auto auto;
+  }
+
+  .routeButtons button {
+    display: flex;
+    min-height: var(--kc-tap);
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .routeButtons button span {
+    font-size: 17px;
+  }
+
+  .controlFooter {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .controlFooter > .controlActions {
+    flex: 2 1 auto;
+    margin-top: 0;
+  }
+
+  .controlFooter > .quizLink {
+    flex: 1 1 auto;
+    min-height: var(--kc-tap);
+    margin-top: 0;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: #eef4ff;
+    padding: 0 6px;
+    line-height: 1.15;
+  }
+
+  .controls > div:first-child > small {
+    display: none;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  /* The quiz card, on the last of its 4 questions.
+     --------------------------------------------
+     New coverage — the quiz screen had only ever been measured on its FIRST
+     question, picked=null, no explain panel. The last question with an answer
+     picked is a different screen: the explain panel now occupies the second
+     grid column, and `.quiz{grid-template-rows:auto 1fr auto}` has no floor on
+     that middle row, so a long question heading wrapping to two lines can push
+     the row past its fair share and take the trailing quizNav row with it —
+     found on a 960x540 stage with both nav buttons 18px past the board.
+
+     `minmax(0,1fr)` is the actual fix: it lets the row shrink to what is
+     available rather than growing to fit content, the same technique the
+     `height<440` block already uses one band down.
+
+     Sizing that competes with the tighter band lives in its own block below,
+     not here — see the note there. */
+  .quiz {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .questionCard {
+    padding: clamp(12px, 2cqi, 24px);
+    gap: 8px 14px;
+    overflow: auto;
+  }
+
+  .questionIcon {
+    font-size: clamp(36px, 5cqi, 60px);
+  }
+
+  .questionCard h3 {
+    font-size: clamp(20px, 2.4cqi, 32px);
+  }
+
+  /* 30% of a 780px stage leaves each of the three route buttons about 63px, and
+     "ข้ามจุดเริ่ม" needs 66px on one line. Three px short of fitting is what
+     made every label wrap and every button 71px tall, so the column gets the
+     width instead — the simulator beside it is a track drawing with width to
+     spare.
+
+     Deliberately supersedes the 30% in the `height<440` block: `height<440` is
+     a subset of this range, both selectors tie on specificity, and this block
+     is later, so 34% wins everywhere the older rule applied. That is the
+     intent here — 34% was measured on the 780x304 stage, which is one of
+     those. The 30% declaration up there is now dead. */
+  .workspace {
+    grid-template-columns: 34% 1fr;
+  }
+
+  /* Icon over label, but the label may not wrap: stacked and wrapping, two of
+     the three labels ran to four lines, and grid rows are equal, so all three
+     took the tallest one's height — 91px of a 230px panel for three buttons. */
+  .routeButtons button {
+    display: grid;
+    min-height: var(--kc-tap);
+    align-content: center;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .routeButtons button span {
+    font-size: 16px;
+  }
+
+  .routeButtons button b {
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  /* The quiz link keeps its own row here. Sharing one with reset and run gave
+     it about 82px for a 24-character label, which wrapped to four lines and
+     cost more than the row saved; full width it is one line and 44px. */
+  .controlFooter {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .controlFooter > .controlActions {
+    margin-top: 0;
+  }
+
+  .controlFooter > .quizLink {
+    min-height: var(--kc-tap);
+    margin-top: 0;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: #eef4ff;
+    padding: 0 6px;
+    line-height: 1.15;
+  }
+
+  /* The step number over the panel heading names a step the heading already
+     names. The cheapest thing here to lose. */
+  .controls > div:first-child > small {
+    display: none;
+  }
+}
+
+/* The quiz card's sizing, for this band only — 480px up to 580px.
+   ---------------------------------------------------------------
+   These two rules exist for the 960x540 stage, and they must NOT reach the
+   stages below 480px, which have their own tighter values in the `height<480`
+   block (`.choices button` at the 11px floor with 3px 7px padding, `.quiz` at
+   a 4px gap). `height<480` is a subset of `height<580`, the selectors tie on
+   specificity, and source order decides — so written unbanded here, later in
+   the file, these would win on exactly the stages that need the tight values,
+   handing back room the block up there took real effort to find. Measured on
+   an 844x390 viewport that is what happened: `.choices button` resolved to
+   48px/8px/13px instead of var(--kc-tap)/3px 7px/max(11px,3.4cqb), and `.quiz`
+   to an 8px gap instead of 4px.
+
+   The lower bound is the fix. It says the range these values were measured
+   for, instead of relying on where the block happens to sit in the file.
+
+   Not a new trap: the same shadowing hit `.explain` earlier in this branch,
+   and that one was fixed by deleting the weaker copy. Four sibling selectors
+   were missed at the time; this is them. `.questionCard` and its descendants
+   are not among them — the `height<440` block scopes those as
+   `.quiz .questionCard`, which outranks the bare selector on specificity and
+   wins regardless of order. */
+@container kcstage (aspect-ratio >= 0.9) and (height >= 480px) and (height < 580px) {
+  .quiz {
+    gap: 8px;
+  }
+
+  .choices button {
+    min-height: 48px;
+    padding: 8px;
+    font-size: clamp(13px, 1.2cqi, 17px);
+  }
+}
+
+/* Shorter than the route note can be read in.
+   ------------------------------------------
+   At 304px of stage the panel has 216px for six blocks that need 222px, and
+   the note is the only one that is neither a control nor a heading. Left in it
+   would shrink to a 10px slot scrolling a 21px sentence, which is not reading
+   it — it is hiding it while claiming otherwise. The route buttons carry the
+   names ("ไปแล้วกลับ", "ข้ามจุดเริ่ม") and the track beside them shows the path,
+   so the sentence goes and comes back the moment the board is taller. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  .routeNote {
+    display: none;
+  }
+
+  /* With the note gone the panel still wanted 38px more than it had, and every
+     remaining block is either a heading or a control sitting on the 44px tap
+     floor — there is nothing left to shave without going under it. So the
+     height comes out of the layout instead: a wider column lets reset, run and
+     the quiz link stand in one row rather than two, which is worth 54px on its
+     own. The simulator loses width it was spending on empty track. */
+  .workspace {
+    grid-template-columns: 40% 1fr;
+  }
+
+  .controlFooter {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .controlFooter > .controlActions {
+    flex: 2 1 0;
+  }
+
+  .controlFooter > .quizLink {
+    flex: 1 1 0;
+    padding: 0 4px;
+    font-size: 12px;
+  }
+}
+
+/* The intro's compaction rules were never winning on a shallow board.
+   ------------------------------------------------------------------
+   The base rule for the description paragraph is
+
+       .introCopy > p:not(.eyebrow) { margin: 18px 0 }
+
+   which scores (0,2,1) — `:not()` contributes the class inside it. Both
+   short-shape blocks try to tighten that with `.introCopy > p { margin-bottom:
+   … }`, which scores (0,1,1) and loses, so the paragraph kept 18px above and
+   18px below no matter how little room the board had. The portrait block picked
+   the right selector and does work; only the wide-and-short ones were silent.
+
+   Nothing reported it. The audit measures boxes, not whether a rule you wrote
+   is being applied, and the screen still passed at the sizes in the suite — but
+   only just. scripts/audit-headroom.mjs is what surfaced it: this screen
+   survived losing 8px of viewport height before "เข้าสู่ห้องทดลอง" left the
+   board entirely, the thinnest margin of any screen in any game, and a phone
+   held sideways in a real browser loses far more than that to the URL bar.
+
+   Matching the base rule's specificity is the whole fix. It is worth 25px here,
+   which takes the same screen from surviving an 8px loss to surviving 46px.
+   Same family as the bug in 2cc843a — a compaction rule that reads correctly
+   and does nothing — except that one lost on source order and this one on
+   specificity. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .introCopy > p:not(.eyebrow) {
+    margin: 8px 0;
+  }
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  .introCopy > p:not(.eyebrow) {
+    margin: 4px 0;
+  }
+}
+
+/* The short block's button sizing never applied.
+   ========================================================================
+   Found when 956x440 was added to the audit suite: the intro finished 2px
+   past the stage and the workspace 4px, on a 892x343 board — the razor-thin
+   kind of fail this game has had before.
+
+   The cause is not the container query, which matches, and not selector
+   specificity, which was checked first by firing a rule at (0,1,1) with
+   `outline-width` and watching it take effect. It is that the base rule sets
+   `.primary, .runButton { padding: 13px 28px !important }`, and the short
+   block answers with a plain `padding: 0 18px`. Important beats the cascade
+   order and the query alike, so the button stayed 56px tall on a stage where
+   the block had already decided it should be 44px. Twelve pixels, on a screen
+   that needed two.
+
+   Same shape of trap as the specificity one recorded in the contract, with a
+   different mechanism: there the losing rule was under-specific, here it is
+   out-weighted. Both read correctly and neither runs, and `auditStage()`
+   cannot see either — it measures boxes, not whether a rule was used. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .primary,
+  .runButton {
+    padding: 0 18px !important;
+  }
+
+  .primary {
+    font-size: max(12px, 3.6cqb) !important;
+  }
+}
+
+/* ...and the workspace's control column, same stage, same 4px.
+   ------------------------------------------------------------------------
+   Measured on the 892x343 board: the column asks for 273px inside the 252px
+   it has. Contract 7's order says spend padding and margins before touching
+   anything that carries meaning, and that is enough here — 21px of it comes
+   off spacing alone, with no control, label or hint removed and no type
+   smaller. The buttons keep `--kc-tap` as their floor. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .controls {
+    padding: 4px !important;
+  }
+
+  .controls h2 {
+    margin: 0 0 2px !important;
+  }
+
+  .controls label {
+    margin-top: 3px !important;
+  }
+
+  .routeNote {
+    margin: 3px 0 !important;
+    padding: 3px !important;
+  }
 }

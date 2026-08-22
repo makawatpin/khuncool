@@ -855,6 +855,7 @@ export default function VocabularyArcadeApp() {
             </button>
           )}
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleBgm}
             style={{
@@ -892,6 +893,7 @@ export default function VocabularyArcadeApp() {
             <span>{bgmLive ? "เพลง" : "ปิดเพลง"}</span>
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleMute}
             style={{
@@ -907,6 +909,7 @@ export default function VocabularyArcadeApp() {
             {muted ? "🔇" : "🔊"}
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleFull}
             aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}

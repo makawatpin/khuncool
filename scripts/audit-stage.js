@@ -249,6 +249,83 @@ function auditStage({ min = 11 } = {}) {
       cutPx: Math.round(el.scrollWidth - el.clientWidth),
     }));
 
+  // 7. Content pushed off the TOP of the stage, where no scroll can follow.
+  //
+  // `justify-content: center` on a flex column whose content is taller than the
+  // box pushes the overflow out of BOTH ends. The bottom half lands in a scroll
+  // region and is merely awkward; the top half lands above the stage, and
+  // scrollTop is already 0 and cannot go negative, so nothing reaches it — not
+  // a scrollbar, not a keyboard, not a finger.
+  //
+  // Every other check here misses it:
+  //   - `unreachable` starts from button/a/input, and what escapes is usually
+  //     artwork. Sound Wheel lost 167px of a 256px wheel this way while the
+  //     audit called the screen a pass.
+  //   - it also clears anything with a scrollable ancestor, which is the wrong
+  //     question upward: `.play` scrolls, so the wheel counted as reachable.
+  //     Scrolling down never reveals what is above the top.
+  //   - `contentHiddenBehindScroll` reports the region but only names the
+  //     controls hidden past its edges, so the artwork above went unnamed.
+  //
+  // The contract warns about exactly this (media-stage-contract.md §5, "safe
+  // center ไม่ใช่ center เฉยๆ"). It has now happened twice — coding-maze's level
+  // badge, then Sound Wheel's wheel — and was found by eye both times, which is
+  // the reason it is a check now.
+  //
+  // Reported outermost-first: the block that escaped is the useful name, not
+  // each of its forty descendants.
+  // The tolerance is 12px, not a rounding allowance.
+  //
+  // At 4px this check flapped: phonics-bingo's intro read 3 rows, then 4, then
+  // 4 on identical code, because two elements sit 4-5px above the edge while an
+  // entry animation runs and the sample lands wherever it lands. Measuring the
+  // whole suite showed why 12 is safe: the rows are 4, 5, then nothing until
+  // 21, 22, 25, 36, 38, 43, 68. There is no real finding between a rounding
+  // wobble and two centimetres of content, and the case this check was written
+  // for — Sound Wheel losing 167px of a 256px wheel — is nowhere near the line.
+  //
+  // What this check must NOT do is gate on `controlsInside > 0`. That is the
+  // obvious way to cut the noise and it would disable the check outright: all
+  // nine remaining rows across sixteen games have zero controls inside,
+  // including a typing-defense element that is 100% hidden, and the wheel that
+  // prompted the check in the first place is artwork with no controls either.
+  // What escapes the top of a stage is usually exactly that — artwork, a
+  // heading, a badge — and it is still gone.
+  const ABOVE_TOLERANCE_PX = 12;
+  const aboveTop = [...stage.querySelectorAll("*")].filter((el) => {
+    if (decorative(el)) return false;
+    const r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    return r.top < box.top - ABOVE_TOLERANCE_PX;
+  });
+  const aboveSet = new Set(aboveTop);
+  const contentAboveStage = aboveTop
+    .filter((el) => {
+      // Keep only the outermost element of each escaped block.
+      for (let p = el.parentElement; p && p !== stage.parentElement; p = p.parentElement) {
+        if (aboveSet.has(p)) return false;
+      }
+      // Reachable only if something is currently scrolled down and could be
+      // scrolled back up. At rest that is never true, which is the point.
+      for (let p = el.parentElement; p && p !== stage.parentElement; p = p.parentElement) {
+        if (p.scrollTop > 0) return false;
+      }
+      return true;
+    })
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        content: label(el),
+        tag: el.tagName,
+        abovePx: Math.round(box.top - r.top),
+        heightPx: Math.round(r.height),
+        // How much of it is gone, because half a wheel still reads as a wheel
+        // and a fully vanished one does not.
+        hiddenPct: Math.min(100, Math.round(((box.top - r.top) / r.height) * 100)),
+        controlsInside: [...el.querySelectorAll("button,a[href],input,select,textarea,[role='button']")].length,
+      };
+    });
+
   const shape =
     box.width / box.height < 0.9 ? "portrait" : box.height < 440 ? "short" : "wide";
 
@@ -267,6 +344,7 @@ function auditStage({ min = 11 } = {}) {
     undersizedTargets,
     smallText,
     contentHiddenBehindScroll, // advisory — judge by what is hidden
+    contentAboveStage, // advisory — nothing can scroll up to any of this
     belowComfortTargets, // advisory only
     nonSemanticControls, // advisory — accessibility, reported separately
     clippedText, // advisory — judge by which label is cut

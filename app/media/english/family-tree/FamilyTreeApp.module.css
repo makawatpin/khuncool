@@ -42,15 +42,46 @@
   position: relative;
   width: min(100%, var(--kc-canvas-w));
   aspect-ratio: var(--kc-canvas-ratio);
+  /* Centred twice, because this element lives in two different layout modes.
+     `margin: 0 auto` is block layout's mechanism and stops applying the
+     moment a shape turns the screen into a flex column — which both canvas
+     screens do on upright and on shallow stages, to hand the board the height
+     left over after the chrome. There the board went to the cross-axis start
+     instead: measured on an iPad held upright in fullscreen, a 496px matching
+     board sitting 120px left of centre in a 760px screen with the entire gap
+     on the right, and the family tree 20px off on a shallow stage.
+
+     `align-self` is ignored outside flex, `margin: auto` is harmless inside
+     it, so one pair covers every shape and no block has to remember. */
   margin: 0 auto;
+  align-self: center;
 }
 
 .canvasStage {
   position: absolute;
-  inset: 0;
+  /* Centred rather than pinned left, which is what `inset: 0` used to do.
+     ---------------------------------------------------------------------
+     The scale below is `min()` of the two axes, so whenever HEIGHT is the
+     binding constraint the scaled board comes out narrower than the viewport
+     — and with `transform-origin: top left` the whole of that difference
+     landed on the right-hand side as blank space. Measured on the family
+     tree, off-centre by 116px on a 1096px stage, 122px at 1280 fullscreen,
+     207px on a tablet in page and 283px on a 780px shallow stage; the
+     matching board is the same mechanism and drifted the same way.
+
+     The three cases that looked right were the ones where the WIDTH ratio
+     won, so the board filled the viewport and had nowhere to drift to. That
+     is why this reads as random until it is measured.
+
+     Placing the unscaled box centred and scaling about its top centre keeps
+     it centred at every ratio. Nothing about the fit changes — the scale
+     factor is untouched. */
+  top: 0;
+  left: 50%;
   width: var(--kc-canvas-w);
   height: var(--kc-canvas-h);
-  transform-origin: top left;
+  margin-left: calc(var(--kc-canvas-w) / -2);
+  transform-origin: top center;
   /* Contain, not fit-to-width: whichever axis runs out first decides. Width
      alone left the matching board at 0.75 and 255px tall inside 238px. This
      needs the viewport to be a size container so cqb resolves. */
@@ -68,7 +99,7 @@
    Both take the same turn the Vocabulary Arcade and Talk Card cards took. A
    shallow board is short of height and 844px wide, and the width is going
    spare — these screens cap themselves at 640px and 680px. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-listen),
   :global(.kc-family-story) {
     display: grid !important;
@@ -157,7 +188,7 @@
    inside the narrow right-hand column, which is narrower than one across and
    taller than both. The story screen keeps a single column and spreads its
    lines along the width instead. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-story) {
     display: block !important;
     padding: 2px 14px 6px !important;
@@ -206,7 +237,7 @@
    lines, which is taller than the stack it replaced. Two across at full width
    gives each sentence room to sit on one or two lines instead, and the
    section title goes — the mascot chip above already says what the screen is. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-story-lines) {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
@@ -307,6 +338,15 @@
     width: 64px !important;
     height: 64px !important;
     font-size: 26px !important;
+    /* Re-centre after shrinking. The button is absolutely placed at
+       `left: 12px; top: 12px` inline, which centres a 96px button in its
+       120px box — and leaves a 64px one 16px left of centre and hard against
+       the top. That is the "speaker not in the middle" this screen was
+       reported for, on every portrait stage. `translate` rather than
+       `transform`, so the wiggle animation keeps its own transform. */
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
   }
 
   :global(.kc-family-options) {
@@ -351,11 +391,15 @@
    changed nothing, the first because there is no svg here and the second
    because scale does not affect layout. */
 @container kcstage (aspect-ratio < 0.9) {
-  /* zoom, not width/height: the face is an absolutely-positioned inner box,
-     so clamping the wrapper let it spill over the label underneath. zoom is the
-     one that takes the layout box and the drawing with it. */
+  /* Was `zoom: 0.66`, chosen because the face is an absolutely-positioned
+     inner box and clamping the wrapper let the drawing spill over the label
+     underneath — zoom took the layout box and the drawing together. The face
+     now publishes its size as `--kc-face` and does both from one number, so
+     the property that was reached for as a workaround is no longer needed.
+     50px * 0.66 = 33px, i.e. the same rendered size as before.
+     `!important` because the prop's default arrives as an inline style. */
   :global(.kc-family-options) button > div {
-    zoom: 0.66;
+    --kc-face: 33px !important;
   }
 
   :global(.kc-family-listen) > div:nth-of-type(2) {
@@ -412,7 +456,7 @@
    126px of the 238px, leaving the board too little to scale into. Trimming
    them hands the room back to the board, and the contain-fit scale picks it up
    without another number being chosen by hand. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-match) {
     padding-top: 2px !important;
   }
@@ -446,7 +490,7 @@
    the screen a column and letting the board take the remainder is what ties the
    two together — the board then gets what is actually free, and the contain-fit
    scale reads that. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-match) {
     display: flex !important;
     min-height: 0;
@@ -477,7 +521,7 @@
    the stage but under the floor. The board needs 146px to hold 24px buttons
    (340 x 24/56), so the chrome has to come under about 90px. The subtitle goes
    — the chip above it already names the round — and the chip itself tightens. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   /* The row under the chip is the combo counter, not a subtitle, so it stays —
      what goes is the 45px of margins between the three rows, replaced by one
      flat gap. */
@@ -515,7 +559,7 @@
 /* The screen's own padding is 8px top and a clamp()ed 20px bottom, and the chip
    is still display-sized. Both are room the board needs to reach the 0.43 that
    keeps its buttons at 24px. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-match) {
     padding: 2px 12px 4px !important;
   }
@@ -567,7 +611,7 @@
 /* The hint line explains the drag, which the cursor and the dashed slots
    already do, and the owl chip is display-sized. The bottom padding is
    clamp(20px,6cqb,100px) — up to 100px of nothing under the word bank. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-tree) {
     gap: 3px;
     padding: 2px 12px 4px !important;
@@ -641,7 +685,7 @@
    flex column it shrinks like anything else. It holds the cards a child drags,
    so it keeps its natural height and the board — which scales — absorbs the
    difference instead. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-family-tree-bank) {
     flex: 0 0 auto;
   }
@@ -659,5 +703,1298 @@
   :global(.kc-family-tree) > div:first-of-type > div:last-child {
     font-size: 11px !important;
     line-height: 1.25 !important;
+  }
+}
+
+/* Wide in shape, short in pixels — the gap the two blocks above leave open.
+   ---------------------------------------------------------------------
+   A tablet in landscape gives a 960x540 stage in the page column: not portrait,
+   and not under the 480px the short block reads, so neither set of compaction
+   applied and the screen finished nine pixels over. Nine, on a screen whose
+   heading is 87px and whose board is 252px — the hint line alone is 17px, which
+   is where they come from. It says "drag a card from below, or tap one and tap
+   a slot", and both blocks above already drop it on the same reasoning: the
+   cursor and the dashed slots say it first.
+
+   580px is the same gate motion-lab and typing-defense use, and for the same
+   reason — 960x540 and the 1096x617 desktop stage are both 16:9, so no
+   ratio-based query can tell them apart, and the desktop one fits as it is.
+
+   Only one card was ever reported hidden, but sweeping ten shuffles of the word
+   bank shows it is a different card each time and the same nine pixels every
+   time: the bank is always two rows of nine cards, so the overflow is the
+   layout's, not any particular draw's. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  :global(.kc-family-tree-bank) {
+    flex: 0 0 auto;
+  }
+}
+
+/* The tree, the word bank and the minigames all sit inside `.screen`, capped
+   at 780px — 41% of a 1920px stage in fullscreen. The family tree is a diagram
+   read from a distance, so it is exactly what should take the extra width. */
+@container kcstage (min-width: 1150px) {
+  :global(.kc-family-stage) {
+    max-width: min(1400px, 92cqi) !important;
+  }
+}
+
+/* ...and the canvas screens need one more thing before they use that width.
+   ------------------------------------------------------------------------
+   The tree and the matching board are laid out at fixed pixel coordinates and
+   then scaled to fit, and `.canvasViewport` caps at `var(--kc-canvas-w)` — the
+   canvas's own natural width. That makes the scale factor `min(…)` of two
+   ratios that can never exceed 1, so these two screens shrink to fit a small
+   board but never grow to use a large one. Widening `.screen` alone did
+   nothing for them: the matching board still drew 1040px wide inside 1400px.
+
+   Letting the viewport run past the canvas width lets the existing scale
+   formula resolve above 1. Nothing else has to change, and the formula's other
+   half still stops it: `100cqb / --kc-canvas-h` keeps a tall board from
+   growing past the height it has. The 1.5 is a ceiling on how far a diagram
+   drawn for a laptop should be enlarged, not a target. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.5));
+  }
+}
+
+/* The shared top bar.
+   ------------------------------------------------------------------------
+   Every rule below used to be an inline style on the TSX, which is why the
+   bar could not respond to the stage at all: a container query can only
+   reach a class, and an inline declaration outranks anything a query could
+   have said anyway.
+
+   Measured on a 343px stage (375px viewport, in page, inside a minigame) it
+   wrapped to THREE rows 168px tall — 27% of a 610px stage spent on chrome —
+   and the wrapped rows sat flush right, because the control group carries
+   `justify-content: flex-end` and wrapping inherits it. */
+.topBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.barControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Geometry only — colour and state stay inline, where they read next to the
+   state that drives them. Height is 40px rather than the 36px the inline
+   styles asked for because `.kc-tap-chrome` was already forcing 40px via
+   min-height; this writes down what was actually rendering. */
+.barPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.barIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.barChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+/* Narrow stages: one row of icons instead of three rows of labelled pills.
+   ------------------------------------------------------------------------
+   This gates on width rather than on one of the three standard shapes
+   (contract 3) on purpose, and the number is measured rather than guessed:
+   what makes the bar wrap is the stage's inline size against seven
+   fixed-width controls, not its aspect ratio. The 343px and 375px stages
+   wrap; the 704px and 780px ones already fit on one row at 68px and are
+   deliberately left alone, so the gate sits between them.
+
+   Dropping the labels is contract 7 step 3 — chrome that repeats what the
+   UI already says. The emoji carry the meaning, and every control keeps its
+   accessible name through an explicit `aria-label`, so the label is hidden
+   from sight only: a screen reader still hears "มินิเกม", and so does the
+   audit walk, which finds that button by accessible name. */
+/* First tier: drop the wordmark, keep every label. Measured — at 704px the
+   brand costs 216px of the 736px the bar needs, and losing it is the whole
+   difference between one row at 68px and two at 104px. The game's own intro
+   heading names it on the way in, so this is the same repeat-of-what-the-UI-
+   already-says as the labels below, just cheaper. */
+@container kcstage (max-width: 900px) {
+  .brandName {
+    display: none;
+  }
+}
+
+@container kcstage (max-width: 620px) {
+  .barLabel {
+    display: none;
+  }
+
+  .topBar {
+    gap: 8px;
+    padding: 10px 12px;
+    justify-content: center;
+  }
+
+  .barControls {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .barPill {
+    width: 40px;
+    padding: 0;
+  }
+}
+
+/* Short stages have width to spare and none to spare vertically, so the bar
+   keeps its labels and gives back padding instead. 8px a side returns 12px
+   to the game on the 390px-tall stage the contract calls the tightest one. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .topBar {
+    padding: 8px 16px;
+  }
+}
+
+/* The hub — the screen a child has to choose from.
+   ========================================================================
+   Same story as the top bar: every size below was an inline `clamp()`, so no
+   container query could reach any of it, and the caps were set for a laptop.
+   The base block reproduces exactly what was rendering; the query blocks are
+   the new part. `animation` stays inline, because CSS Modules rewrites
+   animation names and `floatY` is declared globally.
+
+   Two different problems, so two different answers, per contract 5:
+   the shallow board is short of height and the projector has height going
+   spare. Neither number is a guess — both are what measured. */
+.hubTitle {
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
+.hubLead {
+  font-size: 15px;
+  color: #5a6273;
+  margin: 0 0 28px;
+}
+
+.hubGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(45%, 200px), 1fr));
+  gap: clamp(10px, 3cqi, 18px);
+}
+
+.hubCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: clamp(16px, 4cqi, 22px);
+  padding: clamp(14px, 4cqi, 26px) clamp(8px, 3cqi, 16px);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -16px rgba(0, 0, 0, 0.5);
+}
+
+/* Illustration only, so it does not take the tap — contract 4.5. It sits
+   inside the button and could not have swallowed a click, but the rule is
+   also the signal audit-stage.js reads to tell decoration from content. */
+.hubBlob {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hubDone {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: clamp(14px, 3.4cqi, 18px);
+}
+
+.hubEmoji {
+  font-size: clamp(30px, 7cqi, 44px);
+  position: relative;
+}
+
+.hubLabel {
+  font-weight: 600;
+  font-size: clamp(13px, 3.4cqi, 16px);
+  position: relative;
+}
+
+.hubDesc {
+  font-size: clamp(11px, 2.6cqi, 12px);
+  color: #7c8494;
+  position: relative;
+}
+
+/* Shallow board: four across on one row.
+   ------------------------------------------------------------------------
+   `auto-fit` with a 200px floor gives three columns on a 780px stage, so the
+   four cards became two rows — 546px of content in a 304px stage, with 276px
+   of it behind a scroll the game gives no sign of. The contract is explicit
+   that hidden option cards are a layout bug rather than an advisory: a child
+   who sees two of four choices picks from two.
+
+   Width is what this shape has spare, so the fix spends width: four fixed
+   columns, and the trims come off padding and type, in that order. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .hubTitle {
+    font-size: 18px;
+    margin: 0 0 2px;
+  }
+
+  .hubLead {
+    font-size: 12px;
+    margin: 0 0 8px;
+  }
+
+  .hubGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hubCard {
+    gap: 4px;
+    border-radius: 14px;
+    padding: 8px 6px;
+  }
+
+  .hubEmoji {
+    font-size: 26px;
+  }
+
+  .hubLabel {
+    font-size: 13px;
+  }
+
+  .hubDesc {
+    font-size: 11px;
+  }
+}
+
+/* Projector and desktop fullscreen: use the height that is going spare.
+   ------------------------------------------------------------------------
+   Measured at 1920x1080 fullscreen, the four cards were 325x184 and the whole
+   screen ended at y=358 of 1080 — 67% of the stage left blank, with the one
+   thing a child has to read sitting in a thin strip along the top edge. Every
+   size was already at its `clamp()` ceiling, so the stage growing changed
+   nothing.
+
+   `safe center` rather than `center`, per contract 5: if the content ever
+   does outgrow the box, the overflow goes below where it can still be
+   reached, instead of half of it going above the stage where it cannot. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-menu) {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+  }
+
+  .hubTitle {
+    font-size: 40px;
+    margin: 0 0 12px;
+  }
+
+  .hubLead {
+    font-size: 22px;
+    margin: 0 0 40px;
+  }
+
+  .hubGrid {
+    gap: 28px;
+  }
+
+  .hubCard {
+    gap: 18px;
+    border-radius: 28px;
+    padding: 44px 20px;
+  }
+
+  .hubBlob {
+    top: -60px;
+    right: -46px;
+    width: 180px;
+    height: 180px;
+  }
+
+  .hubEmoji {
+    font-size: 84px;
+  }
+
+  .hubLabel {
+    font-size: 26px;
+  }
+
+  .hubDesc {
+    font-size: 18px;
+  }
+}
+
+/* The intro.
+   ========================================================================
+   Same two problems as the hub, plus one of its own: the cast of faces
+   floats, and it floated the wrong way.
+
+   `floatY` runs 0 to -10px, so the row's animated extreme is UPWARDS, into
+   the only thing above it. Measured with the animation pinned at its peak,
+   the drawn top of the cast sits 12px under the bottom of the top bar — at
+   every stage size and in both modes, because the gap comes from the screen's
+   fixed 24px top margin rather than from anything that scales. It never
+   crosses the stage edge, so nothing in the audit could have said a word
+   about it, but 12px between a moving illustration and a row of controls
+   reads as a collision.
+
+   Bobbing down instead of up costs no height at all — the 22px below the row
+   already absorbs it — and it works on the shallow stages too, where there is
+   no spare height to solve it by spacing. */
+@keyframes castBob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(9px);
+  }
+}
+
+.introCast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+/* Duration and delay stay inline: they are per-face, and staggering them is
+   what stops the row moving as one block. */
+.introCastItem {
+  animation-name: castBob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.introTitle {
+  font-weight: 700;
+  font-size: clamp(32px, 5cqi, 48px);
+  margin: 0 0 14px;
+}
+
+.introLead {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #5a6273;
+  margin: 0 0 34px;
+}
+
+.introCta {
+  font-weight: 600;
+  font-size: 19px;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 42px;
+}
+
+/* Projector and desktop fullscreen. The intro ended at y=405 of 1080 with the
+   lead paragraph still at the 17px it uses on a phone, which is the size it
+   was written at and not a size anyone reads from the back of a room. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-intro) {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+  }
+
+  .introCast {
+    margin-bottom: 34px;
+  }
+
+  .introLead {
+    font-size: 24px;
+    margin: 0 0 44px;
+  }
+
+  .introCta {
+    font-size: 26px;
+    padding: 20px 56px;
+  }
+}
+
+/* FamilyFace, sized from CSS.
+   ========================================================================
+   The faces are drawn once at 64x74 and scaled, and the scale used to come
+   from a JS `size` prop — which meant a face could never respond to the
+   stage, because contract 1 forbids the game reading the viewport and the
+   caller has no other way to know how much room it has. The prop now sets
+   `--kc-face` instead, so it is still the default and a container query can
+   raise it.
+
+   `calc(var(--kc-face) / 64px)` divides a length by a length to get a plain
+   number, the same CSS Values 4 syntax `.canvasStage` already relies on. */
+.face {
+  position: relative;
+  width: var(--kc-face, 64px);
+  height: calc(var(--kc-face, 64px) * 74 / 64);
+  flex: none;
+}
+
+.faceScale {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 74px;
+  transform: scale(calc(var(--kc-face, 64px) / 64px));
+  transform-origin: top left;
+}
+
+/* Listening Quiz on a stage with height to spare.
+   ========================================================================
+   Measured before: 1920x1080 fullscreen ended at y=546 of 1080 and used 70%
+   of the width, with the answer labels at 16px and the faces at 50px — the
+   sizes they were drawn at for a phone. 768x1024 fullscreen was worse, 36%
+   of the height, because the existing desktop gate starts at 1150px wide and
+   a tablet held upright never reaches it.
+
+   So two gates, for the two shapes that have height going spare. The tall one
+   starts at 900px so a 812px phone in fullscreen is not caught by it — that
+   stage has no room and the contract is explicit about not spending it.
+
+   Centring needs `align-items: center` rather than the default stretch: the
+   mascot chip is an inline-flex pill, and a stretched flex child would run
+   the full width of the screen. The answer grid is told to stretch back. */
+/* Written out twice rather than as one comma-separated query list: the
+   PostCSS build in this project fails to parse a list of container queries
+   ("Unexpected token Comma"), and a stylesheet that does not compile is a
+   worse trade than eight repeated lines. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-listen) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-options) {
+    align-self: stretch;
+  }
+
+  /* Without this the speaker measured 200x0.
+     ---------------------------------------------------------------------
+     Its only child is absolutely positioned, so as a flex item its automatic
+     minimum size resolves to zero and it is the first thing flex shrinks
+     when the column runs long — an explicit `height` does not protect it.
+     Overflowing is the honest failure here: it is a shape the audit reports,
+     where a silently collapsed control is not. */
+  :global(.kc-family-listen) > * {
+    flex: none;
+  }
+}
+
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-listen) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-options) {
+    align-self: stretch;
+  }
+
+  :global(.kc-family-listen) > * {
+    flex: none;
+  }
+}
+
+/* A desktop at 1280x800 gives this screen 675px to work in, a projector at
+   1920x1080 gives it 939px, and both clear the same 1150px gate — so the
+   sizes are split rather than shared. Sized to the budget, not to taste:
+   the first set totals 649px, the second 861px. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-listen) > div:first-of-type {
+    padding: 12px 24px !important;
+    margin-bottom: 18px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 36px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 15px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 27px !important;
+  }
+
+  /* The replay button is the entire interaction of this screen, and it was
+     the same 96px on a 1080px stage as on a 390px one. */
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+    width: 150px !important;
+    height: 150px !important;
+    margin-bottom: 24px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 120px !important;
+    height: 120px !important;
+    font-size: 48px !important;
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
+  }
+
+  :global(.kc-family-options) {
+    gap: 20px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 20px !important;
+    gap: 8px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 72px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 22px !important;
+  }
+}
+
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-listen) > div:first-of-type {
+    padding: 16px 30px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 46px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 18px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 34px !important;
+  }
+
+    width: 200px !important;
+    height: 200px !important;
+    margin-bottom: 30px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 160px !important;
+    height: 160px !important;
+    font-size: 64px !important;
+  }
+
+  :global(.kc-family-options) {
+    gap: 26px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 28px !important;
+    gap: 12px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 96px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 28px !important;
+  }
+}
+
+/* A tablet held upright: narrower, so the answers grow less, but it has more
+   height going spare than the projector does. */
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-listen) > div:first-of-type > div:first-child {
+    font-size: 38px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) {
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 16px !important;
+  }
+
+  :global(.kc-family-listen) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 28px !important;
+  }
+
+    width: 170px !important;
+    height: 170px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-listen) > div:nth-of-type(2) button {
+    width: 136px !important;
+    height: 136px !important;
+    font-size: 54px !important;
+    left: 50% !important;
+    top: 50% !important;
+    translate: -50% -50%;
+  }
+
+  :global(.kc-family-options) {
+    gap: 22px !important;
+  }
+
+  :global(.kc-family-options) button {
+    padding: 24px !important;
+  }
+
+  :global(.kc-family-options) button > div {
+    --kc-face: 78px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 24px !important;
+  }
+}
+
+/* Fill in the Blank on a stage with height to spare.
+   ========================================================================
+   The worst of the four by a distance: 1920x1080 fullscreen ended at y=373 of
+   1080 — 33% used — with English sentences a child is meant to READ set at
+   15px and the word buttons at 14px, on a screen 1920px wide. A tablet held
+   upright sat at 42% for the same reason the listening screen did: the
+   desktop gate starts at 1150px and an upright tablet never reaches it.
+
+   Same three gates and the same budgeting as the listening screen. The story
+   lines are already two across on any non-upright shape, so the height goes
+   into type and padding rather than into rearranging them. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-story) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-story-lines) {
+    align-self: stretch;
+  }
+
+  :global(.kc-family-story) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-story) > div:first-of-type {
+    padding: 12px 24px !important;
+    margin-bottom: 18px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 36px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 15px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 27px !important;
+  }
+
+  :global(.kc-family-story-lines) {
+    gap: 20px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 20px 24px !important;
+  }
+
+  /* The sentence is the thing being read. */
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 24px !important;
+    margin-bottom: 14px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 20px !important;
+    padding: 12px 26px !important;
+  }
+}
+
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-story) > div:first-of-type {
+    padding: 16px 30px !important;
+    margin-bottom: 26px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 46px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:first-child {
+    font-size: 18px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 34px !important;
+  }
+
+  :global(.kc-family-story-lines) {
+    gap: 28px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 28px 32px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 32px !important;
+    margin-bottom: 20px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 26px !important;
+    padding: 15px 32px !important;
+  }
+}
+
+/* A tablet held upright keeps the lines in one column, so they get the full
+   width each and the type grows without the sentences wrapping further. */
+@container kcstage (aspect-ratio < 0.9) and (height >= 900px) {
+  :global(.kc-family-story) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-story-lines) {
+    align-self: stretch;
+    gap: 18px !important;
+  }
+
+  :global(.kc-family-story) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:first-child {
+    font-size: 38px !important;
+  }
+
+  :global(.kc-family-story) > div:first-of-type > div:nth-of-type(2) > div:nth-of-type(2) {
+    font-size: 28px !important;
+  }
+
+  :global(.kc-family-story-lines) > div {
+    padding: 18px 22px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 22px !important;
+    margin-bottom: 12px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 19px !important;
+    padding: 11px 24px !important;
+  }
+}
+
+/* The matching board on a projector.
+   ========================================================================
+   Unlike the other three this screen is the scaled canvas, so its cards and
+   its text grow together with one number and there is nothing to re-type.
+   What held it back was not the 1.5x ceiling on `.canvasViewport` — measured
+   at 1920x1080 fullscreen it was drawing at 1.3x, well under it — but the
+   1400px cap on `.kc-family-stage`, which is a laptop's width and left the
+   board using 70% of a 1920px stage and 57% of its height.
+
+   Only the projector gets this. At 1280x800 fullscreen the screen is already
+   at 92cqi and the board at 88% of the width, so there is nothing to give;
+   raising the ceiling there would do nothing at all.
+
+   The ceiling is raised for THIS screen only. The family tree shares
+   `.canvasViewport`, but its viewport carries an `aspect-ratio`, so a wider
+   viewport is also a taller one — at 2x the tree would stand 860px in a
+   1012px screen that also has to hold a mascot chip and a word bank. The
+   matching board is 1040x310 and has the height to spare; the tree does not. */
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-match) {
+    max-width: 92cqi !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-match) > * {
+    flex: none;
+  }
+
+  :global(.kc-family-match) .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.75));
+  }
+}
+
+/* The intro on a shallow board — the start button was under the fold.
+   ========================================================================
+   The audit reported `hiddenControls: 1 of 1` with the sample "เริ่มเล่น 🚀"
+   at 844x390 in page (124px hidden), 844x390 fullscreen (46px) and 768x1024
+   in page (30px). It is reachable by scrolling, so it is an advisory and not
+   a hard failure — but it is the one control on the screen, and contract 5
+   records that the button to the next screen going under the fold is the
+   single most common way these games fail. A child holding a phone sideways
+   sees an intro with no way in.
+
+   Contract 5's four steps, stopping as soon as it fits. Nothing is cut:
+
+     1  margins to fixed px           22/14/34 -> 8/6/10   ~46px
+     2  the title measured against the axis that ran out    ~20px
+     3  the cast sized down through --kc-face, which the
+        face component only learned to accept this round     ~28px
+
+   Which leaves the lead paragraph and every face on screen. Measured after:
+   194px of content in the 248px an 844x390 stage gives. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  :global(.kc-family-intro) .introCast {
+    margin-bottom: 8px;
+  }
+
+  :global(.kc-family-intro) .introCastItem > div {
+    --kc-face: 40px !important;
+  }
+
+  .introTitle {
+    font-size: clamp(22px, 9cqb, 30px);
+    margin: 0 0 6px;
+  }
+
+  .introLead {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 10px;
+  }
+
+  .introCta {
+    font-size: 16px;
+    padding: 11px 30px;
+  }
+}
+
+/* Four choices in one row on any board that is not upright.
+   ========================================================================
+   `auto-fit` decides the column count from a floor, and on a 960x540 stage
+   it chose three: the screen caps at 780px, leaving 732px, and four cards at
+   the 200px floor plus three 18px gaps need 734px. Two pixels short, so the
+   fourth card wrapped to a second row and went under the fold — the audit
+   reported "1 of 4 controls hidden" at 1024x768 in page, and the sample was
+   the fourth minigame.
+
+   Lowering the floor to 165px would also have fitted, and would have been
+   exactly the kind of pass-by-a-hair the contract keeps warning about: the
+   next label to grow by a character puts it back. Asking for four columns
+   outright says what is actually meant — a wide board shows all four choices
+   at once — and holds whatever the cards are sized at.
+
+   Upright boards are untouched and stay two by two; there is no width there
+   to spread four across. */
+@container kcstage (aspect-ratio >= 0.9) {
+  .hubGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* The desktop stage that is NOT fullscreen — the gap between the tiers.
+   ========================================================================
+   `.kc-stage` is `width: 100%; aspect-ratio: 16/9`, so in the page the stage
+   is as wide as the site's content column and no wider: 1096x617 whether the
+   browser is 1280 or 1920. That is a page-layout decision and correct.
+
+   What was not correct is that every rule added for a roomy stage gates on
+   `min-width: 1150px`, and 1096 misses it by 54px. So the most ordinary way
+   anyone opens this game — a desktop browser, without pressing fullscreen —
+   received none of them, and the matching board sat at 65% of the width and
+   69% of the height with the whole surround empty.
+
+   This tier is bounded on both sides so it can never collide with the
+   fullscreen one: at least 900px wide, and between 520px and 700px tall.
+   1096x617 and 960x540 land in it; 1280x800 fullscreen is above it and every
+   phone and tablet shape is below.
+
+   The intro is deliberately left out of the widening. Its lead is a
+   paragraph, and a paragraph set across 1030px is harder to read, not easier
+   — the same reason talk-card and is-are-sorting cap their width and spend
+   the room on type instead. */
+@container kcstage (min-width: 900px) and (height >= 520px) and (height < 700px) {
+  :global(.kc-family-match),
+  :global(.kc-family-listen),
+  :global(.kc-family-story),
+  :global(.kc-family-menu) {
+    max-width: min(1040px, 94cqi) !important;
+  }
+
+  :global(.kc-family-match) .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.1));
+  }
+
+  /* Listening gets the width and very little else: it was already using 86%
+     of the height here, so there are only about 70px to spend. */
+  :global(.kc-family-options) button > div {
+    --kc-face: 62px !important;
+  }
+
+  :global(.kc-family-options) button > span {
+    font-size: 19px !important;
+  }
+
+  /* Fill in the blank had 223px spare, and its sentences are the thing being
+     read. */
+  :global(.kc-family-story-lines) > div {
+    padding: 16px 20px !important;
+  }
+
+  :global(.kc-family-story-lines) > div > div:first-child {
+    font-size: 20px !important;
+    margin-bottom: 12px !important;
+  }
+
+  :global(.kc-family-story-lines) button {
+    font-size: 17px !important;
+    padding: 10px 22px !important;
+  }
+}
+
+/* Still in the in-page desktop tier: the height left over after the widening.
+   The hub ended at 56% of the stage and fill in the blank at 67%, both with
+   the block pinned to the top edge. Same treatment as the fullscreen tier,
+   sized to a 561px screen rather than a 939px one. */
+@container kcstage (min-width: 900px) and (height >= 520px) and (height < 700px) {
+  :global(.kc-family-menu),
+  :global(.kc-family-match),
+  :global(.kc-family-story) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-menu) > *,
+  :global(.kc-family-match) > *,
+  :global(.kc-family-story) > * {
+    flex: none;
+  }
+
+  .hubGrid,
+  :global(.kc-family-story-lines) {
+    align-self: stretch;
+  }
+
+  .hubTitle {
+    font-size: 32px;
+    margin: 0 0 10px;
+  }
+
+  .hubLead {
+    font-size: 18px;
+    margin: 0 0 26px;
+  }
+
+  .hubGrid {
+    gap: 22px;
+  }
+
+  .hubCard {
+    gap: 12px;
+    border-radius: 24px;
+    padding: 30px 16px;
+  }
+
+  .hubBlob {
+    top: -50px;
+    right: -38px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .hubEmoji {
+    font-size: 62px;
+  }
+
+  .hubLabel {
+    font-size: 21px;
+  }
+
+  .hubDesc {
+    font-size: 15px;
+  }
+}
+
+/* An upright TABLET is not an upright phone.
+   ========================================================================
+   Upright, the matching board re-declares its canvas to 496x668 and stacks
+   the two column-pairs, because 1040px of board in a 343px phone viewport
+   scales to 0.28 and puts the buttons under the 24px floor. That is right for
+   a phone. On an iPad held upright it is not: `.canvasViewport` caps at
+   `--kc-canvas-w`, so the stacked board can never draw wider than the 496px
+   it was declared at — 60% of an 820px stage and 60% of its height, with the
+   surround empty on three sides.
+
+   Letting the viewport past the declared width lets the existing contain-fit
+   scale resolve above 1. Nothing else changes, and the formula's other half
+   still holds it: `100cqb / --kc-canvas-h` stops it growing past the height
+   available. Measured, that lands at 1.48 on an 820x1180 stage and 1.30 on a
+   768x1024 one — the width runs out first on the wider stage, the height on
+   the shorter one, which is what the `min()` is for.
+
+   Gated at 700px so no phone reaches it. The narrowest upright stage above
+   the gate is 744px; the widest phone one below it is 375px. */
+@container kcstage (aspect-ratio < 0.9) and (min-width: 700px) {
+  :global(.kc-family-match) .canvasViewport {
+    width: min(100%, calc(var(--kc-canvas-w) * 1.6));
+  }
+}
+
+/* Still the upright tablet: the three screens that are not the canvas.
+   Listening and Fill in the Blank cap themselves at 640px and 680px, which is
+   72% and 74% of an 820px stage — the caps were chosen for a phone. The hub
+   ended at 46% of the height with its block against the top edge. */
+@container kcstage (aspect-ratio < 0.9) and (min-width: 700px) {
+  :global(.kc-family-listen),
+  :global(.kc-family-story) {
+    max-width: min(900px, 94cqi) !important;
+  }
+
+  :global(.kc-family-menu) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+  }
+
+  :global(.kc-family-menu) > * {
+    flex: none;
+  }
+
+  .hubGrid {
+    align-self: stretch;
+    gap: 24px;
+  }
+
+  .hubTitle {
+    font-size: 32px;
+    margin: 0 0 10px;
+  }
+
+  .hubLead {
+    font-size: 18px;
+    margin: 0 0 28px;
+  }
+
+  .hubCard {
+    gap: 14px;
+    border-radius: 26px;
+    padding: 38px 18px;
+  }
+
+  .hubBlob {
+    top: -54px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+  }
+
+  .hubEmoji {
+    font-size: 74px;
+  }
+
+  .hubLabel {
+    font-size: 23px;
+  }
+
+  .hubDesc {
+    font-size: 16px;
+  }
+}
+
+/* The family tree on an upright tablet: it was stranded at the top.
+   ========================================================================
+   `.kc-family-tree .canvasViewport` carries `flex: 1 1 auto` ungated, because
+   a shallow stage has to hand the board whatever height is left under the owl
+   and above the word bank — see the note on that rule. Upright on a tablet
+   the same line does the opposite of what it is for: the viewport takes all
+   951px of the leftover, the board draws its natural 780x430 at the top of
+   it, and the remaining 521px becomes a gap between the tree and the bank.
+
+   The board itself cannot get meaningfully bigger here and this does not
+   pretend otherwise. Its scale is `min(100cqi / 780, 100cqb / 430)` and the
+   WIDTH term is the binding one: 780px of tree in the 796px this stage has to
+   give is already 98% of it. Letting the viewport past its declared width
+   buys 2%, which is taken because it is free, and nothing more. Growing it
+   properly would mean re-declaring the canvas upright the way the matching
+   board does — a portrait arrangement of the generations — and that means
+   editing the hand-written SVG connectors, which contract 7 calls the
+   riskiest change in this project. Deliberately not done here.
+
+   What is fixed is the composition. The viewport stops growing, so its height
+   comes from its own aspect ratio, and the screen distributes what is left
+   with `space-between`: the owl keeps the top edge, the word bank keeps the
+   bottom edge where a child reaches for it, and the tree takes the middle.
+
+   `margin-block: auto` on the viewport was tried first and does nothing here
+   — the auto margins resolve to 0 and the gap simply moved from between the
+   tree and the bank to below the bank, which is worse. Measured, not assumed,
+   on an 820x1180 stage: flex-start left the tree at y=135 with 518px empty
+   under the bank, `safe center` floated the bank up to 833, and
+   `space-between` puts the tree at 390-829 with the bank back on the bottom
+   edge at 1089.
+
+   Gated at 700px so no phone reaches it — phones need the greedy `flex` for
+   exactly the reason the base rule gives. */
+@container kcstage (aspect-ratio < 0.9) and (min-width: 700px) {
+  :global(.kc-family-tree) {
+    justify-content: space-between;
+  }
+
+  :global(.kc-family-tree) .canvasViewport {
+    flex: 0 1 auto;
+    width: min(100%, calc(var(--kc-canvas-w) * 1.6));
+  }
+}
+
+/* The word bank on an upright tablet.
+   ========================================================================
+   The chips are what a child actually drags, and they were still the size
+   they are on a phone: a 28px face, text capped at 15px by
+   `clamp(13px, 3.4cqi, 15px)`, and the whole thing then shrunk again by the
+   upright `zoom: 0.8`. 85px of bank under a 439px tree, on a stage 1180px
+   tall.
+
+   Centring the tree freed 519px, so this spends about 65px of it. `zoom` is
+   set back to normal and the face sized through `--kc-face` instead — the
+   same swap the listening options got, and for the same reason: one number
+   that moves the layout box and the drawing together, rather than a scale
+   applied on top of a size. */
+@container kcstage (aspect-ratio < 0.9) and (min-width: 700px) {
+  :global(.kc-family-tree-bank) {
+    gap: 12px !important;
+  }
+
+  :global(.kc-family-tree-bank) button {
+    gap: 12px !important;
+    padding: 9px 20px 9px 10px !important;
+    font-size: 20px !important;
+  }
+
+  :global(.kc-family-tree-bank) button > div {
+    zoom: normal;
+    --kc-face: 44px !important;
+  }
+}
+
+/* The word bank on a desktop or a projector.
+   ========================================================================
+   Same complaint as the upright tablet, same measurements: 46px of bank with
+   a 28px face and 15px text on a 1080px stage. These are the cards a child
+   drags and a class reads from the back of the room.
+
+   How much can be spent differs by stage, and it is decided by what the TREE
+   is bound by rather than by taste. `.canvasViewport` carries `flex: 1 1 auto`
+   and the bank takes what is left, so every pixel added here is a pixel the
+   viewport loses — but only some of those pixels cost anything:
+
+     1920x1080 fullscreen  viewport 1170x771, tree drawn 1170x645 at scale
+                           1.50 — WIDTH-bound, and pinned at the 1.5 ceiling.
+                           126px of the viewport is already dead space, so the
+                           bank can take it and the tree does not move at all.
+
+     1280x800 fullscreen   viewport 1146x511, tree drawn 928x511 at 1.19 —
+                           HEIGHT-bound, no slack. Anything the bank takes
+                           comes straight off the tree, so it takes little.
+
+   The 1096x617 in-page stage is left alone entirely: its tree is already
+   height-bound at 0.72 and is the smallest of the three. It has nothing to
+   give and is the one that can least afford to. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-family-tree-bank) {
+    gap: 10px !important;
+  }
+
+  :global(.kc-family-tree-bank) button {
+    gap: 10px !important;
+    padding: 7px 16px 7px 8px !important;
+    font-size: 17px !important;
+  }
+
+  :global(.kc-family-tree-bank) button > div {
+    --kc-face: 34px !important;
+  }
+}
+
+@container kcstage (min-width: 1600px) and (height >= 950px) {
+  :global(.kc-family-tree-bank) {
+    gap: 14px !important;
+  }
+
+  :global(.kc-family-tree-bank) button {
+    gap: 12px !important;
+    padding: 10px 22px 10px 11px !important;
+    font-size: 22px !important;
+  }
+
+  :global(.kc-family-tree-bank) button > div {
+    --kc-face: 46px !important;
   }
 }

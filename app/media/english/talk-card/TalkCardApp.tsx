@@ -931,6 +931,7 @@ export default function TalkCardApp() {
             left: `${b.left}%`,
             fontSize: b.size,
             opacity: 0.55,
+            pointerEvents: "none",
             animation: `bubbleUp ${b.dur}s linear ${b.delay}s infinite`,
           }}
         >
@@ -949,6 +950,7 @@ export default function TalkCardApp() {
             background: c.color,
             borderRadius: 2,
             zIndex: 60,
+            pointerEvents: "none",
             animation: `confettiFall ${c.dur}s linear ${c.delay}s forwards`,
           }}
         />
@@ -1002,6 +1004,7 @@ export default function TalkCardApp() {
           ☰ เมนู
         </Link>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleBgm}
           style={{
@@ -1038,6 +1041,7 @@ export default function TalkCardApp() {
           <span>{bgmLive ? "เพลง" : "ปิดเพลง"}</span>
         </button>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleMute}
           aria-label="เปิด/ปิดเสียง"
@@ -1053,6 +1057,7 @@ export default function TalkCardApp() {
           {muted ? "🔇" : "🔊"}
         </button>
         <button
+          className="kc-tap-chrome"
           type="button"
           onClick={toggleFull}
           aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
@@ -1070,6 +1075,7 @@ export default function TalkCardApp() {
         </button>
         {stage !== 0 && (
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={goSetup}
             style={{

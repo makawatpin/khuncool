@@ -421,6 +421,7 @@ export default function ClassroomObjectsApp() {
             ☰ เมนู
           </Link>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleBgm}
             title="เพลงประกอบ"
@@ -466,6 +467,7 @@ export default function ClassroomObjectsApp() {
             <span>{bgmOn ? "เพลง" : "ปิดเพลง"}</span>
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleMute}
             title="เสียงเอฟเฟกต์"
@@ -482,6 +484,7 @@ export default function ClassroomObjectsApp() {
             {muted ? "🔇" : "🔊"}
           </button>
           <button
+            className="kc-tap-chrome"
             type="button"
             onClick={toggleFull}
             aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}

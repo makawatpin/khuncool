@@ -111,10 +111,18 @@ export default function DigitalSortGame() {
       <div className={styles.arena}>
         <button type="button" className={`${styles.bin} ${styles.hardware}`} onClick={() => sort("hardware")} onDragOver={(e) => e.preventDefault()} onDrop={(e) => drop(e, "hardware")} disabled={locked}><span className={styles.binIcon}>🧰</span><b>ฮาร์ดแวร์</b><em>Hardware</em><small>สิ่งที่จับต้องได้</small><i>วางที่นี่</i></button>
         <div className={styles.cardZone}>
-          <div className={`${styles.itemCard} ${dragging ? styles.dragging : ""} ${feedback ? (feedback.good ? styles.correct : styles.wrong) : ""}`} draggable={!locked} onDragStart={(e) => { e.dataTransfer.setData("text/plain", current.id); setDragging(true); }} onDragEnd={() => setDragging(false)}>
-            <span className={styles.itemIcon}>{current.icon}</span><h3>{current.name}</h3><strong className={`${styles.englishName} kc-english-word`}>{currentEnglish}</strong><p>{current.hint}</p><div className={styles.dragHint}>⋮⋮ ลากการ์ดไปยังคำตอบ</div>
+          {/* The card is the question, and it changes under the player after
+             every answer. Nothing announced that, so a screen-reader user who
+             sorted one item was never told what the next one was. The bins
+             themselves are real buttons and the game is fully playable from the
+             keyboard — verified by finishing a whole round of twelve with Tab
+             and Enter — so this announcement was the only part missing. */}
+          <div role="status" aria-live="polite" className={`${styles.itemCard} ${dragging ? styles.dragging : ""} ${feedback ? (feedback.good ? styles.correct : styles.wrong) : ""}`} draggable={!locked} onDragStart={(e) => { e.dataTransfer.setData("text/plain", current.id); setDragging(true); }} onDragEnd={() => setDragging(false)}>
+            <span className={styles.itemIcon}>{current.icon}</span><h3>{current.name}</h3><strong className={`${styles.englishName} kc-english-word`}>{currentEnglish}</strong><p>{current.hint}</p>{/* Pointer-only advice, and the card is a live region now, so this
+                would be read out after every answer to someone who cannot act
+                on it. The two bins are buttons and reachable by Tab. */}<div aria-hidden="true" className={styles.dragHint}>⋮⋮ ลากการ์ดไปยังคำตอบ</div>
           </div>
-          {feedback && <div className={`${styles.feedback} ${feedback.good ? styles.good : styles.bad}`}>{feedback.good ? "✓" : "!"} {feedback.text}</div>}
+          {feedback && <div role="status" aria-live="polite" className={`${styles.feedback} ${feedback.good ? styles.good : styles.bad}`}>{feedback.good ? "✓" : "!"} {feedback.text}</div>}
         </div>
         <button type="button" className={`${styles.bin} ${styles.software}`} onClick={() => sort("software")} onDragOver={(e) => e.preventDefault()} onDrop={(e) => drop(e, "software")} disabled={locked}><span className={styles.binIcon}>💿</span><b>ซอฟต์แวร์</b><em>Software</em><small>โปรแกรมและชุดคำสั่ง</small><i>วางที่นี่</i></button>
       </div>

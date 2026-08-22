@@ -4,4 +4,4 @@
 .body{border-radius:inherit;background:#151329}
 .frame{display:block;width:100%;height:100%;border:0;background:#151329}
 @container kcstage (aspect-ratio < 0.9){.shell{border-radius:18px}}
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){.shell{border-radius:14px}}
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){.shell{border-radius:14px}}

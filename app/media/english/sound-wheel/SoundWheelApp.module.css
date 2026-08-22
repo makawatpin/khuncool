@@ -3,7 +3,13 @@
 
    Replaces the .kc-sound-game transform:scale(.86) rules in app/globals.css,
    which shrank the whole intro and play screen — type included — because the
-   wheel inside them reserved more room than the board had. */
+   wheel inside them reserved more room than the board had.
+
+   The play screen's structure lives here rather than inline because it has to
+   change with the stage: inline styles win over any rule in this file, so a
+   layout property that a container query needs to touch cannot be written on
+   the element. Colour, shadow and anything the game computes from `result`
+   stay inline. */
 
 .body {
   display: flex;
@@ -22,10 +28,319 @@
   overflow: auto;
 }
 
+/* ---------- top bar ---------- */
+
+/* 115px of a 610px portrait stage went to this bar — 19% of the board, spent
+   on six controls wrapping into three rows at 343px wide. Contract §7 says
+   measure the chrome before touching the content, and this was the largest
+   single piece of chrome on the screen. */
+.topbar {
+  position: relative;
+  z-index: 5;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- play screen ---------- */
+
 .play {
   flex-flow: row wrap;
   align-items: flex-start;
   justify-content: center;
+  gap: 8px;
+  padding: 6px 16px clamp(8px, 2cqb, 36px);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.wheelCol {
+  flex: 1 1 340px;
+  min-width: 300px;
+  max-width: 520px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wheelWrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.spinBtn {
+  margin-top: 6px;
+  width: min(46cqi, 430px);
+  border: none;
+  border-radius: 999px;
+  padding: 16px;
+  font-family: var(--font-fredoka);
+  font-weight: 600;
+  font-size: 19px;
+  color: #fff;
+  transition: transform 0.18s;
+}
+
+/* The panel has to be able to give ground. Left to grow it reached 663px on a
+   304px stage and took five of the screen's six buttons off the board with it
+   — including the two that score the round. */
+.panel {
+  flex: 1 1 320px;
+  min-width: 290px;
+  max-width: 440px;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stats {
+  flex: none;
+  display: flex;
+  gap: 10px;
+}
+
+.statCard {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e5e8ee;
+  border-radius: 18px;
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 12px 26px -22px rgba(0, 0, 0, 0.7);
+}
+
+.statLabel {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9aa3b2;
+  font-weight: 700;
+}
+
+.statValue {
+  font-family: var(--font-fredoka);
+  font-weight: 700;
+  font-size: 26px;
+}
+
+.placeholder {
+  flex: 0 1 auto;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.72);
+  border: 2px dashed #c9cfe0;
+  border-radius: 26px;
+  padding: clamp(14px, 3cqb, 30px) 20px;
+  text-align: center;
+}
+
+.placeholderIcon {
+  font-size: clamp(24px, 5cqb, 40px);
+  margin-bottom: 4px;
+}
+
+.placeholderTitle {
+  font-family: var(--font-fredoka);
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.placeholderHint {
+  font-size: 14px;
+  color: #5a6273;
+  line-height: 1.4;
+}
+
+/* ---------- result card ---------- */
+
+/* `flex: none`, not `0 1 auto`. Allowed to shrink, the card compressed below
+   its own content while the circle inside it kept its fixed 72px and the
+   buttons rode up over the word — a screen that measured as passing (every
+   control still inside the stage, nothing clipped, nothing too small) and was
+   unreadable. Nothing in the audit can see two boxes overlapping, so the card
+   is not allowed to get into that state: it keeps its content height and the
+   chip list above it, which can scroll, gives up the space instead. */
+.resultCard {
+  position: relative;
+  flex: none;
+  background: #fff;
+  border-radius: 26px;
+  padding: clamp(12px, 3cqb, 22px) 18px;
+  text-align: center;
+  box-shadow: 0 24px 46px -30px rgba(26, 29, 38, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resultTag {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9aa3b2;
+  font-weight: 700;
+}
+
+/* Column on a stage with height, row on one without. Stacked, the circle, the
+   label, the word and the three buttons came to 388px; folded into a row the
+   same information is 142px and nothing is dropped. */
+.resultHead {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.resultCircle {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+}
+
+.resultSound {
+  font-family: var(--font-fredoka);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1;
+}
+
+.resultText {
+  min-width: 0;
+}
+
+.resultLabel {
+  font-family: var(--font-fredoka);
+  font-weight: 600;
+  font-size: 15px;
+  color: #5a6273;
+  margin-bottom: 4px;
+}
+
+.resultWord {
+  font-family: var(--font-fredoka);
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: -0.01em;
+}
+
+.resultActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: none;
+}
+
+.resultActions > button {
+  flex: 1 1 auto;
+  border-radius: 16px;
+  padding: 13px;
+  font-family: var(--font-fredoka);
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform 0.18s;
+}
+
+/* The listen button takes its own row wherever there is room for one. */
+.listenBtn {
+  flex: 1 1 100% !important;
+  border: none;
+  border-radius: 999px !important;
+  color: #fff;
+}
+
+/* ---------- history ---------- */
+
+.histCard {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e8ee;
+  border-radius: 22px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 26px -24px rgba(0, 0, 0, 0.7);
+}
+
+.histLabel {
+  flex: none;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9aa3b2;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* The one region here that genuinely has no bound: a chip per spin, to a cap
+   of 12, wrapping to as many rows as the width allows. It holds no controls —
+   the chips are spans — so scrolling it is the honest answer per the contract's
+   reading of contentHiddenBehindScroll, and it is what lets the two buttons
+   below stay on the board. */
+.chipRow {
+  flex: 1 1 auto;
+  min-height: 34px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 7px;
+}
+
+/* Pinned. These two were the Tier A finding: last in the tallest column, so
+   the first things off the bottom of the stage. Nothing above them may push
+   them off again. */
+.navRow {
+  flex: none;
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e8ee;
+}
+
+.navRow > button {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* The wheel is a circle: one measurement sets both axes. Sizing it off width
@@ -37,6 +352,8 @@
   height: min(46cqi, 62cqb, 430px);
 }
 
+/* ---------- portrait ---------- */
+
 /* Upright, the wheel is the main event and the board has height to give. The
    row becomes a column so the wheel and the word panel stack instead of
    competing for a width that is not there — side by side they overflow, and a
@@ -46,6 +363,15 @@
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
+    /* NOT `center`. The base rule above centres on the main axis, and flipping
+       the direction to column turned that into vertical centring — which, with
+       content taller than the box, pushes the overflow out of BOTH ends. The
+       top end is above the stage, where scrollTop is already 0 and cannot go
+       negative, so nothing reaches it: 167px of the 256px wheel sat up there
+       unreachable while the audit called the screen a pass. This is the trap
+       written up in media-stage-contract.md §5, and Sound Wheel is its second
+       victim after coding-maze's level badge. */
+    justify-content: flex-start;
   }
 
   .play > * {
@@ -53,12 +379,194 @@
   }
 
   .wheel {
-    width: min(78cqi, 42cqb, 430px);
-    height: min(78cqi, 42cqb, 430px);
+    width: min(78cqi, 31cqb, 430px);
+    height: min(78cqi, 31cqb, 430px);
+  }
+
+  .wheelCol {
+    flex: none;
+  }
+
+  .panel {
+    flex: 1 1 auto;
+  }
+
+  /* Three rows at 343px wide, and the title and the music label are what
+     pushed it there. Dropping both leaves the row 10px too wide to fit, so the
+     padding and the gaps go too — 115px of a 610px board down to one row. The
+     logo still names the game and the button still reads as music. */
+  .topbar {
+    padding: 7px 10px;
+    gap: 6px;
+  }
+
+  .brandName,
+  .bgmLabel {
+    display: none;
+  }
+
+  .tools {
+    gap: 6px;
+  }
+
+  /* Kept, unlike in `short` — upright there is room for the tally, just not at
+     display size. */
+  .statCard {
+    padding: 4px 8px;
+  }
+
+  .statValue {
+    font-size: 19px;
+  }
+
+  .resultHead {
+    flex-direction: row;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .resultCircle {
+    width: 64px;
+    height: 64px;
+  }
+
+  /* The set name is pinned to the card's top right, which is where the row
+     layout puts "ตัวอย่างคำ" — at 343px wide the two land on each other. Nothing
+     in the audit sees two labels overlapping, and the set is the teacher's own
+     choice from the screen before, so it goes rather than the word. */
+  .resultTag {
+    display: none;
+  }
+
+  .resultSound {
+    font-size: 32px;
+  }
+
+  .resultWord {
+    font-size: 22px;
+  }
+
+  .resultLabel {
+    font-size: 13px;
+  }
+
+  .resultCard {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  /* All three on one row. Given its own row the listen button cost 54px, and
+     the card had to fit in 166. */
+  .listenBtn {
+    flex: 1 1 auto !important;
+  }
+
+  .resultActions > button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .spinBtn {
+    padding: 11px 16px;
+    font-size: 17px;
+  }
+
+  /* Free, so taken before anything that costs. */
+  .panel {
+    gap: 10px;
+  }
+
+  .histCard {
+    padding: 8px 12px;
+  }
+
+  .navRow {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  /* One row of chips, scrolling. The card's floor is what decides whether the
+     two buttons under it stay on the board — the panel can be no shorter than
+     this card's content — so it is set to a single row rather than the two the
+     default leaves room for. */
+  .chipRow {
+    min-height: 24px;
   }
 }
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+/* ---------- portrait, and not much of it ---------- */
+
+/* A phone in the page column gets a 343x610 stage; the same phone full screen
+   gets 375x812. Both are portrait, so one container query cannot tell them
+   apart — and the first is 200px short while the second has room to spare.
+   Height in px is the only thing that separates them, which is the deviation
+   the contract allows in §5 ("ทรง wide ก็เตี้ยได้") as long as the reason is
+   written down. 700px sits between the two.
+
+   What goes is the tally. The star count a class actually plays for is already
+   in the toolbar; spins-so-far and streak are the teacher's running total, and
+   they cost 69px that the wheel and the two nav buttons both need more. The
+   wheel stays at full size — it is the game. */
+@container kcstage (aspect-ratio < 0.9) and (height < 700px) {
+  .stats {
+    display: none;
+  }
+
+  /* And the heading over the chips. At 343px wide the three round buttons
+     cannot share a row, so the card below them needs every px the heading was
+     holding — and a row of coloured letter chips under the word that was just
+     spoken does not need to be told what it is. */
+  .histLabel {
+    display: none;
+  }
+}
+
+/* ---------- wide, but not tall ---------- */
+
+/* A 1280x800 desktop in the page column gives a 1096x617 stage and a tablet
+   gives 960x540. Both are `wide` by aspect ratio and neither has room for the
+   full-size card: stacked, the 118px circle, the label, the word and two rows
+   of buttons come to 333px of a panel with about 300px to spend, and the two
+   nav buttons went off the bottom. Full screen the same machines give 768px
+   and 800px of stage and the card fits as designed.
+
+   Aspect ratio cannot separate those — 960x540 and 1096x617 are both 16:9 —
+   so this measures height in px, the same deviation motion-lab and
+   typing-defense make at `height < 580px` and for the same reason. 660px sits
+   above the tallest in-page stage here (617px) and below the shortest full
+   screen one (768px).
+
+   Placed before the `short` block so that a stage matching both — a phone in
+   landscape is wide AND under 480px — takes the tighter treatment. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 660px) {
+  .resultHead {
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+  }
+
+  .resultCircle {
+    width: 84px;
+    height: 84px;
+  }
+
+  .resultSound {
+    font-size: 40px;
+  }
+
+  .resultCard {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .panel {
+    gap: 10px;
+  }
+}
+
+/* ---------- short ---------- */
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .wheel {
     width: min(40cqi, 56cqb, 430px);
     height: min(40cqi, 56cqb, 430px);
@@ -73,10 +581,125 @@
      9px past the stage. The wheel above it is the thing worth keeping at size,
      so the button gives up its padding instead: 16px all round is display
      spacing on a board this shallow, and the label still reads at 14px with the
-     tap target intact. Inline styles set both, hence !important. */
-  .play > div:first-of-type > button {
-    margin-top: 4px !important;
-    padding: 9px 14px !important;
-    font-size: max(14px, 5cqb) !important;
+     tap target intact. */
+  .spinBtn {
+    margin-top: 4px;
+    padding: 9px 14px;
+    font-size: max(14px, 5cqb);
+  }
+
+  .topbar {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .brandName,
+  .bgmLabel {
+    display: none;
+  }
+
+  /* 238px of board under the toolbar against a panel that wanted 386px empty
+     and 663px in play. Everything below is contract §5 step 4 — cutting what
+     has no job in this shape — applied in order of what a class loses least by
+     losing.
+
+     The spin counter and the streak are the teacher's running tally and the
+     star count is already in the toolbar; the list of sounds already drawn is
+     a recap of what just happened on a board with no room to recap. The sound
+     itself, the example word, and every button stay. */
+  .stats,
+  .histLabel,
+  .chipRow {
+    display: none;
+  }
+
+  .histCard {
+    flex: none;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .navRow {
+    margin-top: 0;
+    padding-top: 8px;
+  }
+
+  .resultHead {
+    flex-direction: row;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .resultCircle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .resultSound {
+    font-size: 30px;
+  }
+
+  .resultWord {
+    font-size: 20px;
+  }
+
+  .resultLabel {
+    font-size: 12px;
+  }
+
+  .resultCard {
+    padding: 8px 12px;
+    gap: 6px;
+  }
+
+  .panel {
+    gap: 8px;
+  }
+
+  .resultActions > button {
+    padding: 9px;
+    font-size: 14px;
+  }
+
+  .listenBtn {
+    flex: 1 1 auto !important;
+  }
+
+  .placeholder {
+    padding: 10px 16px;
+  }
+
+  .placeholderIcon {
+    font-size: 22px;
+    margin-bottom: 0;
+  }
+
+  .placeholderHint {
+    display: none;
+  }
+}
+
+/* Fullscreen on a desktop is the projector case.
+   ---------------------------------------------
+   The wheel is capped at 430px and its column at 520px, so on a 1920px stage
+   the thing the whole class is watching spin occupies 22% of the board. The
+   caps exist so the wheel does not outgrow its bitmap on a big screen. That
+   bitmap is now drawn at 1.5x (see WHEEL_SS in the component), so the ceiling
+   moves with it: 760px is still inside 1020px of backing store. Height is in
+   the min() as well because the spin button has to stay on the board. */
+@container kcstage (min-width: 1150px) {
+  .wheel {
+    width: min(46cqi, 70cqb, 760px);
+    height: min(46cqi, 70cqb, 760px);
+  }
+
+  .wheelCol {
+    max-width: 820px;
+  }
+
+  .panel {
+    max-width: 560px;
   }
 }

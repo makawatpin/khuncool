@@ -55,7 +55,7 @@
    the left, answers in a 2x2 block on the right, and the card needs the taller
    of the two columns rather than their sum. Nothing is removed and the picture
    keeps its size. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-vocab-card) > div {
     display: grid;
     /* Explicit rows so the options can span the full height with 1 / -1; on a
@@ -130,7 +130,7 @@
    class: the picture and the kicker take the left column, and everything from
    the answer slots down — slots, tiles, and the undo and hint buttons — goes to
    the right, so the card needs the taller column instead of the sum. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
     display: grid;
     grid-template-rows: repeat(8, min-content);
@@ -211,4 +211,147 @@
   :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(3) { grid-row: 1 / span 2; }
   :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(4) { grid-row: 3; }
   :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) > :nth-child(5) { grid-row: 4; }
+}
+
+/* The results screen: 20 words reviewed, three buttons under them.
+   ---------------------------------------------------------------
+   New coverage — this screen had never been measured. The review list is one
+   row per question, so on a 780x304 stage it stands 638px tall inside a 238px
+   box, and with the screen scrolling as a whole the three buttons underneath
+   went with it: at 1920x1080 the audit reported "เล่นอีกครั้ง", "เปลี่ยนโหมด" and
+   "หมวดอื่น" all scrolled out of reach, and at 844x390 every one of its 23
+   controls.
+
+   Same shape as the fix on sound-wheel's play screen and classroom-objects'
+   results: the list is the part with no natural bound, so it takes the scroll
+   on its own, and the row that ends the round is pinned below it. A list one
+   row per question is the case the contract says scrolling is honest for; the
+   buttons are not. */
+:global(.kc-vocab-result) {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+:global(.kc-vocab-result) > :global(.kc-vocab-result-list) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+:global(.kc-vocab-result) > :last-child {
+  flex: 0 0 auto;
+}
+
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  /* The celebration emoji renders about 1.5x its own font-size tall — the
+     metrics quirk this branch has now hit on four other screens — so the box
+     is capped rather than the glyph shrunk. */
+  :global(.kc-vocab-result) > :first-child {
+    height: 34px !important;
+    font-size: 30px !important;
+    line-height: 34px !important;
+    overflow: hidden;
+  }
+
+  :global(.kc-vocab-result) > :nth-child(2) {
+    margin: 2px 0 !important;
+    font-size: max(15px, 6cqb) !important;
+  }
+
+  :global(.kc-vocab-result) > :nth-child(3) {
+    margin: 0 0 4px !important;
+    font-size: max(11px, 3.2cqb) !important;
+  }
+
+  :global(.kc-vocab-result) > :nth-child(4) {
+    margin-bottom: 6px !important;
+    font-size: max(14px, 5cqb) !important;
+  }
+
+  :global(.kc-vocab-result) > :last-child > button {
+    min-height: var(--kc-tap);
+    padding: 0 14px !important;
+    font-size: max(11px, 3.2cqb) !important;
+  }
+}
+
+/* The review rows are 62px each — sized for a projector, and taller than the
+   whole list box gets on a short board (51px at 960x540, 24px at 780x304), so
+   not one row fitted and the list scrolled without ever showing a row. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 580px) {
+  :global(.kc-vocab-result-list) > div {
+    padding: 3px 8px !important;
+    font-size: max(11px, 3cqb) !important;
+  }
+
+  :global(.kc-vocab-result-list) > div button {
+    width: 26px !important;
+    height: 26px !important;
+    min-height: 0 !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Below ~340px the list has nothing left to show at all — same call as
+   classroom-objects' review list, and the words were on screen a moment ago. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
+  :global(.kc-vocab-result-list) {
+    display: none !important;
+  }
+}
+
+/* Fullscreen on a desktop is the projector case.
+   ---------------------------------------------
+   `.screen` caps at 940px — 49% of a 1920px stage — and the answer grid at
+   700px inside it. The picture and the four options are what a class is
+   reading together, so both take the extra width, and the option labels scale
+   with them: a bigger card whose word stays at its laptop size is a bigger
+   picture of the same small game. */
+@container kcstage (min-width: 1150px) {
+  .screen {
+    max-width: min(1400px, 92cqi) !important;
+  }
+
+  :global(.kc-vocab-options) {
+    max-width: min(1060px, 72cqi) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    font-size: clamp(18px, 1.35cqi, 28px);
+  }
+}
+
+/* ...and the height, on a board that has plenty of it.
+   ---------------------------------------------------
+   Widening alone left the projector case still looking like a small game
+   printed on a large sheet: the picture a child is being asked to name caps at
+   168px, the emoji inside it at 92px, and on a 1080px board the whole card
+   finished around y=530 with half the screen empty underneath. Both caps come
+   from `cqi`, so widening the screen could not move them — they were already
+   pinned at their ceilings.
+
+   So this block sizes the picture from `cqb` instead, the axis that actually
+   has the room. The height guard matters: on a stage that is wide but shallow
+   the earlier compaction rules are the ones that should win, and they still do
+   because this never matches there. */
+@container kcstage (min-width: 1150px) and (height >= 700px) {
+  :global(.kc-vocab-visual) {
+    width: min(420px, 38cqb) !important;
+    height: min(420px, 38cqb) !important;
+    margin-bottom: min(28px, 2.6cqb) !important;
+  }
+
+  :global(.kc-vocab-visual) > span {
+    font-size: min(250px, 23cqb) !important;
+  }
+
+  :global(.kc-vocab-kicker) {
+    font-size: clamp(13px, 1.5cqb, 20px) !important;
+  }
+
+  :global(.kc-vocab-options) button {
+    min-height: min(120px, 11cqb);
+  }
 }

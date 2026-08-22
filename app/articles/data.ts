@@ -30,6 +30,32 @@ export type Article = {
 
 export const ALL_ARTICLES: Article[] = [
   {
+    title: "8 เกมและกิจกรรมวิทยาการคำนวณ ป.4–ป.6 สอนได้ด้วยจอเดียว",
+    cat: "สื่อการสอน",
+    date: "22 ส.ค. 2569",
+    dateISO: "2026-08-22",
+    readTime: "9 นาที",
+    img: "/assets/computing-science-games-cover.webp",
+    alt: "เกมและกิจกรรมวิทยาการคำนวณ ป.4-ป.6 สำหรับครู",
+    href: "/blog/computing-science-games",
+    excerpt:
+      "เกมและกิจกรรมวิทยาการคำนวณที่เปิดจากจอหน้าชั้นได้ทันที พร้อมกิจกรรมแบบไม่ใช้เครื่องสำหรับห้องที่ไม่มีคอมพิวเตอร์",
+    linksTool: { label: "สื่อวิทยาการคำนวณ", href: "/media/computer" },
+  },
+  {
+    title: "8 กิจกรรมสอนคำศัพท์ครอบครัวภาษาอังกฤษ ด้วยผัง Family Tree",
+    cat: "สื่อการสอน",
+    date: "22 ส.ค. 2569",
+    dateISO: "2026-08-22",
+    readTime: "9 นาที",
+    img: "/assets/family-tree-english-cover.webp",
+    alt: "กิจกรรมสอนคำศัพท์ครอบครัวภาษาอังกฤษด้วยผัง Family Tree",
+    href: "/blog/family-tree-english",
+    excerpt:
+      "สอนคำศัพท์ครอบครัวจากผังความสัมพันธ์ก่อนท่องคำ พร้อมจุดที่นักเรียนไทยพลาดบ่อยอย่าง ลุง ป้า น้า อา และการบอกพี่หรือน้อง",
+    linksTool: { label: "เปิดผัง Family Tree", href: "/media/english/family-tree" },
+  },
+  {
     title: "7 เกมสุ่มชื่อนักเรียนออนไลน์ฟรี ใช้ได้ทันทีในห้องเรียน",
     cat: "สื่อการสอน",
     date: "5 ส.ค. 2569",

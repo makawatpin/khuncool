@@ -250,8 +250,13 @@ export default function MotionLab() {
             setProgress(0);
           }}/></label>
           <p className={styles.routeNote}>{route.note}</p>
-          <div className={styles.controlActions}><button onClick={reset}>↺ รีเซ็ต</button><button className={styles.runButton} onClick={run} disabled={running}>{running ? "กำลังเคลื่อนที่…" : "▶ ปล่อยรถ"}</button></div>
-          <button className={styles.quizLink} onClick={startQuiz}>โจทย์จากการทดลอง {QUIZ_LENGTH} ข้อ →</button>
+          {/* Reset, run and the way into the quiz, kept together so they can be
+              pinned to the foot of the panel. Loose in the column they were the
+              three controls the Tier A rows reported scrolled out of sight. */}
+          <div className={styles.controlFooter}>
+            <div className={styles.controlActions}><button onClick={reset}>↺ รีเซ็ต</button><button className={styles.runButton} onClick={run} disabled={running}>{running ? "กำลังเคลื่อนที่…" : "▶ ปล่อยรถ"}</button></div>
+            <button className={styles.quizLink} onClick={startQuiz}>โจทย์จากการทดลอง {QUIZ_LENGTH} ข้อ →</button>
+          </div>
         </aside>
 
         <section className={styles.simulator}>

@@ -190,27 +190,13 @@ function FamilyFace({
   bowColor,
   size = 64,
 }: Chars & { size?: number }) {
-  const scale = size / 64;
+  // The size arrives as a prop but is published as a custom property, so a
+  // container query can raise it for a big stage. A JS number could not be:
+  // contract 1 forbids the game reading the viewport, and the caller has no
+  // other way to know how much room it has. The prop stays the default.
   return (
-    <div
-      style={{
-        position: "relative",
-        width: size,
-        height: 74 * scale,
-        flex: "none",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 64,
-          height: 74,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
+    <div className={styles.face} style={{ ["--kc-face" as string]: `${size}px` }}>
+      <div className={styles.faceScale}>
         <div
           style={{
             position: "relative",
@@ -1020,45 +1006,32 @@ export default function FamilyTreeApp() {
           <span>{WORD_MAP[dragPreview.id].en}</span>
         </div>
       )}
-      {/* top bar */}
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 10,
-          padding: "14px 16px",
-          maxWidth: 1000,
-          margin: "0 auto",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      {/* top bar — geometry lives in the CSS module so container queries can
+          reach it; see the .topBar block there for what it costs when it
+          cannot. Colour and state stay here. */}
+      <div className={styles.topBar}>
+        <div className={styles.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/khuncool-logo.webp"
             alt="KhunCool"
             style={{ width: 38, height: 38, flex: "none", objectFit: "contain", filter: "drop-shadow(0 6px 14px rgba(92,94,230,.5))" }}
           />
-          <div className="kc-title" style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
+          <div className={`kc-title ${styles.brandName}`} style={{ fontWeight: 600, fontSize: 18 }}>Family Tree Explorer</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <div className={styles.barControls}>
           <Link
             href="/media/english"
+            className={`kc-tap-chrome ${styles.barPill}`}
+            aria-label="เมนู"
+            title="เมนู"
             style={{
-              fontWeight: 600,
-              fontSize: 14,
-              lineHeight: 1.2,
-              whiteSpace: "nowrap",
               color: "#5C5EE6",
               background: "#E1E3FD",
-              borderRadius: 999,
-              padding: "9px 16px",
               textDecoration: "none",
             }}
           >
-            ☰ เมนู
+            ☰<span className={styles.barLabel}>เมนู</span>
           </Link>
           {showTopRight && (
           <>
@@ -1066,36 +1039,28 @@ export default function FamilyTreeApp() {
               <button
                 type="button"
                 onClick={() => goStage(10)}
+                className={`kc-tap-chrome ${styles.barPill}`}
+                aria-label="มินิเกม"
+                title="มินิเกม"
                 style={{
-                  fontWeight: 600,
-                  fontSize: 14,
                   color: "#5C5EE6",
                   background: "#E1E3FD",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "8px 16px",
-                  cursor: "pointer",
                 }}
               >
-                🎮 มินิเกม
+                🎮<span className={styles.barLabel}>มินิเกม</span>
               </button>
             )}
             <button
+              className={`kc-tap-chrome ${styles.barPill}`}
               type="button"
               onClick={toggleBgm}
+              aria-label={bgm ? "ปิดเพลง" : "เปิดเพลง"}
+              title={bgm ? "ปิดเพลง" : "เปิดเพลง"}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 7,
-                height: 36,
-                padding: "0 14px",
-                borderRadius: 999,
                 border: "1px solid #E5E8EE",
                 background: bgm ? "#E1E3FD" : "#fff",
                 color: bgm ? "#4A46D6" : "#8A93A5",
-                fontWeight: 600,
                 fontSize: 13,
-                cursor: "pointer",
               }}
             >
               <span style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 14 }}>
@@ -1113,34 +1078,26 @@ export default function FamilyTreeApp() {
                   />
                 ))}
               </span>
-              <span>{bgm ? "เพลง" : "ปิดเพลง"}</span>
+              <span className={styles.barLabel}>{bgm ? "เพลง" : "ปิดเพลง"}</span>
             </button>
             <button
+              className={`kc-tap-chrome ${styles.barIcon}`}
               type="button"
               onClick={toggleMute}
+              aria-label={muted ? "เปิดเสียง" : "ปิดเสียง"}
+              title={muted ? "เปิดเสียง" : "ปิดเสียง"}
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
                 border: "1px solid #E5E8EE",
                 background: muted ? "#F1F3F7" : "#fff",
-                fontSize: 16,
-                cursor: "pointer",
               }}
             >
               {muted ? "🔇" : "🔊"}
             </button>
             <div
+              className={styles.barChip}
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
                 background: "#fff",
                 border: "1px solid #E5E8EE",
-                borderRadius: 999,
-                padding: "7px 14px",
-                fontWeight: 600,
-                fontSize: 15,
                 color: "#C2500B",
               }}
             >
@@ -1150,18 +1107,14 @@ export default function FamilyTreeApp() {
           </>
         )}
           <button
+            className={`kc-tap-chrome ${styles.barIcon}`}
             type="button"
             onClick={toggleFull}
             aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
             title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
               border: "1px solid #E5E8EE",
               background: isFull ? "#E1E3FD" : "#fff",
-              fontSize: 16,
-              cursor: "pointer",
             }}
           >
             ⛶
@@ -1172,12 +1125,13 @@ export default function FamilyTreeApp() {
       {/* STAGE 0: INTRO */}
       {stage === 0 && (
         <div className={`${styles.screen} kc-family-stage kc-family-intro`} style={{ position: "relative", maxWidth: 760, margin: "24px auto 0", padding: "0 24px clamp(20px,6cqb,90px)", textAlign: "center" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 22 }}>
+          <div className={styles.introCast}>
             {introCast.map((id, i) => (
               <div
                 key={id}
+                className={styles.introCastItem}
                 style={{
-                  animation: `floatY ${(2.8 + i * 0.2).toFixed(1)}s ease-in-out infinite`,
+                  animationDuration: `${(2.8 + i * 0.2).toFixed(1)}s`,
                   animationDelay: `${(i * 0.15).toFixed(2)}s`,
                 }}
               >
@@ -1185,7 +1139,7 @@ export default function FamilyTreeApp() {
               </div>
             ))}
           </div>
-          <h1 style={{ fontWeight: 700, fontSize: "clamp(32px,5cqi,48px)", margin: "0 0 14px" }}>
+          <h1 className={styles.introTitle}>
             มาเรียนรู้คำศัพท์
             <span
               style={{
@@ -1200,21 +1154,17 @@ export default function FamilyTreeApp() {
             </span>
             กันเถอะ!
           </h1>
-          <p style={{ fontSize: 17, lineHeight: 1.7, color: "#5A6273", margin: "0 0 34px" }}>
+          <p className={styles.introLead}>
             ลากคำศัพท์ปลูกต้นไม้ครอบครัว จับคู่คำกับรูปภาพ ฟังเสียงแล้วเดา และเติมคำในเรื่องราวของเรา — 4
             ด่านสนุก ครบจบในหน้าเดียว!
           </p>
           <button
             type="button"
             onClick={() => goStage(10)}
+            className={styles.introCta}
             style={{
-              fontWeight: 600,
-              fontSize: 19,
               color: "#fff",
               background: "linear-gradient(135deg,#5C5EE6,#14B79A)",
-              border: "none",
-              borderRadius: 999,
-              padding: "16px 42px",
               animation: "pulseGlow 2.4s ease-in-out infinite",
               cursor: "pointer",
               boxShadow: "0 12px 26px -8px rgba(92,94,230,.6)",
@@ -1228,9 +1178,9 @@ export default function FamilyTreeApp() {
       {/* HUB (stage 10) */}
       {stage === 10 && (
         <div className={`${styles.screen} kc-family-stage kc-family-menu`} style={{ position: "relative", maxWidth: 780, margin: "0 auto", padding: "8px 24px clamp(20px,6cqb,100px)", textAlign: "center" }}>
-          <h2 style={{ fontWeight: 600, fontSize: 26, margin: "0 0 8px" }}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
-          <p style={{ fontSize: 15, color: "#5A6273", margin: "0 0 28px" }}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(10px,3cqi,18px)" }}>
+          <h2 className={styles.hubTitle}>เลือกมินิเกมที่อยากเล่น 🎮</h2>
+          <p className={styles.hubLead}>เล่นข้อไหนก่อนก็ได้ เล่นซ้ำได้เรื่อยๆ</p>
+          <div className={styles.hubGrid}>
             {[
               { n: 1 as const, emoji: "🌳", label: "ปลูกต้นไม้ครอบครัว", desc: "ลาก & วางคำศัพท์", done: s1Done, blob: "#D5FBEF" },
               { n: 2 as const, emoji: "🔗", label: "จับคู่คำศัพท์", desc: "Matching", done: s2Done, blob: "#E1E3FD" },
@@ -1241,37 +1191,17 @@ export default function FamilyTreeApp() {
                 key={g.n}
                 type="button"
                 onClick={() => goStage(g.n)}
+                className={styles.hubCard}
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
                   background: g.done ? "#F5FFFC" : "#fff",
                   border: `2px solid ${g.done ? "#14B79A" : "#E9ECF3"}`,
-                  borderRadius: "clamp(16px,4cqi,22px)",
-                  padding: "clamp(14px,4cqi,26px) clamp(8px,3cqi,16px)",
-                  position: "relative",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  boxShadow: "0 10px 22px -16px rgba(0,0,0,.5)",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: -40,
-                    right: -30,
-                    width: 110,
-                    height: 110,
-                    borderRadius: "50%",
-                    background: g.blob,
-                    opacity: 0.5,
-                  }}
-                />
-                {g.done && <span style={{ position: "absolute", top: 8, right: 10, fontSize: "clamp(14px,3.4cqi,18px)" }}>✅</span>}
-                <div style={{ fontSize: "clamp(30px,7cqi,44px)", position: "relative", animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
-                <div style={{ fontWeight: 600, fontSize: "clamp(13px,3.4cqi,16px)", position: "relative" }}>{g.label}</div>
-                <div style={{ fontSize: "clamp(11px,2.6cqi,12px)", color: "#7C8494", position: "relative" }}>{g.desc}</div>
+                <div className={styles.hubBlob} style={{ background: g.blob }} />
+                {g.done && <span className={styles.hubDone}>✅</span>}
+                <div className={styles.hubEmoji} style={{ animation: "floatY 3.2s ease-in-out infinite" }}>{g.emoji}</div>
+                <div className={styles.hubLabel}>{g.label}</div>
+                <div className={styles.hubDesc}>{g.desc}</div>
               </button>
             ))}
           </div>
