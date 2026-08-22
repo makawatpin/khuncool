@@ -131,7 +131,7 @@
 
 /* Short shape — phone sideways. Wide enough for side-by-side content but with
    almost no vertical room, so chrome shrinks and type is driven by height. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .kc-stage-body {
     --kc-tap: 44px;
     --kc-pad: 1.6cqi;

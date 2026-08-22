@@ -96,7 +96,7 @@
   }
 }
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .intro {
     display: flex;
     min-height: 0;
@@ -143,7 +143,7 @@
 /* A shallow board — a phone held sideways, a tablet upright. The baskets and
    the card stacked vertically need more height than there is, so the baskets
    flatten to a single label row and the card takes what is left. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .screen {
     padding-top: 0;
     padding-bottom: 4px;

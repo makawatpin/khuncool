@@ -537,7 +537,7 @@
    screen one (768px).
 
    Placed before the `short` block so that a stage matching both — a phone in
-   landscape is wide AND under 440px — takes the tighter treatment. */
+   landscape is wide AND under 480px — takes the tighter treatment. */
 @container kcstage (aspect-ratio >= 0.9) and (height < 660px) {
   .resultHead {
     flex-direction: row;
@@ -566,7 +566,7 @@
 
 /* ---------- short ---------- */
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .wheel {
     width: min(40cqi, 56cqb, 430px);
     height: min(40cqi, 56cqb, 430px);

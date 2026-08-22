@@ -70,7 +70,7 @@
 
 
 /* Compact landscape layout: keep the complete game visible without scrolling. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){.shell{border-radius:0}.topbar{padding:6px 10px}.brand img{width:32px;height:32px}.controls{gap:5px}.hubMenu,.categoryMenu,.audioBtn,.roundBtn{height:32px}.roundBtn{width:32px}.stage{inset:45px 0 0;padding:7px 12px 10px}.eyebrow{display:none}.title{margin:3px 0;font-size:28px}.subtitle{max-width:720px;margin:0 auto 7px;font-size:11px;line-height:1.35}.categoryGrid{grid-template-columns:repeat(5,1fr);gap:7px}.category:last-child{grid-column:auto;width:auto}.category{border-radius:14px;padding:5px}.categoryIcon{font-size:22px}.categoryTitle{margin-top:1px;font-size:11px}.categoryDesc{display:none}.startBtn{margin-top:7px;padding:8px 22px;font-size:13px}.hud{gap:8px;margin-bottom:5px}.board{grid-template-columns:minmax(190px,.78fr) minmax(360px,1.5fr);grid-template-rows:1fr;gap:8px}.questionCard,.answers{border-radius:16px}.questionCard{padding:7px}.prompt{font-size:11px}.answerName{font-size:18px}.hint{display:none}.answers{min-height:0;overflow:auto;align-content:start;gap:6px;padding:7px}.answer{min-height:var(--kc-tap);border-radius:12px;padding:0 5px 5px}.answerText{padding:3px 8px;font-size:11px}.shell[data-category="animal"] .bigVisual{font-size:96px}.foodFrame,.currencyFrame{max-width:150px}.costumeFrame{max-width:130px}.result h2{margin:2px 0;font-size:27px}.trophy{font-size:54px}.resultCard{margin:8px 0}.resultActions .startBtn{margin-top:0}}
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){.shell{border-radius:0}.topbar{padding:6px 10px}.brand img{width:32px;height:32px}.controls{gap:5px}.hubMenu,.categoryMenu,.audioBtn,.roundBtn{height:32px}.roundBtn{width:32px}.stage{inset:45px 0 0;padding:7px 12px 10px}.eyebrow{display:none}.title{margin:3px 0;font-size:28px}.subtitle{max-width:720px;margin:0 auto 7px;font-size:11px;line-height:1.35}.categoryGrid{grid-template-columns:repeat(5,1fr);gap:7px}.category:last-child{grid-column:auto;width:auto}.category{border-radius:14px;padding:5px}.categoryIcon{font-size:22px}.categoryTitle{margin-top:1px;font-size:11px}.categoryDesc{display:none}.startBtn{margin-top:7px;padding:8px 22px;font-size:13px}.hud{gap:8px;margin-bottom:5px}.board{grid-template-columns:minmax(190px,.78fr) minmax(360px,1.5fr);grid-template-rows:1fr;gap:8px}.questionCard,.answers{border-radius:16px}.questionCard{padding:7px}.prompt{font-size:11px}.answerName{font-size:18px}.hint{display:none}.answers{min-height:0;overflow:auto;align-content:start;gap:6px;padding:7px}.answer{min-height:var(--kc-tap);border-radius:12px;padding:0 5px 5px}.answerText{padding:3px 8px;font-size:11px}.shell[data-category="animal"] .bigVisual{font-size:96px}.foodFrame,.currencyFrame{max-width:150px}.costumeFrame{max-width:130px}.result h2{margin:2px 0;font-size:27px}.trophy{font-size:54px}.resultCard{margin:8px 0}.resultActions .startBtn{margin-top:0}}
 
 /* The result screen at the short shape — new coverage, never measured before.
    ---------------------------------------------------------------------
@@ -87,7 +87,7 @@
    same metrics quirk found on math-bomb-defusal's explosion icon. Capped
    directly rather than shrinking the font — shrinking it would shrink the
    visible trophy along with the box. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .trophy {
     height: 38px;
     line-height: 38px;
@@ -131,7 +131,7 @@
 }
 
 @container kcstage (aspect-ratio < 0.9){.brand{min-width:0;gap:6px}.brand span,.brand span:last-child{display:block;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.shell[data-stage="play"] .hubMenu,.shell[data-stage="result"] .hubMenu{display:none}.answers{align-content:center;grid-auto-rows:auto}.answer{width:100%;min-height:0;aspect-ratio:3/2;align-self:center}}
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){.brand span,.brand span:last-child{max-width:180px;font-size:11px}.answer{height:100%;aspect-ratio:auto}}
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){.brand span,.brand span:last-child{max-width:180px;font-size:11px}.answer{height:100%;aspect-ratio:auto}}
 
 /* Classroom legibility for projector and TV use. */
 @container kcstage (aspect-ratio >= 0.9){

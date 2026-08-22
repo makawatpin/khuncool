@@ -113,7 +113,7 @@
   }
 }
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   /* The card is square, so capping its width caps its height. 58cqb rather
      than 62 is what leaves the last row inside the column once the cells stop
      forcing their own floor. */
@@ -241,7 +241,7 @@
    parts — 76px and 69px of display type that say the same thing at half the
    size — and the margins between the blocks were tuned for a board with room.
    The buttons keep the tap floor; they are the reason for the exercise. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .result > div > div:nth-of-type(1) {
     font-size: max(30px, 11cqb) !important;
   }

@@ -55,7 +55,7 @@
    the left, answers in a 2x2 block on the right, and the card needs the taller
    of the two columns rather than their sum. Nothing is removed and the picture
    keeps its size. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-vocab-card) > div {
     display: grid;
     /* Explicit rows so the options can span the full height with 1 / -1; on a
@@ -130,7 +130,7 @@
    class: the picture and the kicker take the left column, and everything from
    the answer slots down — slots, tiles, and the undo and hint buttons — goes to
    the right, so the card needs the taller column instead of the sum. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-vocab-card) > div:not(:has(:global(.kc-vocab-options))) {
     display: grid;
     grid-template-rows: repeat(8, min-content);
@@ -244,7 +244,7 @@
   flex: 0 0 auto;
 }
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   /* The celebration emoji renders about 1.5x its own font-size tall — the
      metrics quirk this branch has now hit on four other screens — so the box
      is capped rather than the glyph shrunk. */

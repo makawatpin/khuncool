@@ -165,6 +165,20 @@ function isWorse(candidate, current) {
 const SIZES = [
   { label: "375x812-mobile-portrait", width: 375, height: 812 },
   { label: "844x390-mobile-landscape", width: 844, height: 390 },
+  // A big phone sideways, and the reason this row exists rather than being one
+  // more device for the sake of it: the stage's "short" shape was gated at
+  // `height < 440px`, and this viewport makes the fullscreen stage exactly
+  // 440px tall. It missed the gate by nothing at all, so every game fell back
+  // to its desktop layout on the screen a teacher gets when they press
+  // fullscreen on that phone — Family Tree's diagram came out at scale 0.27
+  // against 0.66 on a phone 10px shorter.
+  //
+  // The gate moved to 480px, but nothing in this suite could have caught that
+  // regression or can confirm the fix: stage heights across the other six
+  // sizes are 304, 390, 396, 540, 617, 768, 800, 1024 and 1080, and not one of
+  // them lands between 440 and 480. The whole band was untested. It is tested
+  // now, which is what stops the same thing happening at the next threshold.
+  { label: "956x440-mobile-landscape-tall", width: 956, height: 440 },
   { label: "768x1024-tablet-portrait", width: 768, height: 1024 },
   { label: "1024x768-tablet-landscape", width: 1024, height: 768 },
   { label: "1280x800-desktop", width: 1280, height: 800 },

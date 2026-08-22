@@ -17,7 +17,7 @@
   overflow: auto;
 }
 
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   :global(.kc-talk-setup) {
     padding-top: 2px !important;
   }

@@ -207,7 +207,7 @@ export default function CodingMazeGame() {
          the stage's height, and the margins collapse to one flat gap. The hint
          is the only real loss and the play screen's mission line says the same
          thing. */
-      @container kcstage (aspect-ratio >= 0.9) and (height < 440px){
+      @container kcstage (aspect-ratio >= 0.9) and (height < 480px){
         .${styles.introVisual},.${styles.intro} p{display:none}
         .${styles.intro}{gap:5px;padding:6px 10px}
         .${styles.intro} h2{margin:0;font-size:clamp(17px,8.5cqb,22px);line-height:1.2}

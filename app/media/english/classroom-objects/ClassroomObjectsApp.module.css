@@ -144,7 +144,7 @@
 
 /* Short: the card fan and the description come out, and what remains is sized
    against the stage's height. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   /* Take the leftover height and sit in the middle of it, the same way .play
      claims the space the chrome does not use. `safe` matters: should the
      content ever outgrow the box, a plain centre would push its top edge above
@@ -205,7 +205,7 @@
    rows of 3:4 cards. The rows divide whatever height is left instead, and the
    cards fill their row — the picture and the word still read, the card is just
    no longer portrait. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .grid {
     height: 46cqb;
     gap: 6px;
@@ -249,7 +249,7 @@
    seconds: the headline, the run summary and the star row. Sized from the
    board's height so the list keeps something to show and the button keeps its
    tap target. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .result > h2 {
     margin: 2px 0 !important;
     font-size: max(15px, 6cqb) !important;

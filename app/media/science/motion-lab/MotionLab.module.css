@@ -20,7 +20,7 @@
 /* Short shape — wide but shallow: a phone held sideways, a tablet upright, a
    short desktop window. The two-column composition survives at this width, so
    vertical room comes out of the chrome and type follows the stage height. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){.lab{display:flex;flex-direction:column;border-width:2px;border-radius:16px}.topbar{flex:0 0 auto;height:auto;min-height:0;padding:4px 2.3%}.brand img{width:30px;height:30px}.brand b{font-size:max(13px,4.2cqb)}.brand small{display:none}.actions{gap:6px}.actions a,.actions button{min-height:var(--kc-tap);min-width:var(--kc-tap);padding:0 10px;font-size:max(11px,2.9cqb);box-shadow:0 2px 0 var(--navy)}.actions span{display:none}.intro,.workspace,.quiz{flex:1 1 auto;height:auto;min-height:0}.intro{gap:4%;padding:2% 4%}.eyebrow{margin-bottom:4px;font-size:max(11px,2.8cqb)}.introCopy h2{font-size:max(20px,9cqb);line-height:1.15}.introCopy>p{margin-bottom:8px;font-size:max(11px,3.3cqb);line-height:1.4}.topicChips{gap:5px;margin-bottom:10px}.topicChips>*{padding:4px 9px;font-size:max(11px,2.9cqb)}.primary{min-height:var(--kc-tap);padding:0 18px;font-size:max(12px,3.6cqb)}.workspace{padding:1%;gap:1.2%;grid-template-columns:30% 1fr}.controls{min-height:0;overflow:auto;padding:7px}.controls h2{margin:0 0 4px;font-size:max(14px,5cqb)}.controls label{gap:3px;margin-top:6px}.controls label>span{font-size:max(11px,3cqb)}.routeButtons button{padding:5px 3px}.routeNote{min-height:0;margin:6px 0 5px;padding:5px;font-size:max(11px,3cqb)}.runButton,.controls>button{min-height:var(--kc-tap);font-size:max(11px,3.2cqb)}.simulator{gap:5px;padding:7px}.simHeader h2{margin:0;font-size:max(14px,5cqb)}.quiz{gap:6px;padding:1.5% 4%;grid-template-rows:auto minmax(0,1fr) auto}.quiz section{align-self:stretch;overflow:auto}}
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){.lab{display:flex;flex-direction:column;border-width:2px;border-radius:16px}.topbar{flex:0 0 auto;height:auto;min-height:0;padding:4px 2.3%}.brand img{width:30px;height:30px}.brand b{font-size:max(13px,4.2cqb)}.brand small{display:none}.actions{gap:6px}.actions a,.actions button{min-height:var(--kc-tap);min-width:var(--kc-tap);padding:0 10px;font-size:max(11px,2.9cqb);box-shadow:0 2px 0 var(--navy)}.actions span{display:none}.intro,.workspace,.quiz{flex:1 1 auto;height:auto;min-height:0}.intro{gap:4%;padding:2% 4%}.eyebrow{margin-bottom:4px;font-size:max(11px,2.8cqb)}.introCopy h2{font-size:max(20px,9cqb);line-height:1.15}.introCopy>p{margin-bottom:8px;font-size:max(11px,3.3cqb);line-height:1.4}.topicChips{gap:5px;margin-bottom:10px}.topicChips>*{padding:4px 9px;font-size:max(11px,2.9cqb)}.primary{min-height:var(--kc-tap);padding:0 18px;font-size:max(12px,3.6cqb)}.workspace{padding:1%;gap:1.2%;grid-template-columns:30% 1fr}.controls{min-height:0;overflow:auto;padding:7px}.controls h2{margin:0 0 4px;font-size:max(14px,5cqb)}.controls label{gap:3px;margin-top:6px}.controls label>span{font-size:max(11px,3cqb)}.routeButtons button{padding:5px 3px}.routeNote{min-height:0;margin:6px 0 5px;padding:5px;font-size:max(11px,3cqb)}.runButton,.controls>button{min-height:var(--kc-tap);font-size:max(11px,3.2cqb)}.simulator{gap:5px;padding:7px}.simHeader h2{margin:0;font-size:max(14px,5cqb)}.quiz{gap:6px;padding:1.5% 4%;grid-template-rows:auto minmax(0,1fr) auto}.quiz section{align-self:stretch;overflow:auto}}
 
 /* Below ~340px the intro's two columns cannot both fit: the copy alone needs
    more height than the board has. Give the copy the full width instead — the
@@ -73,7 +73,7 @@
 
    The audit's default seed is chosen to draw this question first, so a run
    measures the hard case rather than one of the five easy ones. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px){
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px){
   /* The heading over the card is display-sized while the card underneath is
      the part that has run out of room, so it gives its space up first. */
   .quizTop{gap:2px}
@@ -332,12 +332,12 @@
   }
 }
 
-/* The quiz card's sizing, for this band only — 440px up to 580px.
+/* The quiz card's sizing, for this band only — 480px up to 580px.
    ---------------------------------------------------------------
    These two rules exist for the 960x540 stage, and they must NOT reach the
-   stages below 440px, which have their own tighter values in the `height<440`
+   stages below 480px, which have their own tighter values in the `height<480`
    block (`.choices button` at the 11px floor with 3px 7px padding, `.quiz` at
-   a 4px gap). `height<440` is a subset of `height<580`, the selectors tie on
+   a 4px gap). `height<480` is a subset of `height<580`, the selectors tie on
    specificity, and source order decides — so written unbanded here, later in
    the file, these would win on exactly the stages that need the tight values,
    handing back room the block up there took real effort to find. Measured on
@@ -354,7 +354,7 @@
    are not among them — the `height<440` block scopes those as
    `.quiz .questionCard`, which outranks the bare selector on specificity and
    wins regardless of order. */
-@container kcstage (aspect-ratio >= 0.9) and (height >= 440px) and (height < 580px) {
+@container kcstage (aspect-ratio >= 0.9) and (height >= 480px) and (height < 580px) {
   .quiz {
     gap: 8px;
   }
@@ -430,7 +430,7 @@
    Same family as the bug in 2cc843a — a compaction rule that reads correctly
    and does nothing — except that one lost on source order and this one on
    specificity. */
-@container kcstage (aspect-ratio >= 0.9) and (height < 440px) {
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
   .introCopy > p:not(.eyebrow) {
     margin: 8px 0;
   }
@@ -439,5 +439,61 @@
 @container kcstage (aspect-ratio >= 0.9) and (height < 340px) {
   .introCopy > p:not(.eyebrow) {
     margin: 4px 0;
+  }
+}
+
+/* The short block's button sizing never applied.
+   ========================================================================
+   Found when 956x440 was added to the audit suite: the intro finished 2px
+   past the stage and the workspace 4px, on a 892x343 board — the razor-thin
+   kind of fail this game has had before.
+
+   The cause is not the container query, which matches, and not selector
+   specificity, which was checked first by firing a rule at (0,1,1) with
+   `outline-width` and watching it take effect. It is that the base rule sets
+   `.primary, .runButton { padding: 13px 28px !important }`, and the short
+   block answers with a plain `padding: 0 18px`. Important beats the cascade
+   order and the query alike, so the button stayed 56px tall on a stage where
+   the block had already decided it should be 44px. Twelve pixels, on a screen
+   that needed two.
+
+   Same shape of trap as the specificity one recorded in the contract, with a
+   different mechanism: there the losing rule was under-specific, here it is
+   out-weighted. Both read correctly and neither runs, and `auditStage()`
+   cannot see either — it measures boxes, not whether a rule was used. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .primary,
+  .runButton {
+    padding: 0 18px !important;
+  }
+
+  .primary {
+    font-size: max(12px, 3.6cqb) !important;
+  }
+}
+
+/* ...and the workspace's control column, same stage, same 4px.
+   ------------------------------------------------------------------------
+   Measured on the 892x343 board: the column asks for 273px inside the 252px
+   it has. Contract 7's order says spend padding and margins before touching
+   anything that carries meaning, and that is enough here — 21px of it comes
+   off spacing alone, with no control, label or hint removed and no type
+   smaller. The buttons keep `--kc-tap` as their floor. */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .controls {
+    padding: 4px !important;
+  }
+
+  .controls h2 {
+    margin: 0 0 2px !important;
+  }
+
+  .controls label {
+    margin-top: 3px !important;
+  }
+
+  .routeNote {
+    margin: 3px 0 !important;
+    padding: 3px !important;
   }
 }
