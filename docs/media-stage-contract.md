@@ -6,6 +6,9 @@
 **เริ่มที่นี่ถ้าจะทำเกมใหม่:** ข้อ 3 (token ตามทรง) → Checklist → ข้อ 4.5 (ของตกแต่ง)
 สามอันนี้ครอบบั๊กที่เกิดซ้ำบ่อยที่สุดไว้เกือบหมด
 
+**ถ้ากำลังเปิดเซสชันใหม่:** บรีฟสำเร็จรูปสำหรับ "รีวิวเกมเดิม" กับ "สร้างเกมใหม่"
+อยู่ที่ [`how-to-brief.md`](./how-to-brief.md) — ก๊อปวางได้เลย
+
 ---
 
 ## 1. ตัวเกมห้ามรู้จัก viewport
@@ -62,6 +65,49 @@ Token ที่มี: `--kc-tap`, `--kc-pad`, `--kc-gap`, `--kc-radius`, `--kc-
 วัดมาแล้ว: ใส่ `.kc-tap` ให้ toolbar ทำให้แถบโต 12px บนมือถือแนวตั้ง แล้วพังสองหน้าจอทันที — ปุ่ม "เริ่มเล่น" ของ classroom-objects เลยขอบล่างไป 6px และการ์ดคำศัพท์ของ family-tree (canvas scale-to-fit) หดเหลือ **23.7px ต่ำกว่าเกณฑ์ตก 24px**
 
 40px โตแค่ 4px ผ่านทั้งสองหน้าจอ และยังสูงกว่าเกณฑ์ตกมาก
+
+### ⚠️ ขนาดต้องอยู่ใน CSS module — inline style เอื้อมไม่ถึง
+
+**ทุกอย่างที่เป็นขนาด ระยะห่าง หรือการจัดวาง ต้องเขียนใน `.module.css`**
+inline style เก็บได้แค่สีและค่าที่ผูกกับ state (`background: done ? A : B`)
+
+เหตุผลตรง ๆ: **container query แต่งได้เฉพาะสิ่งที่มี class** และ inline declaration
+ชนะทุกอย่างยกเว้น `!important` อยู่แล้ว กฎที่เขียนใน `@container` จึงไม่มีทางชนะ inline
+แปลว่าค่าที่เขียน inline คือค่าที่ตายตัวตลอดกาล ไม่ว่าเวทีจะ 343px หรือ 1920px
+
+วัดมาแล้วที่ family-tree — toolbar, hub และ intro เขียนเป็น inline ทั้งหมด ผลคือ:
+
+| | อาการ |
+|---|---|
+| toolbar | 3 บรรทัด 168px = **27% ของเวที 610px** บนมือถือ และบรรทัดที่ตกไปชิดขวา |
+| hub | การ์ด 325×184 คงที่ ตั้งแต่เวที 343px ยัน 1920px — จบที่ y=358 จาก 1080 |
+| intro | `margin: 24px auto 0` คงที่ หัวติดขอบบนเสมอ เหลือล่าง 112–676px |
+
+ไม่มีอันไหนแก้ได้เลยจนกว่าจะย้าย geometry เข้า module ก่อน ซึ่งเป็นงานที่ต้องทำ
+ก่อนเริ่มแก้จริงทุกครั้ง และไม่มีต้นทุนอะไรเลยถ้าเขียนถูกตั้งแต่แรก
+
+```tsx
+// ผิด — ไม่มีทางตอบสนองต่อเวที
+<div style={{ display: "flex", gap: 12, padding: "14px 16px", fontSize: 18 }}>
+
+// ถูก — geometry อยู่ใน module, สีอยู่กับ state ที่ขับมัน
+<div className={styles.topBar}>
+  <button className={styles.barPill} style={{ background: on ? "#E1E3FD" : "#fff" }}>
+```
+
+**กรณีที่ค่ามาจาก prop ของ component** เช่นรูปหน้าคนที่รับ `size={50}` ให้ประกาศเป็น
+custom property แล้วให้ prop เป็นค่าตั้งต้น — container query จะได้ยกค่าได้
+
+```tsx
+<div className={styles.face} style={{ ["--kc-face"]: `${size}px` }}>
+```
+
+```css
+.face { width: var(--kc-face, 64px); height: calc(var(--kc-face, 64px) * 74 / 64) }
+```
+
+> **ระวัง:** custom property ที่เขียน inline ก็ชนะ stylesheet เหมือนกัน
+> container query ที่จะยกค่าต้องใช้ `--kc-face: 96px !important`
 
 ## 4. เต็มจอ = ขยายเวที ไม่ใช่ย่อ–ขยายภาพ
 
