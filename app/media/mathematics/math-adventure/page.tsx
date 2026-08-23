@@ -6,13 +6,15 @@ const PAGE_URL = "https://www.khuncool.com/media/mathematics/math-adventure";
 const TITLE = "Math Adventure ภารกิจบวกลบแสนสนุก ป.1 | khuncool";
 const DESCRIPTION = "สื่อการสอนคณิตศาสตร์ ป.1 ฝึกบวกและลบจำนวนนับไม่เกิน 20 ผ่านภาพ เส้นจำนวน เกมรถไฟ และแบบทดสอบ เล่นฟรีบนมือถือ แท็บเล็ต และจอห้องเรียน";
 
+const OG_IMAGE = { url: "https://www.khuncool.com/assets/game-covers/math-adventure.webp", width: 960, height: 540, alt: "เกม Math Adventure ภารกิจบวกลบ สื่อการสอนคณิตศาสตร์ ป.1" };
+
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   keywords: ["เกมคณิตศาสตร์ ป.1", "สื่อการสอนบวก ลบ", "การบวกไม่เกิน 20", "การลบไม่เกิน 20", "เส้นจำนวน", "เกมบวกลบ"],
   alternates: { canonical: PAGE_URL },
-  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "khuncool", locale: "th_TH" },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
+  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "khuncool", locale: "th_TH", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [OG_IMAGE.url] },
 };
 
 const jsonLd = {
@@ -23,7 +25,7 @@ const jsonLd = {
       { "@type": "ListItem", position: 2, name: "สื่อคณิตศาสตร์", item: "https://www.khuncool.com/media/mathematics" },
       { "@type": "ListItem", position: 3, name: "Math Adventure", item: PAGE_URL },
     ] },
-    { "@type": "LearningResource", name: "Math Adventure: ภารกิจบวกลบแสนสนุก", url: PAGE_URL, inLanguage: "th-TH", educationalLevel: "ประถมศึกษาปีที่ 1", learningResourceType: "Interactive educational game", teaches: ["การบวกจำนวนนับไม่เกิน 20", "การลบจำนวนนับไม่เกิน 20", "เส้นจำนวน 0–20"], isAccessibleForFree: true },
+    { "@type": "LearningResource", name: "Math Adventure: ภารกิจบวกลบแสนสนุก", url: PAGE_URL, image: OG_IMAGE.url, inLanguage: "th-TH", educationalLevel: "ประถมศึกษาปีที่ 1", learningResourceType: "Interactive educational game", teaches: ["การบวกจำนวนนับไม่เกิน 20", "การลบจำนวนนับไม่เกิน 20", "เส้นจำนวน 0–20"], isAccessibleForFree: true },
   ],
 };
 

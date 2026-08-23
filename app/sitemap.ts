@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/apps`, priority: 0.9 },
     { url: `${BASE_URL}/media`, priority: 0.9 },
     { url: `${BASE_URL}/media/mathematics`, priority: 0.8 },
+    { url: `${BASE_URL}/media/mathematics/math-adventure`, priority: 0.7 },
     { url: `${BASE_URL}/media/mathematics/math-bomb-defusal`, priority: 0.7 },
     { url: `${BASE_URL}/media/science`, priority: 0.8 },
     { url: `${BASE_URL}/media/science/science-lab-crisis`, priority: 0.7 },

@@ -16,6 +16,10 @@ export type SubjectPageContent = {
   icon: string;
   accent: string;
   soft: string;
+  /** Human-readable grade range used in schema.org educationalLevel. */
+  educationalLevel: string;
+  /** ISO date of the last content change, used in schema.org dateModified. */
+  updated: string;
   headline: string;
   intro: string;
   topics: string[];
@@ -42,11 +46,11 @@ export default function SubjectResourcePage({ content }: { content: SubjectPageC
         name: `สื่อการสอน${content.name} ระดับประถมศึกษา`,
         url: canonical,
         inLanguage: "th-TH",
-        educationalLevel: content.slug === "mathematics" ? "ประถมศึกษาปีที่ 3–6" : "ประถมศึกษาปีที่ 1–6",
+        educationalLevel: content.educationalLevel,
         teaches: content.topics,
         description: content.intro,
         isAccessibleForFree: true,
-        dateModified: "2026-08-06",
+        dateModified: content.updated,
         author: { "@type": "Organization", name: "Khuncool", url: "https://www.khuncool.com" },
         publisher: { "@type": "Organization", name: "Khuncool", url: "https://www.khuncool.com" },
         mainEntity: {
@@ -57,6 +61,7 @@ export default function SubjectResourcePage({ content }: { content: SubjectPageC
             position: index + 1,
             name: resource.title || `เกม${resource.type} (เร็ว ๆ นี้)`,
             description: resource.description,
+            ...(resource.image ? { image: `https://www.khuncool.com${resource.image}` } : {}),
             ...(resource.href ? { url: `https://www.khuncool.com${resource.href}` } : {}),
           })),
         },
@@ -145,7 +150,7 @@ export default function SubjectResourcePage({ content }: { content: SubjectPageC
         <div className="rounded-[20px] border border-border p-5 md:p-6">
           <h2 className="m-0 text-xl">เลือกดูวิชาอื่น</h2>
           <div className="mt-4 grid gap-2">
-            {[{ name: "คณิตศาสตร์", href: "/media/mathematics" }, { name: "วิทยาศาสตร์", href: "/media/science" }, { name: "ภาษาไทย", href: "/media/thai" }].filter((item) => item.href !== `/media/${content.slug}`).map((item) => (
+            {[{ name: "ภาษาอังกฤษ", href: "/media/english" }, { name: "คณิตศาสตร์", href: "/media/mathematics" }, { name: "วิทยาศาสตร์", href: "/media/science" }, { name: "ภาษาไทย", href: "/media/thai" }, { name: "สังคมศึกษา", href: "/media/social-studies" }, { name: "คอมพิวเตอร์", href: "/media/computer" }].filter((item) => item.href !== `/media/${content.slug}`).map((item) => (
               <Link key={item.href} href={item.href} className="flex items-center justify-between rounded-xl bg-surface-light px-4 py-3 text-sm font-semibold text-ink no-underline hover:text-primary"><span>สื่อการสอน{item.name}</span><span>›</span></Link>
             ))}
             <Link href="/media" className="mt-1 text-sm font-semibold text-primary">ดูสื่อการสอนทุกวิชา ›</Link>
