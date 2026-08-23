@@ -7,7 +7,7 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
     intro: "เกมคณิตศาสตร์สำหรับใช้ทั้งห้อง ฝึกคิดเลขเร็ว สมการ เศษส่วน ร้อยละ และการประมาณค่า ผ่านภารกิจตัดสายระเบิดที่ตื่นเต้น เล่นได้ทันทีบนจอหน้าชั้นเรียน",
     topics: ["คิดเลขเร็ว", "สมการ", "เศษส่วน", "ร้อยละ", "การประมาณค่า"],
     resources: [
-      { title: "Math Adventure ภารกิจบวกลบ", description: "เรียนด้วยภาพและเส้นจำนวน ฝึกตอบ เล่นรถไฟเก็บดาว และทำแบบทดสอบหลังเรียน", grades: "ป.1 · 10–20 นาที", type: "การบวกและการลบ", href: "/media/mathematics/math-adventure" },
+      { title: "Math Adventure ภารกิจบวกลบ", description: "เรียนด้วยภาพและเส้นจำนวน ฝึกตอบ เล่นรถไฟเก็บดาว และทำแบบทดสอบหลังเรียน", grades: "ป.1 · 10–20 นาที", type: "การบวกและการลบ", href: "/media/mathematics/math-adventure", image: "/assets/game-covers/math-adventure.webp" },
       { title: "ถอดรหัสบอมบ์ตัวเลข", description: "แก้โจทย์ เลือกตัดสายคำตอบที่ถูกต้อง และหยุดระเบิดก่อนหมดเวลา", grades: "ป.3–ป.6 · 5–10 นาที", type: "คิดเลขเร็ว", href: "/media/mathematics/math-bomb-defusal", image: "/assets/game-covers/math-bomb-defusal.webp" },
     ],
     outcomes: ["เชื่อมแนวคิดนามธรรมกับภาพและสถานการณ์ใกล้ตัว", "สื่อสารกระบวนการคิดด้วยคำพูด ภาพ และสัญลักษณ์", "ตรวจสอบความสมเหตุสมผลของคำตอบได้ด้วยตนเอง"],
