@@ -12,6 +12,7 @@
  *   node scripts/audit-games.mjs phonics-bingo       // one game
  *   node scripts/audit-games.mjs phonics-bingo talk-card
  *   node scripts/audit-games.mjs --seeds=1,2,3,4,5,6 motion-lab
+ *   node scripts/audit-games.mjs --size=1920x1080 thai-kingdom
  *
  * Requires the Next dev server running at BASE_URL (default
  * http://localhost:3000) — start it yourself first:
@@ -161,8 +162,8 @@ function isWorse(candidate, current) {
   return a[0] !== b[0] ? a[0] > b[0] : a[1] > b[1];
 }
 
-// 6 sizes x 2 modes, per docs/media-stage-contract.md checklist.
-const SIZES = [
+// Responsive sizes x 2 modes, per docs/media-stage-contract.md checklist.
+const ALL_SIZES = [
   { label: "375x812-mobile-portrait", width: 375, height: 812 },
   { label: "844x390-mobile-landscape", width: 844, height: 390 },
   // A big phone sideways, and the reason this row exists rather than being one
@@ -184,6 +185,9 @@ const SIZES = [
   { label: "1280x800-desktop", width: 1280, height: 800 },
   { label: "1920x1080-projector", width: 1920, height: 1080 },
 ];
+const sizeArg = process.argv.find((argument) => argument.startsWith("--size="));
+const requestedSize = sizeArg?.slice("--size=".length);
+const SIZES = requestedSize ? ALL_SIZES.filter((size) => size.label.startsWith(requestedSize)) : ALL_SIZES;
 
 const FULLSCREEN_LABEL = "เต็มจอ";
 
@@ -352,6 +356,52 @@ const loseOnFirstWrong = ({ optionSelector, verifyWaitMs, lostSelector, advanceN
     if (await page.locator(lostSelector).count()) return;
     await page.getByRole("button", { name: advanceName }).click();
     await page.waitForTimeout(250);
+  }
+};
+
+/** Math Adventure keeps a question in place after a wrong answer, so trying
+ * each of its three unique choices is deterministic and still exercises the
+ * encouraging retry state. The correct choice advances after 850ms. */
+const solveMathAdventure = (count = 10) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    const options = page.locator('[class*="__answerGrid"] button');
+    let solved = false;
+    for (let i = 0; i < await options.count(); i++) {
+      await options.nth(i).click({ force: true });
+      await page.waitForTimeout(120);
+      if (await page.locator('[class*="__correctMessage"]').count()) {
+        solved = true;
+        await page.waitForTimeout(900);
+        break;
+      }
+    }
+    if (!solved) throw new Error(`math-adventure: question ${round + 1} was not solved`);
+  }
+};
+
+/** Thai Kingdom uses three-choice questions plus a two-piece tap/drag word
+ * builder. Try every choice for deterministic progress; for arrange screens,
+ * tapping both native buttons exercises the touch-equivalent interaction. */
+const solveThaiKingdom = (count = 10) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    const arrange = page.locator('[data-question-kind="arrange"] button[draggable="true"]');
+    if (await arrange.count()) {
+      for (let i = 0; i < await arrange.count(); i++) await arrange.nth(i).click({ force: true });
+      await page.waitForTimeout(1000);
+      continue;
+    }
+    const options = page.locator('[class*="__answerGrid"] button');
+    let solved = false;
+    for (let i = 0; i < await options.count(); i++) {
+      await options.nth(i).click({ force: true });
+      await page.waitForTimeout(120);
+      if (await page.locator('[class*="__correctMessage"]').count()) {
+        solved = true;
+        await page.waitForTimeout(950);
+        break;
+      }
+    }
+    if (!solved) throw new Error(`thai-kingdom: question ${round + 1} was not solved`);
   }
 };
 
@@ -632,6 +682,123 @@ const GAMES = {
       },
     ],
   },
+  "math-adventure": {
+    path: "/media/mathematics/math-adventure",
+    stress: {
+      selector: '[data-question-kind="word-problem"] h2',
+      text: "มีดินสอ 12 แท่ง ได้เพิ่มอีก 8 แท่ง ตอนนี้มีดินสอทั้งหมดกี่แท่ง",
+    },
+    screens: [
+      { name: "home" },
+      { name: "practice-settings", enter: click(/ฝึกทำ/) },
+      { name: "practice", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="practice"]' },
+      { name: "practice-result", enter: solveMathAdventure(10), expect: '[data-stage="result"]' },
+      {
+        name: "lesson",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /เรียนรู้/ }).click();
+        },
+        expect: '[data-stage="lesson"]',
+      },
+      {
+        name: "lesson-number-line-10",
+        async enter(page) {
+          await page.getByRole("tab", { name: /เส้นจำนวน 0–20/ }).click();
+          const nextExample = page.getByRole("button", { name: "ตัวอย่างถัดไป" });
+          for (let index = 1; index < 10; index += 1) await nextExample.click();
+        },
+        expect: 'text="ตัวอย่าง 10/10"',
+      },
+      {
+        name: "train-settings",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /รถไฟเก็บดาว/ }).click();
+          await page.getByRole("button", { name: "แบ่งทีม" }).click();
+          await page.getByRole("button", { name: "3 ทีม" }).click();
+        },
+        expect: '[data-stage="settings"]',
+      },
+      { name: "train", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="train"]' },
+      { name: "train-result", enter: solveMathAdventure(10), expect: '[data-stage="result"]' },
+      {
+        name: "quiz-settings",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /แบบทดสอบ/ }).click();
+        },
+        expect: '[data-stage="settings"]',
+      },
+      { name: "quiz", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="quiz"]' },
+      { name: "quiz-long", enter: solveMathAdventure(3), expect: '[data-question-kind="word-problem"]' },
+      { name: "quiz-result", enter: solveMathAdventure(7), expect: '[data-stage="result"]' },
+    ],
+  },
+  "thai-kingdom": {
+    path: "/media/thai/thai-kingdom",
+    stress: {
+      selector: '[data-stage="question"] h2',
+      text: "ฟังเสียงแล้วเลือกพยัญชนะต้นที่ถูกต้องจากตัวเลือกต่อไปนี้",
+    },
+    screens: [
+      { name: "home" },
+      { name: "practice-settings", enter: click(/ฝึกทำ/) },
+      { name: "practice", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="practice"]' },
+      { name: "practice-result", enter: solveThaiKingdom(10), expect: '[data-stage="result"]' },
+      {
+        name: "lesson-consonant",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /เรียนรู้/ }).click();
+        },
+        expect: '[data-stage="lesson"]',
+      },
+      ...[0, 1, 2].map((vowelIndex) => ({
+        name: `lesson-vowel-${["aa", "ii", "uu"][vowelIndex]}`,
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /เรียนรู้/ }).click();
+          await page.getByRole("tab", { name: /ตำแหน่งสระ/ }).click();
+          for (let step = 0; step < vowelIndex; step += 1) {
+            await page.getByRole("button", { name: "ตัวอย่างถัดไป" }).click();
+          }
+        },
+        expect: '[data-stage="lesson"]',
+      })),
+      {
+        name: "lesson-builder",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /เรียนรู้/ }).click();
+          await page.getByRole("tab", { name: /โรงงานสร้างคำ/ }).click();
+        },
+        expect: '[data-stage="lesson"]',
+      },
+      {
+        name: "train-settings",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /รถไฟเก็บคำ/ }).click();
+          await page.getByRole("button", { name: "แบ่งทีม" }).click();
+          await page.getByRole("button", { name: "3 ทีม" }).click();
+        },
+        expect: '[data-stage="settings"]',
+      },
+      { name: "train", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="train"]' },
+      { name: "train-result", enter: solveThaiKingdom(10), expect: '[data-stage="result"]' },
+      {
+        name: "quiz-settings",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูเกม" }).click();
+          await page.getByRole("button", { name: /แบบทดสอบ/ }).click();
+        },
+        expect: '[data-stage="settings"]',
+      },
+      { name: "quiz", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="quiz"]' },
+      { name: "quiz-result", enter: solveThaiKingdom(10), expect: '[data-stage="result"]' },
+    ],
+  },
   "math-bomb-defusal": {
     path: "/media/mathematics/math-bomb-defusal",
     screens: [
@@ -797,10 +964,6 @@ const GAMES = {
     ],
   },
 };
-
-function slugify(label) {
-  return label.replace(/[^a-z0-9-]+/gi, "-");
-}
 
 async function auditOneScreen({ page, game, gameKey, screen, size, mode, outDir, suffix = "" }) {
   // Force the CSS-fallback fullscreen path (see useStage.ts) instead of the
@@ -1156,6 +1319,11 @@ async function auditGameAcrossSeeds(browser, gameKey, game, seeds) {
 
 async function main() {
   const args = process.argv.slice(2);
+  if (requestedSize && SIZES.length === 0) {
+    console.error(`Unknown size "${requestedSize}". Configured: ${ALL_SIZES.map((size) => size.label).join(", ")}`);
+    process.exitCode = 1;
+    return;
+  }
   const seedArg = args.find((a) => a.startsWith("--seeds="));
   const seeds = seedArg
     ? seedArg.slice("--seeds=".length).split(",").map(Number).filter((n) => Number.isFinite(n))

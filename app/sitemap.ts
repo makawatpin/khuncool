@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/media/science/motion-lab`, priority: 0.7 },
     { url: `${BASE_URL}/media/science/density-lab`, priority: 0.7 },
     { url: `${BASE_URL}/media/thai`, priority: 0.8 },
+    { url: `${BASE_URL}/media/thai/thai-kingdom`, priority: 0.7 },
     { url: `${BASE_URL}/media/english`, priority: 0.9 },
     { url: `${BASE_URL}/media/social-studies`, priority: 0.9 },
     { url: `${BASE_URL}/media/computer`, priority: 0.9 },

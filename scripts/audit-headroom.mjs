@@ -47,6 +47,8 @@ const AUDIT_SRC = await readFile(path.join(ROOT, "scripts", "audit-stage.js"), "
 // runtime for little more information — a result screen that breaks 40px down
 // is a different, smaller problem than a play screen that does.
 const GAMES = {
+  "math-adventure": { path: "/media/mathematics/math-adventure", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 15 },
+  "thai-kingdom": { path: "/media/thai/thai-kingdom", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 17 },
   "classroom-objects": { path: "/media/english/classroom-objects", start: /เริ่มเล่น/ },
   "family-tree": { path: "/media/english/family-tree", start: /เริ่มเล่น/ },
   "phonics-bingo": { path: "/media/english/phonics-bingo", start: /เริ่มเล่น/ },
@@ -111,13 +113,28 @@ for (const key of keys) {
     for (let loss = 0; loss <= MAX_LOSS; loss += STEP) {
       const ctx = await browser.newContext({ viewport: { width: size.width, height: size.height - loss } });
       const page = await ctx.newPage();
+      if (game.seed !== undefined) {
+        await page.addInitScript((seed) => {
+          let s = seed >>> 0;
+          Math.random = function () {
+            s = (s + 0x6D2B79F5) >>> 0;
+            let t = s;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }, game.seed);
+      }
       await page.addInitScript(AUDIT_SRC);
       try {
         await page.goto(`${BASE_URL}${game.path}`, { waitUntil: "networkidle" });
         await page.waitForTimeout(500);
         if (game.start) {
-          try { await page.getByRole("button", { name: game.start }).first().click({ timeout: 3500 }); } catch {}
-          await page.waitForTimeout(800);
+          const steps = Array.isArray(game.start) ? game.start : [game.start];
+          for (const name of steps) {
+            try { await page.getByRole("button", { name }).first().click({ timeout: 3500 }); } catch {}
+            await page.waitForTimeout(400);
+          }
         }
         await page.mouse.move(0, 0);
         await page.evaluate(() => {
