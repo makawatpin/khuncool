@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PhonicsBingoApp from "./PhonicsBingoApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Phonics Bingo", "ป.1–ป.3");
+
+const OG_IMAGE = gameOgImage("phonics-bingo", "Phonics Bingo");
 
 export const metadata: Metadata = {
   title: "Phonics Bingo เกมบิงโกเสียงภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -29,9 +31,11 @@ export const metadata: Metadata = {
       "ฟังเสียงต้น/ท้ายคำแล้วแตะบิงโก เกมฝึกโฟนิกส์ภาษาอังกฤษสำหรับห้องเรียน ใช้ฟรีบนเว็บ ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/media/english/phonics-bingo",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

@@ -161,7 +161,7 @@ export default function MediaPage() {
             <div className="min-w-0 flex-1">
               <h3 className="m-0 mb-0.5 text-[15.5px]">สื่อการสอนภาษาอังกฤษ</h3>
               <p className="m-0 text-[12.5px] text-ink-secondary">
-                7 สื่อ · Phonics, คำศัพท์, ไวยากรณ์, การพูด
+                8 สื่อ · Phonics, คำศัพท์, ไวยากรณ์, การพูด
               </p>
             </div>
             <span className="flex-none text-[13px] font-semibold text-primary">

@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SoundWheelApp from "./SoundWheelApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Sound Wheel", "ป.1–ป.3");
+
+const OG_IMAGE = gameOgImage("sound-wheel", "Sound Wheel");
 
 export const metadata: Metadata = {
   title: "Sound Wheel วงล้อเสียงภาษาอังกฤษ ใช้ฟรีออนไลน์ | khuncool",
@@ -29,9 +31,11 @@ export const metadata: Metadata = {
       "หมุนวงล้อสุ่มเสียงพยัญชนะ สระสั้น CVC และ digraphs ให้นักเรียนออกเสียงและบอกคำศัพท์ พร้อมเสียงอ่าน ดาวสะสม และสตรีคถูกต่อเนื่อง",
     url: "https://www.khuncool.com/media/english/sound-wheel",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

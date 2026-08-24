@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ClassroomObjectsApp from "./ClassroomObjectsApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Classroom Objects Match", "ป.1–ป.3");
+
+const OG_IMAGE = gameOgImage("classroom-objects", "Classroom Objects Match");
 
 export const metadata: Metadata = {
   title:
@@ -32,9 +34,11 @@ export const metadata: Metadata = {
       "พลิกการ์ดหาคู่รูปภาพกับคำศัพท์ภาษาอังกฤษของใช้ในห้องเรียน จับคู่ถูกได้ดาว ติดคอมโบได้โบนัส ใช้ฟรีบนเว็บ ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/media/english/classroom-objects",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

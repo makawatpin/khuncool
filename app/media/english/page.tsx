@@ -12,6 +12,7 @@ import {
   SUBJECTS,
   TRUST_CHIPS,
 } from "./data";
+import { ENGLISH_DATE_MODIFIED, ENGLISH_OG_IMAGE } from "./seo";
 
 export const metadata: Metadata = {
   title: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์ ประถม ใช้ฟรี | khuncool",
@@ -27,9 +28,11 @@ export const metadata: Metadata = {
       "รวมสื่อและเกมภาษาอังกฤษออนไลน์สำหรับครูประถม แยกตามทักษะ เปิดเล่นบนจอหน้าชั้นได้ทันที ไม่ต้องติดตั้ง ไม่ต้องสมัครสมาชิก",
     url: "https://www.khuncool.com/media/english",
     locale: "th_TH",
+    images: [ENGLISH_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [ENGLISH_OG_IMAGE.url],
   },
 };
 
@@ -49,7 +52,7 @@ const jsonLd = {
           "@type": "ListItem",
           position: 2,
           name: "สื่อการสอน",
-          item: "https://www.khuncool.com/media/english",
+          item: "https://www.khuncool.com/media",
         },
         {
           "@type": "ListItem",
@@ -64,7 +67,7 @@ const jsonLd = {
       name: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์",
       url: "https://www.khuncool.com/media/english",
       inLanguage: "th-TH",
-      dateModified: "2026-08-04",
+      dateModified: ENGLISH_DATE_MODIFIED,
       educationalLevel: "ประถมศึกษาปีที่ 1–6",
       teaches: ["Phonics", "Vocabulary", "Grammar", "Speaking"],
       author: {
@@ -82,6 +85,8 @@ const jsonLd = {
         "@type": "ListItem",
         position: i + 1,
         name: m.title,
+        description: m.short,
+        image: `https://www.khuncool.com${m.image}`,
         url: `https://www.khuncool.com${m.href}`,
       })),
     },
@@ -240,15 +245,16 @@ export default function MediaEnglishPage() {
         </div>
 
         <div className="md:w-[340px] md:flex-none">
-          <h2 className="m-0 mb-1.5 text-lg md:text-2xl">วิชาอื่นที่กำลังทำ</h2>
+          <h2 className="m-0 mb-1.5 text-lg md:text-2xl">สื่อการสอนวิชาอื่น</h2>
           <p className="m-0 mb-3 text-[13px] leading-[1.65] text-ink-secondary md:mb-3.5 md:text-sm">
-            โครงหน้านี้ใช้ซ้ำได้กับทุกวิชา บอกเราได้ว่าอยากได้วิชาไหนก่อน
+            ทุกวิชามีสื่อให้เปิดใช้แล้ว เลือกวิชาที่กำลังสอนได้เลย
           </p>
           <div className="grid grid-cols-2 gap-2 md:flex md:flex-col">
             {SUBJECTS.map((s) => (
-              <div
+              <Link
                 key={s.t}
-                className="flex items-center gap-[9px] rounded-2xl border border-dashed border-[#D8DCE5] p-[11px_12px]"
+                href={s.href}
+                className="flex items-center gap-[9px] rounded-2xl border border-border p-[11px_12px] text-inherit no-underline hover:border-[#C6C9FB] hover:bg-[#FBFBFE]"
               >
                 <span className="text-lg">{s.icon}</span>
                 <div className="min-w-0">
@@ -259,7 +265,7 @@ export default function MediaEnglishPage() {
                     {s.st}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

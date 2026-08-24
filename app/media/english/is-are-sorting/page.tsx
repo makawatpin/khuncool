@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import IsAreSortingApp from "./IsAreSortingApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Is / Are Sorting", "ป.3–ป.6");
+
+const OG_IMAGE = gameOgImage("is-are-sorting", "Is / Are Sorting");
 
 export const metadata: Metadata = {
   title: "Is / Are Sorting เกมแยกประโยค is are ภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -29,9 +31,11 @@ export const metadata: Metadata = {
       "อ่านประโยคแล้วแตะตะกร้า IS หรือ ARE ให้ถูกต้อง ฝึกไวยากรณ์เอกพจน์/พหูพจน์ พร้อมคำอธิบายภาษาไทยและคอมโบดาว ใช้ฟรี ไม่ต้องติดตั้ง",
     url: "https://www.khuncool.com/media/english/is-are-sorting",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

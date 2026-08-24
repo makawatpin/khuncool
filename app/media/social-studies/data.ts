@@ -44,10 +44,10 @@ export const RELATED_TOOLS = [
 ];
 
 export const SUBJECTS = [
-  { t: "ภาษาอังกฤษ", st: "7 สื่อ", icon: "🔤", href: "/media/english" },
-  { t: "คณิตศาสตร์", st: "กำลังทำ", icon: "🔢" },
-  { t: "วิทยาศาสตร์", st: "วางแผนไว้", icon: "🔬" },
-  { t: "ภาษาไทย", st: "วางแผนไว้", icon: "📖" },
+  { t: "ภาษาอังกฤษ", st: "8 สื่อ", icon: "🔤", href: "/media/english" },
+  { t: "คณิตศาสตร์", st: "2 สื่อ", icon: "🔢", href: "/media/mathematics" },
+  { t: "วิทยาศาสตร์", st: "3 สื่อ", icon: "🔬", href: "/media/science" },
+  { t: "ภาษาไทย", st: "1 สื่อ", icon: "📖", href: "/media/thai" },
 ];
 
 export const FAQS = [

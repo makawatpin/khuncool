@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import FamilyTreeApp from "./FamilyTreeApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Family Tree Explorer", "ป.1–ป.4");
+
+const OG_IMAGE = gameOgImage("family-tree", "Family Tree Explorer");
 
 export const metadata: Metadata = {
   title: "Family Tree Explorer เกมคำศัพท์ครอบครัวภาษาอังกฤษ ใช้ฟรี | khuncool",
@@ -28,9 +30,11 @@ export const metadata: Metadata = {
       "เรียนคำศัพท์ครอบครัวภาษาอังกฤษผ่าน 4 มินิเกม ลาก & วางปลูกต้นไม้ครอบครัว จับคู่คำศัพท์กับรูปภาพ ฟังเสียงแล้วเดา และเติมคำในเรื่องราว",
     url: "https://www.khuncool.com/media/english/family-tree",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import WeatherSeasonsApp from "./WeatherSeasonsApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const title = "Weather & Seasons Adventure เกมสภาพอากาศและฤดูกาล | khuncool";
 const description = "สื่อการสอนภาษาอังกฤษเรื่องสภาพอากาศ ฤดูกาล และเครื่องแต่งกาย สำหรับ ป.1–ป.6 มีบทเรียนพร้อมเสียง เกมสลับอักษร Dress the Character แบบลากเสื้อผ้า และ Sentence Quiz ใช้ฟรีบนคอม แท็บเล็ต และมือถือ";
 const url = "https://www.khuncool.com/media/english/weather-seasons";
 const faqs = gameFaqs("Weather & Seasons Adventure", "ป.1–ป.6");
+const OG_IMAGE = gameOgImage("weather-seasons", "Weather & Seasons Adventure", 1200, 675);
 
 export const metadata: Metadata = {
   title,
@@ -29,8 +30,9 @@ export const metadata: Metadata = {
     description,
     url,
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
 };
 
 const jsonLd = {
@@ -40,14 +42,16 @@ const jsonLd = {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "หน้าแรก", item: "https://www.khuncool.com/" },
-        { "@type": "ListItem", position: 2, name: "สื่อการสอนภาษาอังกฤษ", item: "https://www.khuncool.com/media/english" },
-        { "@type": "ListItem", position: 3, name: "Weather & Seasons Adventure", item: url },
+        { "@type": "ListItem", position: 2, name: "สื่อการสอน", item: "https://www.khuncool.com/media" },
+        { "@type": "ListItem", position: 3, name: "สื่อการสอนภาษาอังกฤษ", item: "https://www.khuncool.com/media/english" },
+        { "@type": "ListItem", position: 4, name: "Weather & Seasons Adventure", item: url },
       ],
     },
     {
       "@type": "WebApplication",
       name: "Weather & Seasons Adventure Khuncool",
       url,
+      image: OG_IMAGE.url,
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
       inLanguage: ["th-TH", "en"],
@@ -65,7 +69,8 @@ export default function WeatherSeasonsPage() {
       <nav aria-label="breadcrumb">
         <div className="flex items-center gap-1.5 px-4 pt-3.5 text-[11.5px] text-ink-faint md:gap-[7px] md:px-8 md:pt-[18px] md:text-[12.5px]">
           <Link href="/" className="text-ink-faint">หน้าแรก</Link><span>›</span>
-          <Link href="/media/english" className="text-ink-faint">สื่อการสอน</Link><span>›</span>
+          <Link href="/media" className="text-ink-faint">สื่อการสอน</Link><span>›</span>
+          <Link href="/media/english" className="text-ink-faint">ภาษาอังกฤษ</Link><span>›</span>
           <span className="font-semibold text-ink-secondary" aria-current="page">Weather & Seasons Adventure</span>
         </div>
       </nav>

@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import VocabularyArcadeApp from "./VocabularyArcadeApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Vocabulary Arcade", "ป.1–ป.6");
+
+const OG_IMAGE = gameOgImage("vocabulary-arcade", "Vocabulary Arcade");
 
 export const metadata: Metadata = {
   title: "Vocabulary Arcade เกมคำศัพท์ภาษาอังกฤษ 10 หมวด ใช้ฟรี | khuncool",
@@ -29,9 +31,11 @@ export const metadata: Metadata = {
       "เกมคำศัพท์ภาษาอังกฤษ 10 หมวด เล่นได้ 4 โหมด (Picture Match, Word → Picture, Spelling Builder, Mixed Challenge) พร้อมเสียงอ่านทุกคำ ดาวสะสม และคอมโบ",
     url: "https://www.khuncool.com/media/english/vocabulary-arcade",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

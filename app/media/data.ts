@@ -26,10 +26,10 @@ export const SUBJECTS: Subject[] = [
     icon: "🔤",
     bg: "#EEEEFD",
     href: "/media/english",
-    desc: "Phonics คำศัพท์ ไวยากรณ์ และการพูด พร้อมเสียงอ่านทุกคำ",
-    meta: "7 สื่อ · ป.1–ป.6",
+    desc: "Phonics คำศัพท์ ไวยากรณ์ การพูด และสภาพอากาศ/ฤดูกาล พร้อมเสียงอ่านทุกคำ",
+    meta: "8 สื่อ · ป.1–ป.6",
     tags: ["Phonics", "Vocabulary", "Grammar", "Speaking"],
-    status: "7 สื่อ",
+    status: "8 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
@@ -160,7 +160,7 @@ export const EEAT_CARDS = [
 export const AUTHOR_META = [
   { k: "อัปเดตล่าสุด", v: "24 ส.ค. 2569" },
   { k: "ตรวจสอบเนื้อหาโดย", v: "ครูคูล" },
-  { k: "จำนวนสื่อในระบบ", v: "18 ชิ้น" },
+  { k: "จำนวนสื่อในระบบ", v: "19 ชิ้น" },
   { k: "ระดับชั้น", v: "ป.1–ม.2" },
 ];
 

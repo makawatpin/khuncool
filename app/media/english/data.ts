@@ -154,10 +154,11 @@ export const RELATED_TOOLS = [
 ];
 
 export const SUBJECTS = [
-  { t: "คณิตศาสตร์", st: "กำลังทำ", icon: "🔢" },
-  { t: "วิทยาศาสตร์", st: "วางแผนไว้", icon: "🔬" },
-  { t: "ภาษาไทย", st: "วางแผนไว้", icon: "📖" },
-  { t: "สังคมศึกษา", st: "วางแผนไว้", icon: "🗺" },
+  { t: "คณิตศาสตร์", st: "2 สื่อ", icon: "🔢", href: "/media/mathematics" },
+  { t: "วิทยาศาสตร์", st: "3 สื่อ", icon: "🔬", href: "/media/science" },
+  { t: "ภาษาไทย", st: "1 สื่อ", icon: "📖", href: "/media/thai" },
+  { t: "สังคมศึกษา", st: "2 สื่อ", icon: "🗺", href: "/media/social-studies" },
+  { t: "คอมพิวเตอร์", st: "3 สื่อ", icon: "💻", href: "/media/computer" },
 ];
 
 export const FAQS = [

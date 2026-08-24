@@ -82,34 +82,34 @@ const DEFAULT_SETTINGS: TeacherSettings = {
 };
 
 const WEATHER_WORDS: WeatherWord[] = [
-  { id: "weather-sunny", en: "sunny", th: "มีแดด", emoji: "☀️", image: "/assets/weather-seasons/sunny-3d.png", category: "weather", sentence: "It's sunny today.", sentenceTh: "วันนี้มีแดด", level: 1, tags: ["hot", "summer", "hat", "sunglasses"] },
-  { id: "weather-rainy", en: "rainy", th: "มีฝนตก", emoji: "🌧️", image: "/assets/weather-seasons/rainy-3d.png", category: "weather", sentence: "It's rainy today.", sentenceTh: "วันนี้มีฝนตก", level: 1, tags: ["rainy-season", "raincoat", "boots", "umbrella"] },
-  { id: "weather-cloudy", en: "cloudy", th: "มีเมฆมาก", emoji: "☁️", image: "/assets/weather-seasons/cloudy-3d.png", category: "weather", sentence: "It's cloudy today.", sentenceTh: "วันนี้มีเมฆมาก", level: 1, tags: ["cool", "autumn"] },
-  { id: "weather-windy", en: "windy", th: "มีลมแรง", emoji: "🌬️", image: "/assets/weather-seasons/windy-3d.png", category: "weather", sentence: "It's windy today.", sentenceTh: "วันนี้มีลมแรง", level: 1, tags: ["autumn", "sweater"] },
-  { id: "weather-stormy", en: "stormy", th: "มีพายุ", emoji: "⛈️", image: "/assets/weather-seasons/stormy-3d.png", category: "weather", sentence: "It's stormy today.", sentenceTh: "วันนี้มีพายุ", level: 2, tags: ["rainy-season", "raincoat", "boots"] },
-  { id: "weather-snowy", en: "snowy", th: "มีหิมะตก", emoji: "🌨️", image: "/assets/weather-seasons/snowy-3d.png", category: "weather", sentence: "It's snowy today.", sentenceTh: "วันนี้มีหิมะตก", level: 2, tags: ["cold", "winter", "coat", "scarf"] },
-  { id: "weather-foggy", en: "foggy", th: "มีหมอก", emoji: "🌫️", image: "/assets/weather-seasons/foggy-3d.png", category: "weather", sentence: "It's foggy this morning.", sentenceTh: "เช้านี้มีหมอก", level: 2, tags: ["cool", "winter"] },
-  { id: "weather-hot", en: "hot", th: "ร้อน", emoji: "🥵", image: "/assets/weather-seasons/hot-3d.png", category: "weather", sentence: "It's hot today.", sentenceTh: "วันนี้อากาศร้อน", level: 1, tags: ["summer", "hot-season", "T-shirt", "shorts"] },
-  { id: "weather-warm", en: "warm", th: "อบอุ่น", emoji: "🌤️", image: "/assets/weather-seasons/warm-3d.png", category: "weather", sentence: "It's warm today.", sentenceTh: "วันนี้อากาศอบอุ่น", level: 2, tags: ["spring", "T-shirt"] },
-  { id: "weather-cool", en: "cool", th: "เย็นสบาย", emoji: "🍃", image: "/assets/weather-seasons/cool-3d.png", category: "weather", sentence: "It's cool today.", sentenceTh: "วันนี้อากาศเย็นสบาย", level: 2, tags: ["autumn", "cool-season", "sweater"] },
-  { id: "weather-cold", en: "cold", th: "หนาว", emoji: "🥶", image: "/assets/weather-seasons/cold-3d.png", category: "weather", sentence: "It's cold today.", sentenceTh: "วันนี้อากาศหนาว", level: 1, tags: ["winter", "cool-season", "coat", "scarf"] },
-  { id: "season-spring", en: "spring", th: "ฤดูใบไม้ผลิ", emoji: "🌷", image: "/assets/weather-seasons/spring-3d.png", category: "season", sentence: "Flowers grow in spring.", sentenceTh: "ดอกไม้เติบโตในฤดูใบไม้ผลิ", level: 2, tags: ["warm", "international"] },
-  { id: "season-summer", en: "summer", th: "ฤดูร้อน", emoji: "🏖️", image: "/assets/weather-seasons/summer-3d.png", category: "season", sentence: "It's hot in summer.", sentenceTh: "อากาศร้อนในฤดูร้อน", level: 1, tags: ["sunny", "hot", "international"] },
-  { id: "season-autumn", en: "autumn / fall", th: "ฤดูใบไม้ร่วง", emoji: "🍂", image: "/assets/weather-seasons/autumn-3d.png", category: "season", sentence: "Leaves fall in autumn.", sentenceTh: "ใบไม้ร่วงในฤดูใบไม้ร่วง", level: 2, tags: ["windy", "cool", "international"] },
-  { id: "season-winter", en: "winter", th: "ฤดูหนาว", emoji: "❄️", image: "/assets/weather-seasons/winter-3d.png", category: "season", sentence: "It's cold in winter.", sentenceTh: "อากาศหนาวในฤดูหนาว", level: 1, tags: ["snowy", "cold", "international"] },
-  { id: "season-thai-hot", en: "hot season", th: "ฤดูร้อนของไทย", emoji: "☀️", image: "/assets/weather-seasons/thai-hot-season-3d.png", category: "season", sentence: "Thailand is hot in the hot season.", sentenceTh: "ประเทศไทยอากาศร้อนในฤดูร้อน", level: 1, tags: ["sunny", "hot", "thai"] },
-  { id: "season-thai-rainy", en: "rainy season", th: "ฤดูฝนของไทย", emoji: "🌧️", image: "/assets/weather-seasons/thai-rainy-season-3d.png", category: "season", sentence: "It rains in the rainy season.", sentenceTh: "ฝนตกในฤดูฝน", level: 1, tags: ["rainy", "stormy", "thai"] },
-  { id: "season-thai-cool", en: "cool season", th: "ฤดูหนาวของไทย", emoji: "🍃", image: "/assets/weather-seasons/thai-cool-season-3d.png", category: "season", sentence: "It is cool in the cool season.", sentenceTh: "อากาศเย็นในฤดูหนาวของไทย", level: 1, tags: ["cool", "cold", "thai"] },
-  { id: "clothes-tshirt", en: "T-shirt", th: "เสื้อยืด", emoji: "👕", image: "/assets/weather-seasons/tshirt-3d.png", category: "clothes", sentence: "You should wear a T-shirt.", sentenceTh: "เธอควรใส่เสื้อยืด", level: 1, tags: ["sunny", "hot", "summer", "hot-season"] },
-  { id: "clothes-shorts", en: "shorts", th: "กางเกงขาสั้น", emoji: "🩳", image: "/assets/weather-seasons/shorts-3d.png", category: "clothes", sentence: "You should wear shorts.", sentenceTh: "เธอควรใส่กางเกงขาสั้น", level: 1, tags: ["sunny", "hot", "summer"] },
-  { id: "clothes-sweater", en: "sweater", th: "เสื้อกันหนาว", emoji: "🧶", image: "/assets/weather-seasons/sweater-3d.png", category: "clothes", sentence: "You should wear a sweater.", sentenceTh: "เธอควรใส่เสื้อกันหนาว", level: 2, tags: ["cool", "windy", "autumn"] },
-  { id: "clothes-coat", en: "coat", th: "เสื้อโค้ต", emoji: "🧥", image: "/assets/weather-seasons/coat-3d.png", category: "clothes", sentence: "You should wear a coat.", sentenceTh: "เธอควรใส่เสื้อโค้ต", level: 1, tags: ["cold", "snowy", "winter"] },
-  { id: "clothes-raincoat", en: "raincoat", th: "เสื้อกันฝน", emoji: "🧥", image: "/assets/weather-seasons/raincoat-3d.png", category: "clothes", sentence: "You should wear a raincoat.", sentenceTh: "เธอควรใส่เสื้อกันฝน", level: 1, tags: ["rainy", "stormy", "rainy-season"] },
-  { id: "clothes-boots", en: "boots", th: "รองเท้าบูต", emoji: "🥾", image: "/assets/weather-seasons/boots-3d.png", category: "clothes", sentence: "You should wear boots.", sentenceTh: "เธอควรใส่รองเท้าบูต", level: 1, tags: ["rainy", "snowy", "winter"] },
-  { id: "clothes-hat", en: "hat", th: "หมวก", emoji: "👒", image: "/assets/weather-seasons/hat-3d.png", category: "clothes", sentence: "You should wear a hat.", sentenceTh: "เธอควรใส่หมวก", level: 1, tags: ["sunny", "hot"] },
-  { id: "clothes-scarf", en: "scarf", th: "ผ้าพันคอ", emoji: "🧣", image: "/assets/weather-seasons/scarf-3d.png", category: "clothes", sentence: "You should wear a scarf.", sentenceTh: "เธอควรใส่ผ้าพันคอ", level: 2, tags: ["cold", "snowy", "winter"] },
-  { id: "clothes-umbrella", en: "umbrella", th: "ร่ม", emoji: "☂️", image: "/assets/weather-seasons/umbrella-3d.png", category: "clothes", sentence: "You should take an umbrella.", sentenceTh: "เธอควรพกร่ม", level: 1, tags: ["rainy", "stormy", "rainy-season"] },
-  { id: "clothes-sunglasses", en: "sunglasses", th: "แว่นกันแดด", emoji: "🕶️", image: "/assets/weather-seasons/sunglasses-3d.png", category: "clothes", sentence: "You should wear sunglasses.", sentenceTh: "เธอควรใส่แว่นกันแดด", level: 1, tags: ["sunny", "hot", "summer"] },
+  { id: "weather-sunny", en: "sunny", th: "มีแดด", emoji: "☀️", image: "/assets/weather-seasons/sunny-3d.webp", category: "weather", sentence: "It's sunny today.", sentenceTh: "วันนี้มีแดด", level: 1, tags: ["hot", "summer", "hat", "sunglasses"] },
+  { id: "weather-rainy", en: "rainy", th: "มีฝนตก", emoji: "🌧️", image: "/assets/weather-seasons/rainy-3d.webp", category: "weather", sentence: "It's rainy today.", sentenceTh: "วันนี้มีฝนตก", level: 1, tags: ["rainy-season", "raincoat", "boots", "umbrella"] },
+  { id: "weather-cloudy", en: "cloudy", th: "มีเมฆมาก", emoji: "☁️", image: "/assets/weather-seasons/cloudy-3d.webp", category: "weather", sentence: "It's cloudy today.", sentenceTh: "วันนี้มีเมฆมาก", level: 1, tags: ["cool", "autumn"] },
+  { id: "weather-windy", en: "windy", th: "มีลมแรง", emoji: "🌬️", image: "/assets/weather-seasons/windy-3d.webp", category: "weather", sentence: "It's windy today.", sentenceTh: "วันนี้มีลมแรง", level: 1, tags: ["autumn", "sweater"] },
+  { id: "weather-stormy", en: "stormy", th: "มีพายุ", emoji: "⛈️", image: "/assets/weather-seasons/stormy-3d.webp", category: "weather", sentence: "It's stormy today.", sentenceTh: "วันนี้มีพายุ", level: 2, tags: ["rainy-season", "raincoat", "boots"] },
+  { id: "weather-snowy", en: "snowy", th: "มีหิมะตก", emoji: "🌨️", image: "/assets/weather-seasons/snowy-3d.webp", category: "weather", sentence: "It's snowy today.", sentenceTh: "วันนี้มีหิมะตก", level: 2, tags: ["cold", "winter", "coat", "scarf"] },
+  { id: "weather-foggy", en: "foggy", th: "มีหมอก", emoji: "🌫️", image: "/assets/weather-seasons/foggy-3d.webp", category: "weather", sentence: "It's foggy this morning.", sentenceTh: "เช้านี้มีหมอก", level: 2, tags: ["cool", "winter"] },
+  { id: "weather-hot", en: "hot", th: "ร้อน", emoji: "🥵", image: "/assets/weather-seasons/hot-3d.webp", category: "weather", sentence: "It's hot today.", sentenceTh: "วันนี้อากาศร้อน", level: 1, tags: ["summer", "hot-season", "T-shirt", "shorts"] },
+  { id: "weather-warm", en: "warm", th: "อบอุ่น", emoji: "🌤️", image: "/assets/weather-seasons/warm-3d.webp", category: "weather", sentence: "It's warm today.", sentenceTh: "วันนี้อากาศอบอุ่น", level: 2, tags: ["spring", "T-shirt"] },
+  { id: "weather-cool", en: "cool", th: "เย็นสบาย", emoji: "🍃", image: "/assets/weather-seasons/cool-3d.webp", category: "weather", sentence: "It's cool today.", sentenceTh: "วันนี้อากาศเย็นสบาย", level: 2, tags: ["autumn", "cool-season", "sweater"] },
+  { id: "weather-cold", en: "cold", th: "หนาว", emoji: "🥶", image: "/assets/weather-seasons/cold-3d.webp", category: "weather", sentence: "It's cold today.", sentenceTh: "วันนี้อากาศหนาว", level: 1, tags: ["winter", "cool-season", "coat", "scarf"] },
+  { id: "season-spring", en: "spring", th: "ฤดูใบไม้ผลิ", emoji: "🌷", image: "/assets/weather-seasons/spring-3d.webp", category: "season", sentence: "Flowers grow in spring.", sentenceTh: "ดอกไม้เติบโตในฤดูใบไม้ผลิ", level: 2, tags: ["warm", "international"] },
+  { id: "season-summer", en: "summer", th: "ฤดูร้อน", emoji: "🏖️", image: "/assets/weather-seasons/summer-3d.webp", category: "season", sentence: "It's hot in summer.", sentenceTh: "อากาศร้อนในฤดูร้อน", level: 1, tags: ["sunny", "hot", "international"] },
+  { id: "season-autumn", en: "autumn / fall", th: "ฤดูใบไม้ร่วง", emoji: "🍂", image: "/assets/weather-seasons/autumn-3d.webp", category: "season", sentence: "Leaves fall in autumn.", sentenceTh: "ใบไม้ร่วงในฤดูใบไม้ร่วง", level: 2, tags: ["windy", "cool", "international"] },
+  { id: "season-winter", en: "winter", th: "ฤดูหนาว", emoji: "❄️", image: "/assets/weather-seasons/winter-3d.webp", category: "season", sentence: "It's cold in winter.", sentenceTh: "อากาศหนาวในฤดูหนาว", level: 1, tags: ["snowy", "cold", "international"] },
+  { id: "season-thai-hot", en: "hot season", th: "ฤดูร้อนของไทย", emoji: "☀️", image: "/assets/weather-seasons/thai-hot-season-3d.webp", category: "season", sentence: "Thailand is hot in the hot season.", sentenceTh: "ประเทศไทยอากาศร้อนในฤดูร้อน", level: 1, tags: ["sunny", "hot", "thai"] },
+  { id: "season-thai-rainy", en: "rainy season", th: "ฤดูฝนของไทย", emoji: "🌧️", image: "/assets/weather-seasons/thai-rainy-season-3d.webp", category: "season", sentence: "It rains in the rainy season.", sentenceTh: "ฝนตกในฤดูฝน", level: 1, tags: ["rainy", "stormy", "thai"] },
+  { id: "season-thai-cool", en: "cool season", th: "ฤดูหนาวของไทย", emoji: "🍃", image: "/assets/weather-seasons/thai-cool-season-3d.webp", category: "season", sentence: "It is cool in the cool season.", sentenceTh: "อากาศเย็นในฤดูหนาวของไทย", level: 1, tags: ["cool", "cold", "thai"] },
+  { id: "clothes-tshirt", en: "T-shirt", th: "เสื้อยืด", emoji: "👕", image: "/assets/weather-seasons/tshirt-3d.webp", category: "clothes", sentence: "You should wear a T-shirt.", sentenceTh: "เธอควรใส่เสื้อยืด", level: 1, tags: ["sunny", "hot", "summer", "hot-season"] },
+  { id: "clothes-shorts", en: "shorts", th: "กางเกงขาสั้น", emoji: "🩳", image: "/assets/weather-seasons/shorts-3d.webp", category: "clothes", sentence: "You should wear shorts.", sentenceTh: "เธอควรใส่กางเกงขาสั้น", level: 1, tags: ["sunny", "hot", "summer"] },
+  { id: "clothes-sweater", en: "sweater", th: "เสื้อกันหนาว", emoji: "🧶", image: "/assets/weather-seasons/sweater-3d.webp", category: "clothes", sentence: "You should wear a sweater.", sentenceTh: "เธอควรใส่เสื้อกันหนาว", level: 2, tags: ["cool", "windy", "autumn"] },
+  { id: "clothes-coat", en: "coat", th: "เสื้อโค้ต", emoji: "🧥", image: "/assets/weather-seasons/coat-3d.webp", category: "clothes", sentence: "You should wear a coat.", sentenceTh: "เธอควรใส่เสื้อโค้ต", level: 1, tags: ["cold", "snowy", "winter"] },
+  { id: "clothes-raincoat", en: "raincoat", th: "เสื้อกันฝน", emoji: "🧥", image: "/assets/weather-seasons/raincoat-3d.webp", category: "clothes", sentence: "You should wear a raincoat.", sentenceTh: "เธอควรใส่เสื้อกันฝน", level: 1, tags: ["rainy", "stormy", "rainy-season"] },
+  { id: "clothes-boots", en: "boots", th: "รองเท้าบูต", emoji: "🥾", image: "/assets/weather-seasons/boots-3d.webp", category: "clothes", sentence: "You should wear boots.", sentenceTh: "เธอควรใส่รองเท้าบูต", level: 1, tags: ["rainy", "snowy", "winter"] },
+  { id: "clothes-hat", en: "hat", th: "หมวก", emoji: "👒", image: "/assets/weather-seasons/hat-3d.webp", category: "clothes", sentence: "You should wear a hat.", sentenceTh: "เธอควรใส่หมวก", level: 1, tags: ["sunny", "hot"] },
+  { id: "clothes-scarf", en: "scarf", th: "ผ้าพันคอ", emoji: "🧣", image: "/assets/weather-seasons/scarf-3d.webp", category: "clothes", sentence: "You should wear a scarf.", sentenceTh: "เธอควรใส่ผ้าพันคอ", level: 2, tags: ["cold", "snowy", "winter"] },
+  { id: "clothes-umbrella", en: "umbrella", th: "ร่ม", emoji: "☂️", image: "/assets/weather-seasons/umbrella-3d.webp", category: "clothes", sentence: "You should take an umbrella.", sentenceTh: "เธอควรพกร่ม", level: 1, tags: ["rainy", "stormy", "rainy-season"] },
+  { id: "clothes-sunglasses", en: "sunglasses", th: "แว่นกันแดด", emoji: "🕶️", image: "/assets/weather-seasons/sunglasses-3d.webp", category: "clothes", sentence: "You should wear sunglasses.", sentenceTh: "เธอควรใส่แว่นกันแดด", level: 1, tags: ["sunny", "hot", "summer"] },
 ];
 
 const QUESTIONS: Question[] = [
@@ -163,15 +163,15 @@ const SEASON_WHEEL_ANGLES: Record<string, number> = {
 const WEATHER_ONLY = WEATHER_WORDS.filter((word) => word.category === "weather");
 const CLOTHES_ONLY = WEATHER_WORDS.filter((word) => word.category === "clothes");
 const DRESSED_CHARACTER_IMAGES: Record<string, string> = {
-  "T-shirt": "/assets/weather-seasons/character-tshirt-cutout-3d.png",
-  shorts: "/assets/weather-seasons/character-shorts-cutout-3d.png",
-  sweater: "/assets/weather-seasons/character-sweater-cutout-3d.png",
-  coat: "/assets/weather-seasons/character-coat-cutout-3d.png",
-  raincoat: "/assets/weather-seasons/character-raincoat-cutout-3d.png",
-  boots: "/assets/weather-seasons/character-boots-cutout-3d.png",
-  scarf: "/assets/weather-seasons/character-scarf-cutout-3d.png",
-  umbrella: "/assets/weather-seasons/character-umbrella-cutout-3d.png",
-  sunglasses: "/assets/weather-seasons/character-sunglasses-cutout-3d.png",
+  "T-shirt": "/assets/weather-seasons/character-tshirt-cutout-3d.webp",
+  shorts: "/assets/weather-seasons/character-shorts-cutout-3d.webp",
+  sweater: "/assets/weather-seasons/character-sweater-cutout-3d.webp",
+  coat: "/assets/weather-seasons/character-coat-cutout-3d.webp",
+  raincoat: "/assets/weather-seasons/character-raincoat-cutout-3d.webp",
+  boots: "/assets/weather-seasons/character-boots-cutout-3d.webp",
+  scarf: "/assets/weather-seasons/character-scarf-cutout-3d.webp",
+  umbrella: "/assets/weather-seasons/character-umbrella-cutout-3d.webp",
+  sunglasses: "/assets/weather-seasons/character-sunglasses-cutout-3d.webp",
 };
 const DRESS_MISSIONS: Record<string, { correct: string; options: string[] }> = {
   sunny: { correct: "sunglasses", options: ["sunglasses", "raincoat", "coat", "boots"] },
@@ -681,7 +681,7 @@ export default function WeatherSeasonsApp() {
   const wheelWeatherWords = wheelWord ? WEATHER_ONLY.filter((word) => wheelWord.tags.includes(word.en)) : [];
   const dressWord = WEATHER_ONLY.find((word) => word.en === dressWeather) || WEATHER_ONLY[1];
   const dressChoiceWord = dressChoice ? CLOTHES_ONLY.find((word) => word.en === dressChoice) : undefined;
-  const dressedCharacterSrc = dressChoiceWord && dressChoiceWord.en !== "hat" ? DRESSED_CHARACTER_IMAGES[dressChoiceWord.en] : "/assets/weather-seasons/dress-character-3d.png";
+  const dressedCharacterSrc = dressChoiceWord && dressChoiceWord.en !== "hat" ? DRESSED_CHARACTER_IMAGES[dressChoiceWord.en] : "/assets/weather-seasons/dress-character-3d.webp";
   const dressMission = DRESS_MISSIONS[dressWeather] || DRESS_MISSIONS.rainy;
   const dressOptions = dressMission.options.map((name) => CLOTHES_ONLY.find((word) => word.en === name)).filter((word): word is WeatherWord => Boolean(word));
   const promptVisualWord = currentQuestion?.promptVisual ? WEATHER_ONLY.find((word) => word.en === currentQuestion.promptVisual) : undefined;
@@ -897,7 +897,7 @@ export default function WeatherSeasonsApp() {
               <section role="region" aria-label="ตัวละครสำหรับวางเสื้อผ้า" className={`${styles.characterDropZone} ${dressReaction === "right" ? styles.characterHappy : dressReaction === "wrong" ? styles.characterSilly : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const id = event.dataTransfer.getData("text/plain"); const word = CLOTHES_ONLY.find((item) => item.id === id); if (word) tryDressItem(word); }}>
                 <div className={styles.reactionBubble}>{dressReaction === "right" ? "เยี่ยม! ชิ้นนี้เหมาะกับอากาศนี้ที่สุด 😄" : dressReaction === "wrong" ? `${dressChoice} ไม่ใช่ของที่ใช้กับอากาศ ${dressWeather} โดยตรง ลองใหม่!` : "เลือกของที่เหมาะกับอากาศนี้ที่สุด"}</div>
                 <div className={styles.characterCanvas}>
-                  <Image key={dressedCharacterSrc} className={styles.characterImage} src={dressedCharacterSrc} width={1024} height={1536} alt={dressChoiceWord ? `ตัวละครสวม ${dressChoiceWord.en}` : "ตัวละครสำหรับเกมแต่งตัว"} priority />
+                  <Image key={dressedCharacterSrc} className={styles.characterImage} src={dressedCharacterSrc} width={1024} height={1536} sizes="310px" alt={dressChoiceWord ? `ตัวละครสวม ${dressChoiceWord.en}` : "ตัวละครสำหรับเกมแต่งตัว"} priority />
                   {dressChoiceWord?.en === "hat" && <WeatherVisual word={dressChoiceWord} className={styles.hatOnCharacter} />}
                 </div>
                 <span className={styles.dropHint}>วางเสื้อผ้าตรงนี้</span>

@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import TalkCardApp from "./TalkCardApp";
 import GameFaq from "../GameFaq";
-import { gameFaqs } from "../seo";
+import { gameFaqs, gameOgImage } from "../seo";
 
 const faqs = gameFaqs("Talk Card", "ป.4–ป.6");
+
+const OG_IMAGE = gameOgImage("talk-card", "Talk Card");
 
 export const metadata: Metadata = {
   title: "Talk Card สุ่มคำถามภาษาอังกฤษให้เด็กพูดหน้าชั้น ใช้ฟรี | khuncool",
@@ -28,9 +30,11 @@ export const metadata: Metadata = {
       "สุ่มการ์ดคำถามให้นักเรียนพูดภาษาอังกฤษหน้าชั้น มีคำแปลไทย ประโยคตัวอย่าง เสียงอ่าน และตัวจับเวลา เล่นได้ทั้งคอมและมือถือ",
     url: "https://www.khuncool.com/media/english/talk-card",
     locale: "th_TH",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 

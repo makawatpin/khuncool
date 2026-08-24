@@ -65,7 +65,7 @@ export const RELATED_TOOLS = [
 ];
 
 export const RELATED_SUBJECTS = [
-  { title: "ภาษาอังกฤษ", meta: "7 สื่อ", icon: "🔤", href: "/media/english" },
+  { title: "ภาษาอังกฤษ", meta: "8 สื่อ", icon: "🔤", href: "/media/english" },
   { title: "สังคมศึกษา", meta: "2 สื่อ", icon: "🗺️", href: "/media/social-studies" },
 ];
 
