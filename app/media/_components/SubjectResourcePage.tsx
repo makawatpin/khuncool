@@ -1,5 +1,6 @@
 import Link from "next/link";
 import GamePlaceholderGrid from "./GamePlaceholderGrid";
+import { otherSubjects, type SubjectSlug } from "../catalog";
 
 export type SubjectResource = {
   title: string;
@@ -11,7 +12,7 @@ export type SubjectResource = {
 };
 
 export type SubjectPageContent = {
-  slug: string;
+  slug: SubjectSlug;
   name: string;
   icon: string;
   accent: string;
@@ -150,8 +151,8 @@ export default function SubjectResourcePage({ content }: { content: SubjectPageC
         <div className="rounded-[20px] border border-border p-5 md:p-6">
           <h2 className="m-0 text-xl">เลือกดูวิชาอื่น</h2>
           <div className="mt-4 grid gap-2">
-            {[{ name: "ภาษาอังกฤษ", href: "/media/english" }, { name: "คณิตศาสตร์", href: "/media/mathematics" }, { name: "วิทยาศาสตร์", href: "/media/science" }, { name: "ภาษาไทย", href: "/media/thai" }, { name: "สังคมศึกษา", href: "/media/social-studies" }, { name: "คอมพิวเตอร์", href: "/media/computer" }].filter((item) => item.href !== `/media/${content.slug}`).map((item) => (
-              <Link key={item.href} href={item.href} className="flex items-center justify-between rounded-xl bg-surface-light px-4 py-3 text-sm font-semibold text-ink no-underline hover:text-primary"><span>สื่อการสอน{item.name}</span><span>›</span></Link>
+            {otherSubjects(content.slug).map((item) => (
+              <Link key={item.href} href={item.href} className="flex items-center justify-between rounded-xl bg-surface-light px-4 py-3 text-sm font-semibold text-ink no-underline hover:text-primary"><span>สื่อการสอน{item.t}</span><span className="text-xs font-normal text-ink-faint">{item.st} ›</span></Link>
             ))}
             <Link href="/media" className="mt-1 text-sm font-semibold text-primary">ดูสื่อการสอนทุกวิชา ›</Link>
           </div>

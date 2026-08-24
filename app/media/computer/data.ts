@@ -64,11 +64,6 @@ export const RELATED_TOOLS = [
   { title: "กระดานคะแนน", sub: "ให้คะแนนระหว่างเล่น", icon: "🏆", bg: "#EEEEFD", href: "/group-scoreboard" },
 ];
 
-export const RELATED_SUBJECTS = [
-  { title: "ภาษาอังกฤษ", meta: "8 สื่อ", icon: "🔤", href: "/media/english" },
-  { title: "สังคมศึกษา", meta: "2 สื่อ", icon: "🗺️", href: "/media/social-studies" },
-];
-
 export const EEAT_CARDS = [
   { k: "EXPERIENCE", t: "ออกแบบจากการใช้หน้าชั้น", d: "รูปแบบการเล่น ตัวอักษร และเวลาของกิจกรรมออกแบบให้ครูฉายจอและพาเด็กทั้งห้องเรียนรู้ร่วมกันได้" },
   { k: "EXPERTISE", t: "เชื่อมทักษะวิทยาการคำนวณ", d: "ทุกเกมระบุทักษะ เป้าหมายการเรียนรู้ ระดับชั้น และแนวทางใช้ต่อยอดในคาบเรียนอย่างชัดเจน" },

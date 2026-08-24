@@ -153,14 +153,6 @@ export const RELATED_TOOLS = [
   { title: "กระดานคะแนน", sub: "ให้คะแนนระหว่างเล่น", icon: "🏆", bg: "#EEEEFD", href: "/group-scoreboard" },
 ];
 
-export const SUBJECTS = [
-  { t: "คณิตศาสตร์", st: "2 สื่อ", icon: "🔢", href: "/media/mathematics" },
-  { t: "วิทยาศาสตร์", st: "3 สื่อ", icon: "🔬", href: "/media/science" },
-  { t: "ภาษาไทย", st: "1 สื่อ", icon: "📖", href: "/media/thai" },
-  { t: "สังคมศึกษา", st: "2 สื่อ", icon: "🗺", href: "/media/social-studies" },
-  { t: "คอมพิวเตอร์", st: "3 สื่อ", icon: "💻", href: "/media/computer" },
-];
-
 export const FAQS = [
   {
     q: "สื่อภาษาอังกฤษเหล่านี้ใช้ฟรีไหม",

@@ -11,7 +11,9 @@ import {
   RELATED_TOOLS,
   SUBJECTS,
   TRUST_CHIPS,
+  subjectMeta,
 } from "./data";
+import { mediaLabel } from "./catalog";
 
 export const metadata: Metadata = {
   title: "สื่อการสอนออนไลน์ ฟรี ทุกวิชา ป.1–ป.6 | khuncool",
@@ -161,7 +163,7 @@ export default function MediaPage() {
             <div className="min-w-0 flex-1">
               <h3 className="m-0 mb-0.5 text-[15.5px]">สื่อการสอนภาษาอังกฤษ</h3>
               <p className="m-0 text-[12.5px] text-ink-secondary">
-                8 สื่อ · Phonics, คำศัพท์, ไวยากรณ์, การพูด
+                {mediaLabel("english")} · Phonics, คำศัพท์, ไวยากรณ์, การพูด
               </p>
             </div>
             <span className="flex-none text-[13px] font-semibold text-primary">
@@ -198,7 +200,7 @@ export default function MediaPage() {
                     className="rounded-md px-[7px] py-0.5 text-[10px] font-semibold md:px-2 md:py-[3px] md:text-[10.5px]"
                     style={{ color: s.stFg, background: s.stBg }}
                   >
-                    {s.status}
+                    {mediaLabel(s.slug)}
                   </span>
                 </div>
                 <p className="m-0 mb-1.5 text-[12.5px] leading-[1.6] text-ink-secondary md:mb-2 md:text-[13.5px] md:leading-[1.65]">
@@ -215,7 +217,7 @@ export default function MediaPage() {
                   ))}
                 </div>
                 <div className="text-[11px] text-ink-faint md:hidden">
-                  {s.meta}
+                  {subjectMeta(s)}
                 </div>
               </div>
             </Link>

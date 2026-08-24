@@ -1,3 +1,5 @@
+import { LAST_UPDATED, TOTAL_MEDIA, formatThaiDate, mediaLabel, type SubjectSlug } from "./catalog";
+
 // Static content for the /media hub page, sourced from
 // "Khuncool Media.dc.html" in the Khuncool Design System project.
 
@@ -8,88 +10,92 @@ export const TRUST_CHIPS = [
 ];
 
 export type Subject = {
+  slug: SubjectSlug;
   t: string;
   icon: string;
   bg: string;
   href: string;
   desc: string;
-  meta: string;
+  /** Grade range only — the media count is derived from the catalog. */
+  grades: string;
   tags: string[];
-  status: string;
   stFg: string;
   stBg: string;
 };
 
+/** "8 สื่อ · ป.1–ป.6" for the mobile meta line. */
+export const subjectMeta = (subject: Subject) => `${mediaLabel(subject.slug)} · ${subject.grades}`;
+
 export const SUBJECTS: Subject[] = [
   {
+    slug: "english",
     t: "ภาษาอังกฤษ",
     icon: "🔤",
     bg: "#EEEEFD",
     href: "/media/english",
     desc: "Phonics คำศัพท์ ไวยากรณ์ การพูด และสภาพอากาศ/ฤดูกาล พร้อมเสียงอ่านทุกคำ",
-    meta: "8 สื่อ · ป.1–ป.6",
+    grades: "ป.1–ป.6",
     tags: ["Phonics", "Vocabulary", "Grammar", "Speaking"],
-    status: "8 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
   {
+    slug: "mathematics",
     t: "คณิตศาสตร์",
     icon: "🔢",
     bg: "#FFF0E4",
     href: "/media/mathematics",
     desc: "ฝึกบวกลบไม่เกิน 20 ด้วยเส้นจำนวน และคิดเลขเร็ว สมการ เศษส่วน ร้อยละ ผ่านเกมถอดรหัสบอมบ์ตัวเลข",
-    meta: "2 สื่อ · ป.1–ป.6",
+    grades: "ป.1–ป.6",
     tags: ["การบวกและการลบ", "คิดเลขเร็ว", "เศษส่วนและร้อยละ"],
-    status: "2 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
   {
+    slug: "science",
     t: "วิทยาศาสตร์",
     icon: "🔬",
     bg: "#EAF7E4",
     href: "/media/science",
     desc: "วิเคราะห์สถานการณ์และกู้ห้องทดลอง ทดลองการเคลื่อนที่และความหนาแน่น ผ่านโจทย์สิ่งมีชีวิต สสาร แรง พลังงาน ไฟฟ้า โลกและอวกาศ",
-    meta: "3 สื่อ · ป.3–ม.2",
+    grades: "ป.3–ม.2",
     tags: ["สิ่งมีชีวิตและสสาร", "แรงและการเคลื่อนที่", "ความหนาแน่น"],
-    status: "3 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
   {
+    slug: "thai",
     t: "ภาษาไทย",
     icon: "📖",
     bg: "#FDE8F3",
     href: "/media/thai",
     desc: "รู้จักพยัญชนะ ตำแหน่งสระ และการประสมคำ ผ่านเกมรถไฟเก็บคำในอาณาจักรภาษาไทย",
-    meta: "1 สื่อ · ป.1",
+    grades: "ป.1",
     tags: ["พยัญชนะ", "สระ", "ประสมคำ"],
-    status: "1 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
   {
+    slug: "social-studies",
     t: "สังคมศึกษา",
     icon: "🗺️",
     bg: "#E7F0FF",
     href: "/media/social-studies",
     desc: "เรียนรู้อาเซียน 11 ประเทศ ผ่านเกมจับคู่ภาพ ชื่อประเทศ และธงชาติ",
-    meta: "2 สื่อ · ระดับประถมศึกษา",
+    grades: "ระดับประถมศึกษา",
     tags: ["อาเซียน", "ภูมิศาสตร์", "วัฒนธรรม"],
-    status: "2 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
   {
+    slug: "computer",
     t: "คอมพิวเตอร์",
     icon: "💻",
     bg: "#E9E7FF",
     href: "/media/computer",
     desc: "Coding การพิมพ์ ความปลอดภัยดิจิทัล และส่วนประกอบคอมพิวเตอร์",
-    meta: "3 สื่อ · ระดับประถมศึกษา",
+    grades: "ระดับประถมศึกษา",
     tags: ["Coding", "Typing", "Digital Safety"],
-    status: "3 สื่อ",
     stFg: "#0A9380",
     stBg: "#D0FBEF",
   },
@@ -158,9 +164,9 @@ export const EEAT_CARDS = [
 ];
 
 export const AUTHOR_META = [
-  { k: "อัปเดตล่าสุด", v: "24 ส.ค. 2569" },
+  { k: "อัปเดตล่าสุด", v: formatThaiDate(LAST_UPDATED) },
   { k: "ตรวจสอบเนื้อหาโดย", v: "ครูคูล" },
-  { k: "จำนวนสื่อในระบบ", v: "19 ชิ้น" },
+  { k: "จำนวนสื่อในระบบ", v: `${TOTAL_MEDIA} ชิ้น` },
   { k: "ระดับชั้น", v: "ป.1–ม.2" },
 ];
 

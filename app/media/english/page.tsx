@@ -9,10 +9,10 @@ import {
   RELATED_ARTICLES,
   RELATED_TOOLS,
   SKILLS,
-  SUBJECTS,
   TRUST_CHIPS,
 } from "./data";
 import { ENGLISH_DATE_MODIFIED, ENGLISH_OG_IMAGE } from "./seo";
+import { otherSubjects } from "../catalog";
 
 export const metadata: Metadata = {
   title: "สื่อการสอนและเกมภาษาอังกฤษออนไลน์ ประถม ใช้ฟรี | khuncool",
@@ -250,7 +250,7 @@ export default function MediaEnglishPage() {
             ทุกวิชามีสื่อให้เปิดใช้แล้ว เลือกวิชาที่กำลังสอนได้เลย
           </p>
           <div className="grid grid-cols-2 gap-2 md:flex md:flex-col">
-            {SUBJECTS.map((s) => (
+            {otherSubjects("english").map((s) => (
               <Link
                 key={s.t}
                 href={s.href}
