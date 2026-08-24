@@ -12,11 +12,12 @@ export default function QuestionCard({ question, index, total, feedback, showHin
   const [pending, setPending] = useState<string | null>(null);
   const choose = (answer: string) => { setPending(answer); if (instantAnswer) onAnswer(answer); };
   const masked = question.kind === "missing-consonant" ? `□${question.word.vowel}` : question.kind === "missing-vowel" ? `${question.word.consonant}□` : "";
+  const canReplayWord = question.kind !== "picture-word";
   return <section className={`${styles.questionCard} ${feedback === "retry" ? styles.questionRetry : ""} ${feedback === "correct" ? styles.questionCorrect : ""}`} data-stage="question" data-question-kind={question.kind} aria-labelledby="question-title">
     <div className={styles.questionMeta}><span>ข้อ {index + 1}/{total}</span><span>{question.skill === "listening" ? "👂 ฟัง" : question.skill === "picture" ? "🖼️ ภาพ" : question.skill === "vowel" ? "🔤 สระ" : "🧩 ประสมคำ"}</span></div>
     <div className={styles.questionContent} role="status" aria-live="polite">
       <h2 id="question-title">{question.prompt}</h2>
-      {question.kind === "listen-consonant" && <AudioButton src={question.word.audio} text={question.word.word} disabled={!sound} label="ฟังอีกครั้ง" />}
+      {canReplayWord && <AudioButton src={question.word.audio} text={question.word.word} disabled={!sound} label="ฟังอีกครั้ง" />}
       {question.kind === "picture-word" && <img className={styles.questionImage} src={question.word.image} alt={`ภาพคำว่า ${question.word.word}`} />}
       {(question.kind === "missing-consonant" || question.kind === "missing-vowel") && <div className={styles.missingWord}>{masked}<span>อ่านว่า “{question.word.word}”</span></div>}
       {question.kind === "arrange" && <WordBuilder word={question.word} interactive onComplete={choose} />}
