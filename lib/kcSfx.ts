@@ -341,9 +341,16 @@ export function speakEnglish(text: string, slow = false) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-US";
-    u.rate = slow ? 0.7 : 0.85;
-    u.pitch = 1.1;
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find((voice) => voice.lang.toLowerCase() === "en-us" && /google us english|aria|jenny|guy|samantha|ava|andrew|emma/i.test(voice.name))
+      || voices.find((voice) => voice.lang.toLowerCase() === "en-us" && voice.localService)
+      || voices.find((voice) => voice.lang.toLowerCase() === "en-us")
+      || voices.find((voice) => voice.lang.toLowerCase().startsWith("en"));
+    if (preferredVoice) u.voice = preferredVoice;
+    u.lang = preferredVoice?.lang || "en-US";
+    u.rate = slow ? 0.72 : 0.85;
+    u.pitch = 1;
+    u.volume = 1;
     window.speechSynthesis.speak(u);
   } catch {
     /* ignore */

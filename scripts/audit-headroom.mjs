@@ -51,6 +51,7 @@ const GAMES = {
   "thai-kingdom": { path: "/media/thai/thai-kingdom", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 17 },
   "classroom-objects": { path: "/media/english/classroom-objects", start: /เริ่มเล่น/ },
   "family-tree": { path: "/media/english/family-tree", start: /เริ่มเล่น/ },
+  "weather-seasons": { path: "/media/english/weather-seasons", start: [/เลือกโหมดการสอน/, /เรียนรู้/] },
   "phonics-bingo": { path: "/media/english/phonics-bingo", start: /เริ่มเล่น/ },
   "sound-wheel": { path: "/media/english/sound-wheel", start: /เริ่มเล่น/ },
   "talk-card": { path: "/media/english/talk-card", start: /เริ่มสุ่มการ์ด/ },

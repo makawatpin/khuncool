@@ -26,6 +26,19 @@ export type MediaItem = {
 export const MEDIA: MediaItem[] = [
   {
     skill: "Vocabulary",
+    title: "Weather & Seasons Adventure",
+    icon: "☀️",
+    bg: "#E8F5FF",
+    image: "/assets/game-covers/weather-seasons.webp",
+    short: "เรียนอากาศและฤดูกาล แล้วเล่นเกมนักพยากรณ์",
+    long: "เรียนคำศัพท์สภาพอากาศ ฤดูกาล และเครื่องแต่งกายผ่าน 4 บทเรียน จากนั้นเล่นเกมสลับอักษร แต่งตัวตามอากาศ และ Sentence Quiz สรุปทักษะ",
+    grade: "ป.1–ป.6",
+    time: "10–20 นาที",
+    mode: "ทั้งห้อง / เดี่ยว",
+    href: "/media/english/weather-seasons",
+  },
+  {
+    skill: "Vocabulary",
     title: "Family Tree Explorer",
     icon: "🌳",
     bg: "#DFF6EF",

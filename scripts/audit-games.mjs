@@ -529,6 +529,47 @@ const GAMES = {
       { name: "fill-blank", enter: backToHub(/เติมคำในเรื่อง/) },
     ],
   },
+  "weather-seasons": {
+    path: "/media/english/weather-seasons",
+    // The lesson contains four teaching layouts followed by three deliberately
+    // different activities. Audit each layout without replaying whole rounds.
+    stress: {
+      selector: '[data-stage="quiz-question"] button[aria-label^="ตัวเลือก"] strong',
+      text: "sunglasses",
+    },
+    screens: [
+      { name: "welcome" },
+      { name: "mode-picker", enter: click(/เลือกโหมดการสอน/) },
+      { name: "settings", enter: click(/ตั้งค่า/) },
+      {
+        name: "learn-words",
+        async enter(page) {
+          await page.getByRole("button", { name: /ปิดการตั้งค่า/ }).click();
+          await page.getByRole("button", { name: /เรียนรู้/ }).click();
+        },
+      },
+      { name: "learn-wheel", enter: click(/บทถัดไป/) },
+      { name: "learn-clothes", enter: click(/บทถัดไป/) },
+      { name: "learn-map", enter: click(/บทถัดไป/) },
+      { name: "practice", enter: click(/ไปเกมสลับอักษร/) },
+      {
+        name: "dress-character",
+        async enter(page) {
+          await page.getByRole("button", { name: /กลับหน้าเลือกโหมด/ }).click();
+          await page.getByRole("button", { name: /Dress the Character/ }).click();
+        },
+        expect: '[data-stage="dress-character"]',
+      },
+      {
+        name: "sentence-quiz",
+        async enter(page) {
+          await page.getByRole("button", { name: /กลับหน้าเลือกโหมด/ }).click();
+          await page.getByRole("button", { name: /Sentence Quiz/ }).click();
+        },
+        expect: '[data-stage="quiz-question"]',
+      },
+    ],
+  },
   "vocabulary-arcade": {
     path: "/media/english/vocabulary-arcade",
     // "triangle ruler" is the longest word across all ten categories, at 14
