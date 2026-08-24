@@ -12,6 +12,12 @@ import WordBuilder from "./WordBuilder";
 
 type LessonTab = "consonant" | "vowel" | "builder";
 
+const VOWEL_AUDIO = {
+  "า": "/assets/thai-kingdom/audio/vowel-aa.wav",
+  "ี": "/assets/thai-kingdom/audio/vowel-ii.wav",
+  "ู": "/assets/thai-kingdom/audio/vowel-uu.wav",
+} as const;
+
 export default function LessonPlayer({ sound, onBack, onPractice }: { sound: boolean; onBack: () => void; onPractice: () => void }) {
   const [tab, setTab] = useState<LessonTab>("consonant");
   const [wordIndex, setWordIndex] = useState(0);
@@ -48,7 +54,7 @@ export default function LessonPlayer({ sound, onBack, onPractice }: { sound: boo
       <div className={styles.lessonHeader}><span className={styles.eyebrow}>{tab === "consonant" ? "พยัญชนะไทย ก–ฮ" : tab === "vowel" ? "สระอยู่ตรงไหน" : "ประสมคำทีละขั้น"}</span><h2 id="lesson-title">{tab === "consonant" ? `${consonant.letter} ${hideWord ? "อะไรเอ่ย" : consonant.mnemonic}` : tab === "vowel" ? thaiVowelLabel(word.vowel) : `สร้างคำว่า “${hideWord ? "?" : word.word}”`}</h2><span className={styles.lessonCounter}>{wordIndex + 1}/{lessonLength}</span></div>
       <div className={styles.lessonMain}>
         {tab === "consonant" && <ConsonantCard consonant={consonant} hideWord={hideWord} hideImage={hideImage} sound={sound} />}
-        {tab === "vowel" && <VowelPositionDemo consonant={word.consonant} vowel={word.vowel} position={word.composition.vowelPosition} word={word.word} />}
+        {tab === "vowel" && <><VowelPositionDemo consonant={word.consonant} vowel={word.vowel} position={word.composition.vowelPosition} word={word.word} /><AudioButton src={VOWEL_AUDIO[word.vowel]} text={thaiVowelLabel(word.vowel)} disabled={!sound} label="ฟังสระ" /></>}
         {tab === "builder" && <><WordBuilder word={word} step={step} hideWord={hideWord} /><div className={styles.stepControls} aria-label="ควบคุมการประสมคำทีละขั้น"><button type="button" className={`kc-tap ${styles.stepButton}`} onClick={() => moveStep(-1)} disabled={step === 1} aria-label="ย้อนกลับไปขั้นก่อนหน้า">← ขั้นก่อนหน้า</button><span className={styles.stepStatus} role="status" aria-live="polite">ขั้น {step} จาก 3</span><button type="button" className={`kc-tap ${styles.stepButton} ${styles.stepButtonNext}`} onClick={() => moveStep(1)} disabled={step === 3} aria-label="แสดงขั้นถัดไป">ขั้นถัดไป →</button></div><AudioButton src={word.audio} text={word.word} disabled={!sound} label="ฟังคำ" /></>}
       </div>
       <div className={styles.lessonPager}><button type="button" className="kc-tap" onClick={() => move(-1)} aria-label="ตัวอย่างก่อนหน้า">←</button><button type="button" className="kc-tap" onClick={() => move(1)} aria-label="ตัวอย่างถัดไป">→</button></div>

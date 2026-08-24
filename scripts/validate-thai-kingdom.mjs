@@ -32,16 +32,26 @@ if (errors.length) {
 }
 console.log(`Validated ${THAI_WORDS.length} Thai words: unique data, valid Unicode, distractors, images and audio.`);
 
+for (const asset of ["vowel-aa.wav", "vowel-ii.wav", "vowel-uu.wav"]) {
+  const target = path.join(root, "public", "assets", "thai-kingdom", "audio", asset);
+  if (!fs.existsSync(target)) errors.push(`missing vowel audio: ${asset}`);
+  else if (fs.statSync(target).size < 5_000) errors.push(`vowel audio may be blank: ${asset}`);
+}
+
 if (THAI_CONSONANTS.length !== 44) errors.push(`expected 44 consonants, found ${THAI_CONSONANTS.length}`);
 if (new Set(THAI_CONSONANTS.map((item) => item.letter)).size !== 44) errors.push("duplicate consonant letters");
 if (new Set(THAI_CONSONANTS.map((item) => item.mnemonic)).size !== 44) errors.push("duplicate consonant mnemonics");
 for (const item of THAI_CONSONANTS) {
   if (item.letter !== item.letter.normalize("NFC")) errors.push(`non-NFC consonant: ${item.letter}`);
   if (item.mnemonic !== item.mnemonic.normalize("NFC")) errors.push(`non-NFC mnemonic: ${item.mnemonic}`);
-  for (const asset of [item.image]) {
+  for (const asset of [item.image, item.audio]) {
+    if (!asset) {
+      errors.push(`missing consonant asset path: ${item.id}`);
+      continue;
+    }
     const target = path.join(root, "public", asset.replace(/^\/assets\//, "assets/"));
     if (!fs.existsSync(target)) errors.push(`missing consonant asset: ${asset}`);
-    else if (fs.statSync(target).size < 5_000) errors.push(`consonant image may be blank: ${asset}`);
+    else if (fs.statSync(target).size < 5_000) errors.push(`consonant asset may be blank: ${asset}`);
   }
 }
 
@@ -49,4 +59,4 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log("Validated 44 Thai consonants: standard mnemonics, unique data and images.");
+console.log("Validated 44 Thai consonants and 3 Thai vowels: standard data, images and audio.");

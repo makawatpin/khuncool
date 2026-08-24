@@ -54,4 +54,5 @@ export const THAI_CONSONANTS: ThaiConsonant[] = rows.map(([id, letter, mnemonic]
   letter,
   mnemonic,
   image: `/assets/thai-kingdom/consonants/${id}.webp`,
+  audio: `/assets/thai-kingdom/audio/consonants/${id}.wav`,
 }));
