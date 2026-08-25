@@ -52,6 +52,7 @@ export const FAQS = [
 ];
 
 export const RELATED_ARTICLES = [
+  { t: "6 เกมและกิจกรรมสังคมศึกษา อาเซียนและกฎหมายใกล้ตัว", href: "/blog/social-studies-games" },
   { t: "10 กิจกรรมสุ่มชื่อที่ใช้ได้ทุกวิชา", href: "/blog/random-name-activities" },
   { t: "เครื่องมือสุ่มแบ่งกลุ่มสำหรับกิจกรรมในห้อง", href: "/blog/group-maker" },
   { t: "อ่านบทความอื่น ๆ ทั้งหมด", href: "/articles" },

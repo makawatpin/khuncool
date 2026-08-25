@@ -200,6 +200,9 @@ export const FAQS = [
 ];
 
 export const RELATED_ARTICLES = [
+  { t: "8 เกมและกิจกรรมคณิตศาสตร์ ป.1–ป.6", href: "/blog/mathematics-games" },
+  { t: "7 กิจกรรมทดลองวิทยาศาสตร์บนจอ", href: "/blog/science-lab-activities" },
+  { t: "8 กิจกรรมสอนอ่านเขียนภาษาไทย ป.1", href: "/blog/thai-reading-writing-activities" },
   { t: "เทคนิคสอนภาษาอังกฤษจาก PSU", href: "/blog/psu-english" },
   { t: "10 กิจกรรมสุ่มชื่อที่ใช้ได้ทุกวิชา", href: "/blog/random-name-activities" },
   { t: "อ่านบทความอื่น ๆ ทั้งหมด", href: "/articles" },

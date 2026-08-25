@@ -11,6 +11,7 @@ import { APPS, TOOLS } from "@/app/tools/data";
 import { MEDIA as MEDIA_COMPUTER } from "@/app/media/computer/data";
 import { MEDIA as MEDIA_ENGLISH } from "@/app/media/english/data";
 import { MEDIA as MEDIA_SOCIAL_STUDIES } from "@/app/media/social-studies/data";
+import { SUBJECT_CONTENT } from "@/app/media/subjectContent";
 
 const LATEST_ARTICLES = [...ALL_ARTICLES]
   .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
@@ -108,10 +109,22 @@ type MediaSubjectGroup = {
   games: { title: string; href: string }[];
 };
 
+/** Subjects whose media list lives in SUBJECT_CONTENT; only playable games get a link. */
+const subjectGroup = (slug: keyof typeof SUBJECT_CONTENT): MediaSubjectGroup => {
+  const content = SUBJECT_CONTENT[slug];
+  return {
+    subject: content.name,
+    subjectHref: `/media/${content.slug}`,
+    games: content.resources
+      .filter((r): r is typeof r & { href: string } => Boolean(r.href))
+      .map((r) => ({ title: r.title, href: r.href })),
+  };
+};
+
 const MEDIA_SUBMENU: MediaSubjectGroup[] = [
-  { subject: "คณิตศาสตร์", subjectHref: "/media/mathematics", games: [{ title: "ถอดรหัสบอมบ์ตัวเลข", href: "/media/mathematics/math-bomb-defusal" }] },
-  { subject: "วิทยาศาสตร์", subjectHref: "/media/science", games: [] },
-  { subject: "ภาษาไทย", subjectHref: "/media/thai", games: [] },
+  subjectGroup("mathematics"),
+  subjectGroup("science"),
+  subjectGroup("thai"),
   {
     subject: "คอมพิวเตอร์",
     subjectHref: "/media/computer",

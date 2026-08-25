@@ -26,6 +26,8 @@ export type SubjectPageContent = {
   topics: string[];
   resources: SubjectResource[];
   outcomes: string[];
+  /** Blog posts that expand on how to teach this subject. Omit to hide the section. */
+  relatedArticles?: { t: string; href: string }[];
 };
 
 export default function SubjectResourcePage({ content }: { content: SubjectPageContent }) {
@@ -172,6 +174,25 @@ export default function SubjectResourcePage({ content }: { content: SubjectPageC
           <details className="border-b border-border py-3"><summary className="cursor-pointer text-sm font-semibold">จะใช้ฟรีหรือไม่</summary><p className="text-xs leading-6 text-ink-secondary">{hasPlayableGames ? `สื่อและเกม${content.name}ของ Khuncool เปิดใช้งานฟรีผ่านเว็บเบราว์เซอร์ ไม่ต้องติดตั้ง` : "เกมของ Khuncool วางแผนให้เปิดผ่านเบราว์เซอร์และใช้ฟรีเหมือนสื่อวิชาอื่น"}</p></details>
         </div>
       </section>
+
+      {content.relatedArticles?.length ? (
+        <section className="border-t border-border px-4 py-8 md:px-8 md:py-10" aria-labelledby="related-articles-heading">
+          <h2 id="related-articles-heading" className="m-0 text-2xl">บทความที่เกี่ยวข้อง</h2>
+          <p className="mb-5 mt-2 text-sm text-ink-secondary">แนวทางนำสื่อเหล่านี้ไปใช้จริงในคาบเรียน พร้อมกิจกรรมที่ครูจัดเองได้</p>
+          <div className="grid gap-2 md:grid-cols-2 md:gap-[9px]">
+            {content.relatedArticles.map((article) => (
+              <Link
+                key={article.href}
+                href={article.href}
+                className="flex items-center gap-2.5 rounded-xl border border-[#EEF0F4] bg-surface-light p-[13px_15px] text-inherit no-underline hover:bg-[#F1F2FC]"
+              >
+                <span className="flex-1 text-sm text-ink-secondary">{article.t}</span>
+                <span className="flex-none text-[13px] text-primary">อ่าน ›</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="flex flex-col gap-4 border-t border-border px-4 py-6 md:flex-row md:items-center md:px-8">
         <div className="flex-1"><h2 className="m-0 text-lg">{hasPlayableGames ? `พร้อมเล่นเกม${content.name}แล้วหรือยัง` : "มีชื่อเกมแล้ว ส่งมาเพิ่มได้เลย"}</h2><p className="mb-0 mt-1 text-sm text-ink-secondary">{hasPlayableGames ? "เปิดเกมบนจอ แบ่งนักเรียนเป็นทีม แล้วเริ่มภารกิจในชั้นเรียนได้ทันที" : "โครงข้อมูลพร้อมสำหรับชื่อเกม คำอธิบาย หมวด ระดับชั้น เวลาเล่น และลิงก์หน้าของเกม"}</p></div>

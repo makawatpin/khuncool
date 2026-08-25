@@ -12,6 +12,12 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
       { title: "ถอดรหัสบอมบ์ตัวเลข", description: "แก้โจทย์ เลือกตัดสายคำตอบที่ถูกต้อง และหยุดระเบิดก่อนหมดเวลา", grades: "ป.3–ป.6 · 5–10 นาที", type: "คิดเลขเร็ว", href: "/media/mathematics/math-bomb-defusal", image: "/assets/game-covers/math-bomb-defusal.webp" },
     ],
     outcomes: ["เชื่อมแนวคิดนามธรรมกับภาพและสถานการณ์ใกล้ตัว", "สื่อสารกระบวนการคิดด้วยคำพูด ภาพ และสัญลักษณ์", "ตรวจสอบความสมเหตุสมผลของคำตอบได้ด้วยตนเอง"],
+    relatedArticles: [
+      { t: "8 เกมและกิจกรรมคณิตศาสตร์ ป.1–ป.6 เล่นทั้งห้องได้จากจอเดียว", href: "/blog/mathematics-games" },
+      { t: "ตัวอย่างแผนจัดการเรียนรู้ 50 นาทีด้วยสื่อดิจิทัล", href: "/blog/digital-teaching-media" },
+      { t: "7 วิธีใช้สุ่มคำถามในห้องเรียน ให้เด็กทุกคนได้ตอบ", href: "/blog/random-question-activities" },
+      { t: "จับเวลาในห้องเรียน 8 วิธีใช้ให้คุมคาบเรียนได้จริง", href: "/blog/classroom-timer-activities" },
+    ],
   },
   science: {
     slug: "science", name: "วิทยาศาสตร์", icon: "🔬", accent: "#24805F", soft: "#EAF7E4",
@@ -25,6 +31,12 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
       { title: "Density Lab ความหนาแน่น", description: "เลือกวัตถุ ของเหลว และปริมาตร ทดลองการลอยจมพร้อมวิเคราะห์ค่าความหนาแน่น", grades: "ม.1 · 10–20 นาที", type: "สสารและสมบัติของสาร", href: "/media/science/density-lab" },
     ],
     outcomes: ["ตั้งคำถามและคาดการณ์จากความรู้เดิม", "เก็บและใช้หลักฐานจากการสังเกตหรือทดลอง", "อธิบายปรากฏการณ์ด้วยเหตุผลและคำศัพท์วิทยาศาสตร์"],
+    relatedArticles: [
+      { t: "7 กิจกรรมทดลองวิทยาศาสตร์บนจอ สอนได้แม้ห้องเรียนไม่มีอุปกรณ์", href: "/blog/science-lab-activities" },
+      { t: "ตัวอย่างแผนจัดการเรียนรู้ 50 นาทีด้วยสื่อดิจิทัล", href: "/blog/digital-teaching-media" },
+      { t: "7 วิธีใช้สุ่มคำถามในห้องเรียน ให้เด็กทุกคนได้ตอบ", href: "/blog/random-question-activities" },
+      { t: "จับเวลาในห้องเรียน 8 วิธีใช้ให้คุมคาบเรียนได้จริง", href: "/blog/classroom-timer-activities" },
+    ],
   },
   thai: {
     slug: "thai", name: "ภาษาไทย", icon: "📖", accent: "#B4477C", soft: "#FDE8F3",
@@ -36,5 +48,11 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
       { title: "อาณาจักรภาษาไทย อ่านออก เขียนได้", description: "รู้จักพยัญชนะ เรียนตำแหน่งสระ ประสมคำ ฝึกตอบ และเล่นรถไฟเก็บคำ", grades: "ป.1 · 15–25 นาที", type: "พยัญชนะ สระ และประสมคำ", href: "/media/thai/thai-kingdom", image: "/assets/game-covers/thai-kingdom.webp" },
     ],
     outcomes: ["บอกชื่อพยัญชนะและเชื่อมเสียงกับภาพคำได้", "รู้ตำแหน่งของสระและประสมคำไม่มีตัวสะกดได้", "อ่านออกเสียงคำและข้อความได้ถูกต้องคล่องแคล่ว"],
+    relatedArticles: [
+      { t: "8 กิจกรรมสอนอ่านเขียนภาษาไทย ป.1 พยัญชนะ สระ และการประสมคำ", href: "/blog/thai-reading-writing-activities" },
+      { t: "ตัวอย่างแผนจัดการเรียนรู้ 50 นาทีด้วยสื่อดิจิทัล", href: "/blog/digital-teaching-media" },
+      { t: "10 กิจกรรมสุ่มชื่อนักเรียน ทำให้ห้องเรียนสนุกขึ้นทันที", href: "/blog/random-name-activities" },
+      { t: "จับเวลาในห้องเรียน 8 วิธีใช้ให้คุมคาบเรียนได้จริง", href: "/blog/classroom-timer-activities" },
+    ],
   },
 };
