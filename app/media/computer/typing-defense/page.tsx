@@ -47,7 +47,7 @@ const jsonLd = {
       learningResourceType: "Educational game",
       teaches: ["การพิมพ์สัมผัส", "คำศัพท์คอมพิวเตอร์ภาษาอังกฤษ", "ความปลอดภัยดิจิทัล"],
       audience: { "@type": "EducationalAudience", educationalRole: ["student", "teacher"] },
-      author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" },
+      author: { "@type": "Person", name: "คุณคูล", url: "https://www.khuncool.com/about" },
       dateModified: "2026-08-04",
     },
     {
@@ -81,7 +81,7 @@ export default function TypingDefensePage() {
           <div><h2 className="m-0 mb-2 text-lg md:text-2xl">แนวทางใช้ในห้องเรียน</h2><p className="m-0 text-sm leading-7 text-ink-secondary">วางแผนให้เล่นรายคนบนคอมพิวเตอร์ หรือฉายจอแล้วแบ่งทีมช่วยกันสะกดคำ ครูสามารถหยุดระหว่างรอบเพื่ออธิบายความหมายและยกตัวอย่างการใช้งานของแต่ละคำ</p></div>
         </div>
         <div className="mt-6 rounded-2xl border border-[#DDE3F4] bg-[#F7F9FF] p-4 md:p-5">
-          <div className="mb-1 text-xs font-bold tracking-[.08em] text-primary">ความโปร่งใสของเนื้อหา</div><h2 className="m-0 mb-2 text-base md:text-lg">ออกแบบโดยครู พร้อมใช้ในชั้นเรียน</h2><p className="m-0 text-[13px] leading-6 text-ink-secondary">เกมนี้จัดทำโดยครูคูลสำหรับใช้เป็นสื่อระดับประถม ใช้คำศัพท์คอมพิวเตอร์และความปลอดภัยดิจิทัล 12 คำ มีรอบละ 60 วินาที พร้อมคะแนน คอมโบ และพลังป้องกันฐานข้อมูล · ตรวจทานล่าสุด 4 ส.ค. 2569</p>
+          <div className="mb-1 text-xs font-bold tracking-[.08em] text-primary">ความโปร่งใสของเนื้อหา</div><h2 className="m-0 mb-2 text-base md:text-lg">ออกแบบโดยครู พร้อมใช้ในชั้นเรียน</h2><p className="m-0 text-[13px] leading-6 text-ink-secondary">เกมนี้จัดทำโดยคุณคูลสำหรับใช้เป็นสื่อระดับประถม ใช้คำศัพท์คอมพิวเตอร์และความปลอดภัยดิจิทัล 12 คำ มีรอบละ 60 วินาที พร้อมคะแนน คอมโบ และพลังป้องกันฐานข้อมูล · ตรวจทานล่าสุด 4 ส.ค. 2569</p>
         </div>
       </section>
 

@@ -50,7 +50,7 @@ const jsonLd = {
       teaches: ["กฎหมายในชีวิตประจำวัน", "หน้าที่พลเมือง", "กฎหมายจราจรทางบก", "การตัดสินใจอย่างรับผิดชอบ"],
       description: "เกมสังคมศึกษาแบบ Interactive Presentation สำหรับเรียนรู้กฎหมายในชีวิตประจำวันผ่านการวิเคราะห์คดีและการแข่งขันเป็นทีม",
       dateModified: "2026-08-04",
-      author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" },
+      author: { "@type": "Person", name: "คุณคูล", url: "https://www.khuncool.com/about" },
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
     { "@type": "FAQPage", mainEntity: lawFaqs.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) },

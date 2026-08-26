@@ -165,7 +165,7 @@ export const EEAT_CARDS = [
 
 export const AUTHOR_META = [
   { k: "อัปเดตล่าสุด", v: formatThaiDate(LAST_UPDATED) },
-  { k: "ตรวจสอบเนื้อหาโดย", v: "ครูคูล" },
+  { k: "ตรวจสอบเนื้อหาโดย", v: "คุณคูล" },
   { k: "จำนวนสื่อในระบบ", v: `${TOTAL_MEDIA} ชิ้น` },
   { k: "ระดับชั้น", v: "ป.1–ม.2" },
 ];

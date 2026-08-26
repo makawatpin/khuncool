@@ -310,7 +310,7 @@ export default function MediaPage() {
               />
               <div>
                 <div className="font-anuphan text-[15px] font-bold md:text-base">
-                  ครูคูล
+                  คุณคูล
                 </div>
                 <div className="text-xs leading-[1.5] text-ink-secondary md:text-[12.5px]">
                   ครูผู้สอนภาษาอังกฤษ

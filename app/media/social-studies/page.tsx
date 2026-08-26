@@ -19,7 +19,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": [
     { "@type": "ListItem", position: 2, name: "สื่อการสอน", item: "https://www.khuncool.com/media" },
     { "@type": "ListItem", position: 3, name: "สังคมศึกษา", item: "https://www.khuncool.com/media/social-studies" },
   ]},
-  { "@type": "CollectionPage", name: "สื่อการสอนสังคมศึกษา", url: "https://www.khuncool.com/media/social-studies", inLanguage: "th-TH", dateModified: "2026-08-04", author: { "@type": "Person", name: "ครูคูล", url: "https://www.khuncool.com/about" }, description: "รวมเกมและสื่อสังคมศึกษาออนไลน์สำหรับครูประถมและมัธยมศึกษาตอนต้น" },
+  { "@type": "CollectionPage", name: "สื่อการสอนสังคมศึกษา", url: "https://www.khuncool.com/media/social-studies", inLanguage: "th-TH", dateModified: "2026-08-04", author: { "@type": "Person", name: "คุณคูล", url: "https://www.khuncool.com/about" }, description: "รวมเกมและสื่อสังคมศึกษาออนไลน์สำหรับครูประถมและมัธยมศึกษาตอนต้น" },
   { "@type": "ItemList", numberOfItems: MEDIA.length, itemListElement: MEDIA.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.title })) },
   { "@type": "FAQPage", mainEntity: FAQS.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) },
 ]};
