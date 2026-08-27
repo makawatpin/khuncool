@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import styles from "./MysteryBoard.module.css";
+import BoardGrid from "./BoardGrid";
+import SetupPanel from "./SetupPanel";
 import {
-  BOARD_SIZES,
   DEFAULT_SETTINGS,
-  MODE_LABELS,
-  THEME_LABELS,
+  buildTiles,
   loadSettings,
   parseQuestions,
   saveSettings,
-  type BoardSize,
-  type Mode,
   type Settings,
-  type Theme,
+  type Tile,
 } from "./boardModel";
+
+type Phase = "setup" | "board";
 
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
@@ -24,6 +24,8 @@ export default function MysteryBoardApp() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [questionText, setQuestionText] = useState("");
   const [hydrated, setHydrated] = useState(false);
+  const [phase, setPhase] = useState<Phase>("setup");
+  const [tiles, setTiles] = useState<Tile[]>([]);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(
@@ -47,8 +49,28 @@ export default function MysteryBoardApp() {
     saveSettings(settings);
   }, [settings, hydrated]);
 
-  const questions = parseQuestions(questionText);
-  const canStart = settings.mode === "score" || questions.length > 0;
+  const patchSettings = useCallback((patch: Partial<Settings>) => {
+    setSettings((s) => ({ ...s, ...patch }));
+  }, []);
+
+  const handleQuestionText = useCallback((text: string) => {
+    setQuestionText(text);
+    setSettings((s) => ({ ...s, questions: parseQuestions(text) }));
+  }, []);
+
+  const startGame = useCallback(() => {
+    setTiles(buildTiles(settings));
+    setPhase("board");
+  }, [settings]);
+
+  const openTile = useCallback((id: number) => {
+    setTiles((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, opened: true } : t)),
+    );
+  }, []);
+
+  const openedCount = tiles.filter((t) => t.opened).length;
+  const allOpened = tiles.length > 0 && openedCount === tiles.length;
 
   return (
     <div
@@ -58,79 +80,61 @@ export default function MysteryBoardApp() {
     >
       <div className={styles.bar}>
         <span className={styles.barTitle}>🎁 กระดานป้ายปริศนา</span>
-        <button type="button" className={styles.iconBtn} onClick={toggle}>
-          ⛶ {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
-        </button>
+        <div className={styles.chipRow}>
+          {phase === "board" && (
+            <>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={() => setPhase("setup")}
+              >
+                ⚙️ ตั้งค่า
+              </button>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={startGame}
+              >
+                🔄 เริ่มใหม่
+              </button>
+            </>
+          )}
+          <button type="button" className={styles.iconBtn} onClick={toggle}>
+            ⛶ {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          </button>
+        </div>
       </div>
 
       <div className={styles.body}>
-        <fieldset>
-          <legend>โหมด</legend>
-          {(Object.keys(MODE_LABELS) as Mode[]).map((mode) => (
-            <button
-              key={mode}
-              type="button"
-              className={styles.iconBtn}
-              aria-pressed={settings.mode === mode}
-              onClick={() => setSettings((s) => ({ ...s, mode }))}
-            >
-              {MODE_LABELS[mode]}
-            </button>
-          ))}
-        </fieldset>
-
-        <fieldset>
-          <legend>จำนวนป้าย</legend>
-          {BOARD_SIZES.map((size: BoardSize) => (
-            <button
-              key={size}
-              type="button"
-              className={styles.iconBtn}
-              aria-pressed={settings.size === size}
-              onClick={() => setSettings((s) => ({ ...s, size }))}
-            >
-              {size} ป้าย
-            </button>
-          ))}
-        </fieldset>
-
-        <fieldset>
-          <legend>ธีม</legend>
-          {(Object.keys(THEME_LABELS) as Theme[]).map((theme) => (
-            <button
-              key={theme}
-              type="button"
-              className={styles.iconBtn}
-              aria-pressed={settings.theme === theme}
-              onClick={() => setSettings((s) => ({ ...s, theme }))}
-            >
-              {THEME_LABELS[theme]}
-            </button>
-          ))}
-        </fieldset>
-
-        {settings.mode === "question" && (
-          <div>
-            <label htmlFor="mystery-board-questions">
-              คำถาม (1 บรรทัด = 1 คำถาม)
-            </label>
-            <textarea
-              id="mystery-board-questions"
-              rows={6}
-              value={questionText}
-              onChange={(e) => {
-                const next = e.target.value;
-                setQuestionText(next);
-                setSettings((s) => ({ ...s, questions: parseQuestions(next) }));
-              }}
+        {phase === "setup" ? (
+          <SetupPanel
+            settings={settings}
+            questionText={questionText}
+            questionCount={parseQuestions(questionText).length}
+            onChange={patchSettings}
+            onQuestionTextChange={handleQuestionText}
+            onStart={startGame}
+          />
+        ) : (
+          <>
+            <div className={styles.boardTop}>
+              <span className={styles.counter}>
+                เปิดแล้ว {openedCount}/{tiles.length}
+              </span>
+            </div>
+            <BoardGrid
+              tiles={tiles}
+              spotlightId={null}
+              busy={false}
+              onPick={openTile}
             />
-            <span aria-live="polite">{questions.length} คำถาม</span>
-          </div>
+            {allOpened && (
+              <p className={styles.doneBanner}>
+                🎉 เปิดครบทุกป้ายแล้ว! กด &quot;เริ่มใหม่&quot; เพื่อเล่นอีกรอบ
+              </p>
+            )}
+          </>
         )}
-
-        <button type="button" className={styles.iconBtn} disabled={!canStart}>
-          เริ่มเกม
-        </button>
       </div>
     </div>
   );
