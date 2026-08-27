@@ -193,7 +193,11 @@
   outline: none;
 }
 
-.tileSpotlight {
+/* ต้องชนะทั้ง .tile:not(.tileOpened):hover/:focus-visible (specificity 0,3,0)
+   ไม่งั้นเมาส์ที่ค้างอยู่บนป้ายจะบังไฟวิ่งสีทองด้วยสีม่วงตอน hover */
+.tile.tileSpotlight,
+.tile.tileSpotlight:hover,
+.tile.tileSpotlight:focus-visible {
   transform: translateY(-6px) scale(1.06);
   border-color: #fbbf24;
   box-shadow:

@@ -19,6 +19,9 @@ import {
 
 type Phase = "setup" | "board";
 
+// จำกัดจำนวนขั้นของไฟวิ่งไม่ให้บอร์ดใหญ่ (30 ป้าย) ใช้เวลานานเกินไป
+const MAX_STEPS = 28;
+
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
 
@@ -32,6 +35,7 @@ export default function MysteryBoardApp() {
   const [spotlightId, setSpotlightId] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+  const randomBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(
@@ -76,19 +80,24 @@ export default function MysteryBoardApp() {
   // ไฟวิ่งใช้ timeout หลายสิบตัว ถ้าไม่เคลียร์จะยิงหลัง unmount
   useEffect(() => clearTimeouts, [clearTimeouts]);
 
+  /** ยกเลิกไฟวิ่งที่ค้างอยู่ (ถ้ามี) — เรียกก่อนออกจากกระดานทุกทาง */
+  const cancelRun = useCallback(() => {
+    clearTimeouts();
+    setSpotlightId(null);
+    setBusy(false);
+  }, [clearTimeouts]);
+
   const handleQuestionText = useCallback((text: string) => {
     setQuestionText(text);
     setSettings((s) => ({ ...s, questions: parseQuestions(text) }));
   }, []);
 
   const startGame = useCallback(() => {
-    clearTimeouts();
-    setSpotlightId(null);
-    setBusy(false);
+    cancelRun();
     setTiles(buildTiles(settings));
     setPhase("board");
     setRevealId(null);
-  }, [settings, clearTimeouts]);
+  }, [settings, cancelRun]);
 
   const openTile = useCallback(
     (id: number) => {
@@ -131,6 +140,12 @@ export default function MysteryBoardApp() {
     const targetIndex = closed.findIndex((t) => t.id === target.id);
     for (let i = 0; i <= targetIndex; i++) path.push(closed[i].id);
 
+    // ตัดให้เหลือขั้นตอนไม่เกิน MAX_STEPS เพื่อคุมเวลารวมของบอร์ดใหญ่
+    // ตัดจากหัว (ไม่ใช่ท้าย) เพื่อให้ยังจบที่ป้ายเป้าหมายเดิมเสมอ
+    if (path.length > MAX_STEPS) {
+      path.splice(0, path.length - MAX_STEPS);
+    }
+
     let elapsed = 0;
     path.forEach((id, i) => {
       const progress = i / Math.max(1, path.length - 1);
@@ -143,6 +158,8 @@ export default function MysteryBoardApp() {
       setSpotlightId(null);
       setBusy(false);
       openTile(target.id);
+      // ย้ายโฟกัสมาที่ปุ่มสุ่ม เพราะ overlay เผยผลกำลังจะเด้งขึ้นมาแทนอยู่แล้ว
+      randomBtnRef.current?.focus();
     }, elapsed + 420);
   }, [busy, tiles, openTile, clearTimeouts, trackedTimeout]);
 
@@ -173,7 +190,10 @@ export default function MysteryBoardApp() {
               <button
                 type="button"
                 className={styles.iconBtn}
-                onClick={() => setPhase("setup")}
+                onClick={() => {
+                  cancelRun();
+                  setPhase("setup");
+                }}
               >
                 ⚙️ ตั้งค่า
               </button>
@@ -217,6 +237,7 @@ export default function MysteryBoardApp() {
             />
             <div className={styles.boardFooter}>
               <button
+                ref={randomBtnRef}
                 type="button"
                 className={styles.primaryBtn}
                 disabled={busy || allOpened}
