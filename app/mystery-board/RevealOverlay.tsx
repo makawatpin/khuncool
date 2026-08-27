@@ -8,10 +8,17 @@ type Props = {
   tile: Tile;
   /** true เมื่อเป็นการเปิดครั้งแรก (เล่นแอนิเมชัน) — false เมื่อกดดูย้อนหลัง */
   animate: boolean;
+  /** true ระหว่างช่วงสั่นจอเมื่อเจอระเบิด */
+  shake?: boolean;
   onClose: () => void;
 };
 
-export default function RevealOverlay({ tile, animate, onClose }: Props) {
+export default function RevealOverlay({
+  tile,
+  animate,
+  shake,
+  onClose,
+}: Props) {
   const [flipped, setFlipped] = useState(!animate);
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
@@ -54,7 +61,7 @@ export default function RevealOverlay({ tile, animate, onClose }: Props) {
 
   return (
     <div
-      className={styles.overlay}
+      className={`${styles.overlay} ${shake ? styles.shakeNow : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label={`ผลของป้ายหมายเลข ${tile.id}`}

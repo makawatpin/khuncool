@@ -10,17 +10,21 @@ import SetupPanel from "./SetupPanel";
 import {
   DEFAULT_SETTINGS,
   buildTiles,
+  isJackpot,
   loadSettings,
   parseQuestions,
   saveSettings,
   type Settings,
   type Tile,
 } from "./boardModel";
+import { useBoardSound } from "./useBoardSound";
 
 type Phase = "setup" | "board";
 
 // จำกัดจำนวนขั้นของไฟวิ่งไม่ให้บอร์ดใหญ่ (30 ป้าย) ใช้เวลานานเกินไป
 const MAX_STEPS = 28;
+
+const CONFETTI_COLORS = ["#fbbf24", "#f97316", "#5c5ee6", "#22b8a0", "#ef4444"];
 
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
@@ -34,8 +38,10 @@ export default function MysteryBoardApp() {
   const [revealAnimate, setRevealAnimate] = useState(true);
   const [spotlightId, setSpotlightId] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [danger, setDanger] = useState(false);
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const randomBtnRef = useRef<HTMLButtonElement | null>(null);
+  const play = useBoardSound(settings.soundOn);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(
@@ -85,7 +91,41 @@ export default function MysteryBoardApp() {
     clearTimeouts();
     setSpotlightId(null);
     setBusy(false);
+    setDanger(false);
   }, [clearTimeouts]);
+
+  const burst = useCallback(() => {
+    const host = frameRef.current;
+    if (!host) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const height = host.clientHeight;
+    for (let i = 0; i < 40; i++) {
+      const bit = document.createElement("div");
+      const size = 6 + Math.random() * 7;
+      bit.style.cssText = `position:absolute;top:-16px;left:${(
+        Math.random() * 100
+      ).toFixed(1)}%;width:${size}px;height:${(size * 0.5).toFixed(
+        1,
+      )}px;background:${
+        CONFETTI_COLORS[i % CONFETTI_COLORS.length]
+      };border-radius:2px;z-index:60;pointer-events:none`;
+      host.appendChild(bit);
+      const dur = 1700 + Math.random() * 1200;
+      bit.animate(
+        [
+          { transform: "translateY(0) rotate(0)", opacity: 1 },
+          {
+            transform: `translateY(${height + 60}px) rotate(${
+              Math.random() * 720
+            }deg)`,
+            opacity: 0.9,
+          },
+        ],
+        { duration: dur, easing: "cubic-bezier(.2,.6,.4,1)" },
+      );
+      trackedTimeout(() => bit.remove(), dur + 80);
+    }
+  }, [trackedTimeout]);
 
   const handleQuestionText = useCallback((text: string) => {
     setQuestionText(text);
@@ -109,9 +149,22 @@ export default function MysteryBoardApp() {
         setTiles((prev) =>
           prev.map((t) => (t.id === id ? { ...t, opened: true } : t)),
         );
+        play("flip");
+        if (tile.prize && isJackpot(tile.prize)) {
+          trackedTimeout(() => {
+            play("jackpot");
+            burst();
+          }, 620);
+        } else if (tile.prize?.kind === "bomb") {
+          trackedTimeout(() => {
+            play("bomb");
+            setDanger(true);
+            trackedTimeout(() => setDanger(false), 620);
+          }, 620);
+        }
       }
     },
-    [tiles],
+    [tiles, play, burst, trackedTimeout],
   );
 
   /** สุ่มเป้าหมายก่อน แล้วค่อยเล่นไฟวิ่งให้ไปจบที่ป้ายนั้น */
@@ -151,7 +204,10 @@ export default function MysteryBoardApp() {
       const progress = i / Math.max(1, path.length - 1);
       // 45ms ตอนต้น ค่อย ๆ ยืดเป็น ~230ms ตอนใกล้หยุด
       elapsed += 45 + Math.pow(progress, 3) * 185;
-      trackedTimeout(() => setSpotlightId(id), elapsed);
+      trackedTimeout(() => {
+        setSpotlightId(id);
+        play("tick");
+      }, elapsed);
     });
 
     trackedTimeout(() => {
@@ -161,7 +217,7 @@ export default function MysteryBoardApp() {
       // ย้ายโฟกัสมาที่ปุ่มสุ่ม เพราะ overlay เผยผลกำลังจะเด้งขึ้นมาแทนอยู่แล้ว
       randomBtnRef.current?.focus();
     }, elapsed + 420);
-  }, [busy, tiles, openTile, clearTimeouts, trackedTimeout]);
+  }, [busy, tiles, openTile, clearTimeouts, trackedTimeout, play]);
 
   const openedCount = tiles.filter((t) => t.opened).length;
   const allOpened = tiles.length > 0 && openedCount === tiles.length;
@@ -206,11 +262,20 @@ export default function MysteryBoardApp() {
               </button>
             </>
           )}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            aria-label={settings.soundOn ? "ปิดเสียง" : "เปิดเสียง"}
+            onClick={() => patchSettings({ soundOn: !settings.soundOn })}
+          >
+            {settings.soundOn ? "🔊" : "🔇"}
+          </button>
           <button type="button" className={styles.iconBtn} onClick={toggle}>
             ⛶ {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
           </button>
         </div>
       </div>
+      {danger && <div className={styles.dangerFlash} />}
 
       <div className={styles.body}>
         {phase === "setup" ? (
@@ -256,6 +321,7 @@ export default function MysteryBoardApp() {
                 key={revealTile.id}
                 tile={revealTile}
                 animate={revealAnimate}
+                shake={danger}
                 onClose={() => setRevealId(null)}
               />
             )}
