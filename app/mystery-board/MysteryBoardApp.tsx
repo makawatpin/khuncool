@@ -81,6 +81,15 @@ export default function MysteryBoardApp() {
       <div className={styles.bar}>
         <span className={styles.barTitle}>🎁 กระดานป้ายปริศนา</span>
         <div className={styles.chipRow}>
+          {phase === "setup" && tiles.length > 0 && (
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={() => setPhase("board")}
+            >
+              ↩ กลับกระดาน
+            </button>
+          )}
           {phase === "board" && (
             <>
               <button
@@ -118,7 +127,7 @@ export default function MysteryBoardApp() {
         ) : (
           <>
             <div className={styles.boardTop}>
-              <span className={styles.counter}>
+              <span className={styles.counter} aria-live="polite">
                 เปิดแล้ว {openedCount}/{tiles.length}
               </span>
             </div>
@@ -129,7 +138,7 @@ export default function MysteryBoardApp() {
               onPick={openTile}
             />
             {allOpened && (
-              <p className={styles.doneBanner}>
+              <p className={styles.doneBanner} aria-live="polite">
                 🎉 เปิดครบทุกป้ายแล้ว! กด &quot;เริ่มใหม่&quot; เพื่อเล่นอีกรอบ
               </p>
             )}
