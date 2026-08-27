@@ -73,7 +73,10 @@ export function loadSettings(): Settings {
         parsed.theme === "treasure" || parsed.theme === "neon"
           ? parsed.theme
           : "space",
-      soundOn: parsed.soundOn !== false,
+      soundOn:
+        typeof parsed.soundOn === "boolean"
+          ? parsed.soundOn
+          : DEFAULT_SETTINGS.soundOn,
       questions: Array.isArray(parsed.questions)
         ? parsed.questions.filter((q): q is string => typeof q === "string")
         : [],

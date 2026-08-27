@@ -110,9 +110,12 @@ export default function MysteryBoardApp() {
         </fieldset>
 
         {settings.mode === "question" && (
-          <label>
-            <span>คำถาม (1 บรรทัด = 1 คำถาม)</span>
+          <div>
+            <label htmlFor="mystery-board-questions">
+              คำถาม (1 บรรทัด = 1 คำถาม)
+            </label>
             <textarea
+              id="mystery-board-questions"
               rows={6}
               value={questionText}
               onChange={(e) => {
@@ -121,8 +124,8 @@ export default function MysteryBoardApp() {
                 setSettings((s) => ({ ...s, questions: parseQuestions(next) }));
               }}
             />
-            <span>{questions.length} คำถาม</span>
-          </label>
+            <span aria-live="polite">{questions.length} คำถาม</span>
+          </div>
         )}
 
         <button type="button" className={styles.iconBtn} disabled={!canStart}>

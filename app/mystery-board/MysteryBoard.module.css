@@ -15,8 +15,11 @@
   inset: 0 !important;
   z-index: 2147483646 !important;
   width: 100vw !important;
+  height: 100vh !important;
   height: 100dvh !important;
   border-radius: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
 }
 
 .bar {
@@ -55,6 +58,11 @@
 .iconBtn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.iconBtn[aria-pressed="true"] {
+  border-color: #8b7bf0;
+  background: linear-gradient(135deg, #5c5ee6, #8b7bf0);
 }
 
 .body {
