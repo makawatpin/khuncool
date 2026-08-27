@@ -172,6 +172,33 @@
   background: linear-gradient(150deg, #2a2f6d, #171a3c);
   color: #fff;
   cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  animation: tileIn 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes tileIn {
+  from {
+    transform: scale(0.7) translateY(16px);
+    opacity: 0;
+  }
+}
+
+.tile:not(.tileOpened):hover,
+.tile:not(.tileOpened):focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(92, 94, 230, 0.45);
+  outline: none;
+}
+
+.tileSpotlight {
+  transform: translateY(-6px) scale(1.06);
+  border-color: #fbbf24;
+  box-shadow:
+    0 0 0 3px rgba(251, 191, 36, 0.8),
+    0 16px 40px rgba(251, 191, 36, 0.45);
 }
 
 .tileNumber {

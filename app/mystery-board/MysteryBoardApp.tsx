@@ -29,6 +29,9 @@ export default function MysteryBoardApp() {
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [revealId, setRevealId] = useState<number | null>(null);
   const [revealAnimate, setRevealAnimate] = useState(true);
+  const [spotlightId, setSpotlightId] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
+  const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(
@@ -56,16 +59,36 @@ export default function MysteryBoardApp() {
     setSettings((s) => ({ ...s, ...patch }));
   }, []);
 
+  const trackedTimeout = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timeoutsRef.current.delete(id);
+      fn();
+    }, ms);
+    timeoutsRef.current.add(id);
+    return id;
+  }, []);
+
+  const clearTimeouts = useCallback(() => {
+    for (const id of timeoutsRef.current) clearTimeout(id);
+    timeoutsRef.current.clear();
+  }, []);
+
+  // ไฟวิ่งใช้ timeout หลายสิบตัว ถ้าไม่เคลียร์จะยิงหลัง unmount
+  useEffect(() => clearTimeouts, [clearTimeouts]);
+
   const handleQuestionText = useCallback((text: string) => {
     setQuestionText(text);
     setSettings((s) => ({ ...s, questions: parseQuestions(text) }));
   }, []);
 
   const startGame = useCallback(() => {
+    clearTimeouts();
+    setSpotlightId(null);
+    setBusy(false);
     setTiles(buildTiles(settings));
     setPhase("board");
     setRevealId(null);
-  }, [settings]);
+  }, [settings, clearTimeouts]);
 
   const openTile = useCallback(
     (id: number) => {
@@ -81,6 +104,47 @@ export default function MysteryBoardApp() {
     },
     [tiles],
   );
+
+  /** สุ่มเป้าหมายก่อน แล้วค่อยเล่นไฟวิ่งให้ไปจบที่ป้ายนั้น */
+  const randomPick = useCallback(() => {
+    if (busy) return;
+    const closed = tiles.filter((t) => !t.opened);
+    if (closed.length === 0) return;
+
+    const target = closed[Math.floor(Math.random() * closed.length)];
+    const reduced = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduced) {
+      openTile(target.id);
+      return;
+    }
+
+    setBusy(true);
+    clearTimeouts();
+
+    // ไล่ไฟผ่านป้ายที่ยังไม่เปิด 2 รอบครึ่ง แล้วหน่วงลงเรื่อย ๆ
+    const path: number[] = [];
+    const loops = 2;
+    for (let l = 0; l < loops; l++) for (const t of closed) path.push(t.id);
+    const targetIndex = closed.findIndex((t) => t.id === target.id);
+    for (let i = 0; i <= targetIndex; i++) path.push(closed[i].id);
+
+    let elapsed = 0;
+    path.forEach((id, i) => {
+      const progress = i / Math.max(1, path.length - 1);
+      // 45ms ตอนต้น ค่อย ๆ ยืดเป็น ~230ms ตอนใกล้หยุด
+      elapsed += 45 + Math.pow(progress, 3) * 185;
+      trackedTimeout(() => setSpotlightId(id), elapsed);
+    });
+
+    trackedTimeout(() => {
+      setSpotlightId(null);
+      setBusy(false);
+      openTile(target.id);
+    }, elapsed + 420);
+  }, [busy, tiles, openTile, clearTimeouts, trackedTimeout]);
 
   const openedCount = tiles.filter((t) => t.opened).length;
   const allOpened = tiles.length > 0 && openedCount === tiles.length;
@@ -147,10 +211,20 @@ export default function MysteryBoardApp() {
             </div>
             <BoardGrid
               tiles={tiles}
-              spotlightId={null}
-              busy={false}
+              spotlightId={spotlightId}
+              busy={busy}
               onPick={openTile}
             />
+            <div className={styles.boardFooter}>
+              <button
+                type="button"
+                className={styles.primaryBtn}
+                disabled={busy || allOpened}
+                onClick={randomPick}
+              >
+                🎲 สุ่มป้าย
+              </button>
+            </div>
             {allOpened && (
               <p className={styles.doneBanner} aria-live="polite">
                 🎉 เปิดครบทุกป้ายแล้ว! กด &quot;เริ่มใหม่&quot; เพื่อเล่นอีกรอบ
