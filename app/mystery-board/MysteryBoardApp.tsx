@@ -158,6 +158,7 @@ export default function MysteryBoardApp() {
             )}
             {revealTile && (
               <RevealOverlay
+                key={revealTile.id}
                 tile={revealTile}
                 animate={revealAnimate}
                 onClose={() => setRevealId(null)}

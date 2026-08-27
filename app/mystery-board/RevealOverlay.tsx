@@ -16,7 +16,15 @@ export default function RevealOverlay({ tile, animate, onClose }: Props) {
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
+    return () => {
+      try {
+        previouslyFocused?.focus();
+      } catch {
+        /* องค์ประกอบเดิมอาจหายไปแล้ว — ปล่อยผ่าน */
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -27,7 +35,14 @@ export default function RevealOverlay({ tile, animate, onClose }: Props) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        closeRef.current?.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
