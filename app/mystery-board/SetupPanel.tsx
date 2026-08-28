@@ -5,6 +5,7 @@ import {
   BOARD_SIZES,
   MODE_LABELS,
   THEME_LABELS,
+  effectiveTileCount,
   type BoardSize,
   type Mode,
   type Settings,
@@ -29,10 +30,11 @@ export default function SetupPanel({
   onStart,
 }: Props) {
   const canStart = settings.mode === "score" || questionCount > 0;
-  const effectiveTiles =
-    settings.mode === "question"
-      ? Math.min(settings.size, questionCount)
-      : settings.size;
+  const effectiveTiles = effectiveTileCount(
+    settings.mode,
+    settings.size,
+    questionCount,
+  );
 
   return (
     <div className={styles.setup}>

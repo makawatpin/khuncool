@@ -46,8 +46,11 @@ export default function MysteryBoardApp() {
   const [busy, setBusy] = useState(false);
   const [danger, setDanger] = useState(false);
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
-  const randomBtnRef = useRef<HTMLButtonElement | null>(null);
   const confettiRef = useRef<HTMLElement[]>([]);
+  const confettiLayerRef = useRef<HTMLDivElement | null>(null);
+  // สะท้อนค่า revealId ให้ callback ที่ตั้งเวลาไว้ล่วงหน้าอ่านค่าล่าสุดได้
+  // (เผื่อ overlay เปลี่ยนไปเปิดป้ายอื่นก่อนเอฟเฟกต์ที่ตั้งเวลาไว้จะทำงาน)
+  const revealIdRef = useRef<number | null>(null);
   const play = useBoardSound(settings.soundOn);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -72,6 +75,10 @@ export default function MysteryBoardApp() {
     saveSettings(settings);
   }, [settings, hydrated]);
 
+  useEffect(() => {
+    revealIdRef.current = revealId;
+  }, [revealId]);
+
   const patchSettings = useCallback((patch: Partial<Settings>) => {
     setSettings((s) => ({ ...s, ...patch }));
   }, []);
@@ -93,12 +100,13 @@ export default function MysteryBoardApp() {
   // ไฟวิ่งใช้ timeout หลายสิบตัว ถ้าไม่เคลียร์จะยิงหลัง unmount
   useEffect(() => clearTimeouts, [clearTimeouts]);
 
-  /** ยกเลิกไฟวิ่งที่ค้างอยู่ (ถ้ามี) — เรียกก่อนออกจากกระดานทุกทาง */
+  /** เก็บกวาดคอนเฟตติที่ค้างอยู่ในจอ (ถ้ามี) */
   const clearConfetti = useCallback(() => {
     for (const bit of confettiRef.current) bit.remove();
     confettiRef.current = [];
   }, []);
 
+  /** ยกเลิกไฟวิ่งที่ค้างอยู่ (ถ้ามี) — เรียกก่อนออกจากกระดานทุกทาง */
   const cancelRun = useCallback(() => {
     clearTimeouts();
     setSpotlightId(null);
@@ -111,7 +119,7 @@ export default function MysteryBoardApp() {
   useEffect(() => clearConfetti, [clearConfetti]);
 
   const burst = useCallback(() => {
-    const host = frameRef.current;
+    const host = confettiLayerRef.current;
     if (!host) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     const height = host.clientHeight;
@@ -172,13 +180,17 @@ export default function MysteryBoardApp() {
         play("flip");
         if (tile.prize && isJackpot(tile.prize)) {
           trackedTimeout(() => {
+            if (revealIdRef.current !== id) return;
             play("jackpot");
             burst();
           }, OUTCOME_DELAY_MS);
         } else if (tile.prize?.kind === "bomb") {
           trackedTimeout(() => {
+            if (revealIdRef.current !== id) return;
             play("bomb");
             setDanger(true);
+            // รีเซ็ตค่า danger เสมอไม่ว่าป้ายที่เปิดอยู่ตอนนี้จะเปลี่ยนไปแล้วหรือไม่
+            // (ไม่งั้น danger จะค้าง true ข้ามไปสั่นป้ายถัดไปที่ไม่เกี่ยวกัน)
             trackedTimeout(() => setDanger(false), 620);
           }, OUTCOME_DELAY_MS);
         }
@@ -203,8 +215,8 @@ export default function MysteryBoardApp() {
       return;
     }
 
+    cancelRun();
     setBusy(true);
-    clearTimeouts();
 
     // ไล่ไฟผ่านป้ายที่ยังไม่เปิด 2 รอบครึ่ง แล้วหน่วงลงเรื่อย ๆ
     const path: number[] = [];
@@ -234,10 +246,10 @@ export default function MysteryBoardApp() {
       setSpotlightId(null);
       setBusy(false);
       openTile(target.id);
-      // ย้ายโฟกัสมาที่ปุ่มสุ่ม เพราะ overlay เผยผลกำลังจะเด้งขึ้นมาแทนอยู่แล้ว
-      randomBtnRef.current?.focus();
+      // ไม่ต้องย้ายโฟกัสเอง — RevealOverlay ที่กำลังจะเด้งขึ้นมาโฟกัสปุ่มปิดของ
+      // ตัวเองอยู่แล้ว และคืนโฟกัสให้ถูกที่ตอนปิด
     }, elapsed + 420);
-  }, [busy, tiles, openTile, clearTimeouts, trackedTimeout, play]);
+  }, [busy, tiles, openTile, cancelRun, trackedTimeout, play]);
 
   const openedCount = tiles.filter((t) => t.opened).length;
   const allOpened = tiles.length > 0 && openedCount === tiles.length;
@@ -296,6 +308,9 @@ export default function MysteryBoardApp() {
         </div>
       </div>
       {danger && <div className={styles.dangerFlash} />}
+      {/* เลเยอร์แยกสำหรับคอนเฟตติ กัน .shell:fullscreen ที่ overflow:auto
+          ทำให้ชิ้นคอนเฟตติที่ตกลงมาทำให้บอร์ดเลื่อน/กระตุกตอนเต็มจอ */}
+      <div ref={confettiLayerRef} className={styles.confettiLayer} />
 
       <div className={styles.body}>
         {phase === "setup" ? (
@@ -322,7 +337,6 @@ export default function MysteryBoardApp() {
             />
             <div className={styles.boardFooter}>
               <button
-                ref={randomBtnRef}
                 type="button"
                 className={styles.primaryBtn}
                 disabled={busy || allOpened}

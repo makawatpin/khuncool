@@ -156,16 +156,25 @@ export function buildPrizes(count: number): Prize[] {
 }
 
 /**
- * สร้างป้ายของกระดานหนึ่งรอบ
+ * จำนวนป้ายจริงที่จะได้จาก buildTiles สำหรับ settings ชุดหนึ่ง
  *
  * โหมดคำถาม: ถ้าคำถามน้อยกว่าขนาดที่เลือก จำนวนป้ายจะลดลงเท่าจำนวนคำถาม
- * (ป้ายเปล่าไม่มีประโยชน์) ผู้เรียกต้องอ่านจำนวนป้ายจริงจาก tiles.length
- * ไม่ใช่ settings.size
+ * (ป้ายเปล่าไม่มีประโยชน์) — จุดเดียวที่กำหนดกติกานี้ ผู้เรียกทุกที่
+ * (ทั้ง buildTiles และ UI ที่ต้องโชว์ตัวเลขก่อนเริ่มเกม) ต้องเรียกฟังก์ชันนี้
  */
+export function effectiveTileCount(
+  mode: Mode,
+  size: BoardSize,
+  questionCount: number,
+): number {
+  return mode === "question" ? Math.min(size, questionCount) : size;
+}
+
+/** สร้างป้ายของกระดานหนึ่งรอบ ใช้กติกาจำนวนป้ายเดียวกับ effectiveTileCount */
 export function buildTiles(settings: Settings): Tile[] {
   if (settings.mode === "question") {
     return shuffle(settings.questions)
-      .slice(0, settings.size)
+      .slice(0, effectiveTileCount(settings.mode, settings.size, settings.questions.length))
       .map((question, i) => ({ id: i + 1, opened: false, question }));
   }
   return buildPrizes(settings.size).map((prize, i) => ({

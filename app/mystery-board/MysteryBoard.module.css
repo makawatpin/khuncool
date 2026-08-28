@@ -22,6 +22,16 @@
   overscroll-behavior: contain;
 }
 
+/* โฮสต์ชิ้นคอนเฟตติแยกจาก .shell เอง กันไม่ให้ตอนเต็มจอ (ที่ .shell:fullscreen
+   บังคับ overflow:auto) ชิ้นที่ตกลงมาไปขยาย scroll region ของบอร์ด */
+.confettiLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 30;
+  pointer-events: none;
+}
+
 .bar {
   display: flex;
   align-items: center;
