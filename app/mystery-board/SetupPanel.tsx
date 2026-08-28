@@ -77,7 +77,7 @@ export default function SetupPanel({
         </div>
       </div>
 
-      <div className={styles.setupGroup}>
+      <div className={`${styles.setupGroup} ${styles.setupGroupWide}`}>
         <span className={styles.setupLabel}>ธีม</span>
         <div className={styles.chipRow}>
           {(Object.keys(THEME_LABELS) as Theme[]).map((theme) => (
@@ -95,7 +95,7 @@ export default function SetupPanel({
       </div>
 
       {settings.mode === "question" && (
-        <div className={styles.setupGroup}>
+        <div className={`${styles.setupGroup} ${styles.setupGroupWide}`}>
           <label className={styles.setupLabel} htmlFor="mystery-questions">
             คำถามของคุณครู
           </label>

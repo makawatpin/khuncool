@@ -11,8 +11,15 @@ type Props = {
 };
 
 export default function BoardGrid({ tiles, spotlightId, busy, onPick }: Props) {
+  const density =
+    tiles.length <= 12 ? "small" : tiles.length <= 20 ? "medium" : "large";
+
   return (
-    <div className={styles.grid}>
+    <div
+      className={styles.grid}
+      data-density={density}
+      data-count={tiles.length}
+    >
       {tiles.map((tile, index) => {
         const grand = tile.opened && tile.prize ? isSuper(tile.prize) : false;
         return (

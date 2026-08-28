@@ -364,17 +364,19 @@ export default function MysteryBoardApp() {
       ref={frameRef}
       className={`${styles.shell} ${fullscreenClassName}`}
       data-theme={settings.theme}
+      data-phase={phase}
     >
       <div className={styles.bar}>
         <span className={styles.barTitle}>🎁 กระดานป้ายปริศนา</span>
-        <div className={styles.chipRow}>
+        <div className={`${styles.chipRow} ${styles.barActions}`}>
           {phase === "setup" && tiles.length > 0 && (
             <button
               type="button"
               className={styles.iconBtn}
+              aria-label="กลับกระดาน"
               onClick={() => setPhase("board")}
             >
-              ↩ กลับกระดาน
+              ↩ <span className={styles.iconBtnLabel}>กลับกระดาน</span>
             </button>
           )}
           {phase === "board" && (
@@ -382,19 +384,21 @@ export default function MysteryBoardApp() {
               <button
                 type="button"
                 className={styles.iconBtn}
+                aria-label="ตั้งค่า"
                 onClick={() => {
                   cancelRun();
                   setPhase("setup");
                 }}
               >
-                ⚙️ ตั้งค่า
+                ⚙️ <span className={styles.iconBtnLabel}>ตั้งค่า</span>
               </button>
               <button
                 type="button"
                 className={styles.iconBtn}
+                aria-label="เริ่มใหม่"
                 onClick={startGame}
               >
-                🔄 เริ่มใหม่
+                🔄 <span className={styles.iconBtnLabel}>เริ่มใหม่</span>
               </button>
             </>
           )}
@@ -406,8 +410,16 @@ export default function MysteryBoardApp() {
           >
             {settings.soundOn ? "🔊" : "🔇"}
           </button>
-          <button type="button" className={styles.iconBtn} onClick={toggle}>
-            ⛶ {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+            onClick={toggle}
+          >
+            ⛶{" "}
+            <span className={styles.iconBtnLabel}>
+              {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+            </span>
           </button>
         </div>
       </div>
@@ -431,7 +443,7 @@ export default function MysteryBoardApp() {
             onStart={startGame}
           />
         ) : (
-          <>
+          <div className={styles.boardScreen}>
             <div className={styles.boardTop}>
               <span className={styles.counter} aria-live="polite">
                 เปิดแล้ว {openedCount}/{tiles.length}
@@ -467,7 +479,7 @@ export default function MysteryBoardApp() {
                 onClose={() => setRevealId(null)}
               />
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

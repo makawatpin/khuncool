@@ -1,6 +1,7 @@
 .shell {
   position: relative;
   overflow: hidden;
+  container: mysteryboard / inline-size;
   border: 1px solid var(--color-border, #e3e6ee);
   border-radius: 20px;
   background: #0b1020;
@@ -20,6 +21,13 @@
   border-radius: 0 !important;
   overflow: auto !important;
   overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell[data-phase="board"]:fullscreen,
+.shell[data-phase="board"].fsFallback {
+  overflow: hidden !important;
 }
 
 /* โฮสต์ชิ้นคอนเฟตติแยกจาก .shell เอง กันไม่ให้ตอนเต็มจอ (ที่ .shell:fullscreen
@@ -45,6 +53,7 @@
 }
 
 .bar {
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,6 +67,16 @@
 .barTitle {
   font-size: 14px;
   font-weight: 700;
+  white-space: nowrap;
+}
+
+.barActions {
+  flex-wrap: nowrap;
+  margin-left: auto;
+}
+
+.iconBtnLabel {
+  display: inline;
 }
 
 .iconBtn {
@@ -91,10 +110,30 @@
   padding: 18px 14px 26px;
 }
 
+.shell:fullscreen .body,
+.shell.fsFallback .body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.shell[data-phase="setup"]:fullscreen .body,
+.shell[data-phase="setup"].fsFallback .body {
+  justify-content: safe center;
+}
+
+.shell:fullscreen .textarea,
+.shell.fsFallback .textarea {
+  height: clamp(112px, 18cqi, 170px);
+  resize: none;
+}
+
 .setup {
   display: grid;
   gap: 18px;
-  max-width: 640px;
+  width: 100%;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -170,15 +209,12 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
-@media (min-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 14px;
-  }
+.grid[data-density="large"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 /* ป้ายทำตัวเป็นก้อนพลาสติกหนา ๆ: ขอบล่างทึบเป็น "สันป้าย" (box-shadow ก้อนแรก)
@@ -191,7 +227,8 @@
   place-items: center;
   gap: 4px;
   aspect-ratio: 1 / 1;
-  min-height: 84px;
+  min-width: 0;
+  min-height: 68px;
   padding: 6px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 22px;
@@ -255,9 +292,17 @@
 }
 
 .tileNumber {
-  font-size: clamp(26px, 6vw, 44px);
+  font-size: clamp(28px, 5cqi, 76px);
   font-weight: 900;
   line-height: 1;
+}
+
+.grid[data-density="medium"] .tileNumber {
+  font-size: clamp(26px, 4cqi, 64px);
+}
+
+.grid[data-density="large"] .tileNumber {
+  font-size: clamp(23px, 3cqi, 54px);
 }
 
 /* เลขป้ายหลังเปิดแล้ว — หดไปมุมบนซ้าย เหลือไว้อ้างอิงเวลาคุยกันในห้อง */
@@ -294,12 +339,12 @@
 }
 
 .tileEmoji {
-  font-size: clamp(20px, 4.4vw, 30px);
+  font-size: clamp(20px, 2.8cqi, 42px);
   line-height: 1;
 }
 
 .tileScore {
-  font-size: clamp(19px, 4.2vw, 30px);
+  font-size: clamp(19px, 3.1cqi, 48px);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -364,6 +409,31 @@
   margin-bottom: 14px;
 }
 
+.boardScreen {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.shell:fullscreen .boardScreen,
+.shell.fsFallback .boardScreen {
+  flex: 1 1 auto;
+}
+
+.shell:fullscreen .grid,
+.shell.fsFallback .grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.shell:fullscreen .tile,
+.shell.fsFallback .tile {
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
 .counter {
   font-size: 14px;
   font-weight: 700;
@@ -392,10 +462,11 @@
   inset: 0;
   z-index: 40;
   display: grid;
-  place-content: center;
-  gap: 26px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
   justify-items: center;
-  padding: 20px;
+  padding: clamp(12px, 2.5vmin, 24px);
   background: rgba(6, 9, 22, 0.72);
   backdrop-filter: blur(10px);
   /* มุมมอง 3D ให้การ์ดที่พลิกดูมีความลึกจริง ไม่แบนเหมือนสติกเกอร์ */
@@ -413,8 +484,10 @@
 
 .card {
   position: relative;
-  width: min(78vw, 460px);
-  min-height: min(52vh, 320px);
+  width: min(90cqi, 620px);
+  height: min(clamp(300px, 78cqi, 500px), calc(100dvh - 124px));
+  min-height: 0;
+  align-self: center;
   transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
   animation: cardRise 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
@@ -438,10 +511,10 @@
   inset: 0;
   display: grid;
   place-content: center;
-  gap: 14px;
+  gap: clamp(8px, 1.6cqi, 18px);
   justify-items: center;
   overflow: hidden;
-  padding: 26px;
+  padding: clamp(16px, 3cqi, 34px);
   border: 1px solid rgba(255, 255, 255, 0.26);
   border-radius: 34px;
   background: linear-gradient(158deg, #3b419a 0%, #2a2f6d 46%, #191d45 100%);
@@ -565,19 +638,19 @@
 }
 
 .cardNumber {
-  font-size: clamp(64px, 16vw, 128px);
+  font-size: clamp(64px, 11cqi, 168px);
   font-weight: 900;
   line-height: 1;
 }
 
 .cardEmoji {
-  font-size: clamp(40px, 9vw, 66px);
+  font-size: clamp(42px, 6cqi, 92px);
   line-height: 1;
 }
 
 /* ---- ช่วงชาร์จพลังก่อนเฉลยคะแนน ---- */
 .chargeMark {
-  font-size: clamp(76px, 18vw, 150px);
+  font-size: clamp(78px, 12cqi, 180px);
   font-weight: 900;
   line-height: 1;
   animation: chargeMark 0.5s ease-in-out infinite alternate;
@@ -666,7 +739,7 @@
 /* ตัวเลขคะแนนบนการ์ด — ซูมจากใหญ่เบลอเข้ามาหยุดพอดีตรงกลาง
    ผูกไว้กับ .cardShowBack ให้เริ่มพร้อมวินาทีที่หน้าหลังโผล่ ไม่ต้องเดาเวลา */
 .cardScore {
-  font-size: clamp(56px, 13vw, 112px);
+  font-size: clamp(58px, 9cqi, 144px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -696,7 +769,7 @@
 }
 
 .cardLabel {
-  font-size: clamp(15px, 2.6vw, 21px);
+  font-size: clamp(16px, 2cqi, 28px);
   font-weight: 700;
   line-height: 1.4;
   opacity: 0.82;
@@ -704,9 +777,10 @@
 
 .cardQuestion {
   margin: 0;
-  font-size: clamp(20px, 3.6vw, 34px);
+  max-width: 26ch;
+  font-size: clamp(22px, 3.2cqi, 44px);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .shakeNow {
@@ -731,6 +805,404 @@
 
 @keyframes dangerFlash {
   to { opacity: 0; }
+}
+
+/* ---- Responsive geometry -------------------------------------------------
+   ตัวเกมตอบสนองต่อความกว้างของ .shell ไม่ใช่ความกว้างหน้าเว็บ เพื่อให้ขนาด
+   เดียวกันใช้ได้ทั้งในคอลัมน์ของหน้าและเมื่อ .shell ขยายเต็มจอ */
+@container mysteryboard (max-width: 519px) {
+  .bar {
+    gap: 7px;
+    padding: 8px 10px;
+  }
+
+  .shell[data-phase="board"] .barTitle,
+  .shell[data-phase="board"] .iconBtnLabel {
+    display: none;
+  }
+
+  .shell[data-phase="board"] .iconBtn {
+    width: 40px;
+    padding: 0;
+  }
+
+  .body {
+    padding: 14px 12px 20px;
+  }
+
+  .setup {
+    gap: 14px;
+  }
+
+  .setupGroup {
+    gap: 7px;
+  }
+
+  .chipRow {
+    gap: 7px;
+  }
+
+  .chip {
+    min-height: 42px;
+    padding: 0 14px;
+    font-size: 13.5px;
+  }
+
+  .grid {
+    gap: 9px;
+  }
+
+  .tile {
+    --tile-lift: 7px;
+    border-radius: 18px;
+  }
+
+  .tileBadge {
+    top: 6px;
+    left: 7px;
+    font-size: 11px;
+  }
+}
+
+@container mysteryboard (min-width: 520px) {
+  .grid[data-density="small"],
+  .grid[data-density="medium"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .grid[data-density="large"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@container mysteryboard (min-width: 720px) {
+  .setup {
+    max-width: 860px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 20px;
+  }
+
+  .setupGroupWide,
+  .setup > .primaryBtn {
+    grid-column: 1 / -1;
+  }
+
+  .setup > .primaryBtn {
+    justify-self: stretch;
+  }
+
+  .body {
+    padding: 22px 20px 30px;
+  }
+
+  .grid {
+    gap: 14px;
+  }
+}
+
+@container mysteryboard (min-width: 680px) {
+  .grid[data-density="small"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .grid[data-density="medium"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .grid[data-density="large"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@container mysteryboard (min-width: 900px) {
+  .body {
+    padding: 24px clamp(22px, 2.5cqi, 42px) 34px;
+  }
+
+  .grid {
+    gap: clamp(14px, 1.25cqi, 22px);
+  }
+
+  .grid[data-density="medium"] {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .grid[data-density="large"] {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+
+@container mysteryboard (min-width: 1200px) {
+  .shell:fullscreen .bar,
+  .shell.fsFallback .bar {
+    gap: 14px;
+    padding: 12px 20px;
+  }
+
+  .shell:fullscreen .barTitle,
+  .shell.fsFallback .barTitle {
+    font-size: 18px;
+  }
+
+  .shell:fullscreen .iconBtn,
+  .shell.fsFallback .iconBtn {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 14px;
+    font-size: 16px;
+  }
+
+  .shell:fullscreen .setup,
+  .shell.fsFallback .setup {
+    max-width: 1120px;
+    column-gap: 34px;
+    row-gap: 28px;
+  }
+
+  .shell:fullscreen .setupLabel,
+  .shell.fsFallback .setupLabel {
+    font-size: 18px;
+  }
+
+  .shell:fullscreen .setupHint,
+  .shell.fsFallback .setupHint {
+    font-size: 15px;
+  }
+
+  .shell:fullscreen .chip,
+  .shell.fsFallback .chip {
+    min-height: 54px;
+    padding: 0 22px;
+    font-size: 17px;
+  }
+
+  .shell:fullscreen .setup > .primaryBtn,
+  .shell.fsFallback .setup > .primaryBtn {
+    min-height: 64px;
+    font-size: 21px;
+  }
+
+  .shell:fullscreen .counter,
+  .shell.fsFallback .counter {
+    font-size: 18px;
+  }
+}
+
+/* เต็มจอแนวตั้งใช้งบความสูงกับหลายแถวและคงป้ายให้เกือบจัตุรัส */
+@media (orientation: portrait) {
+  .shell:fullscreen .grid[data-density="small"],
+  .shell.fsFallback .grid[data-density="small"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .grid[data-density="medium"],
+  .shell.fsFallback .grid[data-density="medium"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .grid[data-density="large"],
+  .shell.fsFallback .grid[data-density="large"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* เต็มจอแนวนอนทั่วไป: ใช้แถวเพิ่มเพื่อให้ป้ายกว้างและอ่านข้อความง่าย */
+@media (orientation: landscape) and (min-height: 481px) {
+  .shell:fullscreen .grid[data-density="small"],
+  .shell.fsFallback .grid[data-density="small"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .grid[data-density="medium"],
+  .shell.fsFallback .grid[data-density="medium"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .grid[data-density="large"],
+  .shell.fsFallback .grid[data-density="large"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* มือถือแนวนอน/หน้าต่างเตี้ย: ความสูงเป็นตัวบีบ จึงลด chrome และใช้แถวยาว */
+@media (orientation: landscape) and (max-height: 480px) {
+  .shell[data-phase="board"] .body {
+    padding: 10px 12px 14px;
+  }
+
+  .shell[data-phase="board"] .boardTop {
+    margin-bottom: 7px;
+  }
+
+  .shell[data-phase="board"] .boardFooter {
+    padding-top: 9px;
+  }
+
+  .shell[data-phase="board"] .grid {
+    gap: 8px;
+  }
+
+  .grid[data-density="small"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .grid[data-density="medium"] {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .grid[data-density="large"] {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .bar,
+  .shell.fsFallback .bar {
+    min-height: 50px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    padding: 5px 10px;
+  }
+
+  .shell:fullscreen[data-phase="board"] .barTitle,
+  .shell.fsFallback[data-phase="board"] .barTitle,
+  .shell:fullscreen[data-phase="board"] .iconBtnLabel,
+  .shell.fsFallback[data-phase="board"] .iconBtnLabel {
+    display: none;
+  }
+
+  .shell:fullscreen[data-phase="board"] .iconBtn,
+  .shell.fsFallback[data-phase="board"] .iconBtn {
+    width: 40px;
+    padding: 0;
+  }
+
+  .shell:fullscreen .body,
+  .shell.fsFallback .body {
+    padding: 7px 10px 9px;
+  }
+
+  .shell:fullscreen .boardTop,
+  .shell.fsFallback .boardTop {
+    margin-bottom: 5px;
+  }
+
+  .shell:fullscreen .boardFooter,
+  .shell.fsFallback .boardFooter {
+    padding-top: 7px;
+  }
+
+  .shell:fullscreen .boardFooter .primaryBtn,
+  .shell.fsFallback .boardFooter .primaryBtn,
+  .overlay .primaryBtn {
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 13px;
+    font-size: 15px;
+  }
+
+  .shell:fullscreen .grid,
+  .shell.fsFallback .grid {
+    gap: 7px;
+  }
+
+  .shell:fullscreen .grid[data-density="small"],
+  .shell.fsFallback .grid[data-density="small"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .grid[data-density="medium"],
+  .shell.fsFallback .grid[data-density="medium"],
+  .shell:fullscreen .grid[data-density="large"],
+  .shell.fsFallback .grid[data-density="large"] {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+
+  .shell:fullscreen .tile,
+  .shell.fsFallback .tile {
+    --tile-lift: 5px;
+    padding: 3px;
+    border-radius: 13px;
+  }
+
+  .shell:fullscreen .tileBadge,
+  .shell.fsFallback .tileBadge {
+    top: 4px;
+    left: 5px;
+    font-size: 11px;
+  }
+
+  .shell:fullscreen .setup,
+  .shell.fsFallback .setup {
+    gap: 8px 18px;
+  }
+
+  .shell:fullscreen .setupGroup,
+  .shell.fsFallback .setupGroup {
+    gap: 4px;
+  }
+
+  .shell:fullscreen .setupHint,
+  .shell.fsFallback .setupHint {
+    display: none;
+  }
+
+  .shell:fullscreen .chip,
+  .shell.fsFallback .chip {
+    min-height: 38px;
+    padding: 0 13px;
+    font-size: 13px;
+  }
+
+  .shell:fullscreen .textarea,
+  .shell.fsFallback .textarea {
+    max-height: 64px;
+    padding: 8px 11px;
+    line-height: 1.45;
+  }
+
+  .shell:fullscreen .setup > .primaryBtn,
+  .shell.fsFallback .setup > .primaryBtn {
+    min-height: 44px;
+    font-size: 15px;
+  }
+
+  .overlay {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .card {
+    width: min(72cqi, 680px);
+    height: min(54cqi, calc(100dvh - 82px));
+  }
+
+  .cardFace {
+    gap: 6px;
+    padding: 13px 20px;
+    border-radius: 24px;
+  }
+}
+
+/* ชุดคำถามสั้นมากไม่ควรทำให้ป้าย 1–2 ใบยืดเป็นเสาสูงเต็มจอ */
+.grid[data-count="1"] {
+  width: min(100%, 360px);
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-self: center;
+}
+
+.grid[data-count="2"] {
+  width: min(100%, 740px);
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-self: center;
+}
+
+.shell:fullscreen .grid[data-count="1"] .tile,
+.shell.fsFallback .grid[data-count="1"] .tile,
+.shell:fullscreen .grid[data-count="2"] .tile,
+.shell.fsFallback .grid[data-count="2"] .tile {
+  max-height: 360px;
+  align-self: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
