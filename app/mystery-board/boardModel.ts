@@ -1,5 +1,5 @@
 export type Mode = "score" | "question";
-export type Theme = "space" | "treasure" | "neon";
+export type Theme = "daylight" | "space" | "treasure" | "neon";
 export type PrizeKind = "points" | "double" | "steal" | "bomb" | "lucky";
 
 export type Prize = {
@@ -32,12 +32,13 @@ export const LS_KEY = "khuncool.mysteryboard";
 export const DEFAULT_SETTINGS: Settings = {
   mode: "score",
   size: 20,
-  theme: "space",
+  theme: "daylight",
   soundOn: true,
   questions: [],
 };
 
 export const THEME_LABELS: Record<Theme, string> = {
+  daylight: "ฟ้าใส",
   space: "อวกาศ",
   treasure: "สมบัติโจรสลัด",
   neon: "นีออน",
@@ -70,9 +71,9 @@ export function loadSettings(): Settings {
         ? (parsed.size as BoardSize)
         : DEFAULT_SETTINGS.size,
       theme:
-        parsed.theme === "treasure" || parsed.theme === "neon"
+        parsed.theme && parsed.theme in THEME_LABELS
           ? parsed.theme
-          : "space",
+          : DEFAULT_SETTINGS.theme,
       soundOn:
         typeof parsed.soundOn === "boolean"
           ? parsed.soundOn
@@ -224,6 +225,17 @@ export function buildTiles(settings: Settings): Tile[] {
 
 /** ข้อความย่อบนป้ายที่เปิดแล้ว */
 export function tileSummary(tile: Tile): string {
-  if (tile.prize) return `${tile.prize.emoji} ${tile.prize.value > 0 ? "+" : ""}${tile.prize.value}`;
+  if (tile.prize) return `${tile.prize.emoji} ${tileScore(tile.prize)}`;
   return "✓";
+}
+
+/**
+ * ตัวเลขที่ขึ้นเต็มหน้าป้ายหลังเปิดแล้ว — สั้นที่สุดเท่าที่อ่านรู้เรื่องจากหลังห้อง
+ * การ์ดพิเศษไม่มีแต้มตรง ๆ จึงใช้สัญลักษณ์แทน (×2, +1 ใบ)
+ */
+export function tileScore(prize: Prize): string {
+  if (prize.kind === "double") return "×2";
+  if (prize.kind === "lucky") return "+1 ใบ";
+  const n = Math.abs(prize.value).toLocaleString("en-US");
+  return `${prize.value < 0 ? "−" : "+"}${n}`;
 }
