@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./MysteryBoard.module.css";
-import { isJackpot, type Tile } from "./boardModel";
+import { isJackpot, isSuper, type Tile } from "./boardModel";
 
 /** ต้องตรงกับ .card { transition: transform 0.6s ... } ใน MysteryBoard.module.css */
 export const FLIP_DELAY_MS = 260;
@@ -60,6 +60,7 @@ export default function RevealOverlay({
   }, [onClose]);
 
   const prize = tile.prize;
+  const grand = prize ? isSuper(prize) : false;
   const celebrate = prize ? isJackpot(prize) : false;
   const dangerous = prize?.kind === "bomb";
 
@@ -73,14 +74,17 @@ export default function RevealOverlay({
     >
       <div
         className={`${styles.card} ${flipped ? styles.cardFlipped : ""} ${
-          celebrate ? styles.cardJackpot : ""
-        } ${dangerous ? styles.cardBomb : ""}`}
+          grand ? styles.cardSuper : ""
+        } ${celebrate ? styles.cardJackpot : ""} ${
+          dangerous ? styles.cardBomb : ""
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.cardFace}>
           <span className={styles.cardNumber}>{tile.id}</span>
         </div>
         <div className={`${styles.cardFace} ${styles.cardBack}`}>
+          {grand && <span className={styles.cardRays} aria-hidden="true" />}
           {prize ? (
             <>
               <span className={styles.cardEmoji}>{prize.emoji}</span>

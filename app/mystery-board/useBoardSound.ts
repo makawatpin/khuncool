@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-export type SoundKind = "tick" | "flip" | "jackpot" | "bomb";
+export type SoundKind = "tick" | "flip" | "jackpot" | "bomb" | "super";
 
 /**
  * เสียงประกอบกระดาน สร้าง AudioContext ตอนผู้ใช้กดครั้งแรกเท่านั้น
@@ -86,6 +86,18 @@ export function useBoardSound(enabled: boolean) {
         case "bomb":
           tone(ctx, 180, t, 0.3, "sawtooth", 0.18);
           tone(ctx, 90, t + 0.05, 0.45, "sawtooth", 0.16);
+          break;
+        // ป้าย 67 — แฟนแฟร์ยาวกว่าแจ็กพอต ไล่สองรอบแล้วปิดด้วยคอร์ดค้าง
+        case "super":
+          [523, 659, 784, 1047, 1319].forEach((f, i) =>
+            tone(ctx, f, t + i * 0.08, 0.26, "triangle", 0.13),
+          );
+          [784, 1047, 1319, 1568].forEach((f, i) =>
+            tone(ctx, f, t + 0.44 + i * 0.07, 0.3, "square", 0.08),
+          );
+          [1047, 1319, 1568].forEach((f) =>
+            tone(ctx, f, t + 0.78, 1.1, "triangle", 0.11),
+          );
           break;
       }
     },

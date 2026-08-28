@@ -14,6 +14,7 @@ import {
   DEFAULT_SETTINGS,
   buildTiles,
   isJackpot,
+  isSuper,
   loadSettings,
   parseQuestions,
   saveSettings,
@@ -28,9 +29,13 @@ type Phase = "setup" | "board";
 const MAX_STEPS = 28;
 
 const CONFETTI_COLORS = ["#fbbf24", "#f97316", "#5c5ee6", "#22b8a0", "#ef4444"];
+/** ป้าย 67 ใช้ทองล้วน + ขาว ให้ต่างจากคอนเฟตตีหลากสีของแจ็กพอตธรรมดา */
+const SUPER_CONFETTI_COLORS = ["#fde68a", "#fbbf24", "#f59e0b", "#fff7e0", "#ffffff"];
 
 // เอฟเฟกต์ผลลัพธ์ (เสียง/คอนเฟตติ/สั่นจอ) ต้องรอให้การ์ดพลิกจนเห็นหน้าหลังก่อน
 const OUTCOME_DELAY_MS = FLIP_DELAY_MS + FLIP_DURATION_MS;
+/** แสงทองของป้าย 67 ค้างนานกว่าแฟลชระเบิด ให้ทันเห็นกันทั้งห้อง */
+const GRAND_GLOW_MS = 2200;
 
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
@@ -45,6 +50,7 @@ export default function MysteryBoardApp() {
   const [spotlightId, setSpotlightId] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [danger, setDanger] = useState(false);
+  const [grandGlow, setGrandGlow] = useState(false);
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const confettiRef = useRef<HTMLElement[]>([]);
   const confettiLayerRef = useRef<HTMLDivElement | null>(null);
@@ -112,30 +118,33 @@ export default function MysteryBoardApp() {
     setSpotlightId(null);
     setBusy(false);
     setDanger(false);
+    setGrandGlow(false);
     clearConfetti();
   }, [clearTimeouts, clearConfetti]);
 
   // กันคอนเฟตติค้างจอถ้าคอมโพเนนต์ unmount กลางอากาศ
   useEffect(() => clearConfetti, [clearConfetti]);
 
-  const burst = useCallback(() => {
+  const burst = useCallback((grand = false) => {
     const host = confettiLayerRef.current;
     if (!host) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     const height = host.clientHeight;
-    for (let i = 0; i < 40; i++) {
+    const colors = grand ? SUPER_CONFETTI_COLORS : CONFETTI_COLORS;
+    const pieces = grand ? 110 : 40;
+    for (let i = 0; i < pieces; i++) {
       const bit = document.createElement("div");
-      const size = 6 + Math.random() * 7;
+      const size = (grand ? 8 : 6) + Math.random() * (grand ? 10 : 7);
       bit.style.cssText = `position:absolute;top:-16px;left:${(
         Math.random() * 100
       ).toFixed(1)}%;width:${size}px;height:${(size * 0.5).toFixed(
         1,
       )}px;background:${
-        CONFETTI_COLORS[i % CONFETTI_COLORS.length]
+        colors[i % colors.length]
       };border-radius:2px;z-index:60;pointer-events:none`;
       host.appendChild(bit);
       confettiRef.current.push(bit);
-      const dur = 1700 + Math.random() * 1200;
+      const dur = (grand ? 2200 : 1700) + Math.random() * 1200;
       bit.animate(
         [
           { transform: "translateY(0) rotate(0)", opacity: 1 },
@@ -178,7 +187,16 @@ export default function MysteryBoardApp() {
           prev.map((t) => (t.id === id ? { ...t, opened: true } : t)),
         );
         play("flip");
-        if (tile.prize && isJackpot(tile.prize)) {
+        if (tile.prize && isSuper(tile.prize)) {
+          trackedTimeout(() => {
+            if (revealIdRef.current !== id) return;
+            play("super");
+            burst(true);
+            setGrandGlow(true);
+            // เช่นเดียวกับ danger: ต้องดับเสมอ ไม่งั้นแสงจะค้างข้ามไปป้ายถัดไป
+            trackedTimeout(() => setGrandGlow(false), GRAND_GLOW_MS);
+          }, OUTCOME_DELAY_MS);
+        } else if (tile.prize && isJackpot(tile.prize)) {
           trackedTimeout(() => {
             if (revealIdRef.current !== id) return;
             play("jackpot");
@@ -308,6 +326,7 @@ export default function MysteryBoardApp() {
         </div>
       </div>
       {danger && <div className={styles.dangerFlash} />}
+      {grandGlow && <div className={styles.grandGlow} />}
       {/* เลเยอร์แยกสำหรับคอนเฟตติ กัน .shell:fullscreen ที่ overflow:auto
           ทำให้ชิ้นคอนเฟตติที่ตกลงมาทำให้บอร์ดเลื่อน/กระตุกตอนเต็มจอ */}
       <div ref={confettiLayerRef} className={styles.confettiLayer} />

@@ -104,44 +104,74 @@ export function shuffle<T>(items: readonly T[]): T[] {
   return out;
 }
 
-const JACKPOT: Prize = {
+/**
+ * ป้ายพิเศษสุดของกระดาน มีใบเดียวเสมอไม่ว่ากระดานจะกี่ป้าย
+ * ค่า 67 ไม่ได้อยู่ในบันไดคะแนนปกติ จึงใช้ตัวเลขนี้เป็นตัวชี้ขาดได้เลย
+ */
+export const SUPER_VALUE = 67;
+
+const SUPER: Prize = {
   kind: "points",
-  value: 50,
-  label: "แจ็กพอต! ได้ 50 คะแนน",
-  emoji: "💎",
+  value: SUPER_VALUE,
+  label: "หกเจ็ด! ได้ 67 คะแนน",
+  emoji: "👑",
 };
 
 const BOMB: Prize = {
   kind: "bomb",
-  value: -15,
-  label: "ระเบิด! เสีย 15 คะแนน",
+  value: -50,
+  label: "ระเบิด! เสีย 50 คะแนน",
   emoji: "💣",
 };
 
-/** น้ำหนักเป็นเปอร์เซ็นต์โดยประมาณ รวมกันได้ 100 */
+/** บันไดคะแนนหลักของกระดาน ยิ่งแต้มสูงยิ่งเจอยาก */
 const PRIZE_WEIGHTS: { weight: number; prize: Prize }[] = [
-  { weight: 20, prize: { kind: "points", value: 5, label: "ได้ 5 คะแนน", emoji: "🎉" } },
-  { weight: 22, prize: { kind: "points", value: 10, label: "ได้ 10 คะแนน", emoji: "🎉" } },
-  { weight: 13, prize: { kind: "points", value: 20, label: "ได้ 20 คะแนน", emoji: "🎊" } },
-  { weight: 8, prize: JACKPOT },
-  { weight: 10, prize: { kind: "double", value: 2, label: "คะแนนรอบนี้ ×2", emoji: "✨" } },
-  { weight: 10, prize: { kind: "steal", value: 10, label: "ขโมย 10 คะแนนจากทีมอื่น", emoji: "🦝" } },
-  { weight: 12, prize: BOMB },
-  { weight: 5, prize: { kind: "lucky", value: 1, label: "โชคดี! เลือกเปิดป้ายเพิ่มอีก 1 ใบ", emoji: "🍀" } },
+  { weight: 22, prize: { kind: "points", value: 5, label: "ได้ 5 คะแนน", emoji: "🎉" } },
+  { weight: 20, prize: { kind: "points", value: 10, label: "ได้ 10 คะแนน", emoji: "🎉" } },
+  { weight: 16, prize: { kind: "points", value: 20, label: "ได้ 20 คะแนน", emoji: "🎊" } },
+  { weight: 12, prize: { kind: "points", value: 50, label: "ได้ 50 คะแนน", emoji: "🎊" } },
+  { weight: 8, prize: { kind: "points", value: 100, label: "ได้ 100 คะแนน", emoji: "🌟" } },
+  { weight: 4, prize: { kind: "points", value: 500, label: "ได้ 500 คะแนน", emoji: "💎" } },
+  { weight: 2, prize: { kind: "points", value: 1000, label: "แจ็กพอต! ได้ 1,000 คะแนน", emoji: "💎" } },
+  { weight: 7, prize: BOMB },
+  { weight: 4, prize: { kind: "double", value: 2, label: "คะแนนรอบนี้ ×2", emoji: "✨" } },
+  { weight: 3, prize: { kind: "steal", value: 100, label: "ขโมย 100 คะแนนจากทีมอื่น", emoji: "🦝" } },
+  { weight: 2, prize: { kind: "lucky", value: 1, label: "โชคดี! เลือกเปิดป้ายเพิ่มอีก 1 ใบ", emoji: "🍀" } },
 ];
 
-export function isJackpot(prize: Prize): boolean {
-  return prize.kind === "points" && prize.value >= 50;
+/** ป้าย 67 — ได้เอฟเฟกต์ใหญ่ที่สุด เหนือกว่าแจ็กพอต */
+export function isSuper(prize: Prize): boolean {
+  return prize.kind === "points" && prize.value === SUPER_VALUE;
 }
 
-/** แทนที่ป้ายแต้มธรรมดา 1 ใบด้วย target ถ้ากระดานยังไม่มีของแบบนั้นเลย */
+/** แต้มก้อนใหญ่ (500 ขึ้นไป) — ได้คอนเฟตตีแต่ไม่ถึงขั้น 67 */
+export function isJackpot(prize: Prize): boolean {
+  return prize.kind === "points" && prize.value >= 500;
+}
+
+/** ดัชนีของป้ายแต้มถูกที่สุดในมือ ใช้เป็นที่ว่างสำหรับยัดป้ายที่ต้องการันตี */
+function cheapestPointsIndex(prizes: Prize[]): number {
+  let best = -1;
+  for (let i = 0; i < prizes.length; i++) {
+    const p = prizes[i];
+    if (p.kind !== "points" || isSuper(p)) continue;
+    if (best < 0 || p.value < prizes[best].value) best = i;
+  }
+  return best;
+}
+
+/** แทนที่ป้ายแต้มถูกสุด 1 ใบด้วย target ถ้ากระดานยังไม่มีของแบบนั้นเลย */
 function ensureOne(prizes: Prize[], target: Prize, has: (p: Prize) => boolean) {
   if (prizes.some(has)) return;
-  const i = prizes.findIndex((p) => p.kind === "points" && p.value < 50);
+  const i = cheapestPointsIndex(prizes);
   prizes[i >= 0 ? i : 0] = target;
 }
 
-/** คืนรางวัลจำนวน count ใบ สับแล้ว การันตีว่ามีแจ็กพอตและระเบิดอย่างละใบ */
+/**
+ * คืนรางวัลจำนวน count ใบ สับแล้ว
+ *
+ * การันตีทุกกระดาน: ป้าย 67 หนึ่งใบพอดี และระเบิดอย่างน้อยหนึ่งใบ
+ */
 export function buildPrizes(count: number): Prize[] {
   const deck: Prize[] = [];
   for (const { weight, prize } of PRIZE_WEIGHTS) {
@@ -150,8 +180,16 @@ export function buildPrizes(count: number): Prize[] {
   }
   const picked = shuffle(deck).slice(0, count);
   while (picked.length < count) picked.push(PRIZE_WEIGHTS[1].prize);
-  ensureOne(picked, JACKPOT, isJackpot);
   ensureOne(picked, BOMB, (p) => p.kind === "bomb");
+  // 67 ใส่ทีหลังสุดเพื่อไม่ให้ ensureOne ทับทิ้ง และลงเฉพาะช่องแต้มธรรมดา
+  // เพื่อไม่ให้ไปทับระเบิดใบเดียวที่เพิ่งการันตีไว้
+  const slots = picked
+    .map((p, i) => (p.kind === "points" ? i : -1))
+    .filter((i) => i >= 0);
+  const slot = slots.length
+    ? slots[Math.floor(Math.random() * slots.length)]
+    : Math.floor(Math.random() * picked.length);
+  picked[slot] = SUPER;
   return picked;
 }
 
