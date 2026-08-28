@@ -1,0 +1,494 @@
+.shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border, #e3e6ee);
+  border-radius: 20px;
+  background: #0b1020;
+  color: #fff;
+}
+
+/* คู่กับ useToolFullscreen: native :fullscreen และ fallback ของ iOS
+   ต้องหน้าตาเหมือนกันเป๊ะ */
+.shell:fullscreen,
+.shell.fsFallback {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483646 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  border-radius: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+}
+
+/* โฮสต์ชิ้นคอนเฟตติแยกจาก .shell เอง กันไม่ให้ตอนเต็มจอ (ที่ .shell:fullscreen
+   บังคับ overflow:auto) ชิ้นที่ตกลงมาไปขยาย scroll region ของบอร์ด */
+.confettiLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.barTitle {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.iconBtn {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.iconBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.iconBtn[aria-pressed="true"] {
+  border-color: #8b7bf0;
+  background: linear-gradient(135deg, #5c5ee6, #8b7bf0);
+}
+
+.body {
+  padding: 18px 14px 26px;
+}
+
+.setup {
+  display: grid;
+  gap: 18px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.setupGroup {
+  display: grid;
+  gap: 8px;
+}
+
+.setupLabel {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.setupHint {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: #8b7bf0;
+  background: linear-gradient(135deg, #5c5ee6, #8b7bf0);
+  box-shadow: 0 6px 20px rgba(92, 94, 230, 0.45);
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.8;
+  resize: vertical;
+}
+
+.primaryBtn {
+  min-height: 52px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f97316, #fbbf24);
+  color: #1b1200;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 14px;
+  }
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  aspect-ratio: 1 / 1;
+  min-height: 84px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  background: linear-gradient(150deg, #2a2f6d, #171a3c);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  animation: tileIn 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes tileIn {
+  from {
+    transform: scale(0.7) translateY(16px);
+    opacity: 0;
+  }
+}
+
+.tile:not(.tileOpened):hover,
+.tile:not(.tileOpened):focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(92, 94, 230, 0.45);
+  outline: none;
+}
+
+/* ต้องชนะทั้ง .tile:not(.tileOpened):hover/:focus-visible (specificity 0,3,0)
+   ไม่งั้นเมาส์ที่ค้างอยู่บนป้ายจะบังไฟวิ่งสีทองด้วยสีม่วงตอน hover */
+.tile.tileSpotlight,
+.tile.tileSpotlight:hover,
+.tile.tileSpotlight:focus-visible {
+  transform: translateY(-6px) scale(1.06);
+  border-color: #fbbf24;
+  box-shadow:
+    0 0 0 3px rgba(251, 191, 36, 0.8),
+    0 16px 40px rgba(251, 191, 36, 0.45);
+}
+
+.tileNumber {
+  font-size: clamp(26px, 6vw, 44px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.tileSummary {
+  font-size: 12.5px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.tileOpened {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+}
+
+.boardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.counter {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.boardFooter {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+}
+
+.doneBanner {
+  margin: 14px 0 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(251, 191, 36, 0.16);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-content: center;
+  gap: 26px;
+  justify-items: center;
+  padding: 20px;
+  background: rgba(6, 9, 22, 0.72);
+  backdrop-filter: blur(10px);
+  animation: overlayIn 0.22s ease-out both;
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.card {
+  position: relative;
+  width: min(78vw, 460px);
+  min-height: min(52vh, 320px);
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+  animation: cardRise 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes cardRise {
+  from {
+    transform: scale(0.7) translateY(28px);
+    opacity: 0;
+  }
+}
+
+.cardFlipped {
+  transform: rotateY(180deg);
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 14px;
+  justify-items: center;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 26px;
+  background: linear-gradient(150deg, #2a2f6d, #171a3c);
+  backface-visibility: hidden;
+  text-align: center;
+}
+
+.cardBack {
+  transform: rotateY(180deg);
+  background: linear-gradient(150deg, #5c5ee6, #8b7bf0);
+}
+
+.cardJackpot .cardBack {
+  background: linear-gradient(150deg, #f59e0b, #fbbf24);
+  color: #1b1200;
+}
+
+.cardBomb .cardBack {
+  background: linear-gradient(150deg, #b91c1c, #ef4444);
+}
+
+.cardNumber {
+  font-size: clamp(64px, 16vw, 128px);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.cardEmoji {
+  font-size: clamp(56px, 14vw, 104px);
+  line-height: 1;
+}
+
+.cardLabel {
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.cardQuestion {
+  margin: 0;
+  font-size: clamp(20px, 3.6vw, 34px);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.shakeNow {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-3px); }
+  20%, 80% { transform: translateX(5px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+
+.dangerFlash {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.5), transparent 70%);
+  animation: dangerFlash 0.6s ease-out both;
+}
+
+@keyframes dangerFlash {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .shell *,
+  .shell *::before,
+  .shell *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- ธีม: อวกาศ (ค่าเริ่มต้น) ---- */
+.shell[data-theme="space"] {
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 45% 80%, rgba(255, 255, 255, 0.6), transparent),
+    linear-gradient(160deg, #0b1020, #1b1147 60%, #0b1020);
+  background-size: 420px 420px, 420px 420px, 420px 420px, 100% 100%;
+  animation: driftStars 42s linear infinite;
+}
+
+@keyframes driftStars {
+  to {
+    background-position: 420px 420px, -420px 420px, 420px -420px, 0 0;
+  }
+}
+
+/* ---- ธีม: สมบัติโจรสลัด ---- */
+.shell[data-theme="treasure"] {
+  background: linear-gradient(160deg, #2b1a08, #5b3410 55%, #2b1a08);
+}
+
+/* :not(.tileSpotlight) กันไม่ให้สีธีม (specificity 0,3,0) ไปทับไฟวิ่งสีทอง
+   ของ .tile.tileSpotlight (specificity แค่ 0,2,0) */
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened) {
+  background: linear-gradient(150deg, #8a5a1c, #52300c);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened):hover,
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened):focus-visible {
+  box-shadow: 0 14px 34px rgba(245, 158, 11, 0.45);
+}
+
+.shell[data-theme="treasure"] .chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, #b45309, #f59e0b);
+  border-color: #fbbf24;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+}
+
+/* :not(.cardBack) เพราะ .cardBack ก็มีคลาส .cardFace ด้วย ต้องแยกกัน
+   ไม่ให้กติกาข้างล่างสำหรับ .cardBack มาชนกับกฎนี้โดยไม่ตั้งใจ */
+.shell[data-theme="treasure"] .cardFace:not(.cardBack) {
+  background: linear-gradient(150deg, #8a5a1c, #52300c);
+}
+
+/* :not(.cardJackpot):not(.cardBomb) บนตัว .card กันไม่ให้สีธีมไปทับ
+   หน้าหลังของรางวัลใหญ่ (ทอง) และระเบิด (แดง) ซึ่งสื่อความหมายสำคัญ */
+.shell[data-theme="treasure"] .card:not(.cardJackpot):not(.cardBomb) .cardBack {
+  background: linear-gradient(150deg, #f59e0b, #fbbf24);
+  color: #2b1a08;
+}
+
+/* แจ็คพอตต้องเด่นกว่าป้ายรางวัลธรรมดา ไม่ใช่สีทองซ้ำกัน — ยกระดับด้วย
+   เฉดทองสว่างขึ้น + เรืองแสงรอบการ์ด กฎ .card:not(.cardJackpot)... ด้านบน
+   ไม่จับคู่การ์ดแจ็คพอตอยู่แล้ว (ถูก :not() กันไว้) จึงไม่มีทางชนกัน
+   ส่วนฐาน .cardJackpot .cardBack (0,2,0) แพ้กฎนี้ (0,4,0) แน่นอน */
+.shell[data-theme="treasure"] .cardJackpot .cardBack {
+  background: linear-gradient(150deg, #fde68a, #fbbf24 45%, #f59e0b);
+  box-shadow:
+    0 0 46px rgba(251, 191, 36, 0.7),
+    inset 0 0 26px rgba(255, 255, 255, 0.35);
+  color: #4a2a08;
+}
+
+/* ---- ธีม: นีออน ---- */
+.shell[data-theme="neon"] {
+  background: linear-gradient(160deg, #06060f, #10102a 55%, #06060f);
+}
+
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened) {
+  background: rgba(12, 12, 32, 0.9);
+  border-color: rgba(34, 211, 238, 0.55);
+  box-shadow: inset 0 0 18px rgba(34, 211, 238, 0.22);
+}
+
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened):hover,
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened):focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(34, 211, 238, 0.8),
+    0 14px 34px rgba(34, 211, 238, 0.4);
+}
+
+.shell[data-theme="neon"] .chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  border-color: #22d3ee;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.45);
+}
+
+.shell[data-theme="neon"] .cardFace:not(.cardBack) {
+  background: rgba(12, 12, 32, 0.95);
+  border-color: rgba(34, 211, 238, 0.5);
+}
+
+.shell[data-theme="neon"] .card:not(.cardJackpot):not(.cardBomb) .cardBack {
+  background: linear-gradient(150deg, #0891b2, #22d3ee);
+  color: #04121a;
+}
