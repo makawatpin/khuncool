@@ -198,10 +198,11 @@
   animation-delay: calc(var(--i) * 40ms);
 }
 
+/* ไม่แตะ opacity ด้วยเหตุผลเดียวกับ scoreIn — ถ้าคิวนี้ค้าง กระดานทั้งใบ
+   จะหายไปเลย ซึ่งเป็นความเสียหายที่หนักที่สุดในเครื่องมือนี้ */
 @keyframes tileIn {
   from {
     transform: scale(0.7) translateY(16px);
-    opacity: 0;
   }
 }
 
@@ -265,17 +266,17 @@
   animation: scoreIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.35) both;
 }
 
+/* อนิเมตเฉพาะ transform ห้ามแตะ opacity — ถ้าแอนิเมชันถูกหยุดค้าง (แท็บพื้นหลัง,
+   เครื่องหน่วง) เฟรมแรกที่ opacity:0 จะทำให้คะแนน "หาย" ถาวร แบบนี้อย่างแย่ที่สุด
+   คือค้างเป็นตัวเล็ก แต่ยังอ่านออก */
 @keyframes scoreIn {
   0% {
-    opacity: 0;
-    transform: scale(0.4) rotate(-8deg);
+    transform: scale(0.45) rotate(-8deg);
   }
   55% {
-    opacity: 1;
     transform: scale(1.18) rotate(2deg);
   }
   100% {
-    opacity: 1;
     transform: scale(1) rotate(0deg);
   }
 }
@@ -390,9 +391,11 @@
   animation: overlayIn 0.22s ease-out both;
 }
 
+/* เบลอฉากหลังเข้ามาแทนการ fade ทั้งชั้น เพราะ opacity บนชั้นนี้กดลูกทั้งหมด
+   รวมถึงการ์ดและตัวเลข ถ้าอนิเมชันค้างที่เฟรมแรก จะไม่เห็นอะไรเลยทั้งจอ */
 @keyframes overlayIn {
   from {
-    opacity: 0;
+    backdrop-filter: blur(0);
   }
 }
 
@@ -405,10 +408,11 @@
   animation: cardRise 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
+/* ไม่แตะ opacity — นอกจากกันการ์ดหายแล้ว ยังกัน 3D context ถูก flatten
+   ระหว่าง opacity < 1 ซึ่งเป็นต้นเหตุที่หน้าแรกเคยทะลุขึ้นมาเป็นเลขกลับด้าน */
 @keyframes cardRise {
   from {
     transform: scale(0.7) translateY(28px);
-    opacity: 0;
   }
 }
 
@@ -573,24 +577,21 @@
   animation: scoreZoom 0.62s cubic-bezier(0.16, 1.1, 0.3, 1) both;
 }
 
+/* เช่นเดียวกับ scoreIn: ไม่แตะ opacity เพื่อไม่ให้ตัวเลขหายถ้าอนิเมชันค้าง
+   ค้างแย่สุดคือเป็นตัวใหญ่เต็มการ์ด ซึ่งยังอ่านออกและไม่ผิดความหมาย */
 @keyframes scoreZoom {
   0% {
-    opacity: 0;
-    transform: scale(2.8);
-    filter: blur(7px);
+    transform: scale(2.4);
+    text-shadow: 0 0 34px rgba(255, 255, 255, 0.85);
   }
   55% {
-    opacity: 1;
     transform: scale(0.9);
-    filter: blur(0);
   }
   78% {
     transform: scale(1.07);
   }
   100% {
-    opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
