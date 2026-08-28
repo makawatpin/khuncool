@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./MysteryBoard.module.css";
-import { isJackpot, isSuper, type Tile } from "./boardModel";
+import { isJackpot, isSuper, tileScore, type Tile } from "./boardModel";
 
 /** ต้องตรงกับ .card { transition: transform 0.6s ... } ใน MysteryBoard.module.css */
 export const FLIP_DELAY_MS = 260;
@@ -24,6 +24,15 @@ export default function RevealOverlay({
   onClose,
 }: Props) {
   const [flipped, setFlipped] = useState(!animate);
+  /**
+   * สลับหน้าการ์ดตรงกลางจังหวะพลิก ตอนที่การ์ดหันสันเข้าหาคนดูพอดี
+   *
+   * ใช้ state สั่งเองแทนที่จะพึ่ง backface-visibility เพราะ 3D context ถูก
+   * flatten ได้ระหว่างที่ cardRise ยังอนิเมต opacity อยู่ แล้วหน้าแรกจะทะลุ
+   * ขึ้นมาเป็นเลขกลับด้าน (และ transition ก็ถูกเบราว์เซอร์ freeze ตอนแท็บ
+   * ไม่ได้แสดงผล) — setTimeout ยังทำงานทั้งสองกรณี
+   */
+  const [showBack, setShowBack] = useState(!animate);
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -40,8 +49,15 @@ export default function RevealOverlay({
 
   useEffect(() => {
     if (!animate) return;
-    const id = window.setTimeout(() => setFlipped(true), FLIP_DELAY_MS);
-    return () => window.clearTimeout(id);
+    const flip = window.setTimeout(() => setFlipped(true), FLIP_DELAY_MS);
+    const swap = window.setTimeout(
+      () => setShowBack(true),
+      FLIP_DELAY_MS + FLIP_DURATION_MS / 2,
+    );
+    return () => {
+      window.clearTimeout(flip);
+      window.clearTimeout(swap);
+    };
   }, [animate]);
 
   useEffect(() => {
@@ -74,10 +90,10 @@ export default function RevealOverlay({
     >
       <div
         className={`${styles.card} ${flipped ? styles.cardFlipped : ""} ${
-          grand ? styles.cardSuper : ""
-        } ${celebrate ? styles.cardJackpot : ""} ${
-          dangerous ? styles.cardBomb : ""
-        }`}
+          showBack ? styles.cardShowBack : ""
+        } ${grand ? styles.cardSuper : ""} ${
+          celebrate ? styles.cardJackpot : ""
+        } ${dangerous ? styles.cardBomb : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.cardFace}>
@@ -88,7 +104,11 @@ export default function RevealOverlay({
           {prize ? (
             <>
               <span className={styles.cardEmoji}>{prize.emoji}</span>
-              <span className={styles.cardLabel}>{prize.label}</span>
+              {/* คะแนนคือพระเอกของหน้านี้ ตัวหนังสือบรรยายเป็นตัวรอง */}
+              <span className={styles.cardScore}>{tileScore(prize)}</span>
+              <span className={styles.cardLabel}>
+                {prize.kind === "points" ? "คะแนน" : prize.label}
+              </span>
             </>
           ) : (
             <p className={styles.cardQuestion}>{tile.question}</p>

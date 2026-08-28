@@ -445,6 +445,20 @@
   background: linear-gradient(158deg, #6f71ef, #5c5ee6 45%, #7d6de8);
 }
 
+/* .cardShowBack ถูกใส่จาก React ตรงกลางจังหวะพลิก (ดูคำอธิบายใน
+   RevealOverlay.tsx) — backface-visibility อย่างเดียวเชื่อไม่ได้ */
+.cardBack {
+  opacity: 0;
+}
+
+.cardShowBack .cardFace:not(.cardBack) {
+  opacity: 0;
+}
+
+.cardShowBack .cardBack {
+  opacity: 1;
+}
+
 .cardJackpot .cardBack {
   --card-edge: #92600a;
   background: linear-gradient(158deg, #fbbf24, #f59e0b 60%, #d97706);
@@ -541,14 +555,50 @@
 }
 
 .cardEmoji {
-  font-size: clamp(56px, 14vw, 104px);
+  font-size: clamp(40px, 9vw, 66px);
   line-height: 1;
 }
 
+/* ตัวเลขคะแนนบนการ์ด — ซูมจากใหญ่เบลอเข้ามาหยุดพอดีตรงกลาง
+   ผูกไว้กับ .cardShowBack ให้เริ่มพร้อมวินาทีที่หน้าหลังโผล่ ไม่ต้องเดาเวลา */
+.cardScore {
+  font-size: clamp(56px, 13vw, 112px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
+}
+
+.cardShowBack .cardScore {
+  animation: scoreZoom 0.62s cubic-bezier(0.16, 1.1, 0.3, 1) both;
+}
+
+@keyframes scoreZoom {
+  0% {
+    opacity: 0;
+    transform: scale(2.8);
+    filter: blur(7px);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.9);
+    filter: blur(0);
+  }
+  78% {
+    transform: scale(1.07);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
 .cardLabel {
-  font-size: clamp(20px, 4vw, 30px);
-  font-weight: 800;
+  font-size: clamp(15px, 2.6vw, 21px);
+  font-weight: 700;
   line-height: 1.4;
+  opacity: 0.82;
 }
 
 .cardQuestion {
