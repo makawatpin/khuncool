@@ -374,6 +374,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shell,
   .shell *,
   .shell *::before,
   .shell *::after {
@@ -381,4 +382,86 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---- ธีม: อวกาศ (ค่าเริ่มต้น) ---- */
+.shell[data-theme="space"] {
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 45% 80%, rgba(255, 255, 255, 0.6), transparent),
+    linear-gradient(160deg, #0b1020, #1b1147 60%, #0b1020);
+  background-size: 420px 420px, 420px 420px, 420px 420px, 100% 100%;
+  animation: driftStars 42s linear infinite;
+}
+
+@keyframes driftStars {
+  to {
+    background-position: 420px 420px, -420px 420px, 420px -420px, 0 0;
+  }
+}
+
+/* ---- ธีม: สมบัติโจรสลัด ---- */
+.shell[data-theme="treasure"] {
+  background: linear-gradient(160deg, #2b1a08, #5b3410 55%, #2b1a08);
+}
+
+/* :not(.tileSpotlight) กันไม่ให้สีธีม (specificity 0,3,0) ไปทับไฟวิ่งสีทอง
+   ของ .tile.tileSpotlight (specificity แค่ 0,2,0) */
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight) {
+  background: linear-gradient(150deg, #8a5a1c, #52300c);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.shell[data-theme="treasure"] .chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, #b45309, #f59e0b);
+  border-color: #fbbf24;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+}
+
+/* :not(.cardBack) เพราะ .cardBack ก็มีคลาส .cardFace ด้วย ต้องแยกกัน
+   ไม่ให้กติกาข้างล่างสำหรับ .cardBack มาชนกับกฎนี้โดยไม่ตั้งใจ */
+.shell[data-theme="treasure"] .cardFace:not(.cardBack) {
+  background: linear-gradient(150deg, #8a5a1c, #52300c);
+}
+
+/* :not(.cardJackpot):not(.cardBomb) บนตัว .card กันไม่ให้สีธีมไปทับ
+   หน้าหลังของรางวัลใหญ่ (ทอง) และระเบิด (แดง) ซึ่งสื่อความหมายสำคัญ */
+.shell[data-theme="treasure"] .card:not(.cardJackpot):not(.cardBomb) .cardBack {
+  background: linear-gradient(150deg, #f59e0b, #fbbf24);
+  color: #2b1a08;
+}
+
+/* ---- ธีม: นีออน ---- */
+.shell[data-theme="neon"] {
+  background: linear-gradient(160deg, #06060f, #10102a 55%, #06060f);
+}
+
+.shell[data-theme="neon"] .tile:not(.tileSpotlight) {
+  background: rgba(12, 12, 32, 0.9);
+  border-color: rgba(34, 211, 238, 0.55);
+  box-shadow: inset 0 0 18px rgba(34, 211, 238, 0.22);
+}
+
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened):hover,
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened):focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(34, 211, 238, 0.8),
+    0 14px 34px rgba(34, 211, 238, 0.4);
+}
+
+.shell[data-theme="neon"] .chip[aria-pressed="true"] {
+  background: linear-gradient(135deg, #0891b2, #22d3ee);
+  border-color: #22d3ee;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.45);
+}
+
+.shell[data-theme="neon"] .cardFace:not(.cardBack) {
+  background: rgba(12, 12, 32, 0.95);
+  border-color: rgba(34, 211, 238, 0.5);
+}
+
+.shell[data-theme="neon"] .card:not(.cardJackpot):not(.cardBomb) .cardBack {
+  background: linear-gradient(150deg, #0891b2, #22d3ee);
+  color: #04121a;
 }
