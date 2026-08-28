@@ -408,9 +408,14 @@
 
 /* :not(.tileSpotlight) กันไม่ให้สีธีม (specificity 0,3,0) ไปทับไฟวิ่งสีทอง
    ของ .tile.tileSpotlight (specificity แค่ 0,2,0) */
-.shell[data-theme="treasure"] .tile:not(.tileSpotlight) {
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened) {
   background: linear-gradient(150deg, #8a5a1c, #52300c);
   border-color: rgba(251, 191, 36, 0.4);
+}
+
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened):hover,
+.shell[data-theme="treasure"] .tile:not(.tileSpotlight):not(.tileOpened):focus-visible {
+  box-shadow: 0 14px 34px rgba(245, 158, 11, 0.45);
 }
 
 .shell[data-theme="treasure"] .chip[aria-pressed="true"] {
@@ -432,12 +437,24 @@
   color: #2b1a08;
 }
 
+/* แจ็คพอตต้องเด่นกว่าป้ายรางวัลธรรมดา ไม่ใช่สีทองซ้ำกัน — ยกระดับด้วย
+   เฉดทองสว่างขึ้น + เรืองแสงรอบการ์ด กฎ .card:not(.cardJackpot)... ด้านบน
+   ไม่จับคู่การ์ดแจ็คพอตอยู่แล้ว (ถูก :not() กันไว้) จึงไม่มีทางชนกัน
+   ส่วนฐาน .cardJackpot .cardBack (0,2,0) แพ้กฎนี้ (0,4,0) แน่นอน */
+.shell[data-theme="treasure"] .cardJackpot .cardBack {
+  background: linear-gradient(150deg, #fde68a, #fbbf24 45%, #f59e0b);
+  box-shadow:
+    0 0 46px rgba(251, 191, 36, 0.7),
+    inset 0 0 26px rgba(255, 255, 255, 0.35);
+  color: #4a2a08;
+}
+
 /* ---- ธีม: นีออน ---- */
 .shell[data-theme="neon"] {
   background: linear-gradient(160deg, #06060f, #10102a 55%, #06060f);
 }
 
-.shell[data-theme="neon"] .tile:not(.tileSpotlight) {
+.shell[data-theme="neon"] .tile:not(.tileSpotlight):not(.tileOpened) {
   background: rgba(12, 12, 32, 0.9);
   border-color: rgba(34, 211, 238, 0.55);
   box-shadow: inset 0 0 18px rgba(34, 211, 238, 0.22);
