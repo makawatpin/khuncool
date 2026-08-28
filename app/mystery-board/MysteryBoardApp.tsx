@@ -6,8 +6,9 @@ import { useToolFullscreen } from "@/components/useToolFullscreen";
 import styles from "./MysteryBoard.module.css";
 import BoardGrid from "./BoardGrid";
 import RevealOverlay, {
-  FLIP_DELAY_MS,
-  FLIP_DURATION_MS,
+  CHARGE_MS,
+  FACE_SWAP_MS,
+  REVEAL_AT_MS,
 } from "./RevealOverlay";
 import SetupPanel from "./SetupPanel";
 import {
@@ -32,8 +33,17 @@ const CONFETTI_COLORS = ["#fbbf24", "#f97316", "#5c5ee6", "#22b8a0", "#ef4444"];
 /** ป้าย 67 ใช้ทองล้วน + ขาว ให้ต่างจากคอนเฟตตีหลากสีของแจ็กพอตธรรมดา */
 const SUPER_CONFETTI_COLORS = ["#fde68a", "#fbbf24", "#f59e0b", "#fff7e0", "#ffffff"];
 
-// เอฟเฟกต์ผลลัพธ์ (เสียง/คอนเฟตติ/สั่นจอ) ต้องรอให้การ์ดพลิกจนเห็นหน้าหลังก่อน
-const OUTCOME_DELAY_MS = FLIP_DELAY_MS + FLIP_DURATION_MS;
+function reducedMotion(): boolean {
+  return !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+}
+
+/**
+ * เอฟเฟกต์ผลลัพธ์ (เสียง/คอนเฟตติ/สั่นจอ) ต้องรอจนคะแนนโผล่จริง คือหลัง
+ * ช่วงชาร์จจบ — ยกเว้นคนที่ขอลดการเคลื่อนไหว ซึ่ง overlay ข้ามช่วงชาร์จให้เลย
+ */
+function outcomeDelay(): number {
+  return reducedMotion() ? 0 : REVEAL_AT_MS;
+}
 /** แสงทองของป้าย 67 ค้างนานกว่าแฟลชระเบิด ให้ทันเห็นกันทั้งห้อง */
 const GRAND_GLOW_MS = 2200;
 
@@ -187,6 +197,13 @@ export default function MysteryBoardApp() {
           prev.map((t) => (t.id === id ? { ...t, opened: true } : t)),
         );
         play("flip");
+        // เสียงชาร์จเริ่มพร้อมวงแสง คือตอนหน้าหลังการ์ดโผล่
+        if (tile.prize && !reducedMotion()) {
+          trackedTimeout(() => {
+            if (revealIdRef.current !== id) return;
+            play("charge", CHARGE_MS);
+          }, FACE_SWAP_MS);
+        }
         if (tile.prize && isSuper(tile.prize)) {
           trackedTimeout(() => {
             if (revealIdRef.current !== id) return;
@@ -195,13 +212,13 @@ export default function MysteryBoardApp() {
             setGrandGlow(true);
             // เช่นเดียวกับ danger: ต้องดับเสมอ ไม่งั้นแสงจะค้างข้ามไปป้ายถัดไป
             trackedTimeout(() => setGrandGlow(false), GRAND_GLOW_MS);
-          }, OUTCOME_DELAY_MS);
+          }, outcomeDelay());
         } else if (tile.prize && isJackpot(tile.prize)) {
           trackedTimeout(() => {
             if (revealIdRef.current !== id) return;
             play("jackpot");
             burst();
-          }, OUTCOME_DELAY_MS);
+          }, outcomeDelay());
         } else if (tile.prize?.kind === "bomb") {
           trackedTimeout(() => {
             if (revealIdRef.current !== id) return;
@@ -210,7 +227,7 @@ export default function MysteryBoardApp() {
             // รีเซ็ตค่า danger เสมอไม่ว่าป้ายที่เปิดอยู่ตอนนี้จะเปลี่ยนไปแล้วหรือไม่
             // (ไม่งั้น danger จะค้าง true ข้ามไปสั่นป้ายถัดไปที่ไม่เกี่ยวกัน)
             trackedTimeout(() => setDanger(false), 620);
-          }, OUTCOME_DELAY_MS);
+          }, outcomeDelay());
         }
       }
     },
