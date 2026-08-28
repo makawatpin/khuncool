@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./MysteryBoard.module.css";
 import { isJackpot, type Tile } from "./boardModel";
 
+/** ต้องตรงกับ .card { transition: transform 0.6s ... } ใน MysteryBoard.module.css */
+export const FLIP_DELAY_MS = 260;
+export const FLIP_DURATION_MS = 600;
+
 type Props = {
   tile: Tile;
   /** true เมื่อเป็นการเปิดครั้งแรก (เล่นแอนิเมชัน) — false เมื่อกดดูย้อนหลัง */
@@ -36,7 +40,7 @@ export default function RevealOverlay({
 
   useEffect(() => {
     if (!animate) return;
-    const id = window.setTimeout(() => setFlipped(true), 260);
+    const id = window.setTimeout(() => setFlipped(true), FLIP_DELAY_MS);
     return () => window.clearTimeout(id);
   }, [animate]);
 

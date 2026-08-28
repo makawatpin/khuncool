@@ -5,7 +5,10 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import styles from "./MysteryBoard.module.css";
 import BoardGrid from "./BoardGrid";
-import RevealOverlay from "./RevealOverlay";
+import RevealOverlay, {
+  FLIP_DELAY_MS,
+  FLIP_DURATION_MS,
+} from "./RevealOverlay";
 import SetupPanel from "./SetupPanel";
 import {
   DEFAULT_SETTINGS,
@@ -26,6 +29,9 @@ const MAX_STEPS = 28;
 
 const CONFETTI_COLORS = ["#fbbf24", "#f97316", "#5c5ee6", "#22b8a0", "#ef4444"];
 
+// เอฟเฟกต์ผลลัพธ์ (เสียง/คอนเฟตติ/สั่นจอ) ต้องรอให้การ์ดพลิกจนเห็นหน้าหลังก่อน
+const OUTCOME_DELAY_MS = FLIP_DELAY_MS + FLIP_DURATION_MS;
+
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
 
@@ -41,6 +47,7 @@ export default function MysteryBoardApp() {
   const [danger, setDanger] = useState(false);
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const randomBtnRef = useRef<HTMLButtonElement | null>(null);
+  const confettiRef = useRef<HTMLElement[]>([]);
   const play = useBoardSound(settings.soundOn);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -87,12 +94,21 @@ export default function MysteryBoardApp() {
   useEffect(() => clearTimeouts, [clearTimeouts]);
 
   /** ยกเลิกไฟวิ่งที่ค้างอยู่ (ถ้ามี) — เรียกก่อนออกจากกระดานทุกทาง */
+  const clearConfetti = useCallback(() => {
+    for (const bit of confettiRef.current) bit.remove();
+    confettiRef.current = [];
+  }, []);
+
   const cancelRun = useCallback(() => {
     clearTimeouts();
     setSpotlightId(null);
     setBusy(false);
     setDanger(false);
-  }, [clearTimeouts]);
+    clearConfetti();
+  }, [clearTimeouts, clearConfetti]);
+
+  // กันคอนเฟตติค้างจอถ้าคอมโพเนนต์ unmount กลางอากาศ
+  useEffect(() => clearConfetti, [clearConfetti]);
 
   const burst = useCallback(() => {
     const host = frameRef.current;
@@ -110,6 +126,7 @@ export default function MysteryBoardApp() {
         CONFETTI_COLORS[i % CONFETTI_COLORS.length]
       };border-radius:2px;z-index:60;pointer-events:none`;
       host.appendChild(bit);
+      confettiRef.current.push(bit);
       const dur = 1700 + Math.random() * 1200;
       bit.animate(
         [
@@ -123,7 +140,10 @@ export default function MysteryBoardApp() {
         ],
         { duration: dur, easing: "cubic-bezier(.2,.6,.4,1)" },
       );
-      trackedTimeout(() => bit.remove(), dur + 80);
+      trackedTimeout(() => {
+        bit.remove();
+        confettiRef.current = confettiRef.current.filter((b) => b !== bit);
+      }, dur + 80);
     }
   }, [trackedTimeout]);
 
@@ -154,13 +174,13 @@ export default function MysteryBoardApp() {
           trackedTimeout(() => {
             play("jackpot");
             burst();
-          }, 620);
+          }, OUTCOME_DELAY_MS);
         } else if (tile.prize?.kind === "bomb") {
           trackedTimeout(() => {
             play("bomb");
             setDanger(true);
             trackedTimeout(() => setDanger(false), 620);
-          }, 620);
+          }, OUTCOME_DELAY_MS);
         }
       }
     },
