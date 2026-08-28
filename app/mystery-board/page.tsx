@@ -262,7 +262,7 @@ export default function MysteryBoardPage() {
       {/* Related */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">
         <h2 className="m-0 mb-3 text-lg md:mb-4 md:text-2xl">
-          เครื่องมือและบทความที่เกี่ยวข้อง
+          เครื่องมือที่ใช้คู่กันได้
         </h2>
         <div className="flex flex-wrap gap-2.5">
           <Link
