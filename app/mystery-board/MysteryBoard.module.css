@@ -32,6 +32,18 @@
   pointer-events: none;
 }
 
+/* ฝนตัวเลข 67 ต้องเต็มจอจริงและอยู่หน้า .overlay (z-index 40) เพื่อให้ตัวที่
+   "ใกล้จอ" ผ่านหน้าการ์ดได้ — ความลึกของแต่ละตัวคุมด้วย z-index ในชั้นนี้เอง
+   fixed ที่นี่ปลอดภัยเพราะ .shell ไม่มี transform/filter มาทำตัวเป็น
+   containing block (perspective อยู่บน .overlay ซึ่งเป็นพี่น้องกัน) */
+.rainLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 46;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .bar {
   display: flex;
   align-items: center;

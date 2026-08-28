@@ -47,6 +47,10 @@ function outcomeDelay(): number {
 /** แสงทองของป้าย 67 ค้างนานกว่าแฟลชระเบิด ให้ทันเห็นกันทั้งห้อง */
 const GRAND_GLOW_MS = 2200;
 
+/** ฝนตัวเลข 67: จำนวนตัว และช่วงเวลาที่ทยอยปล่อยลงมา */
+const RAIN_PIECES = 54;
+const RAIN_SPAWN_MS = 3400;
+
 export default function MysteryBoardApp() {
   useTrackToolUse("mystery-board");
 
@@ -64,6 +68,7 @@ export default function MysteryBoardApp() {
   const timeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const confettiRef = useRef<HTMLElement[]>([]);
   const confettiLayerRef = useRef<HTMLDivElement | null>(null);
+  const rainLayerRef = useRef<HTMLDivElement | null>(null);
   // สะท้อนค่า revealId ให้ callback ที่ตั้งเวลาไว้ล่วงหน้าอ่านค่าล่าสุดได้
   // (เผื่อ overlay เปลี่ยนไปเปิดป้ายอื่นก่อนเอฟเฟกต์ที่ตั้งเวลาไว้จะทำงาน)
   const revealIdRef = useRef<number | null>(null);
@@ -174,6 +179,69 @@ export default function MysteryBoardApp() {
     }
   }, [trackedTimeout]);
 
+  /**
+   * ฝน "67" — ตัวเลขร่วงจากขอบบนทั่วจอ แต่ละตัวสุ่มระยะความลึกของตัวเอง
+   *
+   * ความลึกคุมทุกอย่างพร้อมกันเพื่อให้สมองอ่านเป็นระยะทางจริง: ตัวใกล้จอ
+   * ตัวใหญ่ ทึบ ร่วงเร็ว และเบลอเล็กน้อยแบบระยะชัดของเลนส์ ส่วนตัวที่ลึก
+   * เข้าไปตัวเล็ก จาง ร่วงช้า (พารัลแลกซ์) — ปรับแยกกันเมื่อไหร่มิติจะพัง
+   */
+  const numberRain = useCallback(() => {
+    const host = rainLayerRef.current;
+    if (!host) return;
+    if (reducedMotion()) return;
+    const height = window.innerHeight;
+    for (let i = 0; i < RAIN_PIECES; i++) {
+      const depth = Math.random(); // 0 = ลึกสุด, 1 = ใกล้จอสุด
+      const scale = 0.3 + depth * 2.5;
+      const drift = (Math.random() - 0.5) * 90;
+      const numeral = document.createElement("span");
+      numeral.textContent = "67";
+      numeral.style.cssText = [
+        "position:absolute",
+        "top:-18vh",
+        `left:${(Math.random() * 104 - 2).toFixed(1)}%`,
+        "font-weight:900",
+        "font-size:44px",
+        "line-height:1",
+        "white-space:nowrap",
+        "pointer-events:none",
+        "will-change:transform",
+        `color:${depth > 0.55 ? "#fde68a" : "#fbbf24"}`,
+        `z-index:${Math.round(depth * 40)}`,
+        `opacity:${(0.28 + depth * 0.62).toFixed(2)}`,
+        `text-shadow:0 0 ${(6 + depth * 26).toFixed(0)}px rgba(251,191,36,${(
+          0.35 +
+          depth * 0.45
+        ).toFixed(2)})`,
+        // เบลอเฉพาะตัวที่ใกล้จอมาก ๆ เท่านั้น เหมือนหลุดระยะชัด
+        depth > 0.78 ? `filter:blur(${((depth - 0.78) * 16).toFixed(1)}px)` : "",
+      ]
+        .filter(Boolean)
+        .join(";");
+      host.appendChild(numeral);
+      confettiRef.current.push(numeral);
+      // ใกล้ = ร่วงเร็ว ไกล = ร่วงช้า
+      const dur = 4200 - depth * 2300 + Math.random() * 700;
+      const delay = Math.random() * RAIN_SPAWN_MS;
+      numeral.animate(
+        [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(${scale})` },
+          {
+            transform: `translate3d(${drift}px,${
+              height * 1.35
+            }px,0) rotate(${(Math.random() - 0.5) * 40}deg) scale(${scale})`,
+          },
+        ],
+        { duration: dur, delay, easing: "cubic-bezier(.3,.1,.5,1)", fill: "backwards" },
+      );
+      trackedTimeout(() => {
+        numeral.remove();
+        confettiRef.current = confettiRef.current.filter((n) => n !== numeral);
+      }, delay + dur + 80);
+    }
+  }, [trackedTimeout]);
+
   const handleQuestionText = useCallback((text: string) => {
     setQuestionText(text);
     setSettings((s) => ({ ...s, questions: parseQuestions(text) }));
@@ -209,6 +277,7 @@ export default function MysteryBoardApp() {
             if (revealIdRef.current !== id) return;
             play("super");
             burst(true);
+            numberRain();
             setGrandGlow(true);
             // เช่นเดียวกับ danger: ต้องดับเสมอ ไม่งั้นแสงจะค้างข้ามไปป้ายถัดไป
             trackedTimeout(() => setGrandGlow(false), GRAND_GLOW_MS);
@@ -231,7 +300,7 @@ export default function MysteryBoardApp() {
         }
       }
     },
-    [tiles, play, burst, trackedTimeout],
+    [tiles, play, burst, numberRain, trackedTimeout],
   );
 
   /** สุ่มเป้าหมายก่อน แล้วค่อยเล่นไฟวิ่งให้ไปจบที่ป้ายนั้น */
@@ -347,6 +416,9 @@ export default function MysteryBoardApp() {
       {/* เลเยอร์แยกสำหรับคอนเฟตติ กัน .shell:fullscreen ที่ overflow:auto
           ทำให้ชิ้นคอนเฟตติที่ตกลงมาทำให้บอร์ดเลื่อน/กระตุกตอนเต็มจอ */}
       <div ref={confettiLayerRef} className={styles.confettiLayer} />
+      {/* ฝนตัวเลข 67 อยู่คนละชั้นกับคอนเฟตติ เพราะต้องเต็มจอจริง (fixed)
+          และต้องอยู่หน้า overlay เพื่อให้ตัวที่ใกล้จอผ่านหน้าการ์ดได้ */}
+      <div ref={rainLayerRef} className={styles.rainLayer} />
 
       <div className={styles.body}>
         {phase === "setup" ? (
