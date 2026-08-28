@@ -491,6 +491,37 @@ const GAMES = {
       },
     ],
   },
+  "touch-typing": {
+    path: "/media/computer/touch-typing",
+    screens: [
+      { name: "home" },
+      { name: "lesson", enter: click(/เริ่มฝึกวางนิ้ว/) },
+      { name: "play", enter: click(/เริ่มบทนี้/) },
+      {
+        name: "result",
+        async enter(page) {
+          const codes = ["KeyA", "KeyA", "Space", "KeyS", "KeyS", "Space", "KeyD", "KeyD", "Space", "KeyF", "KeyF", "Space", "KeyA", "KeyS", "Space", "KeyD", "KeyF", "Space", "KeyA", "KeyD", "Space", "KeyS", "KeyF"];
+          for (const code of codes) {
+            await page.evaluate((nextCode) => {
+              document.querySelector(".kc-stage-body")?.dispatchEvent(new KeyboardEvent("keydown", { code: nextCode, bubbles: true }));
+            }, code);
+            await page.waitForTimeout(45);
+          }
+          await page.waitForTimeout(500);
+        },
+        expect: '[data-stage="result"]',
+      },
+      {
+        name: "showcase",
+        async enter(page) {
+          await page.getByRole("button", { name: "เลือกบท", exact: true }).click();
+          await page.getByRole("button", { name: "ย้อนกลับ", exact: true }).click();
+          await page.getByRole("button", { name: "สอนหน้าชั้น", exact: true }).click();
+        },
+        expect: '[data-stage="showcase"]',
+      },
+    ],
+  },
   "asean-matching": {
     path: "/media/social-studies/asean-matching",
     screens: [

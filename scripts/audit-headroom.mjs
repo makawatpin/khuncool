@@ -61,6 +61,7 @@ const GAMES = {
   "coding-maze": { path: "/media/computer/coding-maze", start: /เริ่ม/ },
   "digital-sort": { path: "/media/computer/digital-sort", start: /เริ่มภารกิจ/ },
   "typing-defense": { path: "/media/computer/typing-defense", start: null },
+  "touch-typing": { path: "/media/computer/touch-typing", start: [/เริ่มฝึกวางนิ้ว/, /เริ่มบทนี้/] },
   "math-bomb-defusal": { path: "/media/mathematics/math-bomb-defusal", start: /ตั้งค่าภารกิจ/ },
   "science-lab-crisis": { path: "/media/science/science-lab-crisis", start: null },
   "motion-lab": { path: "/media/science/motion-lab", start: null },
