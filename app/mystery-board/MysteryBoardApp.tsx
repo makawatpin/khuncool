@@ -7,8 +7,6 @@ import styles from "./MysteryBoard.module.css";
 import BoardGrid from "./BoardGrid";
 import RevealOverlay, {
   CHARGE_MS,
-  FACE_SWAP_MS,
-  REVEAL_AT_MS,
 } from "./RevealOverlay";
 import SetupPanel from "./SetupPanel";
 import {
@@ -37,13 +35,6 @@ function reducedMotion(): boolean {
   return !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 }
 
-/**
- * เอฟเฟกต์ผลลัพธ์ (เสียง/คอนเฟตติ/สั่นจอ) ต้องรอจนคะแนนโผล่จริง คือหลัง
- * ช่วงชาร์จจบ — ยกเว้นคนที่ขอลดการเคลื่อนไหว ซึ่ง overlay ข้ามช่วงชาร์จให้เลย
- */
-function outcomeDelay(): number {
-  return reducedMotion() ? 0 : REVEAL_AT_MS;
-}
 /** แสงทองของป้าย 67 ค้างนานกว่าแฟลชระเบิด ให้ทันเห็นกันทั้งห้อง */
 const GRAND_GLOW_MS = 2200;
 
@@ -69,10 +60,11 @@ export default function MysteryBoardApp() {
   const confettiRef = useRef<HTMLElement[]>([]);
   const confettiLayerRef = useRef<HTMLDivElement | null>(null);
   const rainLayerRef = useRef<HTMLDivElement | null>(null);
-  // สะท้อนค่า revealId ให้ callback ที่ตั้งเวลาไว้ล่วงหน้าอ่านค่าล่าสุดได้
-  // (เผื่อ overlay เปลี่ยนไปเปิดป้ายอื่นก่อนเอฟเฟกต์ที่ตั้งเวลาไว้จะทำงาน)
-  const revealIdRef = useRef<number | null>(null);
-  const play = useBoardSound(settings.soundOn);
+  // กันการกดข้ามช่วงชาร์จกับ timer ปกติยิงเสียง/เอฟเฟกต์ซ้ำในป้ายเดียวกัน
+  const playedOutcomesRef = useRef<Set<number>>(new Set());
+  const { play, startBackground, stopBackground } = useBoardSound(
+    settings.soundOn,
+  );
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(
@@ -95,10 +87,6 @@ export default function MysteryBoardApp() {
     if (!hydrated) return;
     saveSettings(settings);
   }, [settings, hydrated]);
-
-  useEffect(() => {
-    revealIdRef.current = revealId;
-  }, [revealId]);
 
   const patchSettings = useCallback((patch: Partial<Settings>) => {
     setSettings((s) => ({ ...s, ...patch }));
@@ -247,12 +235,47 @@ export default function MysteryBoardApp() {
     setSettings((s) => ({ ...s, questions: parseQuestions(text) }));
   }, []);
 
+  /** ทำงานในจังหวะเดียวกับที่ RevealOverlay เปลี่ยน ? เป็นคะแนน */
+  const handleRevealOutcome = useCallback(
+    (tile: Tile) => {
+      const prize = tile.prize;
+      if (!prize || playedOutcomesRef.current.has(tile.id)) return;
+      playedOutcomesRef.current.add(tile.id);
+
+      if (isSuper(prize)) {
+        play("super");
+        burst(true);
+        numberRain();
+        setGrandGlow(true);
+        trackedTimeout(() => setGrandGlow(false), GRAND_GLOW_MS);
+      } else if (isJackpot(prize)) {
+        play("jackpot");
+        burst();
+      } else if (prize.kind === "bomb") {
+        play("bomb");
+        setDanger(true);
+        trackedTimeout(() => setDanger(false), 620);
+      } else {
+        // คะแนนทั่วไปและการ์ดพิเศษก็ได้คอร์ด "ผ่าม" ตอนผลลัพธ์โผล่
+        play("reveal");
+      }
+    },
+    [burst, numberRain, play, trackedTimeout],
+  );
+
+  const handleCharge = useCallback(() => {
+    play("charge", CHARGE_MS);
+  }, [play]);
+
   const startGame = useCallback(() => {
     cancelRun();
+    playedOutcomesRef.current.clear();
+    if (settings.soundOn) startBackground();
+    else stopBackground();
     setTiles(buildTiles(settings));
     setPhase("board");
     setRevealId(null);
-  }, [settings, cancelRun]);
+  }, [settings, cancelRun, startBackground, stopBackground]);
 
   const openTile = useCallback(
     (id: number) => {
@@ -265,42 +288,9 @@ export default function MysteryBoardApp() {
           prev.map((t) => (t.id === id ? { ...t, opened: true } : t)),
         );
         play("flip");
-        // เสียงชาร์จเริ่มพร้อมวงแสง คือตอนหน้าหลังการ์ดโผล่
-        if (tile.prize && !reducedMotion()) {
-          trackedTimeout(() => {
-            if (revealIdRef.current !== id) return;
-            play("charge", CHARGE_MS);
-          }, FACE_SWAP_MS);
-        }
-        if (tile.prize && isSuper(tile.prize)) {
-          trackedTimeout(() => {
-            if (revealIdRef.current !== id) return;
-            play("super");
-            burst(true);
-            numberRain();
-            setGrandGlow(true);
-            // เช่นเดียวกับ danger: ต้องดับเสมอ ไม่งั้นแสงจะค้างข้ามไปป้ายถัดไป
-            trackedTimeout(() => setGrandGlow(false), GRAND_GLOW_MS);
-          }, outcomeDelay());
-        } else if (tile.prize && isJackpot(tile.prize)) {
-          trackedTimeout(() => {
-            if (revealIdRef.current !== id) return;
-            play("jackpot");
-            burst();
-          }, outcomeDelay());
-        } else if (tile.prize?.kind === "bomb") {
-          trackedTimeout(() => {
-            if (revealIdRef.current !== id) return;
-            play("bomb");
-            setDanger(true);
-            // รีเซ็ตค่า danger เสมอไม่ว่าป้ายที่เปิดอยู่ตอนนี้จะเปลี่ยนไปแล้วหรือไม่
-            // (ไม่งั้น danger จะค้าง true ข้ามไปสั่นป้ายถัดไปที่ไม่เกี่ยวกัน)
-            trackedTimeout(() => setDanger(false), 620);
-          }, outcomeDelay());
-        }
       }
     },
-    [tiles, play, burst, numberRain, trackedTimeout],
+    [tiles, play],
   );
 
   /** สุ่มเป้าหมายก่อน แล้วค่อยเล่นไฟวิ่งให้ไปจบที่ป้ายนั้น */
@@ -374,7 +364,10 @@ export default function MysteryBoardApp() {
               type="button"
               className={styles.iconBtn}
               aria-label="กลับกระดาน"
-              onClick={() => setPhase("board")}
+              onClick={() => {
+                if (settings.soundOn) startBackground();
+                setPhase("board");
+              }}
             >
               ↩ <span className={styles.iconBtnLabel}>กลับกระดาน</span>
             </button>
@@ -387,6 +380,7 @@ export default function MysteryBoardApp() {
                 aria-label="ตั้งค่า"
                 onClick={() => {
                   cancelRun();
+                  stopBackground();
                   setPhase("setup");
                 }}
               >
@@ -406,7 +400,12 @@ export default function MysteryBoardApp() {
             type="button"
             className={styles.iconBtn}
             aria-label={settings.soundOn ? "ปิดเสียง" : "เปิดเสียง"}
-            onClick={() => patchSettings({ soundOn: !settings.soundOn })}
+            onClick={() => {
+              const soundOn = !settings.soundOn;
+              patchSettings({ soundOn });
+              if (!soundOn) stopBackground();
+              else if (phase === "board") startBackground();
+            }}
           >
             {settings.soundOn ? "🔊" : "🔇"}
           </button>
@@ -476,6 +475,8 @@ export default function MysteryBoardApp() {
                 tile={revealTile}
                 animate={revealAnimate}
                 shake={danger}
+                onCharge={handleCharge}
+                onReveal={handleRevealOutcome}
                 onClose={() => setRevealId(null)}
               />
             )}

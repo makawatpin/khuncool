@@ -29,6 +29,10 @@ type Props = {
   animate: boolean;
   /** true ระหว่างช่วงสั่นจอเมื่อเจอระเบิด */
   shake?: boolean;
+  /** เริ่มเสียงไต่ระดับเมื่อหน้าหลังการ์ดโผล่ */
+  onCharge: () => void;
+  /** ยิงพร้อมเฟรมที่ผลลัพธ์แทนเครื่องหมาย ? */
+  onReveal: (tile: Tile) => void;
   onClose: () => void;
 };
 
@@ -36,6 +40,8 @@ export default function RevealOverlay({
   tile,
   animate,
   shake,
+  onCharge,
+  onReveal,
   onClose,
 }: Props) {
   const [flipped, setFlipped] = useState(!animate);
@@ -50,6 +56,7 @@ export default function RevealOverlay({
   const [showBack, setShowBack] = useState(!animate);
   /** false = กำลังชาร์จ (โชว์ ?) / true = เฉลยคะแนนแล้ว */
   const [charged, setCharged] = useState(!animate);
+  const chargedRef = useRef(!animate);
   const closeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -66,24 +73,36 @@ export default function RevealOverlay({
 
   useEffect(() => {
     if (!animate) return;
+    const revealNow = () => {
+      if (chargedRef.current) return;
+      chargedRef.current = true;
+      setCharged(true);
+      if (tile.prize) onReveal(tile);
+    };
     // ผู้ที่ขอลดการเคลื่อนไหวข้ามทั้งการพลิกและช่วงชาร์จ เห็นผลทันที
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
       const now = window.setTimeout(() => {
         setFlipped(true);
         setShowBack(true);
-        setCharged(true);
+        revealNow();
       }, 0);
       return () => window.clearTimeout(now);
     }
     const flip = window.setTimeout(() => setFlipped(true), FLIP_DELAY_MS);
     const swap = window.setTimeout(() => setShowBack(true), FACE_SWAP_MS);
-    const reveal = window.setTimeout(() => setCharged(true), REVEAL_AT_MS);
+    const charge = tile.prize
+      ? window.setTimeout(() => {
+          if (!chargedRef.current) onCharge();
+        }, FACE_SWAP_MS)
+      : null;
+    const reveal = window.setTimeout(revealNow, REVEAL_AT_MS);
     return () => {
       window.clearTimeout(flip);
       window.clearTimeout(swap);
+      if (charge !== null) window.clearTimeout(charge);
       window.clearTimeout(reveal);
     };
-  }, [animate]);
+  }, [animate, onCharge, onReveal, tile]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -125,7 +144,14 @@ export default function RevealOverlay({
         }`}
         onClick={(e) => {
           e.stopPropagation();
-          // กดที่การ์ดเพื่อข้ามช่วงชาร์จ เผื่อคาบไหนเวลาไม่พอ
+          // กดที่การ์ดเพื่อข้ามช่วงพลิก/ชาร์จ เผื่อคาบไหนเวลาไม่พอ
+          // อัปเดตหน้าการ์ดกับยิงเสียงใน event เดียวกัน เพื่อให้เลขขึ้นพร้อม "ผ่าม"
+          if (!chargedRef.current) {
+            setFlipped(true);
+            setShowBack(true);
+            if (tile.prize) onReveal(tile);
+          }
+          chargedRef.current = true;
           setCharged(true);
         }}
       >
