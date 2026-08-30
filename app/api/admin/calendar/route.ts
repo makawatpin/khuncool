@@ -5,7 +5,6 @@ import { buildAgenda, resolveDate, computeStatus } from "@/lib/teacher-calendar/
 import type { AgendaItem } from "@/lib/teacher-calendar/types";
 
 const MONTHS_AHEAD = 6;
-const DAYS_GRID_LOOKAHEAD_MONTHS = 1;
 
 function bangkokToday(): string {
   // en-CA gives YYYY-MM-DD directly.
@@ -38,9 +37,12 @@ export async function GET(request: Request) {
   const agenda = buildAgenda(CALENDAR_EVENTS, today, MONTHS_AHEAD).slice(0, 5);
 
   // Build the month grid: for the requested year/month, resolve every
-  // event that could land on any day of it (checking both this year and
-  // the occurrence's natural year is unnecessary here since we resolve
-  // directly against `year`).
+  // event that could land on any day of it. Ranges anchored in December can
+  // spill into January/February of the following year, so each event is
+  // resolved against both `year - 1` and `year` and included if its
+  // resolved [start, end] interval overlaps the requested month. Ranges are
+  // anchored to a single marker on the grid (the later of the event's start
+  // date or the first day of the month).
   const totalDays = daysInMonth(year, month);
   const dayItems: Record<string, AgendaItem[]> = {};
   for (let d = 1; d <= totalDays; d++) {
@@ -48,28 +50,38 @@ export async function GET(request: Request) {
     dayItems[iso] = [];
   }
 
+  const monthPrefix = `${year}-${String(month).padStart(2, "0")}`;
+  const monthStart = `${monthPrefix}-01`;
+  const monthEnd = `${monthPrefix}-${String(totalDays).padStart(2, "0")}`;
+  const addedEventIds = new Set<string>();
+
   for (const event of CALENDAR_EVENTS) {
-    const resolved = resolveDate(event.occurrence, year);
-    if (!resolved) continue;
+    if (addedEventIds.has(event.id)) continue;
 
-    // Only place it on the grid if its start date falls in the requested
-    // month (multi-month ranges are anchored to their start date here;
-    // DAYS_GRID_LOOKAHEAD_MONTHS is reserved for a future "spans into
-    // next month" indicator and isn't used yet).
-    void DAYS_GRID_LOOKAHEAD_MONTHS;
-    if (!resolved.eventDate.startsWith(`${year}-${String(month).padStart(2, "0")}`)) continue;
+    for (const candidateYear of [year - 1, year]) {
+      const resolved = resolveDate(event.occurrence, candidateYear);
+      if (!resolved) continue;
 
-    const status = computeStatus(event.leadDays, resolved, today);
-    dayItems[resolved.eventDate].push({
-      ...event,
-      year,
-      resolvedDate: resolved.eventDate,
-      resolvedEndDate: resolved.eventEndDate,
-      publishByDate: null,
-      status,
-      daysUntilEvent: null,
-      daysUntilPublishBy: null,
-    });
+      const overlapsMonth = resolved.eventDate <= monthEnd && resolved.eventEndDate >= monthStart;
+      if (!overlapsMonth) continue;
+
+      const anchorDate = resolved.eventDate >= monthStart ? resolved.eventDate : monthStart;
+      if (!dayItems[anchorDate]) continue;
+
+      const status = computeStatus(event.leadDays, resolved, today);
+      dayItems[anchorDate].push({
+        ...event,
+        year: candidateYear,
+        resolvedDate: resolved.eventDate,
+        resolvedEndDate: resolved.eventEndDate,
+        publishByDate: null,
+        status,
+        daysUntilEvent: null,
+        daysUntilPublishBy: null,
+      });
+      addedEventIds.add(event.id);
+      break;
+    }
   }
 
   return NextResponse.json({

@@ -195,7 +195,11 @@ function MonthGrid({
 }
 
 export default function CalendarTab() {
-  const state = useAdminFetch<CalendarResponse>("/api/admin/calendar");
+  const [viewMonth, setViewMonth] = useState<{ year: number; month: number } | null>(null);
+  const path = viewMonth
+    ? `/api/admin/calendar?month=${viewMonth.year}-${String(viewMonth.month).padStart(2, "0")}`
+    : "/api/admin/calendar";
+  const state = useAdminFetch<CalendarResponse>(path);
   const [activeCategories, setActiveCategories] = useState<Set<CategoryKey>>(
     new Set(CATEGORIES)
   );
@@ -213,6 +217,26 @@ export default function CalendarTab() {
       else next.add(cat);
       return next;
     });
+  }
+
+  function goToMonth(delta: number) {
+    setSelectedDate(null);
+    const base = viewMonth ?? { year: month.year, month: month.month };
+    let nextMonth = base.month + delta;
+    let nextYear = base.year;
+    if (nextMonth > 12) {
+      nextMonth = 1;
+      nextYear += 1;
+    } else if (nextMonth < 1) {
+      nextMonth = 12;
+      nextYear -= 1;
+    }
+    setViewMonth({ year: nextYear, month: nextMonth });
+  }
+
+  function goToCurrentMonth() {
+    setSelectedDate(null);
+    setViewMonth(null);
   }
 
   const selectedDay = selectedDate ? month.days.find((d) => d.date === selectedDate) : null;
@@ -236,6 +260,43 @@ export default function CalendarTab() {
       </div>
 
       <div className="rounded-[--radius-card] border border-border bg-surface-card p-3">
+        <div className="mb-3 flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => goToMonth(-1)}
+              aria-label="เดือนก่อนหน้า"
+              className="rounded-md border border-border px-2 py-1 text-xs text-ink-muted hover:bg-surface-panel"
+            >
+              ‹
+            </button>
+            <span className="min-w-[7rem] text-center text-sm text-ink">
+              {new Date(Date.UTC(month.year, month.month - 1, 1)).toLocaleDateString("th-TH", {
+                month: "long",
+                year: "numeric",
+                timeZone: "UTC",
+              })}
+            </span>
+            <button
+              type="button"
+              onClick={() => goToMonth(1)}
+              aria-label="เดือนถัดไป"
+              className="rounded-md border border-border px-2 py-1 text-xs text-ink-muted hover:bg-surface-panel"
+            >
+              ›
+            </button>
+          </div>
+          {viewMonth && (
+            <button
+              type="button"
+              onClick={goToCurrentMonth}
+              className="rounded-full border border-border px-2.5 py-1 text-xs text-ink-muted hover:bg-surface-panel"
+            >
+              กลับเดือนนี้
+            </button>
+          )}
+        </div>
+
         <div className="mb-3 flex flex-wrap gap-1.5 px-1">
           {CATEGORIES.map((cat) => (
             <button
