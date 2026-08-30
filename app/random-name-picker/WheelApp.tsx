@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
+import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 
 const NAMES_KEY = "khuncool.wheel.names";
 const ROSTER_KEY = "khuncool.roster";
@@ -564,20 +565,10 @@ export default function WheelApp() {
     });
   }, []);
 
-  const importFromRoster = useCallback(() => {
-    let roster: unknown = null;
-    try {
-      roster = JSON.parse(window.localStorage.getItem(ROSTER_KEY) || "null");
-    } catch {
-      /* ignore */
-    }
-    if (Array.isArray(roster) && roster.length) {
-      setNames(roster as string[]);
-      setShowResult(false);
-      setImportMsg(`นำเข้า ${roster.length} ชื่อจากทะเบียนแล้ว`);
-    } else {
-      setImportMsg("ยังไม่มีทะเบียนรายชื่อ — เพิ่มที่หน้า “แบ่งกลุ่ม” หรือ “เช็กชื่อ” ก่อน");
-    }
+  const useClassroomRoster = useCallback((roster: { name: string; studentNames: string[] }) => {
+    setNames(roster.studentNames);
+    setShowResult(false);
+    setImportMsg(`ใช้ห้อง ${roster.name} · ${roster.studentNames.length} คน`);
     if (importTimerRef.current) clearTimeout(importTimerRef.current);
     importTimerRef.current = setTimeout(() => setImportMsg(""), 2600);
   }, []);
@@ -660,13 +651,10 @@ export default function WheelApp() {
               รายชื่อ ({names.length})
             </span>
             <div className="flex gap-2.5 md:gap-3">
-              <button
-                type="button"
-                onClick={importFromRoster}
+              <ClassroomRosterPicker
+                onSelect={useClassroomRoster}
                 className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
-              >
-                📥 ทะเบียน
-              </button>
+              />
               <button
                 type="button"
                 onClick={shuffle}

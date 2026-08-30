@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
+import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
@@ -873,20 +874,12 @@ export default function DuckRaceApp() {
     });
   }, []);
 
-  const importFromRoster = useCallback(() => {
-    let r: unknown = null;
-    try {
-      r = JSON.parse(window.localStorage.getItem(ROSTER_KEY) || "null");
-    } catch {
-      /* ignore */
-    }
-    if (Array.isArray(r) && r.length) {
-      setNames(r as string[]);
+  const useClassroomRoster = useCallback((roster: { name: string; studentNames: string[] }) => {
+    if (roster.studentNames.length) {
+      setNames(roster.studentNames);
       setShowResult(false);
-      setImportMsg(`นำเข้า ${r.length} ชื่อจากทะเบียนแล้ว`);
+      setImportMsg(`ใช้ห้อง ${roster.name} · ${roster.studentNames.length} คน`);
       beep(660, 0.14, "sine", 0.06);
-    } else {
-      setImportMsg("ยังไม่มีทะเบียนรายชื่อ — เพิ่มที่หน้า “แบ่งกลุ่ม” หรือ “เช็กชื่อ” ก่อน");
     }
     if (importTimerRef.current) clearTimeout(importTimerRef.current);
     importTimerRef.current = setTimeout(() => setImportMsg(""), 2600);
@@ -1055,13 +1048,10 @@ export default function DuckRaceApp() {
                 รายชื่อเป็ด ({names.length})
               </span>
               <div className="flex gap-2.5 md:gap-3">
-                <button
-                  type="button"
-                  onClick={importFromRoster}
+                <ClassroomRosterPicker
+                  onSelect={useClassroomRoster}
                   className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
-                >
-                  📥 ทะเบียน
-                </button>
+                />
                 <button
                   type="button"
                   onClick={shuffle}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
+import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 
 const ROSTER_KEY = "khuncool.roster";
 
@@ -336,6 +337,13 @@ export default function GroupsApp() {
               รายชื่อ ({n})
             </span>
             <div className="flex gap-2.5 md:gap-3">
+              <ClassroomRosterPicker
+                onSelect={(roster) => {
+                  setNames(roster.studentNames);
+                  setGroups([]);
+                }}
+                className="cursor-pointer border-none bg-transparent p-0 text-xs text-primary md:text-[12.5px]"
+              />
               <button
                 type="button"
                 onClick={toggleBulk}
