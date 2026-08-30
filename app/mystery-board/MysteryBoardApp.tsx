@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
+import ShareActivityButton from "@/components/ShareActivityButton";
 import styles from "./MysteryBoard.module.css";
 import BoardGrid from "./BoardGrid";
 import RevealOverlay, {
@@ -42,7 +43,12 @@ const GRAND_GLOW_MS = 2200;
 const RAIN_PIECES = 54;
 const RAIN_SPAWN_MS = 3400;
 
-export default function MysteryBoardApp() {
+type MysteryBoardAppProps = {
+  initialSettings?: Partial<Settings>;
+  isShared?: boolean;
+};
+
+export default function MysteryBoardApp({ initialSettings, isShared = false }: MysteryBoardAppProps) {
   useTrackToolUse("mystery-board");
 
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
@@ -75,18 +81,20 @@ export default function MysteryBoardApp() {
   // โหลดค่าที่บันทึกไว้หลัง mount เท่านั้น กัน hydration mismatch
   useEffect(() => {
     const restoreTimer = window.setTimeout(() => {
-      const restored = loadSettings();
+      const restored = initialSettings
+        ? { ...DEFAULT_SETTINGS, ...initialSettings, questions: initialSettings.questions ?? [] }
+        : loadSettings();
       setSettings(restored);
       setQuestionText(restored.questions.join("\n"));
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(restoreTimer);
-  }, []);
+  }, [initialSettings]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || isShared) return;
     saveSettings(settings);
-  }, [settings, hydrated]);
+  }, [settings, hydrated, isShared]);
 
   const patchSettings = useCallback((patch: Partial<Settings>) => {
     setSettings((s) => ({ ...s, ...patch }));
@@ -359,6 +367,15 @@ export default function MysteryBoardApp() {
       <div className={styles.bar}>
         <span className={styles.barTitle}>🎁 กระดานป้ายปริศนา</span>
         <div className={`${styles.chipRow} ${styles.barActions}`}>
+          {(settings.mode === "score" || settings.questions.length > 0) && (
+            <ShareActivityButton
+              title="กระดานป้ายปริศนา"
+              items={settings.questions}
+              template="mystery-board"
+              templateConfig={{ mode: settings.mode, size: settings.size, theme: settings.theme, soundOn: settings.soundOn }}
+              className={styles.iconBtn}
+            />
+          )}
           {phase === "setup" && tiles.length > 0 && (
             <button
               type="button"
