@@ -9,6 +9,7 @@ import OverviewTab from "./tabs/OverviewTab";
 import UsersTab from "./tabs/UsersTab";
 import ToolsTab from "./tabs/ToolsTab";
 import ContentTab from "./tabs/ContentTab";
+import CalendarTab from "./tabs/CalendarTab";
 import SystemTab from "./tabs/SystemTab";
 
 function MenuIcon() {
@@ -75,6 +76,7 @@ export default function AdminDashboard() {
           {tab === "users" && <UsersTab />}
           {tab === "tools" && <ToolsTab />}
           {tab === "content" && <ContentTab />}
+          {tab === "calendar" && <CalendarTab />}
           {tab === "system" && <SystemTab />}
         </main>
       </div>

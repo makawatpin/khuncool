@@ -50,6 +50,17 @@ function SystemIcon() {
   );
 }
 
+function CalendarIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2.5" y="3.5" width="13" height="11.5" rx="1.5" />
+      <line x1="2.5" y1="7" x2="15.5" y2="7" />
+      <line x1="6" y1="2" x2="6" y2="5" />
+      <line x1="12" y1="2" x2="12" y2="5" />
+    </svg>
+  );
+}
+
 export const TABS = [
   {
     key: "overview",
@@ -74,6 +85,12 @@ export const TABS = [
     label: "เนื้อหา",
     description: "รายการบทความทั้งหมด",
     Icon: ContentIcon,
+  },
+  {
+    key: "calendar",
+    label: "ปฏิทิน",
+    description: "วันสำคัญและกำหนดลงคอนเทนต์",
+    Icon: CalendarIcon,
   },
   {
     key: "system",
