@@ -48,3 +48,6 @@ next-env.d.ts
 
 # stage audit output (screenshots, generated per run)
 /audit-output/
+
+# codex worktrees (full repo copies incl. build output)
+/.codex/
