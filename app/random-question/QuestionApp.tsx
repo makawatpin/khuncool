@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ShareActivityButton from "@/components/ShareActivityButton";
+import QuestionSetPicker from "@/components/QuestionSetPicker";
 
 const SAMPLE_QUESTIONS = [
   "อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค",
@@ -186,6 +187,15 @@ export default function QuestionApp({ initialQuestions }: { initialQuestions?: r
           คลังคำถาม ({n})
         </span>
         <div className="flex gap-2.5 md:gap-3">
+          <QuestionSetPicker
+            onSelect={(set) => {
+              setQuestions(set.questions);
+              setUsed([]);
+              setCurrent("กดปุ่มเพื่อสุ่มคำถาม");
+            }}
+            currentQuestions={questions}
+            className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
+          />
           <button
             type="button"
             onClick={toggleBulk}

@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./MysteryBoard.module.css";
+import QuestionSetPicker from "@/components/QuestionSetPicker";
 import {
   BOARD_SIZES,
   MODE_LABELS,
@@ -96,9 +97,16 @@ export default function SetupPanel({
 
       {settings.mode === "question" && (
         <div className={`${styles.setupGroup} ${styles.setupGroupWide}`}>
-          <label className={styles.setupLabel} htmlFor="mystery-questions">
-            คำถามของคุณครู
-          </label>
+          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+            <label className={styles.setupLabel} htmlFor="mystery-questions">
+              คำถามของคุณครู
+            </label>
+            <QuestionSetPicker
+              onSelect={(set) => onQuestionTextChange(set.questions.join("\n"))}
+              currentQuestions={questionText.split("\n")}
+              className="cursor-pointer border-none bg-transparent p-0 text-[12.5px] font-semibold text-primary"
+            />
+          </div>
           <textarea
             id="mystery-questions"
             className={styles.textarea}
