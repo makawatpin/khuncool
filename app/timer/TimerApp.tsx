@@ -427,20 +427,24 @@ export default function TimerApp() {
             </button>
           </div>
 
-          {mode === "down" && (
-            <div className="mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px]">
-              {PRESETS.map((p) => (
-                <button
-                  key={p.sec}
-                  type="button"
-                  onClick={() => setPreset(p.sec)}
-                  className="whitespace-nowrap rounded-[11px] border border-border bg-white px-1 py-[11px] font-sans text-[13px] font-semibold text-ink-secondary hover:border-[#C6C9FB] hover:bg-surface-light md:rounded-xl md:px-1 md:py-[13px] md:text-sm"
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          )}
+          <div
+            className={`mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px] ${
+              mode === "down" ? "" : "invisible"
+            }`}
+            aria-hidden={mode !== "down"}
+          >
+            {PRESETS.map((p) => (
+              <button
+                key={p.sec}
+                type="button"
+                tabIndex={mode === "down" ? 0 : -1}
+                onClick={() => setPreset(p.sec)}
+                className="whitespace-nowrap rounded-[11px] border border-border bg-white px-1 py-[11px] font-sans text-[13px] font-semibold text-ink-secondary hover:border-[#C6C9FB] hover:bg-surface-light md:rounded-xl md:px-1 md:py-[13px] md:text-sm"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
 
           <div className="mb-3.5 flex gap-[9px] md:mb-0 md:flex-col md:gap-3">
             <button
@@ -456,15 +460,16 @@ export default function TimerApp() {
               {runLabel}
             </button>
             <div className="hidden gap-2.5 md:flex">
-              {mode === "down" && (
-                <button
-                  type="button"
-                  onClick={addMinute}
-                  className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-3 py-[13px] font-sans text-[15px] font-semibold text-ink hover:bg-surface-light"
-                >
-                  +1:00
-                </button>
-              )}
+              <button
+                type="button"
+                tabIndex={mode === "down" ? 0 : -1}
+                onClick={addMinute}
+                className={`flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-3 py-[13px] font-sans text-[15px] font-semibold text-ink hover:bg-surface-light ${
+                  mode === "down" ? "" : "invisible"
+                }`}
+              >
+                +1:00
+              </button>
               <button
                 type="button"
                 onClick={reset}
@@ -473,15 +478,16 @@ export default function TimerApp() {
                 รีเซ็ต
               </button>
             </div>
-            {mode === "down" && (
-              <button
-                type="button"
-                onClick={addMinute}
-                className="flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-1.5 py-[15px] font-sans text-sm font-semibold text-ink hover:bg-surface-light md:hidden"
-              >
-                +1:00
-              </button>
-            )}
+            <button
+              type="button"
+              tabIndex={mode === "down" ? 0 : -1}
+              onClick={addMinute}
+              className={`flex-1 whitespace-nowrap rounded-[13px] border border-border bg-white px-1.5 py-[15px] font-sans text-sm font-semibold text-ink hover:bg-surface-light md:hidden ${
+                mode === "down" ? "" : "invisible"
+              }`}
+            >
+              +1:00
+            </button>
             <button
               type="button"
               onClick={reset}
