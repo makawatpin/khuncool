@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
+import ShareActivityButton from "@/components/ShareActivityButton";
 
 const SAMPLE_QUESTIONS = [
   "อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค",
@@ -13,9 +14,11 @@ const SAMPLE_QUESTIONS = [
   "ตั้งคำถาม 1 ข้อที่อยากรู้เพิ่มเกี่ยวกับเรื่องนี้",
 ];
 
-export default function QuestionApp() {
+export default function QuestionApp({ initialQuestions }: { initialQuestions?: readonly string[] }) {
   useTrackToolUse("question");
-  const [questions, setQuestions] = useState<string[]>(SAMPLE_QUESTIONS);
+  const [questions, setQuestions] = useState<string[]>(() =>
+    initialQuestions ? [...initialQuestions] : SAMPLE_QUESTIONS,
+  );
   const [used, setUsed] = useState<string[]>([]);
   const [current, setCurrent] = useState("กดปุ่มเพื่อสุ่มคำถาม");
   const [newQ, setNewQ] = useState("");
@@ -268,7 +271,17 @@ export default function QuestionApp() {
   );
 
   return (
-    <ToolFullscreenFrame title="สุ่มคำถาม">
+    <ToolFullscreenFrame
+      title="สุ่มคำถาม"
+      actions={
+        <ShareActivityButton
+          title="ชุดสุ่มคำถาม"
+          items={questions}
+          template="random-question"
+          templateConfig={{ noRepeat }}
+        />
+      }
+    >
     <div className="md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9">
       {/* Display + pick */}
       <div>
