@@ -1,4 +1,4 @@
-import type { EventStatus, Occurrence, ResolvedDate } from "./types";
+import type { AgendaItem, CalendarEvent, EventStatus, Occurrence, ResolvedDate } from "./types";
 import { getLunarDate } from "./lunarDates";
 
 function pad(n: number): string {
@@ -85,4 +85,67 @@ export function computeStatus(
   if (daysUntilPublishBy < 0) return "overdue";
   if (daysUntilPublishBy <= 14) return "act-now";
   return "upcoming";
+}
+
+/** Builds the sorted agenda for the given events, as seen from `today`.
+ *  For each event, resolves both the current year and next year's
+ *  occurrence (so events early in the following year — e.g. Children's
+ *  Day in January — surface while we're still in November/December),
+ *  drops occurrences already fully passed, and sorts by how soon content
+ *  needs to publish. `monthsAhead` bounds how far into the future to
+ *  keep in the result. */
+export function buildAgenda(
+  events: CalendarEvent[],
+  today: string,
+  monthsAhead: number
+): AgendaItem[] {
+  const todayYear = Number(today.slice(0, 4));
+
+  const items: AgendaItem[] = [];
+
+  for (const event of events) {
+    for (const year of [todayYear, todayYear + 1]) {
+      const resolved = resolveDate(event.occurrence, year);
+      const status = computeStatus(event.leadDays, resolved, today);
+
+      if (status === "passed") continue;
+
+      if (resolved && daysBetween(today, resolved.eventDate) > monthsAhead * 31) {
+        // Too far in the future to show yet, unless it's already
+        // actionable (overdue/act-now can't happen this far out, so this
+        // simple cutoff is safe).
+        continue;
+      }
+
+      const publishByDate = resolved ? addDays(resolved.eventDate, -event.leadDays) : null;
+
+      items.push({
+        ...event,
+        year,
+        resolvedDate: resolved?.eventDate ?? null,
+        resolvedEndDate: resolved?.eventEndDate ?? null,
+        publishByDate,
+        status,
+        daysUntilEvent: resolved ? daysBetween(today, resolved.eventDate) : null,
+        daysUntilPublishBy: publishByDate ? daysBetween(today, publishByDate) : null,
+      });
+    }
+  }
+
+  items.sort((a, b) => {
+    const rank = (item: AgendaItem) => {
+      if (item.status === "overdue") return 0;
+      if (item.status === "act-now") return 1;
+      if (item.status === "unknown") return 3;
+      return 2; // upcoming
+    };
+    const rankDiff = rank(a) - rank(b);
+    if (rankDiff !== 0) return rankDiff;
+
+    const aKey = a.daysUntilPublishBy ?? Number.MAX_SAFE_INTEGER;
+    const bKey = b.daysUntilPublishBy ?? Number.MAX_SAFE_INTEGER;
+    return aKey - bKey;
+  });
+
+  return items;
 }

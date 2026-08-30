@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { resolveDate, computeStatus } from "./resolve";
-import type { Occurrence } from "./types";
+import { resolveDate, computeStatus, buildAgenda } from "./resolve";
+import type { Occurrence, CalendarEvent } from "./types";
 
 describe("resolveDate", () => {
   it("resolves a fixed date", () => {
@@ -108,5 +108,80 @@ describe("computeStatus", () => {
 
   it("is 'unknown' when resolved is null", () => {
     expect(computeStatus(leadDays, null, "2026-06-01")).toBe("unknown");
+  });
+});
+
+describe("buildAgenda", () => {
+  const sunthornPhu: CalendarEvent = {
+    id: "sunthorn-phu-day",
+    title: "วันสุนทรภู่",
+    category: "holiday",
+    occurrence: { kind: "fixed", month: 6, day: 26 },
+    precision: "exact",
+    leadDays: 14,
+    searchTerms: ["สุนทรภู่"],
+    contentIdeas: ["ใบงานบทกวี"],
+  };
+
+  const childrensDay: CalendarEvent = {
+    id: "childrens-day",
+    title: "วันเด็กแห่งชาติ",
+    category: "holiday",
+    occurrence: { kind: "nthWeekday", month: 1, weekday: 6, nth: 2 },
+    precision: "exact",
+    leadDays: 21,
+    searchTerms: ["วันเด็ก"],
+    contentIdeas: ["การ์ดวันเด็ก"],
+  };
+
+  const uncoveredLunar: CalendarEvent = {
+    id: "loy-krathong-far-future",
+    title: "วันลอยกระทง",
+    category: "holiday",
+    occurrence: { kind: "lookup", key: "loy-krathong" },
+    precision: "exact",
+    leadDays: 14,
+    searchTerms: ["ลอยกระทง"],
+    contentIdeas: ["กระทงประดิษฐ์"],
+  };
+
+  it("sorts items by soonest publish-by first, using today's date", () => {
+    // Today is 2026-06-01. Sunthorn Phu (Jun 26, lead 14) -> publishBy Jun 12.
+    const agenda = buildAgenda([sunthornPhu], "2026-06-01", 1);
+    expect(agenda).toHaveLength(1);
+    expect(agenda[0].resolvedDate).toBe("2026-06-26");
+    expect(agenda[0].publishByDate).toBe("2026-06-12");
+    expect(agenda[0].status).toBe("act-now");
+  });
+
+  it("excludes events already passed this year", () => {
+    // Today is 2026-07-01, after Sunthorn Phu Jun 26 -> passed, excluded
+    // unless next year's occurrence is within the lookahead window.
+    const agenda = buildAgenda([sunthornPhu], "2026-07-01", 1);
+    expect(agenda.find((a) => a.id === "sunthorn-phu-day" && a.year === 2026)).toBeUndefined();
+  });
+
+  it("rolls over to next year's occurrence when late in the year (Children's Day in November)", () => {
+    const agenda = buildAgenda([childrensDay], "2026-11-01", 3);
+    const item = agenda.find((a) => a.id === "childrens-day");
+    expect(item).toBeDefined();
+    expect(item?.year).toBe(2027);
+    expect(item?.resolvedDate).toBe("2027-01-09"); // 2nd Sat of Jan 2027
+  });
+
+  it("marks unresolved lookup years as status 'unknown' instead of throwing", () => {
+    expect(() => buildAgenda([uncoveredLunar], "2031-01-01", 1)).not.toThrow();
+    const agenda = buildAgenda([uncoveredLunar], "2031-01-01", 1);
+    const item = agenda.find((a) => a.id === "loy-krathong-far-future");
+    expect(item?.status).toBe("unknown");
+    expect(item?.resolvedDate).toBeNull();
+  });
+
+  it("sorts overdue and act-now items before upcoming ones", () => {
+    const agenda = buildAgenda([sunthornPhu, childrensDay], "2026-06-01", 12);
+    // childrensDay's *next* occurrence from 2026-06-01 is Jan 2027 (far away,
+    // "upcoming"); sunthornPhu publishBy is 2026-06-12 (closer). Closer
+    // publish-by date should sort first regardless of category.
+    expect(agenda[0].id).toBe("sunthorn-phu-day");
   });
 });
