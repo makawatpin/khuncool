@@ -30,6 +30,45 @@ export type Article = {
 
 export const ALL_ARTICLES: Article[] = [
   {
+    title: "Kahoot ฟรีเล่นได้กี่คน และมีอะไรใช้แทนได้บ้าง",
+    cat: "สื่อการสอน",
+    date: "30 ส.ค. 2569",
+    dateISO: "2026-08-30",
+    readTime: "6 นาที",
+    img: "/assets/kahoot-free-alternative-cover.webp",
+    alt: "เปรียบเทียบ Kahoot แพ็กเกจฟรีกับสื่อการสอนภาษาไทยที่เล่นได้ทั้งห้อง",
+    href: "/blog/kahoot-free-alternative",
+    excerpt:
+      "แพ็กเกจฟรีของ Kahoot จำกัดผู้เล่นไว้ 10 คนต่อเกม ซึ่งไม่พอกับห้องเรียนไทย ดูวิธีจัดกิจกรรมแข่งขันทั้งห้องแบบไม่เสียค่าสมาชิก",
+    linksTool: { label: "สื่อการสอน", href: "/media" },
+  },
+  {
+    title: "ClassDojo ฟรีไหม ใช้เก็บคะแนนพฤติกรรมนักเรียนแบบไม่ต้องสมัครได้อย่างไร",
+    cat: "สื่อการสอน",
+    date: "30 ส.ค. 2569",
+    dateISO: "2026-08-30",
+    readTime: "6 นาที",
+    img: "/assets/classdojo-thai-alternative-cover.webp",
+    alt: "เปรียบเทียบ ClassDojo กับกระดานคะแนนกลุ่มภาษาไทยที่ใช้ได้ทันที",
+    href: "/blog/classdojo-thai-alternative",
+    excerpt:
+      "ClassDojo ฝั่งครูใช้ฟรีจริง แต่ต้องสมัครและกรอกรายชื่อนักเรียนก่อน เทียบกับกระดานคะแนนกลุ่มที่เปิดใช้ได้ทันทีในคาบเดียว",
+    linksTool: { label: "กระดานคะแนนกลุ่ม", href: "/group-scoreboard" },
+  },
+  {
+    title: "Wordwall ฟรีได้แค่ไหน และมีอะไรใช้แทนได้บ้าง",
+    cat: "สื่อการสอน",
+    date: "30 ส.ค. 2569",
+    dateISO: "2026-08-30",
+    readTime: "6 นาที",
+    img: "/assets/wordwall-free-alternative-cover.webp",
+    alt: "เปรียบเทียบ Wordwall แพ็กเกจฟรีกับสื่อการสอนออนไลน์ภาษาไทยที่ใช้ฟรี",
+    href: "/blog/wordwall-free-alternative",
+    excerpt:
+      "สรุปเงื่อนไขแพ็กเกจฟรีของ Wordwall ว่าสร้างกิจกรรมได้กี่ชิ้น พร้อมเทียบกับสื่อการสอนภาษาไทยที่ใช้ฟรีไม่จำกัดและไม่ต้องสมัครสมาชิก",
+    linksTool: { label: "สื่อการสอน", href: "/media" },
+  },
+  {
     title: "ใช้แท็บเล็ตเครื่องเดียวสอนภาษาอังกฤษ ประถมศึกษา ทั้งห้องได้เรียน",
     cat: "สื่อการสอน",
     date: "27 ส.ค. 2569",
