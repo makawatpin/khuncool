@@ -1,4 +1,4 @@
-import type { Occurrence, ResolvedDate } from "./types";
+import type { EventStatus, Occurrence, ResolvedDate } from "./types";
 import { getLunarDate } from "./lunarDates";
 
 function pad(n: number): string {
@@ -49,4 +49,40 @@ export function resolveDate(occurrence: Occurrence, year: number): ResolvedDate 
       };
     }
   }
+}
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+function toUtcMidnight(iso: string): number {
+  return new Date(`${iso}T00:00:00Z`).getTime();
+}
+
+function addDays(iso: string, days: number): string {
+  const t = toUtcMidnight(iso) + days * MS_PER_DAY;
+  const d = new Date(t);
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+}
+
+function daysBetween(fromIso: string, toIso: string): number {
+  return Math.round((toUtcMidnight(toIso) - toUtcMidnight(fromIso)) / MS_PER_DAY);
+}
+
+/** Computes the publish-by date and status for one resolved event.
+ *  `today` is passed in explicitly (never read from the system clock
+ *  here) so this function is fully deterministic and testable. */
+export function computeStatus(
+  leadDays: number,
+  resolved: ResolvedDate | null,
+  today: string
+): EventStatus {
+  if (!resolved) return "unknown";
+
+  if (daysBetween(today, resolved.eventEndDate) < 0) return "passed";
+
+  const publishByDate = addDays(resolved.eventDate, -leadDays);
+  const daysUntilPublishBy = daysBetween(today, publishByDate);
+
+  if (daysUntilPublishBy < 0) return "overdue";
+  if (daysUntilPublishBy <= 14) return "act-now";
+  return "upcoming";
 }
