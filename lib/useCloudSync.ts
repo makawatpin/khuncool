@@ -31,6 +31,7 @@ const LOCAL_STORAGE_KEY: Record<string, string> = {
   attendance: "khuncool_attendance_v1",
   savings: "khuncool_savings_v1",
   homeroom: "khuncool.homeroom",
+  classrooms: "khuncool.classrooms.v1",
 };
 
 function stampKey(key: string) {

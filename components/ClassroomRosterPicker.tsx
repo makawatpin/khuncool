@@ -134,7 +134,7 @@ export default function ClassroomRosterPicker({
                 {rosters.length ? "จัดการห้องเรียนและรายชื่อ" : "สร้างห้องเรียนแรก"}
               </Link>
               <p className="mt-2 text-center text-[11px] leading-relaxed text-ink-faint">
-                🔒 รายชื่อเก็บอยู่ในเบราว์เซอร์นี้ ไม่ถูกแนบไปกับลิงก์แชร์
+                🔒 รายชื่อไม่ถูกแนบไปกับลิงก์แชร์ · ล็อกอินแล้วจะซิงก์ให้ใช้ได้ทุกเครื่อง
               </p>
             </div>
           </div>

@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useClassrooms } from "@/lib/classrooms/useClassrooms";
+import SyncStatus from "@/components/SyncStatus";
+import SaveScopeNote from "@/components/SaveScopeNote";
 import { normalizeStudentNames } from "@/lib/classrooms/storage";
 
 export default function ClassroomsApp() {
   const {
     store,
     hydrated,
+    cloudStatus,
     createClassroom,
     updateClassroom,
     removeClassroom,
@@ -114,7 +117,7 @@ export default function ClassroomsApp() {
       <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <span className="inline-flex rounded-pill bg-success-bg px-3 py-1 text-[11px] font-semibold text-success">
-            🔒 เก็บในเบราว์เซอร์นี้เท่านั้น
+            🔒 ไม่ติดไปกับลิงก์แชร์
           </span>
           <h1 className="mt-3 text-[26px] font-bold tracking-tight text-ink md:text-[34px]">
             ห้องเรียนของฉัน
@@ -132,9 +135,13 @@ export default function ClassroomsApp() {
         </button>
       </div>
 
+      <SyncStatus status={cloudStatus} />
+
+      <SaveScopeNote variant="sidebar" />
+
       <div className="mb-6 rounded-card border border-[#f2d399] bg-[#fff9eb] px-4 py-3 text-xs leading-relaxed text-[#795518]">
-        รายชื่อนักเรียนเป็นข้อมูลส่วนบุคคล รุ่นนี้จึงไม่อัปโหลดขึ้นคลาวด์อัตโนมัติ
-        และจะไม่ติดไปกับลิงก์แชร์กิจกรรม หากล้างข้อมูลเบราว์เซอร์ รายชื่อในหน้านี้จะถูกลบด้วย
+        รายชื่อนักเรียนเป็นข้อมูลส่วนบุคคล จะไม่ติดไปกับลิงก์แชร์กิจกรรม
+        และนักเรียนที่เปิดลิงก์จะไม่เห็นรายชื่อห้องของคุณ
       </div>
 
       {!hydrated ? (

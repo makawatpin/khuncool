@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCloudSync } from "@/lib/useCloudSync";
 import {
   EMPTY_CLASSROOM_STORE,
   createLocalId,
@@ -14,13 +15,19 @@ export function useClassrooms() {
   const [store, setStore] = useState<ClassroomStore>(EMPTY_CLASSROOM_STORE);
   const [hydrated, setHydrated] = useState(false);
 
+  // Guests get `local-only` and zero network calls; signed-in teachers get the
+  // roster mirrored into their account so it follows them across devices.
+  const { pulled, status: cloudStatus } = useCloudSync("classrooms", store);
+
+  // Read the local store on mount, and again when a cloud pull (after sign-in)
+  // has written newer data into the same localStorage slot.
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setStore(loadClassroomStore());
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [pulled]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -109,6 +116,7 @@ export function useClassrooms() {
     store,
     rosters,
     hydrated,
+    cloudStatus,
     createClassroom,
     updateClassroom,
     removeClassroom,
