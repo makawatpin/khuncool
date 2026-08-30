@@ -91,6 +91,39 @@ export const TOOLS = [
   },
 ];
 
+/**
+ * "ใช้งานยังไง" walkthrough on /tools. Step 1 deliberately comes before the
+ * sign-up step: the whole pitch is that teachers can use everything without an
+ * account, so the account is introduced only once they have seen the value.
+ * Images are decorative — every number and word is real text, not baked in.
+ */
+export const HOW_TO_STEPS = [
+  {
+    title: "เลือกเครื่องมือที่จะใช้",
+    body: "เปิดใช้ได้ทันทีทุกตัว ไม่ต้องสมัคร ไม่ต้องติดตั้ง",
+    image: "/assets/how-to/step-1.webp",
+    bg: "#E1E3FD",
+  },
+  {
+    title: "ใส่รายชื่อหรือคำถามของคุณ",
+    body: "วางทีเดียวทั้งห้อง หรือนำเข้าจากไฟล์ Excel ที่มีอยู่แล้ว",
+    image: "/assets/how-to/step-2.webp",
+    bg: "#FFEAD5",
+  },
+  {
+    title: "สมัครฟรี เก็บไว้ใช้ซ้ำ",
+    body: "รายชื่อและข้อมูลจะตามไปทุกเครื่องที่ล็อกอิน ไม่ต้องกรอกใหม่",
+    image: "/assets/how-to/step-3.webp",
+    bg: "#D0FBEF",
+  },
+  {
+    title: "แชร์ลิงก์หรือ QR ให้นักเรียน",
+    body: "นักเรียนสแกนแล้วเล่นได้เลย ไม่ต้องสมัครและไม่เห็นรายชื่อห้องของคุณ",
+    image: "/assets/how-to/step-4.webp",
+    bg: "#E8E5FF",
+  },
+];
+
 export const APPS = [
   {
     icon: "📋",

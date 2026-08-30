@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import ToolCard from "@/components/ToolCard";
 import FaqAccordion from "./FaqAccordion";
-import { APPS, CASES, FAQS, RELATED, TOOLS, TRUST_CHIPS } from "./data";
+import { APPS, CASES, FAQS, HOW_TO_STEPS, RELATED, TOOLS, TRUST_CHIPS } from "./data";
 
 export const metadata: Metadata = {
   title: "เครื่องมือครูออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง | khuncool",
@@ -186,6 +187,54 @@ export default function ToolsPage() {
               desc={t.desc}
             />
           ))}
+        </div>
+      </div>
+
+      {/* How it works, end to end */}
+      <div className="px-4 pb-6 md:px-8 md:pb-[34px]">
+        <div className="rounded-card-lg border border-border bg-surface-light p-[18px] md:p-8">
+          <h2 className="m-0 mb-1 text-center text-lg md:mb-1.5 md:text-2xl">
+            ใช้งานยังไง ตั้งแต่เปิดเว็บจนแชร์ให้นักเรียน
+          </h2>
+          <p className="m-0 mb-5 text-center text-[13px] leading-[1.65] text-ink-secondary md:mb-7 md:text-[14.5px]">
+            เริ่มใช้ได้เลยโดยไม่ต้องสมัคร สมัครเมื่อคุณอยากเก็บไว้ใช้ซ้ำเท่านั้น
+          </p>
+
+          <ol className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+            {HOW_TO_STEPS.map((step, i) => (
+              <li key={step.title} className="flex gap-3.5 sm:flex-col sm:gap-0">
+                <div
+                  className="relative aspect-video w-[104px] flex-none overflow-hidden rounded-[13px] sm:w-full md:rounded-2xl"
+                  style={{ background: step.bg }}
+                >
+                  <Image
+                    src={step.image}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="(max-width: 639px) 104px, (max-width: 1023px) 45vw, 260px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1 sm:mt-3">
+                  <div className="flex items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-primary text-[12.5px] font-bold text-white md:h-7 md:w-7 md:text-sm"
+                    >
+                      {i + 1}
+                    </span>
+                    <h3 className="m-0 text-[14.5px] leading-snug md:text-[15.5px]">
+                      {step.title}
+                    </h3>
+                  </div>
+                  <p className="m-0 mt-1.5 text-[12.5px] leading-[1.65] text-ink-secondary md:text-[13.5px]">
+                    {step.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
 
