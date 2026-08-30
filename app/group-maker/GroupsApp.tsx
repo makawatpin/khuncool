@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 
-const ROSTER_KEY = "khuncool.roster";
+const NAMES_KEY = "khuncool.groupmaker.names";
 
 const SAMPLE_NAMES = [
   "น้องปลา",
@@ -43,11 +44,13 @@ type Group = {
 function loadInitialNames(): string[] {
   if (typeof window === "undefined") return SAMPLE_NAMES;
   try {
-    const saved = JSON.parse(window.localStorage.getItem(ROSTER_KEY) || "null");
-    if (Array.isArray(saved) && saved.length) return saved;
+    const own = JSON.parse(window.localStorage.getItem(NAMES_KEY) || "null");
+    if (Array.isArray(own) && own.length) return own;
   } catch {
     /* ignore */
   }
+  const roster = loadActiveRosterNames();
+  if (roster.length) return roster;
   return [...SAMPLE_NAMES];
 }
 
@@ -74,11 +77,12 @@ export default function GroupsApp() {
     return () => window.clearTimeout(restoreTimer);
   }, []);
 
-  // Persist to the shared roster key on change (after hydration).
+  // Persist this tool's own working list (after hydration). The shared roster
+  // lives in the classrooms store and is only ever read, never written here.
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(ROSTER_KEY, JSON.stringify(names));
+      window.localStorage.setItem(NAMES_KEY, JSON.stringify(names));
     } catch {
       /* ignore */
     }

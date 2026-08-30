@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 
 const LS_KEY = "khuncool.scoreboard";
-const ROSTER_KEY = "khuncool.roster";
 const COLORS = [
   "#5C5EE6",
   "#14B79A",
@@ -126,15 +126,15 @@ export default function ScoreboardApp() {
   }, []);
 
   const importRoster = useCallback(() => {
-    let r: unknown = null;
+    let r: string[] = [];
     try {
-      r = JSON.parse(window.localStorage.getItem(ROSTER_KEY) || "null");
+      r = loadActiveRosterNames();
     } catch {
       /* ignore */
     }
-    if (!Array.isArray(r) || !r.length) return;
+    if (r.length === 0) return;
     setTeams(
-      (r as string[]).slice(0, 12).map((name) => ({
+      r.slice(0, 12).map((name) => ({
         id: nextIdRef.current++,
         name,
         score: 0,

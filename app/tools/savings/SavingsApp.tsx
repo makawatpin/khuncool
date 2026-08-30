@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
@@ -10,7 +11,6 @@ import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
 
 const LS_KEY = "khuncool_savings_v1";
-const ROSTER_KEY = "khuncool.roster";
 const PRESET_VALS = [5, 10, 20, 50];
 
 const DEFAULT_STUDENTS = [
@@ -152,12 +152,10 @@ export default function SavingsApp() {
             return;
           }
         }
-        const r: unknown = JSON.parse(
-          window.localStorage.getItem(ROSTER_KEY) || "null",
-        );
-        if (Array.isArray(r) && r.length) {
-          setStudents(r as string[]);
-          setBalancesSynced((r as string[]).map(() => 0));
+        const r = loadActiveRosterNames();
+        if (r.length > 0) {
+          setStudents(r);
+          setBalancesSynced(r.map(() => 0));
           setTxns([]);
         }
       } catch {
@@ -217,7 +215,6 @@ export default function SavingsApp() {
           savedAt: Date.now(),
         }),
       );
-      window.localStorage.setItem(ROSTER_KEY, JSON.stringify(students));
     } catch {
       /* ignore */
     }

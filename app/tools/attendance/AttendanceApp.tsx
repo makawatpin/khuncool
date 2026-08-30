@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
@@ -14,7 +15,6 @@ import {
 } from "@/lib/printAttendance";
 
 const LS_KEY = "khuncool_attendance_v1";
-const ROSTER_KEY = "khuncool.roster";
 
 const STATUS_COLORS: Record<AttendanceStatusKey, string> = {
   present: "#0A9380",
@@ -122,12 +122,10 @@ export default function AttendanceApp() {
             return;
           }
         }
-        const r: unknown = JSON.parse(
-          window.localStorage.getItem(ROSTER_KEY) || "null",
-        );
-        if (Array.isArray(r) && r.length) {
-          setStudents(r as string[]);
-          setStatuses((r as string[]).map(() => defaultStatus()));
+        const r = loadActiveRosterNames();
+        if (r.length > 0) {
+          setStudents(r);
+          setStatuses(r.map(() => defaultStatus()));
         }
       } catch {
         /* ignore */
@@ -165,7 +163,6 @@ export default function AttendanceApp() {
         LS_KEY,
         JSON.stringify({ students, statuses, room, savedAt: Date.now() }),
       );
-      window.localStorage.setItem(ROSTER_KEY, JSON.stringify(students));
     } catch {
       /* ignore */
     }

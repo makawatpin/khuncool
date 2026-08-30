@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
@@ -23,7 +24,6 @@ import {
 const LS = "khuncool.homeroom";
 const ATTENDANCE_LS = "khuncool_attendance_v1";
 const SAVINGS_LS = "khuncool_savings_v1";
-const ROSTER_KEY = "khuncool.roster";
 
 const DEFAULT_TOPICS = [
   "รักชาติ ศาสน์ กษัตริย์",
@@ -178,19 +178,15 @@ export default function HomeroomApp() {
           if (Array.isArray(d.students) && d.students.length) {
             setStudents(d.students);
           } else {
-            const r: unknown = JSON.parse(
-              window.localStorage.getItem(ROSTER_KEY) || "null",
-            );
-            if (Array.isArray(r) && r.length) setStudents(r as string[]);
+            const r = loadActiveRosterNames();
+            if (r.length > 0) setStudents(r);
           }
           setHydrated(true);
           return;
         }
       }
-      const r: unknown = JSON.parse(
-        window.localStorage.getItem(ROSTER_KEY) || "null",
-      );
-      if (Array.isArray(r) && r.length) setStudents(r as string[]);
+      const r = loadActiveRosterNames();
+      if (r.length > 0) setStudents(r);
       } catch {
         /* ignore */
       }
@@ -236,7 +232,6 @@ export default function HomeroomApp() {
           savedAt: Date.now(),
         }),
       );
-      window.localStorage.setItem(ROSTER_KEY, JSON.stringify(students));
     } catch {
       /* ignore */
     }

@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
+import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 
 const NAMES_KEY = "khuncool.wheel.names";
-const ROSTER_KEY = "khuncool.roster";
 
 const SAMPLE_NAMES = [
   "น้องปลา",
@@ -40,14 +40,8 @@ function loadInitialNames(): string[] {
   } catch {
     /* ignore */
   }
-  try {
-    const roster = JSON.parse(
-      window.localStorage.getItem(ROSTER_KEY) || "null",
-    );
-    if (Array.isArray(roster) && roster.length) return roster;
-  } catch {
-    /* ignore */
-  }
+  const roster = loadActiveRosterNames();
+  if (roster.length) return roster;
   return [...SAMPLE_NAMES];
 }
 
@@ -565,7 +559,7 @@ export default function WheelApp() {
     });
   }, []);
 
-  const useClassroomRoster = useCallback((roster: { name: string; studentNames: string[] }) => {
+  const applyClassroomRoster = useCallback((roster: { name: string; studentNames: string[] }) => {
     setNames(roster.studentNames);
     setShowResult(false);
     setImportMsg(`ใช้ห้อง ${roster.name} · ${roster.studentNames.length} คน`);
@@ -652,7 +646,7 @@ export default function WheelApp() {
             </span>
             <div className="flex gap-2.5 md:gap-3">
               <ClassroomRosterPicker
-                onSelect={useClassroomRoster}
+                onSelect={applyClassroomRoster}
                 className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
               />
               <button

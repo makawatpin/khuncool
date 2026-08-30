@@ -168,6 +168,21 @@ export function loadClassroomStore(): ClassroomStore {
   return migrated;
 }
 
+/**
+ * Names of the classroom the teacher used last, for tools that seed their
+ * working list from the shared roster. This is the only supported way to read
+ * the roster outside the classrooms UI — the old `khuncool.roster` key is now
+ * read once by the migration above and never written again.
+ */
+export function loadActiveRosterNames(): string[] {
+  const store = loadClassroomStore();
+  const active =
+    store.classrooms.find(
+      (classroom) => classroom.id === store.activeClassroomId,
+    ) ?? store.classrooms[0];
+  return active ? active.students.map((student) => student.name) : [];
+}
+
 export function saveClassroomStore(store: ClassroomStore): void {
   if (typeof window === "undefined") return;
   try {
