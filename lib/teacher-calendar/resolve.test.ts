@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { resolveDate, computeStatus, buildAgenda } from "./resolve";
 import type { Occurrence, CalendarEvent } from "./types";
+import { CALENDAR_EVENTS } from "./events";
 
 describe("resolveDate", () => {
   it("resolves a fixed date", () => {
@@ -183,5 +184,23 @@ describe("buildAgenda", () => {
     // "upcoming"); sunthornPhu publishBy is 2026-06-12 (closer). Closer
     // publish-by date should sort first regardless of category.
     expect(agenda[0].id).toBe("sunthorn-phu-day");
+  });
+});
+
+describe("CALENDAR_EVENTS catalog", () => {
+  it("has at least one event in every category", () => {
+    const categories = new Set(CALENDAR_EVENTS.map((e) => e.category));
+    expect(categories).toEqual(
+      new Set(["holiday", "paperwork", "evaluation", "exam", "competition", "career", "term"])
+    );
+  });
+
+  it("has unique ids", () => {
+    const ids = CALENDAR_EVENTS.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("builds a valid agenda from the real catalog without throwing", () => {
+    expect(() => buildAgenda(CALENDAR_EVENTS, "2026-08-30", 6)).not.toThrow();
   });
 });
