@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ToolCard from "@/components/ToolCard";
 import FaqAccordion from "./FaqAccordion";
+import HowToCta from "@/components/HowToCta";
 import { APPS, CASES, FAQS, HOW_TO_STEPS, RELATED, TOOLS, TRUST_CHIPS } from "./data";
 
 export const metadata: Metadata = {
@@ -235,6 +236,8 @@ export default function ToolsPage() {
               </li>
             ))}
           </ol>
+
+          <HowToCta />
         </div>
       </div>
 
