@@ -27,11 +27,10 @@ export default async function SharedActivityPage({ params }: PageProps) {
   if (!/^[23456789abcdefghjkmnpqrstuvwxyz]{10}$/.test(slug) || !isShareTemplate(template)) notFound();
 
   const { data, error } = await createPublicServerClient()
-    .from("kc_content_sets")
-    .select("slug,title,kind,items,default_template,template_config")
-    .eq("slug", slug)
-    .eq("default_template", template)
-    .in("visibility", ["unlisted", "public"])
+    .rpc("get_kc_shared_content_set", {
+      shared_slug: slug,
+      requested_template: template,
+    })
     .maybeSingle();
 
   if (error || !data) notFound();

@@ -1,7 +1,5 @@
 -- KhunCool unlisted activity sharing.
--- Apply to project segfdmnxbdctntvsdprq with the Supabase SQL editor/MCP.
-
-create table if not exists public.kc_content_sets (
+create table public.kc_content_sets (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users(id) on delete cascade,
   slug text not null unique,
@@ -29,15 +27,15 @@ create table if not exists public.kc_content_sets (
   constraint kc_content_sets_template_config_object check (jsonb_typeof(template_config) = 'object')
 );
 
-create index if not exists kc_content_sets_owner_updated_idx
+create index kc_content_sets_owner_updated_idx
   on public.kc_content_sets (owner_id, updated_at desc);
-create index if not exists kc_content_sets_public_updated_idx
+create index kc_content_sets_public_updated_idx
   on public.kc_content_sets (updated_at desc)
   where visibility = 'public' and is_approved;
 
 alter table public.kc_content_sets enable row level security;
 
-create or replace function public.enforce_kc_content_set_quota()
+create function public.enforce_kc_content_set_quota()
 returns trigger
 language plpgsql
 security definer
@@ -55,7 +53,6 @@ end;
 $$;
 revoke all on function public.enforce_kc_content_set_quota() from public, anon, authenticated;
 
-drop trigger if exists enforce_kc_content_set_quota on public.kc_content_sets;
 create trigger enforce_kc_content_set_quota
   before insert on public.kc_content_sets
   for each row execute function public.enforce_kc_content_set_quota();
@@ -69,19 +66,16 @@ grant update (title, subject, grade_level, kind, items, visibility, default_temp
   on table public.kc_content_sets to authenticated;
 grant delete on table public.kc_content_sets to authenticated;
 
-drop policy if exists "shared sets are readable" on public.kc_content_sets;
 create policy "shared sets are readable"
   on public.kc_content_sets for select
   to anon, authenticated
   using (visibility in ('unlisted', 'public'));
 
-drop policy if exists "owners can read private sets" on public.kc_content_sets;
 create policy "owners can read private sets"
   on public.kc_content_sets for select
   to authenticated
   using ((select auth.uid()) = owner_id);
 
-drop policy if exists "owners can create sets" on public.kc_content_sets;
 create policy "owners can create sets"
   on public.kc_content_sets for insert
   to authenticated
@@ -91,14 +85,12 @@ create policy "owners can create sets"
     and is_approved = false
   );
 
-drop policy if exists "owners can update sets" on public.kc_content_sets;
 create policy "owners can update sets"
   on public.kc_content_sets for update
   to authenticated
   using ((select auth.uid()) = owner_id)
   with check ((select auth.uid()) = owner_id and is_approved = false);
 
-drop policy if exists "owners can delete sets" on public.kc_content_sets;
 create policy "owners can delete sets"
   on public.kc_content_sets for delete
   to authenticated
