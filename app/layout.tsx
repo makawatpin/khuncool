@@ -46,8 +46,12 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-visual",
 };
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.khuncool.com"),
+  ...(GSC_VERIFICATION && { verification: { google: GSC_VERIFICATION } }),
   title: "khuncool - เครื่องมือครู สื่อการสอน ใช้ฟรี",
   description:
     "รวมเครื่องมือครูและสื่อการสอนออนไลน์ ใช้ฟรี ไม่ต้องติดตั้ง เช่น สุ่มชื่อนักเรียน จับเวลา แบ่งกลุ่ม และกระดานคะแนน",
@@ -70,6 +74,25 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+        {/* GA4. Absent unless NEXT_PUBLIC_GA_ID is set, so local runs and
+            previews stay out of the reporting. Client-side navigations are
+            counted by GA4's enhanced measurement (History events) rather than
+            a router listener here. */}
+        {GA_ID && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
       </head>
       <body className="min-h-full flex flex-col">
         {/* Skip past the site navigation.

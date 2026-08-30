@@ -65,6 +65,27 @@ export const otherSubjects = (current: SubjectSlug) =>
     st: mediaLabel(slug),
   }));
 
+/** Playable hrefs per subject, in the same order the subject page lists them. */
+const SUBJECT_MEDIA: Record<SubjectSlug, readonly { href?: string }[]> = {
+  english: ENGLISH_MEDIA,
+  mathematics: SUBJECT_CONTENT.mathematics.resources,
+  science: SUBJECT_CONTENT.science.resources,
+  thai: SUBJECT_CONTENT.thai.resources,
+  "social-studies": SOCIAL_MEDIA,
+  computer: COMPUTER_MEDIA,
+};
+
+/** Every /media URL: the hub, each subject page, and each playable resource.
+ *  The sitemap reads this instead of restating routes, so a game added to a
+ *  subject's data file is submitted to search engines without a second edit. */
+export const MEDIA_ROUTES: string[] = [
+  "/media",
+  ...ORDER.flatMap((slug) => [
+    SUBJECT_INFO[slug].href,
+    ...SUBJECT_MEDIA[slug].map((item) => item.href).filter((href): href is string => Boolean(href)),
+  ]),
+];
+
 const THAI_MONTHS = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 
 /** "2026-08-24" -> "24 ส.ค. 2569" */
