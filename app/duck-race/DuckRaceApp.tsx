@@ -558,7 +558,9 @@ export default function DuckRaceApp() {
       const baseTop = bandTop + slots[i] * bandRange + (Math.random() * 20 - 10);
       const runner = document.createElement("div");
       runner.className = "rnode";
-      runner.style.cssText = `position:absolute;z-index:${4 + i};width:${duckSize}px;height:${duckSize}px;transform:translate(${startX - duckSize / 2}px,${baseTop}px);will-change:transform`;
+      // ตัวที่อยู่ล่างกว่า (ใกล้ผู้ชมกว่าในมุมมองเปอร์สเปกทีฟ) ต้องอยู่ด้านหน้า ไม่ถูกตัวที่อยู่ไกลกว่าบัง
+      const zIndex = 4 + Math.round(baseTop);
+      runner.style.cssText = `position:absolute;z-index:${zIndex};width:${duckSize}px;height:${duckSize}px;transform:translate(${startX - duckSize / 2}px,${baseTop}px);will-change:transform`;
       runner.innerHTML =
         `<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:rgba(26,29,38,.8);color:#fff;font-size:11px;font-weight:600;font-family:'Anuphan','Sarabun';padding:2px 8px;border-radius:8px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;z-index:5;display:${showLabels ? "block" : "none"}">${escHtml(d.name)}</div>` +
         `<div class="rbadge" style="position:absolute;top:-12px;left:-4px;width:24px;height:24px;border-radius:50%;background:#F2B01E;color:#1A1D26;font-weight:700;font-size:13px;font-family:'Anuphan';display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);z-index:6"></div>` +
@@ -662,7 +664,8 @@ export default function DuckRaceApp() {
       r.badge.style.display = "flex";
       r.badge.style.background = rank === 0 ? "#F2B01E" : "#fff";
       r.badge.style.color = rank === 0 ? "#1A1D26" : "#434A58";
-      r.el.style.zIndex = String(100 - rank);
+      // คงลำดับชั้นตามเลนใกล้/ไกล ไม่ใช่ตามอันดับวิ่ง เพื่อไม่ให้ตัวไกลบังตัวใกล้ระหว่างแข่ง
+      r.el.style.zIndex = String(4 + Math.round(r.baseTop));
     });
     const camX = Math.max(0, Math.min(g.worldLen - g.W, leaderX - g.W * 0.32));
     world.style.transform = `translateX(${-camX}px)`;
