@@ -148,6 +148,63 @@
   cursor: pointer;
 }
 
+.lessonTabs { display: flex; gap: 6px; flex: none }
+
+.lessonTab {
+  width: 40px;
+  border: 1px solid rgba(31, 42, 68, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: inherit;
+  font-size: var(--kc-fs-label);
+  font-weight: 700;
+  cursor: pointer;
+}
+.lessonTabOn { background: #625CE7; border-color: #625CE7; color: #fff }
+
+.lessonStage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--kc-gap);
+  width: 100%;
+}
+
+.lessonTitle { margin: 0; font-size: var(--kc-fs-title) }
+
+.lessonShapes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kc-gap);
+  flex-wrap: wrap;
+}
+
+.lessonCaption {
+  margin: 0;
+  max-width: 56ch;
+  font-size: var(--kc-fs-body);
+  line-height: 1.6;
+  color: #4A5570;
+}
+
+.lessonControls { display: flex; gap: var(--kc-gap); flex: none; flex-wrap: wrap; justify-content: center }
+
+.ghost {
+  padding: 8px 16px;
+  border: 1px solid rgba(31, 42, 68, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: inherit;
+  font-size: var(--kc-fs-label);
+  font-weight: 600;
+  cursor: pointer;
+}
+.ghost:disabled { opacity: 0.4; cursor: default }
+
 /* ทรงตั้ง — ขาดความกว้าง การ์ดเรียงลงมา เก็บเนื้อหาครบ แค่บีบระยะห่าง
    (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
 @container kcstage (aspect-ratio < 0.9) {
@@ -164,4 +221,7 @@
   .homeText small { display: none }
   .homeCard { padding: 8px 10px }
   .homeGrid { max-width: 620px }
+  .lessonTitle { font-size: var(--kc-fs-head) }
+  .lessonCaption { font-size: var(--kc-fs-label); line-height: 1.45 }
+  .lessonShapes { gap: 10px }
 }
