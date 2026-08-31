@@ -30,7 +30,8 @@ export function slicePath(index: number, parts: number): string {
   }
   const start = pointAt(index / parts);
   const end = pointAt((index + 1) / parts);
-  const large = 1 / parts > 0.5 ? 1 : 0;
+  // parts >= 2 เสมอที่จุดนี้ ทำให้แต่ละชิ้นกินไม่เกินครึ่งวงกลม จึงเป็นส่วนโค้งเล็กเสมอ
+  const large = 0;
   return `M${CX} ${CY} L${start.x} ${start.y} A${R} ${R} 0 ${large} 1 ${end.x} ${end.y} Z`;
 }
 
@@ -53,7 +54,12 @@ export function unequalWeights(parts: number): number[] {
 export function stripBounds(index: number, parts: number, unequal = false): { x: number; width: number } {
   const weights = unequal ? unequalWeights(parts) : Array.from({ length: parts }, () => 1 / parts);
   const before = weights.slice(0, index).reduce((sum, w) => sum + w, 0);
-  return { x: round(before * 100), width: round(weights[index] * 100) };
+  const after = before + weights[index];
+  const x = round(before * 100);
+  // ความกว้างมาจากผลต่างของขอบเขตที่ปัดแล้วสองจุด ไม่ใช่ปัดน้ำหนักแยกกัน
+  // เพื่อให้ x + width ของแถบหนึ่งตรงกับ x ของแถบถัดไปเป๊ะ ๆ เสมอ
+  const width = round(after * 100) - x;
+  return { x, width };
 }
 
 /** อ่านเศษส่วนเป็นภาษาไทยสำหรับ aria-label และคำบรรยาย */

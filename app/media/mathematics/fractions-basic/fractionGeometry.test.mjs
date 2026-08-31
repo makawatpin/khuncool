@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { slicePath, stripBounds, unequalWeights } from "./fractionGeometry.ts";
+import { readFraction, slicePath, stripBounds, unequalWeights } from "./fractionGeometry.ts";
 
 test("slicePath ของแต่ละชิ้นต่อกันสนิท", () => {
   for (const parts of [2, 3, 4, 5, 6]) {
@@ -39,8 +39,31 @@ test("stripBounds แบ่งเท่ากันและเต็ม 100 พ
     assert.equal(bounds[0].x, 0);
     const last = bounds[parts - 1];
     assert.equal(Math.round((last.x + last.width) * 1000) / 1000, 100);
-    const widths = new Set(bounds.map((b) => b.width));
-    assert.equal(widths.size, 1, "แบ่งเท่ากันต้องกว้างเท่ากันทุกช่อง");
+    // ความกว้างมาจากผลต่างของขอบเขตที่ปัดแล้ว (ดู stripBounds) เพื่อให้แถบที่ติดกัน
+    // บรรจบกันพอดีเสมอ (ไม่มีรอยต่อ) บางจำนวนส่วนจึงกว้างต่างกันได้สูงสุด 0.001
+    // ซึ่งเป็นการยอมรับที่ตั้งใจ — เพราะรอยต่อเห็นได้บนจอ แต่ 0.001 ไม่เห็น
+    const widths = bounds.map((b) => b.width);
+    const maxWidth = Math.max(...widths);
+    const minWidth = Math.min(...widths);
+    assert.ok(
+      Math.round((maxWidth - minWidth) * 1000) / 1000 <= 0.001,
+      "แบ่งเท่ากันต้องกว้างเท่ากันเกือบทุกช่อง (ต่างได้ไม่เกิน 0.001 จากการปัดขอบเขต)",
+    );
+  }
+});
+
+test("stripBounds ของแถบที่ติดกันต้องบรรจบกันพอดี ไม่มีรอยต่อ", () => {
+  for (const unequal of [false, true]) {
+    for (const parts of [2, 3, 4, 5, 6]) {
+      const bounds = Array.from({ length: parts }, (_, i) => stripBounds(i, parts, unequal));
+      for (let i = 0; i < parts - 1; i++) {
+        assert.equal(
+          Math.round((bounds[i].x + bounds[i].width) * 1000) / 1000,
+          bounds[i + 1].x,
+          `parts=${parts} unequal=${unequal} แถบ ${i} จบไม่ตรงที่แถบ ${i + 1} เริ่ม`,
+        );
+      }
+    }
   }
 });
 
@@ -67,4 +90,16 @@ test("unequalWeights ของจำนวนส่วนที่ไม่ไ�
   const weights = unequalWeights(5);
   assert.equal(weights.length, 5);
   assert.equal(new Set(weights).size, 1);
+});
+
+test("readFraction 1/2 อ่านเป็นครึ่งหนึ่ง", () => {
+  assert.equal(readFraction(1, 2), "ครึ่งหนึ่ง");
+});
+
+test("readFraction กรณีทั่วไปอ่านเป็น N ส่วน D", () => {
+  assert.equal(readFraction(2, 3), "2 ส่วน 3");
+});
+
+test("readFraction 1/4 ไม่ถูกเข้าใจผิดว่าเป็นกรณีพิเศษ", () => {
+  assert.equal(readFraction(1, 4), "1 ส่วน 4");
 });
