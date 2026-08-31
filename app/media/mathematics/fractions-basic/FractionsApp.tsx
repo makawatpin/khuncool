@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KcSfx, hoverSfxDelegate } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useStage } from "../../_stage/useStage";
@@ -21,7 +21,28 @@ export default function FractionsApp() {
   const [screen, setScreen] = useState<Screen>("home");
   const [sound, setSound] = useState(true);
 
-  const play = (name: Parameters<typeof KcSfx.play>[0]) => { if (sound) KcSfx.play(name); };
+  // KcSfx จำสถานะปิดเสียงไว้ใน localStorage คีย์ kc-sfx-muted และใช้ร่วมกันทุกสื่อ
+  // ครูที่ปิดเสียงไว้คาบก่อนจึงกลับมาเจอเสียงที่ปิดอยู่แล้ว ถ้าไม่ดึงค่ามา ปุ่มจะโชว์ 🔊 ทั้งที่เงียบ
+  //
+  // อ่านคีย์ตรง ๆ ไม่เรียก KcSfx.isMuted() เพราะ KcSfx อ่าน localStorage ใน init() ซึ่งทำงาน
+  // ตอนสร้าง AudioContext ครั้งแรกเท่านั้น คือหลังผู้ใช้แตะจอแล้ว ก่อนหน้านั้น isMuted()
+  // คืนค่าตั้งต้น false เสมอไม่ว่าใน storage จะเป็นอะไร — และจะเรียก setMuted เพื่อบังคับ init
+  // ก็ไม่ได้ เพราะมันสร้าง AudioContext ตั้งแต่ยังไม่มี gesture ได้แค่ context ที่ถูก suspend
+  // กับคำเตือนใน console ทุกครั้งที่เปิดหน้า
+  //
+  // อ่านใน effect ไม่ใช่ตอน initial state เพราะ server ไม่มี localStorage แล้ว hydration จะไม่ตรง
+  // queueMicrotask ตามแพตเทิร์นเดียวกับ math-adventure — setState ตรง ๆ ใน effect ติดกฎ
+  // react-hooks/set-state-in-effect
+  useEffect(() => {
+    queueMicrotask(() => {
+      try { setSound(window.localStorage.getItem("kc-sfx-muted") !== "1"); } catch {}
+    });
+  }, []);
+
+  // ไม่กรองด้วย sound ซ้ำอีกชั้น — KcSfx.play คืนค่าทันทีอยู่แล้วเมื่อถูกปิดเสียง
+  // การมีสองด่านทำให้ hover ที่เรียก KcSfx ตรง ๆ กับที่นี่ตัดสินใจคนละทาง
+  // ถ้าวันหนึ่ง setMuted ถูกลบเพราะดูซ้ำซ้อน เสียง hover จะดังต่อทั้งที่ครูปิดเสียงแล้ว
+  const play = (name: Parameters<typeof KcSfx.play>[0]) => { KcSfx.play(name); };
   const go = (next: Screen) => { play("click"); setScreen(next); };
   const home = () => setScreen("home");
 

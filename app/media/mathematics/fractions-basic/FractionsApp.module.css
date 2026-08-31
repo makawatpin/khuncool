@@ -18,6 +18,8 @@
   opacity: 0.16;
   font-size: var(--kc-fs-display);
 }
+/* ตำแหน่งผูกกับลำดับ span แบบตายตัว — ต้องมี 5 อันเท่าที่ FractionsApp.tsx เรนเดอร์
+   อันที่ 6 จะไม่มีตำแหน่งและไปกองที่มุมบนซ้าย ถ้าจะเพิ่มต้องเพิ่มกฎที่นี่ด้วย */
 .decorations > span { position: absolute; animation: fractionDrift 14s ease-in-out infinite }
 .decorations > span:nth-child(1) { top: 12%; left: 6% }
 .decorations > span:nth-child(2) { top: 68%; left: 12%; animation-delay: -3s }
@@ -123,7 +125,11 @@
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(31, 42, 68, 0.06);
 }
-.homeCard:hover { transform: translateY(-2px); transition: transform 0.18s ease }
+/* transition อยู่บนกฎฐาน ไม่ใช่ใน :hover — ถ้าอยู่ใน :hover การ์ดจะค่อย ๆ ยกขึ้น
+   แต่ดีดกลับทันทีตอนเมาส์ออก และ contract ข้อ 6 บันทึกไว้ว่า hover ที่ค้างพร้อม
+   transform เคยทำให้ audit รายงาน "การ์ดล้นขอบ 1-12px" ทั้งที่ความสูงจริงพอดี */
+.homeCard { transition: transform 0.18s ease }
+.homeCard:hover { transform: translateY(-2px) }
 .homeIcon { font-size: var(--kc-fs-title) }
 .homeText { display: flex; flex-direction: column; gap: 2px }
 .homeText strong { font-size: var(--kc-fs-head) }
