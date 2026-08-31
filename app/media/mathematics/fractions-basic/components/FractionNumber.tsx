@@ -25,7 +25,9 @@ export default function FractionNumber({ numerator, denominator, reveal = "full"
         {numerator}
       </b>
       <i className={styles.rule} aria-hidden="true" />
-      <b className={styles.denominator} aria-hidden="true">{denominator}</b>
+      {/* ตัวส่วนไม่มี class ของตัวเอง เพราะไม่มีอะไรต้องแต่งต่างจากตัวเศษ —
+          รับ font-size สี และน้ำหนักมาจาก .fraction ทั้งหมด */}
+      <b aria-hidden="true">{denominator}</b>
     </span>
   );
 }

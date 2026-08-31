@@ -15,6 +15,9 @@
 /* ซ่อนแต่ยังกินที่ — ดูคอมเมนต์ใน FractionNumber.tsx */
 .numeratorHidden { visibility: hidden }
 
+/* 1.35em กว้างกว่าเลขหลักเดียวเสมอ จึงอ่านเป็นเส้นคั่นเศษส่วนได้
+   ตัวส่วนเป็นเลขหลักเดียวแน่นอน เพราะ fractionsData.test.mjs บังคับ parts <= 6 ไว้
+   ถ้าวันหนึ่งเพดานนั้นถูกยก ต้องกลับมาทบทวนค่านี้ด้วย */
 .rule {
   display: block;
   width: 1.35em;
