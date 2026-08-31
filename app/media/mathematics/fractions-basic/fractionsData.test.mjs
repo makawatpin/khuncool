@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { CHOICE_QUESTIONS, LESSON_SLIDES, PAINT_QUESTIONS, QUIZ_QUESTIONS } from "./fractionsData.ts";
+import { UNEQUAL_PARTS } from "./fractionGeometry.ts";
 
 /** รวมทุก ShapeSpec ที่ปรากฏในข้อมูลทั้งไฟล์ พร้อมที่อยู่ไว้บอกตอนเทสต์ตก */
 function everyShape() {
@@ -86,5 +87,15 @@ test("ทุก id ไม่ซ้ำกันภายในชุดของ�
     ["paint", PAINT_QUESTIONS], ["quiz", QUIZ_QUESTIONS]]) {
     const ids = rows.map((row) => row.id);
     assert.equal(new Set(ids).size, ids.length, `${name} มี id ซ้ำ`);
+  }
+});
+
+test("รูปที่แบ่งไม่เท่ากันต้องมีสัดส่วนกำหนดไว้จริง ไม่งั้นจะถูกวาดเป็นแบ่งเท่ากัน", () => {
+  for (const [where, shape] of everyShape()) {
+    if (!shape.unequal) continue;
+    assert.ok(
+      UNEQUAL_PARTS.includes(shape.parts),
+      `${where}: ตั้ง unequal ไว้แต่ parts=${shape.parts} ไม่มีสัดส่วนกำหนดไว้ จะถูกวาดเป็นแบ่งเท่ากัน`,
+    );
   }
 });

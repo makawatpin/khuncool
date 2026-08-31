@@ -44,11 +44,17 @@ const UNEQUAL: Record<number, number[]> = {
   2: [0.62, 0.38],
   3: [0.5, 0.3, 0.2],
   4: [0.4, 0.28, 0.19, 0.13],
+  6: [0.26, 0.21, 0.18, 0.15, 0.12, 0.08],
 };
 
 export function unequalWeights(parts: number): number[] {
   return UNEQUAL[parts] ?? Array.from({ length: parts }, () => 1 / parts);
 }
+
+/** จำนวนส่วนที่มีสัดส่วนการแบ่งแบบไม่เท่ากันกำหนดไว้จริง
+ * รูปที่ตั้ง unequal เป็น true แต่ parts ไม่อยู่ในชุดนี้จะถูกวาดเป็นแบ่งเท่ากันเงียบ ๆ
+ * ซึ่งทำให้ตัวลวงกลายเป็นคำตอบที่ถูก — fractionsData.test.mjs กันข้อนี้ไว้ */
+export const UNEQUAL_PARTS = Object.keys(UNEQUAL).map(Number);
 
 /** ขอบซ้ายและความกว้างของแถบที่ `index` ในระบบ 0–100 */
 export function stripBounds(index: number, parts: number, unequal = false): { x: number; width: number } {

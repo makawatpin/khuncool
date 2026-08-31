@@ -68,7 +68,7 @@ test("stripBounds ของแถบที่ติดกันต้องบ�
 });
 
 test("stripBounds แบบไม่เท่ากันยังเต็ม 100 แต่กว้างไม่เท่ากัน", () => {
-  for (const parts of [2, 3, 4]) {
+  for (const parts of [2, 3, 4, 6]) {
     const bounds = Array.from({ length: parts }, (_, i) => stripBounds(i, parts, true));
     const last = bounds[parts - 1];
     assert.equal(Math.round((last.x + last.width) * 1000) / 1000, 100);
@@ -77,7 +77,7 @@ test("stripBounds แบบไม่เท่ากันยังเต็ม 1
 });
 
 test("unequalWeights รวมได้ 1 และไม่มีค่าซ้ำ", () => {
-  for (const parts of [2, 3, 4]) {
+  for (const parts of [2, 3, 4, 6]) {
     const weights = unequalWeights(parts);
     assert.equal(weights.length, parts);
     assert.equal(Math.round(weights.reduce((sum, w) => sum + w, 0) * 1000) / 1000, 1);
