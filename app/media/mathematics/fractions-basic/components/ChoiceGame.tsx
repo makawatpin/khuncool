@@ -9,12 +9,13 @@ import styles from "../FractionsApp.module.css";
 
 type Props = {
   onFinish: () => void;
-  onSound: (name: "correct" | "pop" | "click") => void;
+  onSound: (name: "correct" | "pop") => void;
 };
 
 export default function ChoiceGame({ onFinish, onSound }: Props) {
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
+  const [attempts, setAttempts] = useState(0);
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // เคลียร์ timer ตอน unmount — ถ้าครูกดปุ่มแบรนด์กลับหน้าแรกระหว่างรอ 1.2 วินาที
@@ -28,12 +29,20 @@ export default function ChoiceGame({ onFinish, onSound }: Props) {
   const pick = (option: number) => {
     if (isCorrect) return;
     setPicked(option);
-    if (option !== question.answerIndex) { onSound("pop"); return; }
+    if (option !== question.answerIndex) {
+      // นับทุกครั้งที่ตอบผิด รวมถึงกดตัวเลือกเดิมซ้ำ — ถ้า state ไม่เปลี่ยน React จะ
+      // bail out ทั้งรอบ คลาสไม่ถูกถอดออกแล้วใส่กลับ CSS animation จึงไม่เริ่มใหม่
+      // และ live region ก็ไม่มี mutation ให้ประกาศ (วัดด้วย MutationObserver: กดซ้ำได้ 0 mutation)
+      setAttempts((n) => n + 1);
+      onSound("pop");
+      return;
+    }
     onSound("correct");
     advanceTimer.current = setTimeout(() => {
       if (index + 1 >= CHOICE_QUESTIONS.length) { onFinish(); return; }
       setIndex(index + 1);
       setPicked(null);
+      setAttempts(0);
     }, 1200);
   };
 
@@ -65,16 +74,18 @@ export default function ChoiceGame({ onFinish, onSound }: Props) {
               className={`kc-tap ${styles.option} ${picked === i ? (isCorrect ? styles.optionRight : styles.optionWrong) : ""}`}
               onClick={() => pick(i)}
             >
-              <FractionShape
-                shape={option.shape}
-                parts={option.parts}
-                filled={option.filled}
-                unequal={option.unequal}
-                size="sm"
-                label={option.unequal
-                  ? `ตัวเลือกที่ ${i + 1} แบ่ง ${option.parts} ส่วนไม่เท่ากัน ระบาย ${option.filled.length} ส่วน`
-                  : `ตัวเลือกที่ ${i + 1} แบ่ง ${option.parts} ส่วนเท่ากัน ระบาย ${option.filled.length} ส่วน`}
-              />
+              <span className={styles.optionInner} key={attempts}>
+                <FractionShape
+                  shape={option.shape}
+                  parts={option.parts}
+                  filled={option.filled}
+                  unequal={option.unequal}
+                  size="sm"
+                  label={option.unequal
+                    ? `ตัวเลือกที่ ${i + 1} แบ่ง ${option.parts} ส่วนไม่เท่ากัน ระบาย ${option.filled.length} ส่วน`
+                    : `ตัวเลือกที่ ${i + 1} แบ่ง ${option.parts} ส่วนเท่ากัน ระบาย ${option.filled.length} ส่วน`}
+                />
+              </span>
             </button>
           ))}
         </div>
@@ -85,7 +96,7 @@ export default function ChoiceGame({ onFinish, onSound }: Props) {
         {picked !== null && !isCorrect && (
           <>
             <Mascot mood="think" size="sm" />
-            <span className={styles.feedbackRetry}>ยังไม่ใช่ ลองอีกที — {question.explain}</span>
+            <span key={attempts} className={styles.feedbackRetry}>ยังไม่ใช่ ลองอีกที — {question.explain}</span>
           </>
         )}
       </div>

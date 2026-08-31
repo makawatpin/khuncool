@@ -239,6 +239,10 @@
 /* ตอบผิดใช้โทนอำพัน ไม่ใช่แดง — เพื่อนทั้งห้องเห็นจอเดียวกัน */
 .optionWrong { border-color: #E9A23B; background: #FFF4E2; animation: optionShake 0.36s ease }
 
+/* ตัวครอบรูปในตัวเลือก มีไว้ให้ key={attempts} รีเมานต์ได้โดยไม่ต้องรีเมานต์ทั้งปุ่ม
+   ซึ่งจะทำให้โฟกัสของคนใช้คีย์บอร์ดหลุด */
+.optionInner { display: flex; align-items: center; justify-content: center }
+
 @keyframes optionShake {
   0%, 100% { transform: translateX(0) }
   25% { transform: translateX(-5px) }
