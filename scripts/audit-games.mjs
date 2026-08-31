@@ -405,6 +405,87 @@ const solveThaiKingdom = (count = 10) => async (page) => {
   }
 };
 
+/** เกมเลือกภาพของ fractions-basic: ไล่กดตัวเลือกจนกว่าจะเจอตัวที่ถูก
+ * ตัวที่ถูกทำให้ข้อเดินไปเองใน 1200ms จึงรอ 1300 ให้ข้อถัดไปติดตั้งเสร็จ
+ *
+ * ตัวเลือกจับด้วย `button[class*="__option"]` ไม่ใช่ `[class*="__option"]`
+ * เฉย ๆ — div ที่ห่อแถวตัวเลือกใช้ styles.optionRow (จับคำว่า "__option" ด้วย
+ * substring match เหมือนกัน) และ span ข้างในปุ่มใช้ styles.optionInner ก็เช่น
+ * กัน ถ้าไม่บังคับ tag เป็น button จะได้ locator ที่มี 2N+1 element ต่อข้อ (1
+ * div ห่อ + N ปุ่ม + N span) แทนที่จะเป็น N ปุ่มอย่างที่ต้องการ ทำให้ index 0
+ * เป็น div ห่อไม่ใช่ปุ่มตัวเลือกแรก */
+const solveFractionChoice = (count = 6) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    const options = page.locator('[data-game="choice"] button[class*="__option"]');
+    let solved = false;
+    for (let i = 0; i < await options.count(); i++) {
+      await options.nth(i).click({ force: true });
+      await page.waitForTimeout(150);
+      if (await page.locator('[class*="__feedbackGood"]').count()) {
+        solved = true;
+        await page.waitForTimeout(1300);
+        break;
+      }
+    }
+    if (!solved) throw new Error(`fractions-basic: choice question ${round + 1} was not solved`);
+  }
+};
+
+/** เกมแตะระบาย: แตะส่วนทีละส่วนแล้วกดตรวจ ถ้ายังไม่ถูกก็แตะเพิ่มอีกส่วน
+ * ส่วนย่อยเป็น SVG ที่ไม่มีเมธอด .click() ของ HTMLElement
+ *
+ * toggle() ใน PaintGame สะสมส่วนที่แตะไว้ (เพิ่มเข้า array ถ้ายังไม่มี) และการ
+ * กด "ตรวจคำตอบ" ตอนยังไม่ถูกไม่ล้าง filled ที่สะสมไว้ — จึงแตะ index ใหม่ไป
+ * เรื่อย ๆ (ไม่แตะซ้ำ index เดิม) ทำให้จำนวนที่ระบายเพิ่มขึ้นทีละ 1 ทุกรอบ และ
+ * เข้าตรงจำนวนเศษที่ต้องการเสมอ (1,1,2,3,2,5 จากตัวส่วน 2,3,4,4,5,6 — เศษไม่
+ * เกินตัวส่วนเสมอ จึงวนไม่เกิน total ก็เจอคำตอบ) การกดตรวจแล้วผิดจึงไม่ทำให้
+ * รอบถัดไปเพี้ยน เพราะ state ที่สะสมไว้ยังอยู่ครบ
+ *
+ * แตะด้วย page.evaluate ยิง MouseEvent ตรงที่ตัว element ไม่ใช่
+ * locator.click({force:true}) — ตรวจแล้วพบว่า .paintControls (ปุ่ม "ล้างสี"/
+ * "ตรวจคำตอบ") วางทับกลางรูปเศษส่วนจริงที่ 1280x800 (โปรแกรมจริง ไม่ใช่บั๊กของ
+ * สคริปต์): ส่วนที่มีดัชนีอยู่ใต้แถบปุ่มมี bounding box เต็มความสูงรูป แต่จุด
+ * กึ่งกลางที่ Playwright คลิกจริง ๆ ตกอยู่บนปุ่ม แม้ตั้ง force:true ก็ตาม เพราะ
+ * force แค่ข้ามการเช็ก actionability ของ Playwright เอง แต่ยังคลิกที่พิกัดจอ
+ * จริงซึ่งเบราว์เซอร์ hit-test ไปเจอปุ่มที่ทับอยู่ ทำให้บางข้อ (เช่น ข้อ 3
+ * ตัวส่วน 4) แตะ index ที่ 2 ไม่ติดเลยสักครั้ง ยิง event ตรงที่ element ผ่าน
+ * page.evaluate จึงชัวร์กว่า เพราะไปหา element ด้วย DOM query แล้วส่ง event ให้
+ * ตัวมันเอง ไม่ผ่านพิกัดจอที่ถูกของอื่นบังอยู่ได้ — พฤติกรรมนี้เอง (ปุ่มทับรูป)
+ * เป็นบั๊ก covered-controls จริงของเกม ที่ auditCoveredControls() ในบรรทัด
+ * auditOneScreen ด้านล่างมีหน้าที่จับรายงานอยู่แล้ว ไม่ใช่สิ่งที่ solver นี้
+ * ควรปิดบัง แค่ต้องไม่ให้บั๊กนั้นทำให้การเดินเกมของสคริปต์เองพังไปด้วย */
+const solveFractionPaint = (count = 6) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    const total = await page.locator('[data-game="paint"] [role="button"]').count();
+    let solved = false;
+    for (let taps = 0; taps < total; taps++) {
+      await page.evaluate((idx) => {
+        const els = document.querySelectorAll('[data-game="paint"] [role="button"]');
+        els[idx].dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+      }, taps);
+      await page.waitForTimeout(80);
+      await page.getByRole("button", { name: "ตรวจคำตอบ" }).click();
+      await page.waitForTimeout(150);
+      if (await page.locator('[class*="__feedbackGood"]').count()) {
+        solved = true;
+        await page.waitForTimeout(1300);
+        break;
+      }
+    }
+    if (!solved) throw new Error(`fractions-basic: paint question ${round + 1} was not solved`);
+  }
+};
+
+/** คำถามหน้าชั้น: กดเฉลยแล้วกดข้อถัดไป ไม่มีคำตอบให้เลือก */
+const walkFractionQuiz = (count = 8) => async (page) => {
+  for (let round = 0; round < count; round++) {
+    await page.getByRole("button", { name: "เฉลย" }).click();
+    await page.waitForTimeout(120);
+    await page.getByRole("button", { name: round === count - 1 ? /จบบทเรียน/ : /ข้อถัดไป/ }).click();
+    await page.waitForTimeout(150);
+  }
+};
+
 const GAMES = {
   "phonics-bingo": {
     path: "/media/english/phonics-bingo",
@@ -805,6 +886,28 @@ const GAMES = {
       { name: "quiz", enter: click(/เริ่มภารกิจ/), expect: '[data-stage="quiz"]' },
       { name: "quiz-long", enter: solveMathAdventure(3), expect: '[data-question-kind="word-problem"]' },
       { name: "quiz-result", enter: solveMathAdventure(7), expect: '[data-stage="result"]' },
+    ],
+  },
+  "fractions-basic": {
+    path: "/media/mathematics/fractions-basic",
+    stress: {
+      selector: '[class*="__quizQuestion"]',
+      text: "แม่ทำขนมมา 1 ถาด ตัดแบ่งเท่า ๆ กันให้เพื่อน 4 คน แต่ละคนจะได้ขนมเท่าไรของทั้งถาด",
+    },
+    screens: [
+      { name: "home" },
+      { name: "lesson", enter: click(/บทเรียน/), expect: '[data-stage="lesson"]' },
+      {
+        name: "game-choice",
+        async enter(page) {
+          await page.getByRole("button", { name: "กลับเมนูสื่อ" }).click();
+          await page.getByRole("button", { name: /เกมฝึก/ }).click();
+        },
+        expect: '[data-game="choice"]',
+      },
+      { name: "game-paint", enter: solveFractionChoice(6), expect: '[data-game="paint"]' },
+      { name: "quiz", enter: solveFractionPaint(6), expect: '[data-stage="quiz"]' },
+      { name: "result", enter: walkFractionQuiz(8), expect: '[data-stage="result"]' },
     ],
   },
   "thai-kingdom": {
