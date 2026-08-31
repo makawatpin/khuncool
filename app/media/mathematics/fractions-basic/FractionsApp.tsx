@@ -6,6 +6,7 @@ import { KcSfx, hoverSfxDelegate } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useStage } from "../../_stage/useStage";
 import ChoiceGame from "./components/ChoiceGame";
+import PaintGame from "./components/PaintGame";
 import LessonScreen from "./components/LessonScreen";
 import Mascot from "./components/Mascot";
 import type { Screen } from "./types";
@@ -110,6 +111,10 @@ export default function FractionsApp() {
 
         {screen === "game-choice" && (
           <ChoiceGame onFinish={() => setScreen("game-paint")} onSound={play} />
+        )}
+
+        {screen === "game-paint" && (
+          <PaintGame onFinish={() => setScreen("quiz")} onSound={play} />
         )}
       </div>
     </div>

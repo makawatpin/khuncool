@@ -293,6 +293,10 @@
   to { opacity: 0; transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1.1) }
 }
 
+.paintCount { margin: 0; font-size: var(--kc-fs-body); color: #4A5570 }
+.paintControls { display: flex; gap: var(--kc-gap); flex: none; justify-content: center; flex-wrap: wrap }
+.primary:disabled { opacity: 0.5; cursor: default }
+
 /* ทรงตั้ง — ขาดความกว้าง การ์ดเรียงลงมา เก็บเนื้อหาครบ แค่บีบระยะห่าง
    (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
 @container kcstage (aspect-ratio < 0.9) {
@@ -317,4 +321,5 @@
   .gameLead { font-size: var(--kc-fs-label) }
   .option { padding: 8px }
   .feedback { min-height: 2em; font-size: var(--kc-fs-label) }
+  .paintCount { font-size: var(--kc-fs-label) }
 }
