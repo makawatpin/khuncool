@@ -65,20 +65,20 @@ export default function LessonScreen({ onFinish, onSound }: Props) {
 
   return (
     <main className={`${styles.screen} ${styles.lesson}`} data-stage="lesson">
-      <div className={styles.lessonTabs} role="tablist" aria-label="หัวข้อบทเรียน">
+      <div className={styles.lessonTabs} role="group" aria-label="เลือกสไลด์บทเรียน">
         {LESSON_SLIDES.map((item, index) => (
           <button
             key={item.id}
             type="button"
-            role="tab"
-            aria-selected={slideIndex === index}
+            aria-current={slideIndex === index ? "step" : undefined}
+            aria-label={`สไลด์ที่ ${index + 1} ${item.title}`}
             className={`kc-tap ${styles.lessonTab} ${slideIndex === index ? styles.lessonTabOn : ""}`}
             onClick={() => goSlide(index)}
           >{index + 1}</button>
         ))}
       </div>
 
-      <div className={styles.lessonStage} role="status" aria-live="polite">
+      <div className={styles.lessonStage}>
         <h2 className={styles.lessonTitle}>{slide.title}</h2>
         <div className={styles.lessonShapes}>
           {current.shapes.map((shape, index) => (
@@ -104,7 +104,7 @@ export default function LessonScreen({ onFinish, onSound }: Props) {
             />
           )}
         </div>
-        <p className={styles.lessonCaption}>{current.caption}</p>
+        <p className={styles.lessonCaption} role="status" aria-live="polite">{current.caption}</p>
       </div>
 
       <div className={styles.lessonControls}>
@@ -117,7 +117,13 @@ export default function LessonScreen({ onFinish, onSound }: Props) {
         <button
           type="button"
           className={`kc-tap ${styles.ghost}`}
-          onClick={() => { onSound("click"); setStep(0); setPlaying(!playing); }}
+          onClick={() => {
+            onSound("click");
+            // ▶ คือเล่นต่อจากตรงนี้ ไม่ใช่เริ่มใหม่ — ยกเว้นตอนอยู่สเต็ปสุดท้ายแล้ว
+            // ซึ่งถ้าไม่ย้อนกลับไปต้นสไลด์ กดแล้วจะไม่มีอะไรเกิดขึ้นเลย
+            if (!playing && isLastStep) setStep(0);
+            setPlaying(!playing);
+          }}
           aria-pressed={playing}
         >{playing ? "⏸ หยุด" : "▶ เล่นเอง"}</button>
         <button type="button" className={`kc-tap ${styles.primary}`} onClick={nextStep}>
