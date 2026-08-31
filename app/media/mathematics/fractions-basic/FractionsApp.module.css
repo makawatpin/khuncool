@@ -205,6 +205,90 @@
 }
 .ghost:disabled { opacity: 0.4; cursor: default }
 
+.progress { display: flex; gap: 4px; flex: none; font-size: var(--kc-fs-head) }
+.starOn { color: #F4A261 }
+.starOff { color: rgba(31, 42, 68, 0.16) }
+
+.gameBoard {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--kc-gap);
+  width: 100%;
+}
+
+.gamePrompt { display: flex; flex-direction: column; align-items: center; gap: 4px }
+.gameLead { margin: 0; font-size: var(--kc-fs-body); color: #4A5570 }
+
+.optionRow { display: flex; gap: var(--kc-gap); flex-wrap: wrap; justify-content: center }
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--kc-pad);
+  border: 2px solid rgba(31, 42, 68, 0.12);
+  border-radius: var(--kc-radius);
+  background: #fff;
+  cursor: pointer;
+}
+.optionRight { border-color: #2A9D8F; background: #E8F7F4 }
+/* ตอบผิดใช้โทนอำพัน ไม่ใช่แดง — เพื่อนทั้งห้องเห็นจอเดียวกัน */
+.optionWrong { border-color: #E9A23B; background: #FFF4E2; animation: optionShake 0.36s ease }
+
+@keyframes optionShake {
+  0%, 100% { transform: translateX(0) }
+  25% { transform: translateX(-5px) }
+  75% { transform: translateX(5px) }
+}
+
+.feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: none;
+  min-height: 2.6em;
+  font-size: var(--kc-fs-body);
+  text-align: left;
+}
+.feedbackGood { color: #1D7A6E }
+.feedbackRetry { color: #A9671A }
+
+/* คอนเฟตตี้ — pointer-events:none บังคับตาม contract ข้อ 4.5
+   talk-card เคยให้คอนเฟตตี้บังปุ่มจริง 1.5-3 วินาทีเพราะขาดบรรทัดนี้ */
+.burst { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3 }
+.burstStar {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  color: #F4A261;
+  font-size: var(--kc-fs-head);
+  animation: burstOut 1.1s ease-out forwards;
+}
+.burstStar:nth-child(2n) { color: #625CE7 }
+.burstStar:nth-child(3n) { color: #2A9D8F }
+.burstStar:nth-child(1) { --burst-x: -180px; --burst-y: -120px }
+.burstStar:nth-child(2) { --burst-x: 150px; --burst-y: -140px }
+.burstStar:nth-child(3) { --burst-x: -120px; --burst-y: 90px }
+.burstStar:nth-child(4) { --burst-x: 190px; --burst-y: 70px }
+.burstStar:nth-child(5) { --burst-x: -220px; --burst-y: 20px }
+.burstStar:nth-child(6) { --burst-x: 60px; --burst-y: -190px }
+.burstStar:nth-child(7) { --burst-x: -60px; --burst-y: -200px }
+.burstStar:nth-child(8) { --burst-x: 230px; --burst-y: -30px }
+.burstStar:nth-child(9) { --burst-x: -160px; --burst-y: 150px }
+.burstStar:nth-child(10) { --burst-x: 110px; --burst-y: 160px }
+.burstStar:nth-child(11) { --burst-x: 20px; --burst-y: 200px }
+.burstStar:nth-child(12) { --burst-x: -20px; --burst-y: -150px }
+
+@keyframes burstOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(0.4) }
+  to { opacity: 0; transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1.1) }
+}
+
 /* ทรงตั้ง — ขาดความกว้าง การ์ดเรียงลงมา เก็บเนื้อหาครบ แค่บีบระยะห่าง
    (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
 @container kcstage (aspect-ratio < 0.9) {
@@ -224,4 +308,9 @@
   .lessonTitle { font-size: var(--kc-fs-head) }
   .lessonCaption { font-size: var(--kc-fs-label); line-height: 1.45 }
   .lessonShapes { gap: 10px }
+  .gameBoard { flex-direction: row; gap: 12px }
+  .gamePrompt { flex: 0 0 auto }
+  .gameLead { font-size: var(--kc-fs-label) }
+  .option { padding: 8px }
+  .feedback { min-height: 2em; font-size: var(--kc-fs-label) }
 }
