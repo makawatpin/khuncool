@@ -1,0 +1,161 @@
+/* เวทีของสื่อเศษส่วน — ขนาดทุกอย่างของทุกหน้าจออยู่ในไฟล์นี้
+   ห้ามใช้ vw/vh/dvh/innerWidth ที่ไหนเลย (media-stage-contract ข้อ 1) */
+
+.body {
+  background: linear-gradient(160deg, #FFF9F2 0%, #F3F1FF 100%);
+  color: #1F2A44;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--kc-fs-body);
+}
+
+/* ของตกแต่ง — pointer-events:none บังคับตาม contract ข้อ 4.5
+   ทั้งเพื่อไม่ให้บังปุ่ม และเพื่อให้ audit-stage แยกออกจากเนื้อหาที่หลุดเวที */
+.decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  font-size: var(--kc-fs-display);
+}
+.decorations > span { position: absolute; animation: fractionDrift 14s ease-in-out infinite }
+.decorations > span:nth-child(1) { top: 12%; left: 6% }
+.decorations > span:nth-child(2) { top: 68%; left: 12%; animation-delay: -3s }
+.decorations > span:nth-child(3) { top: 22%; right: 9%; animation-delay: -6s }
+.decorations > span:nth-child(4) { top: 74%; right: 14%; animation-delay: -9s }
+.decorations > span:nth-child(5) { top: 45%; right: 4%; animation-delay: -12s }
+
+@keyframes fractionDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) }
+  50% { transform: translate3d(6px, -12px, 0) }
+}
+
+.toolbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kc-gap);
+  padding: 8px var(--kc-pad);
+  flex: none;
+}
+
+.brandButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: var(--kc-fs-head);
+  cursor: pointer;
+  padding: 0 6px;
+}
+
+.toolbarActions { display: flex; align-items: center; gap: 6px }
+
+.toolbarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 10px;
+  border: 1px solid rgba(31, 42, 68, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  color: inherit;
+  font-size: var(--kc-fs-label);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ทุกหน้าจอกินที่ที่เหลือแล้วจัดกึ่งกลางแบบ safe — ถ้าเนื้อหาสูงเกิน
+   ส่วนเกินไปกองข้างล่างที่ยังเห็นได้ ไม่ใช่ลอยเหนือเวทีจนหาไม่เจอ (contract ข้อ 5) */
+.screen {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--kc-gap);
+  padding: 0 var(--kc-pad) var(--kc-pad);
+  text-align: center;
+}
+
+/* class ประจำแต่ละหน้าจอ — มีไว้ให้แต่ละหน้าจอมีที่ยึดของตัวเองเวลาต้องแก้
+   ทรงใดทรงหนึ่ง และเพื่อไม่ให้ styles.lesson เป็น undefined ตอนต่อ className */
+.lesson, .game, .quiz, .result { width: 100% }
+
+.heroCopy { display: flex; flex-direction: column; align-items: center; gap: 4px }
+.eyebrow {
+  font-size: var(--kc-fs-label);
+  font-weight: 700;
+  color: #C85C12;
+  background: #FFF0E4;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.heroCopy h1 { margin: 0; font-size: var(--kc-fs-display); line-height: 1.2 }
+.heroLead { margin: 0; font-size: var(--kc-fs-body); color: #4A5570 }
+
+.homeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--kc-gap);
+  width: 100%;
+  max-width: 720px;
+}
+
+.homeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--kc-pad);
+  border: 1px solid rgba(31, 42, 68, 0.1);
+  border-radius: var(--kc-radius);
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(31, 42, 68, 0.06);
+}
+.homeCard:hover { transform: translateY(-2px); transition: transform 0.18s ease }
+.homeIcon { font-size: var(--kc-fs-title) }
+.homeText { display: flex; flex-direction: column; gap: 2px }
+.homeText strong { font-size: var(--kc-fs-head) }
+.homeText small { font-size: var(--kc-fs-label); color: #4A5570; line-height: 1.45 }
+
+.homeFooter { display: flex; align-items: center; gap: var(--kc-gap) }
+
+.primary {
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: #625CE7;
+  color: #fff;
+  font-size: var(--kc-fs-head);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ทรงตั้ง — ขาดความกว้าง การ์ดเรียงลงมา เก็บเนื้อหาครบ แค่บีบระยะห่าง
+   (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
+@container kcstage (aspect-ratio < 0.9) {
+  .homeGrid { grid-template-columns: minmax(0, 1fr); max-width: 420px }
+  .homeCard { flex-direction: row; text-align: left; align-items: center }
+  .homeText { align-items: flex-start }
+}
+
+/* ทรงเตี้ย — ขาดความสูง ตัดคำอธิบายใต้การ์ดและคำโปรยทิ้ง (ขั้น 4)
+   margin/padding เป็น px คงที่ ไม่ใช่ cqi ที่โตพอดีตอนที่เหลือน้อยที่สุด (ขั้น 1) */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .screen { gap: 8px; padding: 0 12px 10px }
+  .heroLead { display: none }
+  .homeText small { display: none }
+  .homeCard { padding: 8px 10px }
+  .homeGrid { max-width: 620px }
+}
