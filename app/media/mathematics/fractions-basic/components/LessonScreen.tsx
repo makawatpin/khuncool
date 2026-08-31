@@ -19,16 +19,24 @@ export default function LessonScreen({ onFinish, onSound }: Props) {
   const isLastSlide = slideIndex === LESSON_SLIDES.length - 1;
 
   // เล่นอัตโนมัติ 900ms/สเต็ป แล้วหยุดเองเมื่อจบสไลด์ ครูกดหยุดได้ตลอด
+  //
+  // ตั้ง timeout ทีละสเต็ปโดยให้ step เป็น dependency แทนการตั้ง interval ค้างไว้
+  // เพราะการตัดสินใจหยุดต้องอยู่นอก updater ของ setState — updater ต้องบริสุทธิ์
+  // และ React เรียกซ้ำสองรอบใน StrictMode เพื่อจับ side effect แบบนั้นโดยเฉพาะ
+  // (App Router เปิด reactStrictMode ไว้เป็นค่าตั้งต้น)
+  //
+  // ผลพลอยได้คือหยุดตอนสเต็ปสุดท้ายโผล่พอดี ไม่เสียอีกหนึ่งจังหวะ 900ms ไปกับ tick
+  // ที่ไม่ได้เปลี่ยนอะไรก่อนปุ่มจะเด้งกลับเป็น "เล่นเอง"
   useEffect(() => {
     if (!playing) return;
-    const id = window.setInterval(() => {
-      setStep((value) => {
-        if (value >= slide.steps.length - 1) { setPlaying(false); return value; }
-        return value + 1;
-      });
+    const last = slide.steps.length - 1;
+    const id = window.setTimeout(() => {
+      const next = Math.min(step + 1, last);
+      if (next >= last) setPlaying(false);
+      setStep(next);
     }, 900);
-    return () => window.clearInterval(id);
-  }, [playing, slide.steps.length]);
+    return () => window.clearTimeout(id);
+  }, [playing, step, slide.steps.length]);
 
   const goSlide = (next: number) => {
     onSound("click");
