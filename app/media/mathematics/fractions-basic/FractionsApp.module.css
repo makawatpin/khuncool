@@ -297,6 +297,68 @@
 .paintControls { display: flex; gap: var(--kc-gap); flex: none; justify-content: center; flex-wrap: wrap }
 .primary:disabled { opacity: 0.5; cursor: default }
 
+.quizTop { display: flex; align-items: center; gap: var(--kc-gap); flex: none; flex-wrap: wrap; justify-content: center }
+.quizCount { font-size: var(--kc-fs-label); color: #4A5570 }
+
+.picked {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #E1E3FD;
+  font-size: var(--kc-fs-label);
+  font-weight: 700;
+  color: #3B35B8;
+  animation: quizAnswerIn 0.3s ease both;
+}
+
+.quizBoard {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--kc-gap);
+  width: 100%;
+}
+
+.quizQuestion { margin: 0; max-width: 40ch; font-size: var(--kc-fs-title); line-height: 1.4 }
+.quizShapes { display: flex; gap: var(--kc-gap); align-items: center; justify-content: center; flex-wrap: wrap }
+
+.quizAnswer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 52ch;
+  padding: 10px 16px;
+  border-radius: var(--kc-radius);
+  background: #E8F7F4;
+  animation: quizAnswerIn 0.3s ease both;
+}
+.quizAnswer strong { font-size: var(--kc-fs-head); color: #1D7A6E }
+.quizAnswer span { font-size: var(--kc-fs-label); color: #4A5570; line-height: 1.5 }
+
+@keyframes quizAnswerIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96) }
+  to { opacity: 1; transform: none }
+}
+
+.quizControls { display: flex; gap: var(--kc-gap); flex: none; justify-content: center; flex-wrap: wrap }
+
+.resultTitle { margin: 0; font-size: var(--kc-fs-title) }
+.resultList {
+  margin: 0;
+  padding-left: 1.2em;
+  max-width: 52ch;
+  text-align: left;
+  font-size: var(--kc-fs-body);
+  line-height: 1.7;
+  color: #4A5570;
+}
+.resultControls { display: flex; gap: var(--kc-gap); flex-wrap: wrap; justify-content: center }
+
 /* ทรงตั้ง — ขาดความกว้าง การ์ดเรียงลงมา เก็บเนื้อหาครบ แค่บีบระยะห่าง
    (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
 @container kcstage (aspect-ratio < 0.9) {
@@ -322,4 +384,7 @@
   .option { padding: 8px }
   .feedback { min-height: 2em; font-size: var(--kc-fs-label) }
   .paintCount { font-size: var(--kc-fs-label) }
+  .quizQuestion { font-size: var(--kc-fs-head) }
+  .quizAnswer { padding: 6px 12px }
+  .resultList { line-height: 1.45 }
 }

@@ -8,6 +8,8 @@ import { useStage } from "../../_stage/useStage";
 import ChoiceGame from "./components/ChoiceGame";
 import PaintGame from "./components/PaintGame";
 import LessonScreen from "./components/LessonScreen";
+import QuizScreen from "./components/QuizScreen";
+import ResultScreen from "./components/ResultScreen";
 import Mascot from "./components/Mascot";
 import type { Screen } from "./types";
 import styles from "./FractionsApp.module.css";
@@ -115,6 +117,12 @@ export default function FractionsApp() {
 
         {screen === "game-paint" && (
           <PaintGame onFinish={() => setScreen("quiz")} onSound={play} />
+        )}
+
+        {screen === "quiz" && <QuizScreen onFinish={() => setScreen("result")} onSound={play} />}
+
+        {screen === "result" && (
+          <ResultScreen onHome={home} onReplay={() => go("game-choice")} />
         )}
       </div>
     </div>
