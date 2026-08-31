@@ -99,3 +99,14 @@ test("รูปที่แบ่งไม่เท่ากันต้อง�
     );
   }
 });
+
+test("รูปวงกลมตั้ง unequal ไม่ได้ เพราะ FractionShape วาดวงกลมเป็นชิ้นเท่ากันเสมอ", () => {
+  for (const [where, shape] of everyShape()) {
+    if (!shape.unequal) continue;
+    assert.notEqual(
+      shape.shape,
+      "circle",
+      `${where}: วงกลมจะถูกวาดเป็นชิ้นเท่ากันเสมอ ตั้ง unequal แล้วจะไม่มีผล ให้ใช้ bar หรือ square แทน`,
+    );
+  }
+});

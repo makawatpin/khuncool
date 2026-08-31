@@ -1,0 +1,58 @@
+/* รูปเศษส่วน — ขนาดทั้งหมดคุมจากที่นี่ ไม่มีค่าไหนอยู่ใน inline style
+   viewBox เป็น 0 0 100 100 เสมอ สิ่งที่เปลี่ยนคือกล่องที่ SVG ถูกวางลงไป */
+
+.shape {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.sizeSm { width: max(64px, 14cqi); height: max(64px, 14cqi) }
+.sizeMd { width: max(96px, 20cqi); height: max(96px, 20cqi) }
+.sizeLg { width: max(120px, 28cqi); height: max(120px, 28cqi) }
+
+/* แท่งช็อกโกแลตเตี้ยกว่าที่มันกว้าง ไม่งั้นจะดูเหมือนสี่เหลี่ยมจัตุรัส */
+.bar.sizeSm { height: max(30px, 6cqi) }
+.bar.sizeMd { height: max(42px, 8cqi) }
+.bar.sizeLg { height: max(52px, 11cqi) }
+
+.part {
+  stroke: #1F2A44;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  transition: fill 0.32s ease;
+}
+
+.filled { fill: #F4A261 }
+.empty { fill: #FFF6EC }
+
+.tappable { cursor: pointer }
+.tappable:focus-visible { outline: 3px solid #625CE7; outline-offset: 2px }
+
+.pulse { animation: fractionPulse 1.1s ease-in-out infinite }
+
+@keyframes fractionPulse {
+  0%, 100% { stroke-width: 1.5 }
+  50% { stroke-width: 3.5 }
+}
+
+/* ทรงตั้ง — เวทีแคบ ความกว้างคือของหายาก ให้รูปกินพื้นที่มากขึ้นตามสัดส่วน */
+@container kcstage (aspect-ratio < 0.9) {
+  .sizeSm { width: max(64px, 26cqi); height: max(64px, 26cqi) }
+  .sizeMd { width: max(96px, 38cqi); height: max(96px, 38cqi) }
+  .sizeLg { width: max(120px, 52cqi); height: max(120px, 52cqi) }
+  .bar.sizeSm { height: max(30px, 11cqi) }
+  .bar.sizeMd { height: max(42px, 15cqi) }
+  .bar.sizeLg { height: max(52px, 20cqi) }
+}
+
+/* ทรงเตี้ย — ความสูงคือของหายาก วัดจาก cqb แทน cqi (contract ข้อ 5 ขั้น 2)
+   ต้องอยู่หลังบล็อกทรงตั้งเพราะ specificity เท่ากัน ตัวหลังชนะ */
+@container kcstage (aspect-ratio >= 0.9) and (height < 480px) {
+  .sizeSm { width: max(56px, 22cqb); height: max(56px, 22cqb) }
+  .sizeMd { width: max(72px, 34cqb); height: max(72px, 34cqb) }
+  .sizeLg { width: max(88px, 46cqb); height: max(88px, 46cqb) }
+  .bar.sizeSm { height: max(26px, 9cqb) }
+  .bar.sizeMd { height: max(32px, 13cqb) }
+  .bar.sizeLg { height: max(40px, 17cqb) }
+}
