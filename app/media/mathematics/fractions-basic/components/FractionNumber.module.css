@@ -1,0 +1,31 @@
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  color: #1F2A44;
+  font-weight: 800;
+}
+
+.md { font-size: var(--kc-fs-title) }
+.lg { font-size: var(--kc-fs-display) }
+
+.numeratorIn { animation: numeratorIn 0.42s ease both }
+
+/* ซ่อนแต่ยังกินที่ — ดูคอมเมนต์ใน FractionNumber.tsx */
+.numeratorHidden { visibility: hidden }
+
+.rule {
+  display: block;
+  width: 1.35em;
+  height: 0.11em;
+  min-height: 2px;
+  margin: 0.12em 0;
+  background: currentColor;
+  border-radius: 999px;
+}
+
+@keyframes numeratorIn {
+  from { opacity: 0; transform: translateY(0.35em) scale(0.7) }
+  to { opacity: 1; transform: none }
+}
