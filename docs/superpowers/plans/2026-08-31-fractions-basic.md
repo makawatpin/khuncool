@@ -2117,7 +2117,7 @@ import PaintGame from "./components/PaintGame";
 รันใน devtools console:
 
 ```js
-[...document.querySelectorAll('[role="checkbox"]')].map((el) => {
+[...document.querySelectorAll('[role="button"]')].map((el) => {
   const r = el.getBoundingClientRect();
   return `${Math.round(r.width)}x${Math.round(r.height)}`;
 });
@@ -2483,7 +2483,7 @@ const solveFractionChoice = (count = 6) => async (page) => {
  * จำนวนส่วนสูงสุดคือ 6 จึงวนไม่เกิน 6 รอบต่อข้อ */
 const solveFractionPaint = (count = 6) => async (page) => {
   for (let round = 0; round < count; round++) {
-    const parts = page.locator('[data-game="paint"] [role="checkbox"]');
+    const parts = page.locator('[data-game="paint"] [role="button"]');
     const total = await parts.count();
     let solved = false;
     for (let taps = 0; taps < total; taps++) {

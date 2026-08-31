@@ -16,7 +16,11 @@ type Props = {
   highlight?: "all" | "filled";
   /** ให้แตะเลือกได้ ใช้ใน PaintGame */
   onTapPart?: (index: number) => void;
-  /** คำบรรยายรูปสำหรับคนที่มองไม่เห็น */
+  /** คำบรรยายรูปสำหรับคนที่มองไม่เห็น
+   *
+   * ส่วนย่อยที่ไม่ให้แตะถูกตั้ง aria-hidden ไว้ ป้ายนี้จึงเป็นข้อมูลเดียวที่เหลือ
+   * ผู้เรียกต้องบอกให้ครบว่าแบ่งกี่ส่วน ระบายกี่ส่วน และแบ่งเท่ากันหรือไม่
+   * ไม่มีอะไรในคอมโพเนนต์บังคับข้อนี้ได้ */
   label: string;
 };
 
@@ -42,9 +46,9 @@ export default function FractionShape({
 
     return {
       className: classes,
-      role: "checkbox",
+      role: "button",
       tabIndex: 0,
-      "aria-checked": isFilled,
+      "aria-pressed": isFilled,
       "aria-label": `ส่วนที่ ${index + 1}`,
       onClick: () => onTapPart?.(index),
       onKeyDown: (event: KeyboardEvent) => {
