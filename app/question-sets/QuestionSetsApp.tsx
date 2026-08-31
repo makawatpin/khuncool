@@ -6,6 +6,7 @@ import { useQuestionSets } from "@/lib/questionSets/useQuestionSets";
 import { questionsFromText } from "@/lib/questionSets/storage";
 import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
+import ShareQuestionSetButton from "@/components/ShareQuestionSetButton";
 
 export default function QuestionSetsApp() {
   const {
@@ -198,13 +199,20 @@ export default function QuestionSetsApp() {
                     1 บรรทัด = 1 คำถาม · ระบบตัดคำถามซ้ำให้อัตโนมัติ
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={remove}
-                  className="rounded-[10px] px-3 py-2 text-xs font-semibold text-error-strong hover:bg-error-bg"
-                >
-                  ลบชุด
-                </button>
+                <div className="flex flex-none items-center gap-1">
+                  <ShareQuestionSetButton
+                    title={selected.name}
+                    questions={selected.questions}
+                    className="rounded-[10px] border border-border px-3 py-2 text-xs font-semibold text-primary hover:bg-surface-light disabled:cursor-not-allowed disabled:border-border disabled:text-ink-muted"
+                  />
+                  <button
+                    type="button"
+                    onClick={remove}
+                    className="rounded-[10px] px-3 py-2 text-xs font-semibold text-error-strong hover:bg-error-bg"
+                  >
+                    ลบชุด
+                  </button>
+                </div>
               </div>
 
               <label className="block text-xs font-semibold text-ink-secondary">
@@ -297,7 +305,8 @@ export default function QuestionSetsApp() {
           ))}
         </div>
         <p className="mt-3 text-xs leading-relaxed text-ink-muted">
-          เปิดเครื่องมือแล้วกดปุ่ม “📝 ชุดคำถาม” เพื่อเลือกชุดที่จะใช้
+          เปิดเครื่องมือแล้วกดปุ่ม “📝 ชุดคำถาม” เพื่อเลือกชุดที่จะใช้ ·{" "}
+          <Link href="/sets" className="font-semibold text-primary">ดูลิงก์ที่เคยแชร์ →</Link>
         </p>
       </section>
     </div>
