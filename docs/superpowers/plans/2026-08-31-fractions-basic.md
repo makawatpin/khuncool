@@ -774,9 +774,9 @@ export default function FractionShape({
 
     return {
       className: classes,
-      role: "checkbox",
+      role: "button",
       tabIndex: 0,
-      "aria-checked": isFilled,
+      "aria-pressed": isFilled,
       "aria-label": `ส่วนที่ ${index + 1}`,
       onClick: () => onTapPart?.(index),
       onKeyDown: (event: React.KeyboardEvent) => {
@@ -2117,7 +2117,10 @@ import PaintGame from "./components/PaintGame";
 รันใน devtools console:
 
 ```js
-[...document.querySelectorAll('[role="button"]')].map((el) => {
+// สโคปด้วย [data-game="paint"] ให้ชัด — role="button" ที่เขียนเป็น attribute ตรง ๆ
+// มีแค่ส่วนย่อยของรูป (ปุ่ม <button> จริงมี role โดยปริยาย ไม่เข้าเงื่อนไขนี้)
+// แต่การสโคปทำให้ผลอ่านง่ายและไม่พลาดถ้ามีใครเพิ่ม role ตรง ๆ ที่อื่นทีหลัง
+[...document.querySelectorAll('[data-game="paint"] [role="button"]')].map((el) => {
   const r = el.getBoundingClientRect();
   return `${Math.round(r.width)}x${Math.round(r.height)}`;
 });
