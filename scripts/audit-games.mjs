@@ -405,7 +405,80 @@ const solveThaiKingdom = (count = 10) => async (page) => {
   }
 };
 
+const solveFinalConsonantGame = async (page) => {
+  for (let round = 0; round < 15; round++) {
+    await page.waitForTimeout(250);
+    const game = page.locator('[data-stage="game"]');
+    if (!await game.count()) throw new Error(`final-consonants: game missing before question ${round + 1}`);
+    const answer = await game.getAttribute("data-answer");
+    if (!answer) throw new Error("final-consonants: game answer marker missing");
+    const index = Number(await game.getAttribute("data-index"));
+    const total = Number(await game.getAttribute("data-total"));
+    const next = page.getByRole("button", { name: /คำถัดไป|ดูผล/ });
+    for (let attempt = 0; attempt < 3 && !await next.count(); attempt++) {
+      const clicked = await page.evaluate((expected) => {
+        const stage = document.querySelector('[data-stage="game"]');
+        if (!stage || stage.getAttribute("data-answer") !== expected) return false;
+        const button = stage.querySelector(`[data-family="${expected}"]`);
+        if (!(button instanceof HTMLElement)) return false;
+        button.click();
+        return true;
+      }, answer);
+      if (!clicked) break;
+      await page.waitForTimeout(250);
+    }
+    if (!await next.count()) throw new Error(`final-consonants: correct answer ${answer} did not reveal next control`);
+    await next.click();
+    await page.waitForTimeout(300);
+    if (index + 1 >= total) {
+      await page.waitForTimeout(300);
+      if (!await page.locator('[data-stage="result"]').count()) throw new Error("final-consonants: result not reached after final question");
+      return;
+    }
+  }
+  throw new Error("final-consonants: result not reached within 15 questions");
+};
+
 const GAMES = {
+  "final-consonants": {
+    path: "/media/thai/final-consonants",
+    stress: { selector: '[data-stage="game"] [role="status"] h2', text: "คำที่มีตัวสะกดยาวมากเพื่อพิสูจน์ว่า stress selector ทำงานจริง" },
+    screens: [
+      { name: "home" },
+      { name: "lesson-parts", enter: click(/เริ่มเรียนทีละตอน/), expect: '[data-stage="lesson-parts"]' },
+      { name: "lesson-direct", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-direct"]' },
+      { name: "lesson-indirect", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-indirect"]' },
+      { name: "lesson-map", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-map"]' },
+      { name: "check", enter: click(/เช็กความเข้าใจ/), expect: '[data-stage="check"]' },
+      { name: "settings", enter: click(/ข้ามไปตั้งค่าเกม/), expect: '[data-stage="settings"]' },
+      { name: "game", enter: click(/เริ่มเกม/), expect: '[data-stage="game"]' },
+      { name: "result", enter: solveFinalConsonantGame, expect: '[data-stage="result"]' },
+    ],
+  },
+  "mae-kot": {
+    path: "/media/thai/mae-kot",
+    stress: { selector: '[data-stage="lesson-mistakes"] [class*="__mistakes"] span', text: "คำอธิบายเฉพาะที่ยาวที่สุดต้องยังอ่านได้ครบโดยไม่บังปุ่มนำทางของบทเรียน" },
+    screens: [
+      { name: "home" },
+      { name: "lesson-sound", enter: click(/เริ่มเรียนทีละตอน/), expect: '[data-stage="lesson-sound"]' },
+      { name: "lesson-letters", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-letters"]' },
+      { name: "lesson-contrast", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-contrast"]' },
+      { name: "lesson-mistakes", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-mistakes"]' },
+      { name: "check", enter: click(/เช็กความเข้าใจ/), expect: '[data-stage="check"]' },
+      { name: "settings", enter: click(/ข้ามไปตั้งค่าเกม/), expect: '[data-stage="settings"]' },
+      { name: "game", enter: click(/เริ่มเกม/), expect: '[data-stage="game"]' },
+      {
+        name: "wrong-feedback",
+        async enter(page) {
+          const game = page.locator('[data-stage="game"]');
+          const answer = await game.getAttribute("data-answer");
+          await game.locator(`[data-family]:not([data-family="${answer}"])`).first().click({ force: true });
+        },
+        expect: '[data-stage="game"]',
+      },
+      { name: "result", enter: solveFinalConsonantGame, expect: '[data-stage="result"]' },
+    ],
+  },
   "phonics-bingo": {
     path: "/media/english/phonics-bingo",
     screens: [

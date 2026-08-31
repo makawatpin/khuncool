@@ -49,6 +49,8 @@ const AUDIT_SRC = await readFile(path.join(ROOT, "scripts", "audit-stage.js"), "
 const GAMES = {
   "math-adventure": { path: "/media/mathematics/math-adventure", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 15 },
   "thai-kingdom": { path: "/media/thai/thai-kingdom", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 17 },
+  "final-consonants": { path: "/media/thai/final-consonants", start: [/เริ่มเรียนทีละตอน/, /ตอนถัดไป/, /ตอนถัดไป/, /ตอนถัดไป/, /เช็กความเข้าใจ/, /ข้ามไปตั้งค่าเกม/, /เริ่มเกม/], seed: 19 },
+  "mae-kot": { path: "/media/thai/mae-kot", start: [/เริ่มเรียนทีละตอน/, /ตอนถัดไป/, /ตอนถัดไป/, /ตอนถัดไป/, /เช็กความเข้าใจ/, /ข้ามไปตั้งค่าเกม/, /เริ่มเกม/], seed: 23 },
   "classroom-objects": { path: "/media/english/classroom-objects", start: /เริ่มเล่น/ },
   "family-tree": { path: "/media/english/family-tree", start: /เริ่มเล่น/ },
   "weather-seasons": { path: "/media/english/weather-seasons", start: [/เลือกโหมดการสอน/, /เรียนรู้/] },
