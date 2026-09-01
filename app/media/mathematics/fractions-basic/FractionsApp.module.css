@@ -175,12 +175,18 @@
 
 .lessonTitle { margin: 0; font-size: var(--kc-fs-title) }
 
+/* min-height:0 คือสิ่งที่ทำให้แถวรูปย่อได้จริง
+   flex item มี min-height:auto เป็นค่าตั้งต้น จึงย่อต่ำกว่าความสูงเนื้อหาไม่ได้เลย
+   และ max-height:100% ของ SVG ข้างในก็ไปอ้างกับความสูงที่ไม่ยอมย่อนั้น กลายเป็น
+   เงื่อนไขที่ไม่เคยมีผล — หน้าเกมแตะระบายรอดเพราะ SVG เป็นลูกตรงของ .gameBoard
+   ซึ่งมี min-height:0 อยู่แล้ว ส่วนหน้านี้ SVG ซ้อนลึกกว่าอีกชั้น */
 .lessonShapes {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--kc-gap);
   flex-wrap: wrap;
+  min-height: 0;
 }
 
 .lessonCaption {
@@ -325,7 +331,11 @@
 }
 
 .quizQuestion { margin: 0; max-width: 40ch; font-size: var(--kc-fs-title); line-height: 1.4 }
-.quizShapes { display: flex; gap: var(--kc-gap); align-items: center; justify-content: center; flex-wrap: wrap }
+/* min-height:0 ด้วยเหตุผลเดียวกับ .lessonShapes ข้างบน — และหน้านี้เป็นที่ที่
+   audit จับได้จริง: พอกดเฉลยข้อ 8 กล่องคำตอบดันเนื้อหารวมเป็น 506px ในกล่องสูง
+   427px ส่วนเกิน 72px ไหลลงไปทับปุ่ม "จบบทเรียน →" จนกดไม่ได้ ตกทั้ง 12 ช่อง
+   (6 ขนาด x 2 โหมด) ครูที่กดเฉลยข้อสุดท้ายจึงออกจากบทเรียนไม่ได้เลย */
+.quizShapes { display: flex; gap: var(--kc-gap); align-items: center; justify-content: center; flex-wrap: wrap; min-height: 0 }
 
 .quizAnswer {
   display: flex;
