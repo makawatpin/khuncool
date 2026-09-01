@@ -60,19 +60,44 @@ export default function FractionShape({
     };
   };
 
+  // แท่งต้องยืดเต็มกล่องที่กว้างและเตี้ย จึงต้องปิด preserveAspectRatio
+  //
+  // viewBox เป็น 1:1 เสมอ ถ้าใช้ "meet" ภาพจะถูกย่อลงตามด้านที่สั้นกว่าแล้ววาง
+  // กึ่งกลาง แปลว่าคลาส .bar ที่ตั้งกล่องให้เตี้ยกลับทำให้ทั้งรูปเล็กลงแทนที่จะแบนลง
+  // ผลคือ "แท่งช็อกโกแลต" เรนเดอร์เป็นสี่เหลี่ยมจัตุรัสเล็ก ๆ หน้าตาเหมือน square
+  // ทุกประการ ซึ่งทำให้สไลด์ 5 ที่วางวงกลม แท่ง และสี่เหลี่ยมเทียบกันเพื่อสอนว่า
+  // "รูปต่างกันเขียนเป็นเศษส่วนเดียวกันได้" สอนไม่ได้เลย
+  //
+  // "none" ยืดแกน x กับ y คนละอัตรา ซึ่งไม่เสียความหมายเพราะแถบเป็นสี่เหลี่ยม
+  // ยืดแล้วก็ยังเป็นสี่เหลี่ยม สัดส่วนพื้นที่ของแต่ละส่วนยังเท่าเดิม
+  // ที่เสียคือเส้นขอบจะหนาไม่เท่ากันสองแกน จึงใส่ vector-effect ให้เส้นคงความหนาจริง
+  //
+  // วงกลมกับสี่เหลี่ยมยังใช้ meet ตามเดิม เพราะทั้งคู่ต้องคงอัตราส่วน 1:1
+  const stretch = shape === "bar";
+
   return (
     <svg
       viewBox="0 0 100 100"
-      className={`${styles.shape} ${SIZE_CLASS[size]} ${shape === "bar" ? styles.bar : ""}`}
+      className={`${styles.shape} ${SIZE_CLASS[size]} ${stretch ? styles.bar : ""}`}
       role={interactive ? "group" : "img"}
       aria-label={label}
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio={stretch ? "none" : "xMidYMid meet"}
     >
       {shape === "circle"
         ? indices.map((i) => <path key={i} d={slicePath(i, parts)} {...partProps(i)} />)
         : indices.map((i) => {
             const { x, width } = stripBounds(i, parts, unequal);
-            return <rect key={i} x={x} y={0} width={width} height={100} {...partProps(i)} />;
+            return (
+              <rect
+                key={i}
+                x={x}
+                y={0}
+                width={width}
+                height={100}
+                vectorEffect={stretch ? "non-scaling-stroke" : undefined}
+                {...partProps(i)}
+              />
+            );
           })}
     </svg>
   );

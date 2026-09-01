@@ -1,7 +1,11 @@
 .mascot { display: block; flex: none; overflow: visible }
 
-.sm { width: max(44px, 8cqi); height: auto }
-.md { width: max(64px, 12cqi); height: auto }
+/* มีเพดาน ไม่ใช่ max() ที่โตได้ไม่จำกัด — มาสคอตเป็นของประกอบ ไม่ควรแย่งสายตา
+   จากปุ่มหลักหรือจากรูปเศษส่วน วัดที่เวทีในหน้า 1096 กว้าง: 8cqi ได้ 88px สูง 101px
+   ขณะที่ปุ่ม "เริ่มตั้งแต่ต้น" สูง 55px คือ 1.86 เท่า และตอนเต็มจอบนโปรเจกเตอร์
+   เวทีกว้าง 1920 จะได้ราว 154px คือเกือบ 2.5 เท่าของปุ่ม เพดานตัดตรงนั้นออก */
+.sm { width: clamp(36px, 5cqi, 64px); height: auto }
+.md { width: clamp(48px, 7cqi, 88px); height: auto }
 
 .shadow { fill: rgba(31, 42, 68, 0.12) }
 .body { fill: #625CE7 }
