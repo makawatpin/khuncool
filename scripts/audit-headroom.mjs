@@ -63,6 +63,8 @@ const GAMES = {
   "typing-defense": { path: "/media/computer/typing-defense", start: null },
   "touch-typing": { path: "/media/computer/touch-typing", start: [/เริ่มฝึกวางนิ้ว/, /เริ่มบทนี้/] },
   "math-bomb-defusal": { path: "/media/mathematics/math-bomb-defusal", start: /ตั้งค่าภารกิจ/ },
+  // เกมเลือกภาพคือหน้าเล่นแรกที่เด็กออกมากดจริง ส่วนบทเรียนเป็นหน้าที่ครูกดเดินเอง
+  "fractions-basic": { path: "/media/mathematics/fractions-basic", start: /เกมฝึก/ },
   "science-lab-crisis": { path: "/media/science/science-lab-crisis", start: null },
   "motion-lab": { path: "/media/science/motion-lab", start: null },
   "density-lab": { path: "/media/science/density-lab", start: null },
