@@ -9,9 +9,7 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
     topics: ["การบวกและการลบ", "คิดเลขเร็ว", "สมการ", "เศษส่วน", "ร้อยละ"],
     resources: [
       { title: "Math Adventure ภารกิจบวกลบ", description: "เรียนด้วยภาพและเส้นจำนวน ฝึกตอบ เล่นรถไฟเก็บดาว และทำแบบทดสอบหลังเรียน", grades: "ป.1 · 10–20 นาที", type: "การบวกและการลบ", href: "/media/mathematics/math-adventure", image: "/assets/game-covers/math-adventure.webp" },
-      // ยังไม่มี image — ภาพปกยังไม่ได้ทำ และ SubjectResourcePage ใช้ image เฉพาะใน JSON-LD
-      // ไม่ได้ใช้วาดการ์ด การ์ดจึงหน้าตาเหมือนกันทั้งมีและไม่มี (motion-lab กับ density-lab ก็ไม่มี)
-      { title: "รู้จักเศษส่วน", description: "เรียนจากภาพว่าแบ่งเท่า ๆ กันคืออะไร อ่านและเขียนเศษส่วน แล้วฝึกด้วยเกม 12 ข้อและคำถามหน้าชั้น", grades: "ป.2–ป.3 · 25–30 นาที", type: "เศษส่วน", href: "/media/mathematics/fractions-basic" },
+      { title: "รู้จักเศษส่วน", description: "เรียนจากภาพว่าแบ่งเท่า ๆ กันคืออะไร อ่านและเขียนเศษส่วน แล้วฝึกด้วยเกม 12 ข้อและคำถามหน้าชั้น", grades: "ป.2–ป.3 · 25–30 นาที", type: "เศษส่วน", href: "/media/mathematics/fractions-basic", image: "/assets/game-covers/fractions-basic.webp" },
       { title: "ถอดรหัสบอมบ์ตัวเลข", description: "แก้โจทย์ เลือกตัดสายคำตอบที่ถูกต้อง และหยุดระเบิดก่อนหมดเวลา", grades: "ป.3–ป.6 · 5–10 นาที", type: "คิดเลขเร็ว", href: "/media/mathematics/math-bomb-defusal", image: "/assets/game-covers/math-bomb-defusal.webp" },
     ],
     outcomes: ["เชื่อมแนวคิดนามธรรมกับภาพและสถานการณ์ใกล้ตัว", "สื่อสารกระบวนการคิดด้วยคำพูด ภาพ และสัญลักษณ์", "ตรวจสอบความสมเหตุสมผลของคำตอบได้ด้วยตนเอง"],

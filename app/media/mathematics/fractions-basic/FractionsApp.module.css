@@ -2,7 +2,10 @@
    ห้ามใช้ vw/vh/dvh/innerWidth ที่ไหนเลย (media-stage-contract ข้อ 1) */
 
 .body {
-  background: linear-gradient(160deg, #FFF9F2 0%, #F3F1FF 100%);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 197, 124, 0.2), transparent 30%),
+    radial-gradient(circle at 82% 76%, rgba(98, 92, 231, 0.15), transparent 34%),
+    linear-gradient(160deg, #FFF9F2 0%, #F3F1FF 100%);
   color: #1F2A44;
   display: flex;
   flex-direction: column;
@@ -86,6 +89,12 @@
   gap: var(--kc-gap);
   padding: 0 var(--kc-pad) var(--kc-pad);
   text-align: center;
+  animation: screenEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes screenEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.99) }
+  to { opacity: 1; transform: none }
 }
 
 /* class ประจำแต่ละหน้าจอ — มีไว้ให้แต่ละหน้าจอมีที่ยึดของตัวเองเวลาต้องแก้
@@ -109,31 +118,111 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--kc-gap);
   width: 100%;
-  max-width: 720px;
+  max-width: 840px;
 }
 
 .homeCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: var(--kc-pad);
-  border: 1px solid rgba(31, 42, 68, 0.1);
+  gap: 4px;
+  padding: 10px 12px 12px;
+  border: 1px solid rgba(31, 42, 68, 0.09);
   border-radius: var(--kc-radius);
-  background: #fff;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.88));
   color: inherit;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(31, 42, 68, 0.06);
+  box-shadow: 0 10px 24px rgba(42, 37, 94, 0.09), inset 0 1px 0 rgba(255,255,255,0.9);
 }
 /* transition อยู่บนกฎฐาน ไม่ใช่ใน :hover — ถ้าอยู่ใน :hover การ์ดจะค่อย ๆ ยกขึ้น
    แต่ดีดกลับทันทีตอนเมาส์ออก และ contract ข้อ 6 บันทึกไว้ว่า hover ที่ค้างพร้อม
    transform เคยทำให้ audit รายงาน "การ์ดล้นขอบ 1-12px" ทั้งที่ความสูงจริงพอดี */
-.homeCard { transition: transform 0.18s ease }
-.homeCard:hover { transform: translateY(-2px) }
-.homeIcon { font-size: var(--kc-fs-title) }
+.homeCard {
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+  animation: cardDeal 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.homeCard:nth-child(2) { animation-delay: 0.07s }
+.homeCard:nth-child(3) { animation-delay: 0.14s }
+.homeCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.52;
+  transition: opacity 0.22s ease;
+}
+.cardLesson::before { background: linear-gradient(145deg, #FFF4DD, transparent 65%) }
+.cardPractice::before { background: linear-gradient(145deg, #E7FBF7, transparent 65%) }
+.cardQuiz::before { background: linear-gradient(145deg, #F0ECFF, transparent 65%) }
+.homeCard:hover {
+  transform: translateY(-5px);
+  border-color: rgba(98, 92, 231, 0.28);
+  box-shadow: 0 16px 30px rgba(42, 37, 94, 0.15), inset 0 1px 0 rgba(255,255,255,0.95);
+}
+.homeCard:hover::before { opacity: 1 }
+.homeCard:focus-visible { outline: 3px solid rgba(98, 92, 231, 0.34); outline-offset: 3px }
+
+.cardStep {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 24px;
+  padding: 0 7px;
+  border: 1px solid rgba(31, 42, 68, 0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.86);
+  color: #625CE7;
+  font-size: var(--kc-fs-label);
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(31, 42, 68, 0.08);
+}
+
+.cardArt {
+  position: relative;
+  display: block;
+  width: min(100%, 220px);
+  aspect-ratio: 4 / 3;
+  margin-top: -2px;
+  filter: drop-shadow(0 9px 8px rgba(31, 42, 68, 0.12));
+  transform-origin: 50% 78%;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s ease;
+}
+.cardArt img { object-fit: contain }
+.homeCard:hover .cardArt { transform: translateY(-3px) rotate(-1.5deg) scale(1.055); filter: drop-shadow(0 13px 10px rgba(31, 42, 68, 0.16)) }
+.homeCard:nth-child(2):hover .cardArt { transform: translateY(-3px) rotate(1.5deg) scale(1.055) }
+
 .homeText { display: flex; flex-direction: column; gap: 2px }
-.homeText strong { font-size: var(--kc-fs-head) }
+.homeText strong { font-size: var(--kc-fs-head); line-height: 1.25 }
 .homeText small { font-size: var(--kc-fs-label); color: #4A5570; line-height: 1.45 }
+.cardArrow {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #625CE7;
+  color: #fff;
+  font-weight: 800;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.homeCard:hover .cardArrow, .homeCard:focus-visible .cardArrow { opacity: 1; transform: none }
+
+@keyframes cardDeal {
+  from { opacity: 0; transform: translateY(16px) scale(0.96) }
+  to { opacity: 1; transform: none }
+}
 
 .homeFooter { display: flex; align-items: center; gap: var(--kc-gap) }
 
@@ -146,7 +235,11 @@
   font-size: var(--kc-fs-head);
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 7px 16px rgba(98, 92, 231, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
 }
+.primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(98, 92, 231, 0.28); filter: saturate(1.08) }
+.primary:active:not(:disabled) { transform: translateY(0) scale(0.98) }
 
 .lessonTabs { display: flex; gap: 6px; flex: none }
 
@@ -188,6 +281,14 @@
   flex-wrap: wrap;
   min-height: 0;
 }
+.lessonShapes > * { animation: shapeReveal 0.42s cubic-bezier(0.22, 1, 0.36, 1) both }
+.lessonShapes > :nth-child(2) { animation-delay: 0.08s }
+.lessonShapes > :nth-child(3) { animation-delay: 0.16s }
+
+@keyframes shapeReveal {
+  from { opacity: 0; transform: translateY(8px) scale(0.9) rotate(-2deg) }
+  to { opacity: 1; transform: none }
+}
 
 .lessonCaption {
   margin: 0;
@@ -208,7 +309,9 @@
   font-size: var(--kc-fs-label);
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
 }
+.ghost:hover:not(:disabled) { transform: translateY(-1px); background: #fff; border-color: rgba(98, 92, 231, 0.34) }
 .ghost:disabled { opacity: 0.4; cursor: default }
 
 .progress { display: flex; gap: 4px; flex: none; font-size: var(--kc-fs-head) }
@@ -240,8 +343,11 @@
   border-radius: var(--kc-radius);
   background: #fff;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(31, 42, 68, 0.07);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
-.optionRight { border-color: #2A9D8F; background: #E8F7F4 }
+.option:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 20px rgba(31, 42, 68, 0.12); border-color: rgba(98, 92, 231, 0.34) }
+.optionRight { border-color: #2A9D8F; background: #E8F7F4; animation: optionCorrect 0.5s cubic-bezier(0.22, 1, 0.36, 1) }
 /* ตอบผิดใช้โทนอำพัน ไม่ใช่แดง — เพื่อนทั้งห้องเห็นจอเดียวกัน */
 .optionWrong { border-color: #E9A23B; background: #FFF4E2; animation: optionShake 0.36s ease }
 
@@ -253,6 +359,12 @@
   0%, 100% { transform: translateX(0) }
   25% { transform: translateX(-5px) }
   75% { transform: translateX(5px) }
+}
+
+@keyframes optionCorrect {
+  0% { transform: scale(0.96) }
+  55% { transform: scale(1.08) }
+  100% { transform: scale(1) }
 }
 
 .feedback {
@@ -373,7 +485,10 @@
    (contract ข้อ 5 ตารางแนวนอน/แนวตั้ง) */
 @container kcstage (aspect-ratio < 0.9) {
   .homeGrid { grid-template-columns: minmax(0, 1fr); max-width: 420px }
-  .homeCard { flex-direction: row; text-align: left; align-items: center }
+  .homeCard { flex-direction: row; text-align: left; align-items: center; min-height: 112px; padding: 8px 42px 8px 54px }
+  .cardArt { flex: 0 0 min(32%, 118px); width: min(32%, 118px); margin: 0 }
+  .cardStep { top: 50%; left: 10px; transform: translateY(-50%) }
+  .cardArrow { opacity: 1; transform: none; top: 50%; bottom: auto; transform: translateY(-50%) }
   .homeText { align-items: flex-start }
 }
 
@@ -383,8 +498,11 @@
   .screen { gap: 8px; padding: 0 12px 10px }
   .heroLead { display: none }
   .homeText small { display: none }
-  .homeCard { padding: 8px 10px }
-  .homeGrid { max-width: 620px }
+  .homeCard { padding: 6px 10px 8px }
+  .cardArt { width: min(100%, 112px) }
+  .cardStep { top: 6px; left: 7px; height: 20px; min-width: 26px }
+  .cardArrow { display: none }
+  .homeGrid { max-width: 660px }
   .lessonTitle { font-size: var(--kc-fs-head) }
   .lessonCaption { font-size: var(--kc-fs-label); line-height: 1.45 }
   .lessonShapes { gap: 10px }
@@ -397,4 +515,30 @@
   .quizQuestion { font-size: var(--kc-fs-head) }
   .quizAnswer { padding: 6px 12px }
   .resultList { line-height: 1.45 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decorations > span,
+  .screen,
+  .homeCard,
+  .lessonShapes > *,
+  .optionRight,
+  .optionWrong,
+  .burstStar,
+  .picked,
+  .quizAnswer { animation: none !important }
+
+  .homeCard,
+  .homeCard::before,
+  .cardArt,
+  .cardArrow,
+  .primary,
+  .ghost,
+  .option { transition-duration: 0.01ms !important }
+
+  .homeCard:hover,
+  .homeCard:hover .cardArt,
+  .homeCard:nth-child(2):hover .cardArt,
+  .primary:hover:not(:disabled),
+  .option:hover { transform: none }
 }

@@ -5,17 +5,15 @@ import FractionsApp from "./FractionsApp";
 const PAGE_URL = "https://www.khuncool.com/media/mathematics/fractions-basic";
 const TITLE = "รู้จักเศษส่วน สื่อการสอนคณิตศาสตร์ ป.2-3 | khuncool";
 const DESCRIPTION = "สื่อการสอนเศษส่วน ป.2-3 เริ่มจากการแบ่งเท่า ๆ กัน อ่านและเขียนเศษส่วนจากภาพ พร้อมเกมฝึก 12 ข้อและคำถามหน้าชั้น 8 ข้อ ใช้ฟรีบนจอห้องเรียน มือถือ และแท็บเล็ต";
-
-// หน้าปก public/assets/game-covers/fractions-basic.webp ยังไม่มี — Task 10 จะเพิ่มให้
-// จึงยังไม่ใส่ images/openGraph/twitter และ image ของ LearningResource ในตอนนี้
+const OG_IMAGE = { url: "https://www.khuncool.com/assets/game-covers/fractions-basic.webp", width: 960, height: 540, alt: "เกมรู้จักเศษส่วนจากภาพ สำหรับนักเรียน ป.2–ป.3" };
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   keywords: ["สื่อการสอนเศษส่วน", "เศษส่วน ป.2", "เศษส่วน ป.3", "เกมเศษส่วน", "ตัวเศษ ตัวส่วน", "สื่อคณิตศาสตร์ประถม"],
   alternates: { canonical: PAGE_URL },
-  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "khuncool", locale: "th_TH" },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
+  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "khuncool", locale: "th_TH", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [OG_IMAGE.url] },
 };
 
 const jsonLd = {
@@ -26,7 +24,7 @@ const jsonLd = {
       { "@type": "ListItem", position: 2, name: "สื่อคณิตศาสตร์", item: "https://www.khuncool.com/media/mathematics" },
       { "@type": "ListItem", position: 3, name: "รู้จักเศษส่วน", item: PAGE_URL },
     ] },
-    { "@type": "LearningResource", name: "รู้จักเศษส่วน", url: PAGE_URL, inLanguage: "th-TH", educationalLevel: "ประถมศึกษาปีที่ 2–3", learningResourceType: "Interactive educational game", teaches: ["การแบ่งเท่า ๆ กัน", "การอ่านและเขียนเศษส่วนจากภาพ", "ความหมายของตัวเศษและตัวส่วน"], isAccessibleForFree: true },
+    { "@type": "LearningResource", name: "รู้จักเศษส่วน", url: PAGE_URL, image: OG_IMAGE.url, inLanguage: "th-TH", educationalLevel: "ประถมศึกษาปีที่ 2–3", learningResourceType: "Interactive educational game", teaches: ["การแบ่งเท่า ๆ กัน", "การอ่านและเขียนเศษส่วนจากภาพ", "ความหมายของตัวเศษและตัวส่วน"], isAccessibleForFree: true },
   ],
 };
 

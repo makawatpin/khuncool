@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { KcSfx, hoverSfxDelegate } from "@/lib/kcSfx";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
@@ -14,10 +15,10 @@ import Mascot from "./components/Mascot";
 import type { Screen } from "./types";
 import styles from "./FractionsApp.module.css";
 
-const HOME_CARDS: { screen: Screen; icon: string; title: string; desc: string }[] = [
-  { screen: "lesson", icon: "📖", title: "บทเรียน", desc: "รู้จักเศษส่วนจากภาพ 5 สไลด์" },
-  { screen: "game-choice", icon: "🎯", title: "เกมฝึก", desc: "2 เกม รวม 12 ข้อ" },
-  { screen: "quiz", icon: "🙋", title: "ถามหน้าชั้น", desc: "8 คำถาม ครูถาม เด็กชูมือ" },
+const HOME_CARDS: { screen: Screen; image: string; step: string; title: string; desc: string; cardClass: string }[] = [
+  { screen: "lesson", image: "/assets/fractions-basic/card-lesson.webp", step: "01", title: "บทเรียน", desc: "รู้จักเศษส่วนจากภาพ 5 สไลด์", cardClass: styles.cardLesson },
+  { screen: "game-choice", image: "/assets/fractions-basic/card-practice.webp", step: "02", title: "เกมฝึก", desc: "2 เกม รวม 12 ข้อ", cardClass: styles.cardPractice },
+  { screen: "quiz", image: "/assets/fractions-basic/card-quiz.webp", step: "03", title: "ถามหน้าชั้น", desc: "8 คำถาม ครูถาม เด็กชูมือ", cardClass: styles.cardQuiz },
 ];
 
 export default function FractionsApp() {
@@ -89,12 +90,16 @@ export default function FractionsApp() {
             </div>
             <div className={styles.homeGrid}>
               {HOME_CARDS.map((card) => (
-                <button key={card.screen} type="button" className={`kc-tap ${styles.homeCard}`} onClick={() => go(card.screen)}>
-                  <span className={styles.homeIcon} aria-hidden="true">{card.icon}</span>
+                <button key={card.screen} type="button" className={`kc-tap ${styles.homeCard} ${card.cardClass}`} onClick={() => go(card.screen)}>
+                  <span className={styles.cardStep} aria-hidden="true">{card.step}</span>
+                  <span className={styles.cardArt} aria-hidden="true">
+                    <Image src={card.image} alt="" fill sizes="(max-width: 700px) 36vw, 240px" priority />
+                  </span>
                   <span className={styles.homeText}>
                     <strong>{card.title}</strong>
                     <small>{card.desc}</small>
                   </span>
+                  <span className={styles.cardArrow} aria-hidden="true">→</span>
                 </button>
               ))}
             </div>
