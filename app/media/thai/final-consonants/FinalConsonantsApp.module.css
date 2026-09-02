@@ -8,8 +8,133 @@
 .screen { position:relative; z-index:1; height:calc(100% - 52px); padding:var(--kc-pad); display:flex; flex-direction:column; align-items:center; justify-content:safe center; gap:var(--kc-gap); text-align:center; }
 .home h2,.lesson h2,.check h2,.settings h2,.result h2 { margin:0; font-size:var(--kc-fs-title); line-height:1.12; }.eyebrow{margin:0;color:#b4477c;font-size:var(--kc-fs-label);font-weight:800}.intro,.lessonBody,.resultLead{max-width:760px;margin:0;color:#5b6473;font-size:var(--kc-fs-body);line-height:1.55}.heroIcon,.trophy{font-size:var(--kc-fs-display);line-height:1}.homeActions,.bottomActions{display:flex;justify-content:center;gap:var(--kc-gap);flex-wrap:wrap}.primary,.secondary{border:0;border-radius:var(--kc-radius);padding:8px 18px;font:inherit;font-size:var(--kc-fs-body);font-weight:800;cursor:pointer}.primary{background:#b4477c;color:#fff;box-shadow:0 8px 18px rgba(180,71,124,.24)}.secondary{background:#fff;color:#6b3c55;border:2px solid #efc5d9}.matchup{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}.matchup span{padding:6px 12px;border-radius:999px;background:#fff;border:2px solid #f3c6d8;font-weight:800}.matchup b{font-size:var(--kc-fs-label);color:#8b6476}
 .lesson{justify-content:flex-start}.lessonTop,.gameTop{width:100%;display:flex;justify-content:space-between;align-items:center;color:#8b6476;font-size:var(--kc-fs-label);font-weight:800}.lessonVisual{width:min(100%,900px);flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:var(--kc-gap)}.lessonVisual p{margin:0;font-size:var(--kc-fs-body)}.lessonVisual mark{background:#ffe09b;border-radius:5px;padding:0 5px}.bigParts{display:flex;align-items:center;justify-content:center;gap:1.2cqi;font-size:var(--kc-fs-display);font-style:normal}.bigParts span,.bigParts b,.bigParts strong{min-width:1.2em;border-radius:14px;padding:.08em .2em;background:#fff;border:3px solid #eadfd6}.bigParts strong{border-color:#e11d48;color:#be123c}.bigParts i{font-style:normal}.bigParts em{font-style:normal;color:#b4477c;font-weight:900}.familyCards{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--kc-gap)}.familyCards>div{border:3px solid var(--family-color);background:#fff;border-radius:var(--kc-radius);padding:var(--kc-gap);display:flex;flex-direction:column;gap:3px}.familyCards strong{font-size:var(--kc-fs-head)}.familyCards span{font-size:var(--kc-fs-title);font-weight:900;color:var(--family-color)}.familyCards small{font-size:var(--kc-fs-label)}.compactCards{grid-template-columns:repeat(3,minmax(0,1fr))}.compactCards>div{padding:4px}.compactCards strong{font-size:var(--kc-fs-body)}.compactCards span{font-size:var(--kc-fs-head)}.soundCompare{display:flex;gap:1cqi;font-size:var(--kc-fs-display);font-weight:900}.soundCompare span,.soundCompare strong{padding:.1em .35em;border-radius:18px;background:#fff;border:4px solid #eadfd6}.soundCompare strong{color:#e11d48;border-color:#e11d48}.letterMap{display:grid;grid-template-columns:repeat(8,1fr);gap:var(--kc-gap);width:min(100%,800px)}.letterMap span{display:grid;place-items:center;aspect-ratio:1;border-radius:18px;background:#fff;border:3px solid #fecdd3;color:#be123c;font-size:var(--kc-fs-title);font-weight:900}.contrast{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--kc-gap);width:min(100%,760px)}.contrast>div{padding:var(--kc-pad);border-radius:var(--kc-radius);background:#fff;border:3px solid #e5e7eb;display:flex;flex-direction:column;gap:5px}.contrast strong{font-size:var(--kc-fs-display)}.contrast span{font-size:var(--kc-fs-head);font-weight:800}.contrast small{font-size:var(--kc-fs-body)}.mistakes{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--kc-gap);width:100%}.mistakes>div{background:#fff;border:2px solid #fecdd3;border-radius:var(--kc-radius);padding:var(--kc-gap);display:flex;flex-direction:column;gap:5px}.mistakes strong{font-size:var(--kc-fs-title);color:#be123c}.mistakes span{font-size:var(--kc-fs-label);line-height:1.4}.teacherTip{position:absolute;left:var(--kc-pad);bottom:calc(var(--kc-pad) + var(--kc-tap) + 8px);margin:0;max-width:50%;font-size:var(--kc-fs-label);text-align:left;color:#7a5a68}
+.app[data-variant="kaa"] [data-stage="lesson-letters"] .familyCards{grid-template-columns:1fr;width:min(100%,720px)}
+.wordVisual{font-size:clamp(40px,5cqi,76px);line-height:1;filter:drop-shadow(0 8px 12px rgba(38,48,67,.12));animation:visualFloat 3s ease-in-out infinite}.question{display:flex;flex-direction:column;align-items:center;gap:3px}.question .wordVisual,.check .wordVisual{font-size:clamp(34px,4cqi,58px)}.wordTools{min-height:var(--kc-tap);display:flex;align-items:center;justify-content:center;gap:12px}.listenActions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.listenButton{border:2px solid #c7d2fe;border-radius:999px;background:#eef2ff;color:#4338ca;padding:5px 12px;font:inherit;font-size:var(--kc-fs-label);font-weight:800;cursor:pointer}.teacherPanel{width:min(100%,900px);display:grid;grid-template-columns:minmax(180px,1fr) 2fr auto;align-items:center;gap:10px;border:2px dashed #d8b4fe;border-radius:var(--kc-radius);background:rgba(250,245,255,.92);padding:9px 12px;text-align:left}.teacherPanel>div:first-child{display:flex;flex-direction:column}.teacherPanel small{color:#667085;font-size:11px}.familyToggles{display:flex;gap:5px;justify-content:center}.familyToggles button,.hintToggle{border:2px solid #e5e7eb;border-radius:999px;background:#fff;padding:5px 9px;font:inherit;font-size:12px;font-weight:800}.familyToggles button.selected,.hintToggle.selected{border-color:#b4477c;background:#fce7f3;color:#9d174d}.familyToggles button:disabled{opacity:1;box-shadow:inset 0 0 0 2px #fff}.celebration{display:inline-block;margin-right:6px;animation:celebrate .7s ease both}.screen{animation:screenIn .32s ease both}.houseButton{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.houseButton:hover:not(:disabled){transform:translateY(-4px) scale(1.015);box-shadow:0 12px 24px rgba(38,48,67,.12)}.houseButton:active:not(:disabled){transform:scale(.97)}.correct{animation:correctPop .45s ease both}
+@keyframes screenIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes visualFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}@keyframes celebrate{0%{opacity:0;transform:scale(.4) rotate(-12deg)}65%{transform:scale(1.25) rotate(5deg)}100%{opacity:1;transform:scale(1)}}@keyframes correctPop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
 .check,.settings,.game,.result{justify-content:flex-start}.progressText{align-self:flex-end;font-size:var(--kc-fs-label);font-weight:800}.wordParts{display:flex;align-items:center;justify-content:center;gap:.1em;font-size:var(--kc-fs-display);font-weight:900}.wordParts strong{color:#e11d48;border-bottom:5px solid #fb7185}.answerGrid{width:min(100%,850px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--kc-gap)}.houseButton{border:3px solid #e5e7eb;background:#fff;border-radius:var(--kc-radius);padding:var(--kc-gap);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}.houseButton>span{font-size:var(--kc-fs-title)}.houseButton strong{font-size:var(--kc-fs-head)}.houseButton small{font-size:var(--kc-fs-label);color:#667085}.houseButton.correct{border-color:#22c55e;background:#ecfdf5}.feedback{min-height:1.6em;font-size:var(--kc-fs-body);font-weight:700;color:#7a5a68}.feedbackShown{padding:5px 12px;background:#fff;border-radius:999px}.bottomActions{margin-top:auto}.settingGrid{width:min(100%,900px);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--kc-gap)}.setting{margin:0;padding:var(--kc-gap);border:2px solid #eadfd6;border-radius:var(--kc-radius);background:#fff}.setting legend{padding:0 8px;font-size:var(--kc-fs-body);font-weight:800}.setting>div{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}.setting button{border:2px solid #e5e7eb;background:#fff;border-radius:12px;padding:4px 9px;font:inherit;font-size:var(--kc-fs-label);cursor:pointer}.setting button.selected{border-color:#b4477c;background:#fdf2f8;color:#9d174d}.settingNote{max-width:760px;margin:0;font-size:var(--kc-fs-body);color:#667085}.gameTop{gap:8px}.progressTrack{height:10px;flex:1;background:#f1e8e2;border-radius:999px;overflow:hidden}.progressTrack span{display:block;height:100%;width:var(--progress);background:linear-gradient(90deg,#f97316,#e11d48);transition:width .25s}.question p{margin:0;font-size:var(--kc-fs-label);color:#667085}.question h2{margin:0;font-size:var(--kc-fs-display);line-height:1}.breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--kc-gap);width:min(100%,760px)}.breakdown>div{display:flex;flex-direction:column;gap:5px;padding:var(--kc-gap);background:#fff;border:2px solid #eadfd6;border-radius:var(--kc-radius)}.breakdown strong{font-size:var(--kc-fs-head)}.breakdown span{font-size:var(--kc-fs-label);color:#667085}.result{gap:clamp(5px,1.2cqb,12px)}.result .trophy{font-size:var(--kc-fs-title)}.result .breakdown{gap:clamp(4px,.8cqb,8px)}.result .breakdown>div{gap:2px;padding:clamp(4px,1cqb,9px)}.result .breakdown strong{font-size:var(--kc-fs-body)}
 @container kcstage (aspect-ratio < .9){.toolbar{min-height:52px}.screen{height:calc(100% - 52px)}.home{justify-content:flex-start}.heroIcon{font-size:44px}.homeActions{width:100%;flex-direction:column}.homeActions button{width:100%}.familyCards{grid-template-columns:repeat(2,1fr)}.compactCards{grid-template-columns:repeat(3,1fr)}.letterMap{grid-template-columns:repeat(4,1fr)}.mistakes{grid-template-columns:repeat(2,1fr);overflow:auto}.mistakes>div:last-child{grid-column:1/-1}.settingGrid{grid-template-columns:1fr}.answerGrid{grid-template-columns:1fr}.houseButton{flex-direction:row;justify-content:center}.houseButton>span{font-size:var(--kc-fs-head)}.breakdown{grid-template-columns:repeat(3,1fr)}.teacherTip{display:none}.chromeButton span{display:none}}
+@container kcstage (aspect-ratio < .9){.teacherPanel{grid-template-columns:1fr;text-align:center;gap:5px;padding:6px 9px}.familyToggles{flex-wrap:wrap}.hintToggle{justify-self:center}.question .wordVisual,.check .wordVisual{font-size:36px}.listenButton{padding:4px 10px}.app[data-family] [data-stage="settings"]{gap:4px;padding-top:6px;padding-bottom:6px}.app[data-family] [data-stage="settings"] .settingNote{display:none}}
 @container kcstage (aspect-ratio >= .9) and (height < 480px){.toolbar{min-height:44px;padding-top:2px;padding-bottom:2px}.screen{height:calc(100% - 44px);padding:6px var(--kc-pad);gap:5px}.heroIcon,.trophy{display:none}.home h2,.lesson h2,.check h2,.settings h2,.result h2{font-size:var(--kc-fs-head)}.intro,.lessonBody,.resultLead{font-size:var(--kc-fs-label);line-height:1.3}.result .resultLead{display:none}.homeActions{flex-wrap:nowrap}.matchup{display:none}.lessonVisual{gap:4px}.lessonBody{max-height:2.7em;overflow:hidden}.familyCards{gap:5px}.familyCards>div{padding:3px}.familyCards strong{font-size:var(--kc-fs-body)}.familyCards span{font-size:var(--kc-fs-head)}.compactCards{grid-template-columns:repeat(9,1fr)}.compactCards small{display:none}.bigParts{font-size:var(--kc-fs-title)}.letterMap{grid-template-columns:repeat(8,1fr);gap:5px}.contrast>div{padding:4px}.contrast strong{font-size:var(--kc-fs-title)}.mistakes{grid-template-columns:repeat(5,1fr);gap:5px}.mistakes>div{padding:4px}.mistakes strong{font-size:var(--kc-fs-head)}.mistakes span{font-size:11px}.teacherTip{display:none}.wordParts{font-size:var(--kc-fs-title)}.houseButton{padding:3px}.houseButton>span{display:none}.houseButton strong{font-size:var(--kc-fs-body)}.settingGrid{grid-template-columns:repeat(3,1fr);gap:5px}.setting{padding:3px}.settingNote{font-size:var(--kc-fs-label);max-height:2.6em;overflow:hidden}.question h2{font-size:var(--kc-fs-title)}.feedback{font-size:var(--kc-fs-label)}.breakdown{grid-template-columns:repeat(3,1fr)}.breakdown>div{padding:4px}.bottomActions{flex-wrap:nowrap}.primary,.secondary{padding:3px 12px}}
+@container kcstage (aspect-ratio >= .9) and (height < 480px){.wordVisual{display:none}.wordTools{min-height:var(--kc-tap)}.check h2,.question h2{display:none}.listenActions .listenButton:nth-child(2){display:none}.listenButton{padding:2px 8px}.teacherPanel{grid-template-columns:auto 1fr auto;padding:3px 7px;gap:5px}.teacherPanel small{display:none}.teacherPanel>div:first-child strong{font-size:11px}.familyToggles button{padding:2px 6px;font-size:11px}.teacherPanel label{font-size:11px}.settings .settingNote{display:none}}
+@media (prefers-reduced-motion:reduce){.screen,.wordVisual,.celebration,.correct{animation:none}.houseButton{transition:none}}
 @container kcstage (aspect-ratio >= .9) and (height < 480px){.screen{gap:3px}}
+@container kcstage (aspect-ratio >= .9) and (height >= 480px) and (height < 600px){.check{gap:6px;padding-top:10px;padding-bottom:10px}}
+/* The embedded desktop stage is 1096x617 on the article page. Give every
+   focused family lesson a denser classroom scale without spilling into tablets. */
+@container kcstage (min-width:1000px) and (max-width:1149px) and (height >= 550px){
+  .app[data-family] .screen{padding:18px 26px;gap:10px}
+  .app[data-family] .home h2{font-size:42px}
+  .app[data-family] [data-stage="home"] .heroIcon{font-size:68px}
+  .app[data-family] [data-stage="home"] .intro{max-width:880px;font-size:21px}
+  .app[data-family] [data-stage="home"] :is(.primary,.secondary){padding:9px 20px;font-size:18px}
+  .app[data-family] [data-stage="home"] .matchup span{padding:7px 14px;font-size:17px}
+  .app[data-family] [data-stage^="lesson-"] h2{font-size:42px}
+  .app[data-family] [data-stage^="lesson-"] .lessonBody{max-width:900px;font-size:20px;line-height:1.4}
+  .app[data-family] [data-stage^="lesson-"] .lessonVisual{width:min(96%,1000px);gap:12px}
+  .app[data-family] [data-stage^="lesson-"] .lessonVisual p{font-size:20px}
+  .app[data-family] [data-stage^="lesson-"] :is(.primary,.secondary){padding:8px 18px;font-size:18px}
+  .app[data-family] [data-stage="lesson-sound"] .soundCompare{font-size:76px}
+  .app[data-family] [data-stage="lesson-letters"] .letterMap{width:min(96%,900px);gap:10px}
+  .app[data-family] [data-stage="lesson-letters"] .letterMap span{border-radius:15px;font-size:42px}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast{width:min(94%,900px);gap:14px}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast>div{padding:20px}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast strong{font-size:58px}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast span{font-size:25px}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast small{font-size:18px}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes{gap:10px}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes>div{padding:12px}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes strong{font-size:30px}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes span{font-size:16px;line-height:1.35}
+  .app[data-family] :is([data-stage="check"],[data-stage="game"]) .answerGrid{width:min(94%,1000px)}
+  .app[data-family] :is([data-stage="check"],[data-stage="game"]) .houseButton{padding:12px}
+  .app[data-family] :is([data-stage="check"],[data-stage="game"]) .houseButton>span{font-size:38px}
+  .app[data-family] :is([data-stage="check"],[data-stage="game"]) .houseButton strong{font-size:26px}
+  .app[data-family] :is([data-stage="check"],[data-stage="game"]) .houseButton small{font-size:17px}
+  .app[data-family] [data-stage="check"] .wordParts{font-size:64px}
+  .app[data-family] [data-stage="settings"] .settingGrid{width:min(94%,1000px);gap:14px}
+  .app[data-family] [data-stage="settings"] .setting{padding:12px}
+  .app[data-family] [data-stage="settings"] .setting legend{font-size:20px}
+  .app[data-family] [data-stage="settings"] .setting button{padding:7px 11px;font-size:16px}
+  .app[data-family] [data-stage="settings"] .settingNote{max-width:900px;font-size:19px}
+  .app[data-family] [data-stage="result"] .breakdown{width:min(94%,1000px)}
+  .app[data-family] [data-stage="result"] .breakdown strong{font-size:24px}
+  .app[data-family] [data-stage="result"] .breakdown span{font-size:17px}
+}
+/* A large teaching stage has room to prioritize distance legibility. Keep the
+   reading line bounded, but let lesson examples and card groups use the stage. */
+@container kcstage (min-width:1150px) and (height >= 700px){
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]){padding:clamp(30px,2.4cqi,46px) clamp(42px,3.2cqi,64px);gap:clamp(16px,1.25cqi,24px)}
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]) h2{font-size:clamp(58px,3.5cqi,68px)}
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]) .lessonBody{max-width:1200px;font-size:clamp(32px,1.9cqi,38px);line-height:1.45}
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]) .lessonVisual{width:min(94%,1600px);gap:clamp(20px,1.5cqi,30px)}
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]) .lessonVisual p{font-size:clamp(32px,1.9cqi,38px)}
+  [data-stage="lesson-parts"] .bigParts{gap:clamp(18px,1.3cqi,26px);font-size:clamp(96px,6.4cqi,124px)}
+  [data-stage="lesson-direct"] .familyCards{width:min(100%,1600px);gap:clamp(18px,1.5cqi,30px)}
+  [data-stage="lesson-direct"] .familyCards{grid-template-columns:1.35fr repeat(4,minmax(0,1fr))}
+  [data-stage="lesson-direct"] .familyCards>div{padding:clamp(22px,1.8cqi,36px);gap:clamp(8px,.7cqi,14px)}
+  [data-stage="lesson-direct"] .familyCards strong{font-size:clamp(42px,2.5cqi,50px);white-space:nowrap}
+  [data-stage="lesson-direct"] .familyCards span{font-size:clamp(56px,3.4cqi,68px);line-height:1.25}
+  [data-stage="lesson-direct"] .familyCards small{font-size:clamp(26px,1.6cqi,32px)}
+  :is([data-stage="lesson-parts"],[data-stage="lesson-direct"]) :is(.primary,.secondary){padding:10px 24px;font-size:clamp(26px,1.55cqi,31px)}
+  [data-stage="lesson-map"] .lessonVisual{width:min(96%,1600px)}
+  [data-stage="lesson-map"] .compactCards{grid-template-columns:repeat(9,minmax(0,1fr));gap:clamp(8px,.8cqi,16px)}
+  .app[data-family] [data-stage^="lesson-"]{padding:clamp(30px,2.4cqi,46px) clamp(42px,3.2cqi,64px);gap:clamp(14px,1.1cqi,22px)}
+  .app[data-family] [data-stage^="lesson-"] h2{font-size:clamp(56px,3.5cqi,68px)}
+  .app[data-family] [data-stage^="lesson-"] .lessonBody{max-width:1200px;font-size:clamp(28px,1.8cqi,36px);line-height:1.4}
+  .app[data-family] [data-stage^="lesson-"] .lessonVisual{width:min(94%,1600px);gap:clamp(18px,1.4cqi,28px)}
+  .app[data-family] [data-stage^="lesson-"] .lessonVisual p{font-size:clamp(28px,1.8cqi,36px)}
+  .app[data-family] [data-stage^="lesson-"] :is(.primary,.secondary){padding:10px 24px;font-size:clamp(25px,1.55cqi,31px)}
+  .app[data-family] [data-stage="lesson-sound"] .soundCompare{gap:clamp(18px,1.2cqi,24px);font-size:clamp(108px,7cqi,140px)}
+  .app[data-family] [data-stage="lesson-letters"] .letterMap{width:min(92%,1400px);gap:clamp(14px,1.1cqi,22px)}
+  .app[data-family] [data-stage="lesson-letters"] .letterMap span{font-size:clamp(54px,3.5cqi,70px)}
+  .app[data-variant="kaa"] [data-stage="lesson-letters"] .familyCards>div{padding:clamp(28px,2.4cqi,48px)}
+  .app[data-variant="kaa"] [data-stage="lesson-letters"] .familyCards strong{font-size:clamp(42px,2.8cqi,56px)}
+  .app[data-variant="kaa"] [data-stage="lesson-letters"] .familyCards span{font-size:clamp(54px,3.6cqi,72px)}
+  .app[data-variant="kaa"] [data-stage="lesson-letters"] .familyCards small{font-size:clamp(28px,1.8cqi,36px)}
+  .app[data-family] [data-stage="lesson-contrast"] .lessonBody{max-width:1500px;font-size:clamp(26px,1.65cqi,33px)}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast{width:min(88%,1300px);gap:clamp(20px,1.5cqi,30px)}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast>div{padding:clamp(18px,1.4cqi,28px)}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast strong{font-size:clamp(68px,4.4cqi,88px)}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast span{font-size:clamp(30px,2cqi,40px)}
+  .app[data-family] [data-stage="lesson-contrast"] .contrast small{font-size:clamp(22px,1.45cqi,28px)}
+  .app[data-family] [data-stage="lesson-contrast"] .teacherTip{bottom:clamp(24px,2cqi,40px);max-width:32%;font-size:clamp(18px,1.2cqi,23px)}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes{width:min(96%,1600px);gap:clamp(14px,1.1cqi,22px)}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes>div{padding:clamp(16px,1.4cqi,28px)}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes strong{font-size:clamp(36px,2.4cqi,48px)}
+  .app[data-family] [data-stage="lesson-mistakes"] .mistakes span{font-size:clamp(20px,1.4cqi,28px);line-height:1.45}
+  .home h2{font-size:clamp(52px,3.4cqi,68px)}
+  [data-stage="home"] .heroIcon{font-size:clamp(88px,6cqi,120px)}
+  [data-stage="home"] .intro{max-width:1100px;font-size:clamp(24px,1.75cqi,34px)}
+  [data-stage="home"] :is(.primary,.secondary){padding:12px 26px;font-size:clamp(22px,1.45cqi,28px)}
+  [data-stage="lesson-indirect"] .lessonBody{max-width:1200px;font-size:clamp(24px,1.75cqi,34px)}
+  [data-stage="lesson-indirect"] .lessonVisual{width:min(92%,1400px)}
+  [data-stage="lesson-indirect"] .familyCards{width:100%;gap:clamp(18px,1.4cqi,28px)}
+  [data-stage="lesson-indirect"] .familyCards>div{padding:clamp(20px,1.6cqi,32px);gap:clamp(8px,.7cqi,14px)}
+  [data-stage="lesson-indirect"] .familyCards strong{font-size:clamp(36px,2.4cqi,48px);white-space:nowrap}
+  [data-stage="lesson-indirect"] .familyCards span{font-size:clamp(48px,3.2cqi,64px)}
+  [data-stage="lesson-indirect"] .familyCards small{font-size:clamp(22px,1.5cqi,30px)}
+  :is([data-stage="check"],[data-stage="game"]) .answerGrid{width:min(94%,1400px)}
+  :is([data-stage="check"],[data-stage="game"]) .houseButton{padding:clamp(16px,1.4cqi,28px);gap:clamp(6px,.6cqi,12px)}
+  :is([data-stage="check"],[data-stage="game"]) .houseButton>span{font-size:clamp(44px,3cqi,60px)}
+  :is([data-stage="check"],[data-stage="game"]) .houseButton strong{font-size:clamp(30px,2.2cqi,44px)}
+  :is([data-stage="check"],[data-stage="game"]) .houseButton small{font-size:clamp(20px,1.5cqi,30px)}
+  :is([data-stage="check"],[data-stage="game"]) .feedback{font-size:clamp(22px,1.45cqi,28px)}
+  .check h2{font-size:clamp(52px,3.4cqi,68px)}
+  [data-stage="check"] .wordParts{font-size:clamp(84px,5.5cqi,108px)}
+  .settings h2{font-size:clamp(52px,3.4cqi,68px)}
+  [data-stage="settings"] .settingGrid{width:min(94%,1400px);gap:clamp(18px,1.4cqi,28px)}
+  [data-stage="settings"] .setting{padding:clamp(16px,1.4cqi,28px)}
+  [data-stage="settings"] .setting legend{font-size:clamp(24px,1.7cqi,34px)}
+  [data-stage="settings"] .setting>div{gap:clamp(10px,.8cqi,16px)}
+  [data-stage="settings"] .setting button{padding:9px 15px;font-size:clamp(19px,1.3cqi,26px)}
+  [data-stage="settings"] .settingNote{max-width:1100px;font-size:clamp(22px,1.5cqi,30px)}
+  .result h2{font-size:clamp(52px,3.4cqi,68px)}
+  [data-stage="result"] .trophy{display:block;font-size:clamp(68px,4.6cqi,92px)}
+  [data-stage="result"] .resultLead{max-width:1100px;font-size:clamp(22px,1.5cqi,30px)}
+  [data-stage="result"] .breakdown{width:min(94%,1400px);gap:clamp(12px,1cqi,20px)}
+  [data-stage="result"] .breakdown>div{padding:clamp(14px,1.2cqi,24px)}
+  [data-stage="result"] .breakdown strong{font-size:clamp(27px,1.9cqi,38px)}
+  [data-stage="result"] .breakdown span{font-size:clamp(20px,1.4cqi,28px)}
+  :is([data-stage="home"],[data-stage="check"],[data-stage="game"],[data-stage="settings"],[data-stage="result"]) .bottomActions :is(.primary,.secondary){padding:10px 24px;font-size:clamp(21px,1.4cqi,28px)}
+}
 @media (prefers-reduced-motion:reduce){.progressTrack span{transition:none}}

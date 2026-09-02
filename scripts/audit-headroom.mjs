@@ -51,6 +51,7 @@ const GAMES = {
   "thai-kingdom": { path: "/media/thai/thai-kingdom", start: [/ฝึกทำ/, /เริ่มภารกิจ/], seed: 17 },
   "final-consonants": { path: "/media/thai/final-consonants", start: [/เริ่มเรียนทีละตอน/, /ตอนถัดไป/, /ตอนถัดไป/, /ตอนถัดไป/, /เช็กความเข้าใจ/, /ข้ามไปตั้งค่าเกม/, /เริ่มเกม/], seed: 19 },
   "mae-kot": { path: "/media/thai/mae-kot", start: [/เริ่มเรียนทีละตอน/, /ตอนถัดไป/, /ตอนถัดไป/, /ตอนถัดไป/, /เช็กความเข้าใจ/, /ข้ามไปตั้งค่าเกม/, /เริ่มเกม/], seed: 23 },
+  ...Object.fromEntries(["kaa", "kong", "kom", "koei", "koew", "kok", "kon", "kop"].map((id, index) => [`mae-${id}`, { path: `/media/thai/mae-${id}`, start: [/เริ่มเรียนทีละตอน/, /ตอนถัดไป/, /ตอนถัดไป/, /ตอนถัดไป/, /เช็กความเข้าใจ/, /ข้ามไปตั้งค่าเกม/, /เริ่มเกม/], seed: 24 + index }])),
   "classroom-objects": { path: "/media/english/classroom-objects", start: /เริ่มเล่น/ },
   "family-tree": { path: "/media/english/family-tree", start: /เริ่มเล่น/ },
   "weather-seasons": { path: "/media/english/weather-seasons", start: [/เลือกโหมดการสอน/, /เรียนรู้/] },

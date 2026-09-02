@@ -356,3 +356,24 @@ export function speakEnglish(text: string, slow = false) {
     /* ignore */
   }
 }
+
+/** Speak Thai learning content via the browser's speech synthesis, best-effort. */
+export function speakThai(text: string, slow = false) {
+  try {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find((voice) => voice.lang.toLowerCase() === "th-th" && voice.localService)
+      || voices.find((voice) => voice.lang.toLowerCase() === "th-th")
+      || voices.find((voice) => voice.lang.toLowerCase().startsWith("th"));
+    if (preferredVoice) utterance.voice = preferredVoice;
+    utterance.lang = preferredVoice?.lang || "th-TH";
+    utterance.rate = slow ? 0.62 : 0.82;
+    utterance.pitch = 1.05;
+    utterance.volume = 1;
+    window.speechSynthesis.speak(utterance);
+  } catch {
+    /* Speech is an enhancement; keep the lesson usable without it. */
+  }
+}

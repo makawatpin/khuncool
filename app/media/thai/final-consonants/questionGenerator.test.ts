@@ -47,3 +47,27 @@ test("does not repeat a word in one round", () => {
   const questions = generateQuestions({ focusFamily: "kot", questionCount: 15, difficulty: 3 }, seeded(15));
   assert.equal(new Set(questions.map((question) => question.word.id)).size, 15);
 });
+
+test("provides at least fifteen illustrated words for every family", () => {
+  for (const family of FAMILIES) {
+    const words = WORDS.filter((word) => word.familyId === family.id);
+    assert.ok(words.length >= 15, `${family.name} has ${words.length} words`);
+    assert.ok(words.every((word) => word.visual.length > 0), family.name);
+  }
+});
+
+test("builds a focused round for every published family", () => {
+  for (const family of FAMILIES.filter((item) => item.seo.status === "ready")) {
+    const questions = generateQuestions({ focusFamily: family.id, questionCount: 10, difficulty: 3 }, seeded(12));
+    assert.equal(questions.length, 10, family.name);
+    assert.equal(questions.filter((question) => question.answer === family.id).length, 4, family.name);
+    assert.equal(new Set(questions.map((question) => question.word.id)).size, 10, family.name);
+  }
+});
+
+test("lets a teacher limit a focused game to two comparison families", () => {
+  const questions = generateQuestions({ focusFamily: "kot", comparisonFamilies: ["kot", "kop"], questionCount: 10, difficulty: 3 }, seeded(22));
+  assert.ok(questions.every((question) => question.options.length === 2));
+  assert.ok(questions.every((question) => question.options.includes("kot") && question.options.includes("kop")));
+  assert.ok(questions.every((question) => question.answer === "kot" || question.answer === "kop"));
+});

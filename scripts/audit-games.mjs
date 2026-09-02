@@ -560,6 +560,30 @@ const GAMES = {
       { name: "result", enter: solveFinalConsonantGame, expect: '[data-stage="result"]' },
     ],
   },
+  ...Object.fromEntries(["kaa", "kong", "kom", "koei", "koew", "kok", "kon", "kop"].map((id) => [`mae-${id}`, {
+    path: `/media/thai/mae-${id}`,
+    stress: { selector: '[data-stage="lesson-mistakes"] [class*="__mistakes"] span', text: "คำอธิบายเฉพาะที่ยาวที่สุดต้องยังอ่านได้ครบโดยไม่บังปุ่มนำทางของบทเรียน" },
+    screens: [
+      { name: "home" },
+      { name: "lesson-sound", enter: click(/เริ่มเรียนทีละตอน/), expect: '[data-stage="lesson-sound"]' },
+      { name: "lesson-letters", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-letters"]' },
+      { name: "lesson-contrast", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-contrast"]' },
+      { name: "lesson-mistakes", enter: click(/ตอนถัดไป/), expect: '[data-stage="lesson-mistakes"]' },
+      { name: "check", enter: click(/เช็กความเข้าใจ/), expect: '[data-stage="check"]' },
+      { name: "settings", enter: click(/ข้ามไปตั้งค่าเกม/), expect: '[data-stage="settings"]' },
+      { name: "game", enter: click(/เริ่มเกม/), expect: '[data-stage="game"]' },
+      {
+        name: "wrong-feedback",
+        async enter(page) {
+          const game = page.locator('[data-stage="game"]');
+          const answer = await game.getAttribute("data-answer");
+          await game.locator(`[data-family]:not([data-family="${answer}"])`).first().click({ force: true });
+        },
+        expect: '[data-stage="game"]',
+      },
+      { name: "result", enter: solveFinalConsonantGame, expect: '[data-stage="result"]' },
+    ],
+  }])),
   "phonics-bingo": {
     path: "/media/english/phonics-bingo",
     screens: [

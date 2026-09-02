@@ -37,6 +37,7 @@ export type FinalConsonantWord = {
   final: string;
   familyId: FamilyId;
   meaning: string;
+  visual: string;
   difficulty: 1 | 2 | 3;
   usage: Array<"lesson" | "check" | "game">;
 };
@@ -50,6 +51,7 @@ export type GameQuestion = {
 
 export type GameConfig = {
   focusFamily?: FamilyId;
+  comparisonFamilies?: FamilyId[];
   questionCount: 5 | 10 | 15;
   difficulty: 1 | 2 | 3;
 };

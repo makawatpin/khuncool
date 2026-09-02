@@ -1,4 +1,5 @@
 import type { SubjectPageContent } from "./_components/SubjectResourcePage";
+import { FAMILIES } from "./thai/final-consonants/familyData";
 
 export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", SubjectPageContent> = {
   mathematics: {
@@ -41,13 +42,13 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
   },
   thai: {
     slug: "thai", name: "ภาษาไทย", icon: "📖", accent: "#B4477C", soft: "#FDE8F3",
-    educationalLevel: "ประถมศึกษาปีที่ 1–3", updated: "2026-09-01",
+    educationalLevel: "ประถมศึกษาปีที่ 1–3", updated: "2026-09-03",
     headline: "เกมและสื่อการสอนภาษาไทย อ่านคล่อง เขียนสื่อความ",
     intro: "สื่อการสอนภาษาไทยสำหรับพัฒนาการอ่านและหลักภาษา ตั้งแต่พยัญชนะ ตำแหน่งสระ และการประสมคำ ไปจนถึงมาตราตัวสะกดทั้ง 9 มาตรา แต่ละเรื่องมีบทเรียนสั้นก่อนเกมฝึกจำแนกคำ ออกแบบสำหรับใช้บนจอหน้าชั้นเรียนและโทรศัพท์มือถือ",
     topics: ["พยัญชนะไทย", "ตำแหน่งสระ", "ประสมคำ", "มาตราตัวสะกด", "อ่านออกเสียง", "การเขียน"],
     resources: [
       { title: "หมู่บ้านมาตราตัวสะกด", description: "เรียนตัวสะกดครบ 9 มาตราแบบทีละตอน แล้วเล่นเกมส่งคำกลับบ้านจากเสียงท้าย", grades: "ป.1–ป.3 · 15–25 นาที", type: "มาตราตัวสะกด", href: "/media/thai/final-consonants" },
-      { title: "แม่กด ฟังเสียงให้ชัด", description: "เรียนตัวสะกดแม่กด คำที่มักผิด และเล่นเกมเปรียบเทียบแม่กด แม่กก แม่กบ", grades: "ป.1–ป.3 · 10–15 นาที", type: "แม่กด", href: "/media/thai/mae-kot" },
+      ...FAMILIES.map((family) => ({ title: `${family.name} ฟังเสียงให้ชัด`, description: `${family.seo.uniqueIntroduction} พร้อมบทเรียนและเกมเปรียบเทียบแม่ที่มักสับสน`, grades: "ป.1–ป.3 · 10–15 นาที", type: family.name, href: `/media/thai/mae-${family.id}` })),
       { title: "อาณาจักรภาษาไทย อ่านออก เขียนได้", description: "รู้จักพยัญชนะ เรียนตำแหน่งสระ ประสมคำ ฝึกตอบ และเล่นรถไฟเก็บคำ", grades: "ป.1 · 15–25 นาที", type: "พยัญชนะ สระ และประสมคำ", href: "/media/thai/thai-kingdom", image: "/assets/game-covers/thai-kingdom.webp" },
     ],
     outcomes: ["บอกชื่อพยัญชนะและเชื่อมเสียงกับภาพคำได้", "รู้ตำแหน่งของสระและประสมคำได้", "จำแนกมาตราตัวสะกดจากเสียงท้ายและรูปพยัญชนะได้", "อ่านออกเสียงคำและข้อความได้ถูกต้องคล่องแคล่ว"],

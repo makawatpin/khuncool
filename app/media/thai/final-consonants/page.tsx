@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import FinalConsonantsApp from "./FinalConsonantsApp";
+import { FAMILIES } from "./familyData";
 
 const URL = "https://www.khuncool.com/media/thai/final-consonants";
 const TITLE = "มาตราตัวสะกด 9 มาตรา สื่อการสอนและเกม ป.1–ป.3 | khuncool";
@@ -33,6 +34,6 @@ export default function FinalConsonantsPage() {
     <header className="px-4 pb-3 pt-3 md:px-8 md:pb-4"><div className="mb-2 flex gap-2"><span className="rounded-full bg-[#FDE8F3] px-2.5 py-1 text-[10px] font-bold text-[#B4477C]">ภาษาไทย ป.1–ป.3</span><span className="rounded-full bg-success-bg px-2.5 py-1 text-[10px] font-bold text-success">บทเรียน + เกม</span></div><h1 className="mb-1.5 text-[24px] leading-[1.3] md:text-[30px]">มาตราตัวสะกด 9 มาตรา: สอนก่อนเล่น 🏘️</h1><p className="m-0 max-w-[90ch] text-[13.5px] leading-7 text-ink-secondary md:text-[14.5px]">พาเด็กมองเห็นตัวสะกด ฟังเสียงท้าย และแยกคำเป็นแม่ต่าง ๆ ทีละขั้น จากนั้นจึงเล่นเกมส่งคำกลับบ้าน โดยแต่ละข้อมีตัวเลือกจากมาตราที่มักสับสนกัน</p></header>
     <section className="px-2 pb-8 sm:px-4 md:px-8 md:pb-10" aria-label="สื่อมาตราตัวสะกด"><FinalConsonantsApp variant="overview" /></section>
     <section className="grid gap-7 border-t border-border px-4 py-7 md:grid-cols-2 md:px-8 md:py-10"><div><h2 className="mb-2 text-xl">เด็กจะได้เรียนรู้อะไร</h2><p className="text-sm leading-7 text-ink-secondary">เข้าใจว่ามาตราตัวสะกดจัดตามเสียงท้าย แยกแม่ ก กา มาตราตรง และมาตราไม่ตรง พร้อมอธิบายเหตุผลจากเสียงที่ได้ยิน</p></div><div><h2 className="mb-2 text-xl">ใช้ในห้องเรียนอย่างไร</h2><p className="text-sm leading-7 text-ink-secondary">เปิดบทเรียน 4 ตอนบนจอ ชวนเด็กออกเสียงพร้อมกัน ทำคำถามเช็กความเข้าใจ แล้วแบ่งทีมเล่นเกม 5–15 คำได้ในคาบเดียว</p></div></section>
-    <section className="border-t border-border px-4 py-7 md:px-8"><h2 className="text-xl">เริ่มจากมาตราที่สับสนมาก</h2><article className="mt-4 rounded-2xl border border-[#F3C6DE] bg-[#FFF7FB] p-5"><h3 className="m-0 text-lg">แม่กด ปะทะ แม่กก ปะทะ แม่กบ</h3><p className="mb-4 mt-2 text-sm leading-7 text-ink-secondary">แม่กดมีรูปตัวสะกดหลายตัวและมักสับสนกับเสียงปิดของแม่กกและแม่กบ เรียนตัวอย่างเฉพาะและเล่นเกมเปรียบเทียบสามแม่โดยตรง</p><Link href="/media/thai/mae-kot" className="font-semibold text-primary">เปิดบทเรียนแม่กด →</Link></article></section>
+    <section className="border-t border-border px-4 py-7 md:px-8"><h2 className="text-xl">เลือกเรียนทีละแม่</h2><p className="mt-2 text-sm leading-7 text-ink-secondary">ทุกหน้ามีบทเรียน 4 ตอน คำถามเช็กความเข้าใจ และเกมเปรียบเทียบกลุ่มเสียงที่มักสับสน</p><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{FAMILIES.map((family) => <Link key={family.id} href={`/media/thai/mae-${family.id}`} className="rounded-2xl border-2 bg-white p-4 transition-transform hover:-translate-y-0.5" style={{ borderColor: `${family.color}55` }}><strong style={{ color: family.color }}>{family.name}</strong><span className="mt-1 block text-sm text-ink-secondary">เสียงท้าย {family.endingSound}</span></Link>)}</div></section>
   </main>;
 }
