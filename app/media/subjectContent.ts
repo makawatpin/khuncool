@@ -47,8 +47,8 @@ export const SUBJECT_CONTENT: Record<"mathematics" | "science" | "thai", Subject
     intro: "สื่อการสอนภาษาไทยสำหรับพัฒนาการอ่านและหลักภาษา ตั้งแต่พยัญชนะ ตำแหน่งสระ และการประสมคำ ไปจนถึงมาตราตัวสะกดทั้ง 9 มาตรา แต่ละเรื่องมีบทเรียนสั้นก่อนเกมฝึกจำแนกคำ ออกแบบสำหรับใช้บนจอหน้าชั้นเรียนและโทรศัพท์มือถือ",
     topics: ["พยัญชนะไทย", "ตำแหน่งสระ", "ประสมคำ", "มาตราตัวสะกด", "อ่านออกเสียง", "การเขียน"],
     resources: [
-      { title: "หมู่บ้านมาตราตัวสะกด", description: "เรียนตัวสะกดครบ 9 มาตราแบบทีละตอน แล้วเล่นเกมส่งคำกลับบ้านจากเสียงท้าย", grades: "ป.1–ป.3 · 15–25 นาที", type: "มาตราตัวสะกด", href: "/media/thai/final-consonants" },
-      ...FAMILIES.map((family) => ({ title: `${family.name} ฟังเสียงให้ชัด`, description: `${family.seo.uniqueIntroduction} พร้อมบทเรียนและเกมเปรียบเทียบแม่ที่มักสับสน`, grades: "ป.1–ป.3 · 10–15 นาที", type: family.name, href: `/media/thai/mae-${family.id}` })),
+      { title: "หมู่บ้านมาตราตัวสะกด", description: "เรียนตัวสะกดครบ 9 มาตราแบบทีละตอน แล้วเล่นเกมส่งคำกลับบ้านจากเสียงท้าย", grades: "ป.1–ป.3 · 15–25 นาที", type: "มาตราตัวสะกด", href: "/media/thai/final-consonants", image: "/assets/final-consonants/village.webp", imageLabel: "มาตราตัวสะกด 9 มาตรา" },
+      ...FAMILIES.map((family) => ({ title: `${family.name} ฟังเสียงให้ชัด`, description: `${family.seo.uniqueIntroduction} พร้อมบทเรียนและเกมเปรียบเทียบแม่ที่มักสับสน`, grades: "ป.1–ป.3 · 10–15 นาที", type: family.name, href: `/media/thai/mae-${family.id}`, image: `/assets/final-consonants/${family.id}.webp`, imageLabel: family.name })),
       { title: "อาณาจักรภาษาไทย อ่านออก เขียนได้", description: "รู้จักพยัญชนะ เรียนตำแหน่งสระ ประสมคำ ฝึกตอบ และเล่นรถไฟเก็บคำ", grades: "ป.1 · 15–25 นาที", type: "พยัญชนะ สระ และประสมคำ", href: "/media/thai/thai-kingdom", image: "/assets/game-covers/thai-kingdom.webp" },
     ],
     outcomes: ["บอกชื่อพยัญชนะและเชื่อมเสียงกับภาพคำได้", "รู้ตำแหน่งของสระและประสมคำได้", "จำแนกมาตราตัวสะกดจากเสียงท้ายและรูปพยัญชนะได้", "อ่านออกเสียงคำและข้อความได้ถูกต้องคล่องแคล่ว"],

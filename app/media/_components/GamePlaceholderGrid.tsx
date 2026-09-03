@@ -25,6 +25,14 @@ export default function GamePlaceholderGrid({ games, accent, soft }: { games: Su
             {game.image ? (
               <div className="relative aspect-video overflow-hidden" style={{ background: soft }}>
                 <Image src={game.image} alt={`ภาพประกอบเกม ${game.title}`} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 260px" className="object-cover" />
+                {game.imageLabel ? (
+                  <span
+                    className="absolute bottom-3 left-3 rounded-xl border border-white/70 bg-white/90 px-3 py-1.5 text-sm font-bold shadow-sm backdrop-blur-sm"
+                    style={{ color: accent }}
+                  >
+                    {game.imageLabel}
+                  </span>
+                ) : null}
               </div>
             ) : (
               <div className="flex aspect-video items-center justify-center text-3xl" style={{ background: soft }} aria-hidden="true">🎮</div>

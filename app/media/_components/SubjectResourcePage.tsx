@@ -9,6 +9,7 @@ export type SubjectResource = {
   type: string;
   href?: string;
   image?: string;
+  imageLabel?: string;
 };
 
 export type SubjectPageContent = {
