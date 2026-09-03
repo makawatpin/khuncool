@@ -714,6 +714,66 @@ const GAMES = {
       },
     ],
   },
+  "thai-idiom-detective": {
+    path: "/media/thai/thai-idiom-detective",
+    stress: { selector: '[class*="__answers"] button', text: "เข้าเมืองตาหลิ่ว ต้องหลิ่วตาตาม" },
+    screens: [
+      { name: "intro", expect: '[data-stage="intro"]' },
+      { name: "library", enter: click(/เปิดคลัง 50 สำนวน/), expect: '[data-stage="library"]' },
+      {
+        name: "play",
+        async enter(page) {
+          await page.getByRole("button", { name: /ปิดคลัง/ }).click();
+          await page.getByRole("button", { name: /เริ่มเกมผสมทุกแบบ/ }).click();
+        },
+        expect: '[data-stage="play"]',
+      },
+      {
+        name: "meaning-revealed",
+        enter: click(/เปิดเฉลย/),
+        expect: '[class*="__revealPromptRevealed"]',
+      },
+      {
+        name: "situation",
+        enter: click(/โจทย์ต่อไป/),
+        expect: '[data-mode="situation"]',
+      },
+      {
+        name: "emoji",
+        async enter(page) {
+          await page.locator('[class*="__answers"] button').first().click();
+          await page.getByRole("button", { name: /คดีต่อไป/ }).click();
+        },
+        expect: '[data-mode="emoji"]',
+      },
+      {
+        name: "fill",
+        async enter(page) {
+          await page.locator('[class*="__answers"] button').first().click();
+          await page.getByRole("button", { name: /คดีต่อไป/ }).click();
+        },
+        expect: '[data-mode="fill"]',
+      },
+      {
+        name: "fill-revealed",
+        enter: click(/เปิดเฉลย/),
+        expect: '[class*="__revealPromptRevealed"]',
+      },
+      {
+        name: "result",
+        async enter(page) {
+          for (let round = 4; round < 10; round += 1) {
+            await page.getByRole("button", { name: /คดีต่อไป|โจทย์ต่อไป/ }).click();
+            const mode = await page.locator('[data-stage="play"]').getAttribute("data-mode");
+            if (mode === "fill" || mode === "meaning") await page.getByRole("button", { name: /เปิดเฉลย/ }).click();
+            else await page.locator('[class*="__answers"] button').first().click();
+          }
+          await page.getByRole("button", { name: /ดูสรุปผล/ }).click();
+        },
+        expect: '[data-stage="result"]',
+      },
+    ],
+  },
   "law-daily": {
     path: "/media/social-studies/law-daily",
     // Runs the actual game in a same-origin iframe by design (see
