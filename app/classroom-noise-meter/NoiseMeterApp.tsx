@@ -3,22 +3,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
+import styles from "./NoiseMeterApp.module.css";
 
 const LS_KEY = "khuncool.noisemeter";
 
 type Phase = "idle" | "asking" | "denied" | "live";
 type DenyReason = "denied" | "blocked" | "nomic";
 
-const WIN_OPTS = [30, 60, 120];
+const HOLD_OPTS = [1, 2, 3, 5];
 
-function winLabel(n: number): string {
-  return n < 60 ? `${n} วิ` : `${n / 60} นาที`;
-}
-
-function zoneFor(level: number, limit: number) {
-  // "Quiet" zone is anything at or below 60% of the configured limit;
+function zoneFor(level: number, limit: number, isOverEvent: boolean) {
+  if (isOverEvent) {
+    return {
+      label: "ดังเกินเกณฑ์แล้ว!",
+      icon: "🚨",
+      color: "#B91C1C",
+      bg: "#FEF2F2",
+      border: "#FCA5A5",
+    };
+  }
+  // "Quiet" zone is anything at or below 75% of the configured limit;
   // "ok" is between that and the limit itself; anything above is "loud".
-  if (level <= limit * 0.6) {
+  if (level <= limit * 0.75) {
     return {
       label: "เงียบมาก เยี่ยม!",
       icon: "😌",
@@ -37,11 +43,11 @@ function zoneFor(level: number, limit: number) {
     };
   }
   return {
-    label: "ดังเกินไปแล้ว",
+    label: "เบาเสียงลงหน่อย",
     icon: "🤫",
-    color: "#B91C1C",
-    bg: "#FEF2F2",
-    border: "#FCA5A5",
+    color: "#C2500B",
+    bg: "#FFF7ED",
+    border: "#FDBA74",
   };
 }
 
@@ -51,10 +57,14 @@ export default function NoiseMeterApp() {
   const [reason, setReason] = useState<DenyReason>("denied");
   const [level, setLevel] = useState(0);
   const [limit, setLimit] = useState(40);
-  const [win, setWin] = useState(60);
-  const [stars, setStars] = useState(0);
+  const [holdSeconds, setHoldSeconds] = useState(3);
   const [over, setOver] = useState(0);
-  const [left, setLeft] = useState(60);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const [isOverEvent, setIsOverEvent] = useState(false);
+  const [totalOverSeconds, setTotalOverSeconds] = useState(0);
+  const [currentOverSeconds, setCurrentOverSeconds] = useState(0);
+  const [lastOverSeconds, setLastOverSeconds] = useState(0);
+  const [sensitivity, setSensitivity] = useState(100);
 
   const frameRef = useRef<HTMLDivElement | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
@@ -69,10 +79,15 @@ export default function NoiseMeterApp() {
   const rafRef = useRef<number | null>(null);
   const tickTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const overHoldRef = useRef(0);
+  const quietHoldRef = useRef(0);
+  const inOverEventRef = useRef(false);
+  const currentOverRef = useRef(0);
+  const samplesRef = useRef<{ at: number; value: number }[]>([]);
   const levelRef = useRef(0);
   const limitRef = useRef(40);
-  const winRef = useRef(60);
+  const holdSecondsRef = useRef(3);
   const phaseRef = useRef<Phase>("idle");
+  const sensitivityRef = useRef(100);
 
   useEffect(() => {
     levelRef.current = level;
@@ -81,13 +96,16 @@ export default function NoiseMeterApp() {
     limitRef.current = limit;
   }, [limit]);
   useEffect(() => {
-    winRef.current = win;
-  }, [win]);
+    holdSecondsRef.current = holdSeconds;
+  }, [holdSeconds]);
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+  useEffect(() => {
+    sensitivityRef.current = sensitivity;
+  }, [sensitivity]);
 
-  // Restore saved limit/win
+  // Restore saved threshold, microphone sensitivity, and hold duration.
   useEffect(() => {
     const restoreTimer = window.setTimeout(() => {
       try {
@@ -95,9 +113,17 @@ export default function NoiseMeterApp() {
         const d = raw ? JSON.parse(raw) : null;
         if (d) {
           if (typeof d.limit === "number") setLimit(d.limit);
-          if (typeof d.win === "number") {
-            setWin(d.win);
-            setLeft(d.win);
+          if (typeof d.holdSeconds === "number") {
+            const restoredHold = HOLD_OPTS.includes(d.holdSeconds)
+              ? d.holdSeconds
+              : 3;
+            setHoldSeconds(restoredHold);
+            holdSecondsRef.current = restoredHold;
+          }
+          if (typeof d.sensitivity === "number") {
+            const restored = Math.min(500, Math.max(50, d.sensitivity));
+            setSensitivity(restored);
+            sensitivityRef.current = restored;
           }
         }
       } catch {
@@ -107,14 +133,26 @@ export default function NoiseMeterApp() {
     return () => window.clearTimeout(restoreTimer);
   }, []);
 
-  const persist = useCallback((next: { limit?: number; win?: number }) => {
-    try {
-      const cur = { limit: limitRef.current, win: winRef.current, ...next };
-      localStorage.setItem(LS_KEY, JSON.stringify(cur));
-    } catch {
-      // ignore
-    }
-  }, []);
+  const persist = useCallback(
+    (next: {
+      limit?: number;
+      holdSeconds?: number;
+      sensitivity?: number;
+    }) => {
+      try {
+        const cur = {
+          limit: limitRef.current,
+          holdSeconds: holdSecondsRef.current,
+          sensitivity: sensitivityRef.current,
+          ...next,
+        };
+        localStorage.setItem(LS_KEY, JSON.stringify(cur));
+      } catch {
+        // ignore
+      }
+    },
+    [],
+  );
 
   const teardown = useCallback(() => {
     runningRef.current = false;
@@ -127,6 +165,7 @@ export default function NoiseMeterApp() {
     streamRef.current = null;
     ctxRef.current = null;
     analyserRef.current = null;
+    samplesRef.current = [];
   }, []);
 
   // Holds the current rAF tick function in a ref so the loop can
@@ -151,10 +190,20 @@ export default function NoiseMeterApp() {
     // Scale the 0-1 RMS value up to a 0-100 "loudness" reading. 260 is
     // an empirical multiplier tuned so normal classroom talking lands
     // roughly mid-scale (ported as-is from the source design doc).
-    const raw = Math.min(100, Math.round(rms * 260));
-    // Exponential smoothing (70% previous / 30% new) so the meter
-    // doesn't jitter frame to frame.
-    const smooth = Math.round(levelRef.current * 0.7 + raw * 0.3);
+    const raw = Math.min(
+      100,
+      Math.round(rms * 260 * (sensitivityRef.current / 100)),
+    );
+    // Decide from a time-based two-second rolling average. Short sounds still
+    // move the meter, but do not make the classroom status flicker rapidly.
+    const now = performance.now();
+    const samples = samplesRef.current;
+    samples.push({ at: now, value: raw });
+    while (samples.length && samples[0].at < now - 2000) samples.shift();
+    const smooth = Math.round(
+      samples.reduce((sumValue, sample) => sumValue + sample.value, 0) /
+        samples.length,
+    );
     if (smooth !== levelRef.current) {
       levelRef.current = smooth;
       setLevel(smooth);
@@ -168,29 +217,46 @@ export default function NoiseMeterApp() {
 
   const tick = useCallback(() => {
     if (phaseRef.current !== "live") return;
-    const overNow = levelRef.current > limitRef.current;
-    // Ticks run every 250ms (see setInterval(tick, 250) below), so each
-    // tick that stays over the limit adds 0.25s of "over" hold time.
-    // Once that hold reaches 3s continuously over the limit, the class
-    // loses a star for the current window.
-    overHoldRef.current = overNow ? overHoldRef.current + 0.25 : 0;
-    let failed = false;
-    if (overHoldRef.current >= 3) {
-      setOver((o) => o + 1);
-      overHoldRef.current = 0;
-      failed = true;
-    }
-    setLeft((l) => {
-      // Countdown for the current star-reward window, decremented by
-      // the same 0.25s per tick; a full window with no 3s-over-limit
-      // failure earns a star.
-      const next = l - 0.25;
-      if (next <= 0) {
-        if (!failed) setStars((s) => s + 1);
-        return winRef.current;
+    const aboveLimit = levelRef.current > limitRef.current;
+
+    if (inOverEventRef.current) {
+      if (aboveLimit) {
+        currentOverRef.current += 0.25;
+        setCurrentOverSeconds(currentOverRef.current);
+        setTotalOverSeconds((seconds) => seconds + 0.25);
       }
-      return next;
-    });
+
+      // Require a clear drop below the threshold before allowing another
+      // event. This prevents one long noisy period from being counted again
+      // every few seconds.
+      if (levelRef.current <= Math.max(0, limitRef.current - 5)) {
+        quietHoldRef.current += 0.25;
+        if (quietHoldRef.current >= 2) {
+          setLastOverSeconds(currentOverRef.current);
+          currentOverRef.current = 0;
+          quietHoldRef.current = 0;
+          inOverEventRef.current = false;
+          setCurrentOverSeconds(0);
+          setIsOverEvent(false);
+        }
+      } else {
+        quietHoldRef.current = 0;
+      }
+      return;
+    }
+
+    overHoldRef.current = aboveLimit ? overHoldRef.current + 0.25 : 0;
+    setHoldProgress(overHoldRef.current);
+    if (overHoldRef.current >= holdSecondsRef.current) {
+      inOverEventRef.current = true;
+      currentOverRef.current = holdSecondsRef.current;
+      overHoldRef.current = 0;
+      setHoldProgress(0);
+      setCurrentOverSeconds(currentOverRef.current);
+      setTotalOverSeconds((seconds) => seconds + holdSecondsRef.current);
+      setOver((count) => count + 1);
+      setIsOverEvent(true);
+    }
   }, []);
 
   const start = useCallback(async () => {
@@ -217,12 +283,19 @@ export default function NoiseMeterApp() {
       bufRef.current = new Uint8Array(new ArrayBuffer(analyser.fftSize));
       runningRef.current = true;
       overHoldRef.current = 0;
+      quietHoldRef.current = 0;
+      inOverEventRef.current = false;
+      currentOverRef.current = 0;
+      samplesRef.current = [];
       levelRef.current = 0;
 
       setLevel(0);
-      setStars(0);
       setOver(0);
-      setLeft(winRef.current);
+      setHoldProgress(0);
+      setIsOverEvent(false);
+      setTotalOverSeconds(0);
+      setCurrentOverSeconds(0);
+      setLastOverSeconds(0);
       setPhase("live");
 
       rafRef.current = requestAnimationFrame(() => loopRef.current());
@@ -265,10 +338,16 @@ export default function NoiseMeterApp() {
   }, [teardown]);
 
   const resetGame = useCallback(() => {
-    setStars(0);
     setOver(0);
-    setLeft(winRef.current);
+    setHoldProgress(0);
+    setIsOverEvent(false);
+    setTotalOverSeconds(0);
+    setCurrentOverSeconds(0);
+    setLastOverSeconds(0);
     overHoldRef.current = 0;
+    quietHoldRef.current = 0;
+    inOverEventRef.current = false;
+    currentOverRef.current = 0;
   }, []);
 
   const onLimit = useCallback(
@@ -280,16 +359,27 @@ export default function NoiseMeterApp() {
     [persist],
   );
 
-  const setWinOpt = useCallback(
+  const setHoldOpt = useCallback(
     (n: number) => {
-      setWin(n);
-      setLeft(n);
-      persist({ win: n });
+      setHoldSeconds(n);
+      holdSecondsRef.current = n;
+      persist({ holdSeconds: n });
     },
     [persist],
   );
 
-  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
+  const onSensitivity = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const v = Math.min(500, Math.max(50, parseInt(e.target.value, 10) || 100));
+      sensitivityRef.current = v;
+      setSensitivity(v);
+      persist({ sensitivity: v });
+    },
+    [persist],
+  );
+
+  const { isFull, fullscreenClassName, toggle: toggleFull } =
+    useToolFullscreen(frameRef);
 
   useEffect(() => {
     return () => {
@@ -312,24 +402,37 @@ export default function NoiseMeterApp() {
         ? "ต่อไมโครโฟนหรือหูฟังที่มีไมค์ แล้วลองใหม่อีกครั้ง"
         : "คลิกไอคอน 🔒 ข้างช่องที่อยู่เว็บ แล้วเปิดสิทธิ์ไมโครโฟนสำหรับเว็บนี้ จากนั้นลองใหม่อีกครั้ง";
 
-  const zone = zoneFor(level, limit);
+  const zone = zoneFor(level, limit, isOverEvent);
   const levelPct = `${Math.min(100, level)}%`;
   const limitText = `${limit}%`;
-  const starText = `⭐ ${stars}`;
   const overText = String(over);
-  const countdownText = `${Math.max(0, Math.ceil(left))} วิ`;
+  const sensitivityText = `${sensitivity}%`;
+  const totalOverText = `${Math.round(totalOverSeconds)} วิ`;
+  const statusDetail = isOverEvent
+    ? `กำลังดังเกิน · ครั้งนี้ ${Math.max(1, Math.round(currentOverSeconds))} วิ`
+    : level > limit
+      ? `เกินต่อเนื่อง ${holdProgress.toFixed(1)} / ${holdSeconds} วิ`
+      : lastOverSeconds > 0
+        ? `ครั้งล่าสุดนาน ${Math.round(lastOverSeconds)} วิ`
+        : "ใช้ค่าเฉลี่ยเสียงย้อนหลัง 2 วินาที";
 
-  const winBtnClass = (n: number) =>
+  const holdBtnClass = (n: number) =>
     `whitespace-nowrap rounded-[9px] border font-sans font-bold cursor-pointer ${
-      win === n
+      holdSeconds === n
         ? "border-primary bg-primary text-white"
         : "border-border bg-white text-ink-secondary hover:bg-surface-light"
     }`;
 
   return (
-    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
+    <div
+      ref={frameRef}
+      data-fullscreen={isFull}
+      className={`tool-stage bg-white ${styles.shell} ${fullscreenClassName}`}
+    >
       {phase === "idle" && (
-        <div className="rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]">
+        <div
+          className={`${styles.statePanel} rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]`}
+        >
           <div className="mx-auto mb-[13px] flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E1E3FD] text-[28px] md:mb-4 md:h-[70px] md:w-[70px] md:rounded-[20px] md:text-[34px]">
             🎤
           </div>
@@ -359,7 +462,9 @@ export default function NoiseMeterApp() {
       )}
 
       {phase === "asking" && (
-        <div className="rounded-[18px] border border-[#C6C9FB] bg-[#F5F6FF] px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]">
+        <div
+          className={`${styles.statePanel} rounded-[18px] border border-[#C6C9FB] bg-[#F5F6FF] px-5 py-[34px] text-center md:rounded-[20px] md:px-6 md:py-[76px]`}
+        >
           <div className="mb-[10px] text-[30px] md:mb-3 md:text-[38px]">⏳</div>
           <div className="text-[15px] font-bold text-[#3D38B4] md:text-[19px]">
             กำลังขออนุญาตใช้ไมโครโฟน
@@ -374,7 +479,9 @@ export default function NoiseMeterApp() {
       )}
 
       {phase === "denied" && (
-        <div className="rounded-[18px] border border-[#FCA5A5] bg-[#FEF2F2] px-5 py-7 text-center md:rounded-[20px] md:px-6 md:py-16">
+        <div
+          className={`${styles.statePanel} rounded-[18px] border border-[#FCA5A5] bg-[#FEF2F2] px-5 py-7 text-center md:rounded-[20px] md:px-6 md:py-16`}
+        >
           <div className="mb-[9px] text-[28px] md:mb-[10px] md:text-[36px]">🔇</div>
           <div className="text-[14.5px] font-bold text-[#B91C1C] md:text-[19px]">
             {denyTitle}
@@ -406,9 +513,9 @@ export default function NoiseMeterApp() {
       {phase === "live" && (
         <>
           {/* Mobile layout */}
-          <div className="md:hidden">
+          <div className={`${styles.mobileLayout} md:hidden`}>
             <div
-              className="mb-[14px] rounded-[20px] px-[18px] py-[22px] text-center"
+              className={`${styles.meterPanel} mb-[14px] rounded-[20px] px-[18px] py-[22px] text-center`}
               style={{ background: zone.bg, border: `1.5px solid ${zone.border}` }}
             >
               <div className="mb-2 text-[46px] leading-none">{zone.icon}</div>
@@ -427,6 +534,9 @@ export default function NoiseMeterApp() {
                 }}
               >
                 {level}
+              </div>
+              <div className="mt-1 text-[12px] font-semibold" style={{ color: zone.color }}>
+                {statusDetail}
               </div>
               <div className="mt-3 h-3 overflow-hidden rounded-full bg-[rgba(26,29,38,.10)]">
                 <div
@@ -447,9 +557,9 @@ export default function NoiseMeterApp() {
                   className="text-[22px] font-semibold text-[#0A7A66]"
                   style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                 >
-                  {starText}
+                  {totalOverText}
                 </div>
-                <div className="text-[11.5px] text-ink-faint">ดาวที่ได้</div>
+                <div className="text-[11.5px] text-ink-faint">เวลาดังเกินรวม</div>
               </div>
               <div className="rounded-[14px] border border-border bg-white p-3 text-center">
                 <div
@@ -458,7 +568,7 @@ export default function NoiseMeterApp() {
                 >
                   {overText}
                 </div>
-                <div className="text-[11.5px] text-ink-faint">ครั้งที่เสียงเกิน</div>
+                <div className="text-[11.5px] text-ink-faint">ดังเกินทั้งหมด</div>
               </div>
             </div>
 
@@ -482,16 +592,47 @@ export default function NoiseMeterApp() {
                 className="w-full accent-primary"
               />
               <div className="mt-[11px] flex items-center justify-between">
-                <span className="text-[13px] font-bold">เก็บดาวทุก ๆ</span>
+                <label
+                  htmlFor="mic-sensitivity-mobile"
+                  className="text-[13px] font-bold"
+                >
+                  ความไวไมค์
+                </label>
+                <span
+                  className="text-[13px] text-ink-secondary"
+                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                >
+                  {sensitivityText}
+                </span>
+              </div>
+              <input
+                id="mic-sensitivity-mobile"
+                type="range"
+                min={50}
+                max={500}
+                step={25}
+                value={sensitivity}
+                onChange={onSensitivity}
+                aria-describedby="mic-sensitivity-help-mobile"
+                className="w-full accent-primary"
+              />
+              <div
+                id="mic-sensitivity-help-mobile"
+                className="mt-1 text-[11px] leading-[1.5] text-ink-faint"
+              >
+                เพิ่มเมื่อไมค์อยู่ไกล · สูงสุด 500%
+              </div>
+              <div className="mt-[11px] flex items-center justify-between">
+                <span className="text-[13px] font-bold">นับเมื่อเกินต่อเนื่อง</span>
                 <div className="flex gap-1.5">
-                  {WIN_OPTS.map((n) => (
+                  {HOLD_OPTS.map((n) => (
                     <button
                       key={n}
                       type="button"
-                      onClick={() => setWinOpt(n)}
-                      className={`${winBtnClass(n)} px-2.5 py-1.5 text-xs`}
+                      onClick={() => setHoldOpt(n)}
+                      className={`${holdBtnClass(n)} px-2.5 py-1.5 text-xs`}
                     >
-                      {winLabel(n)}
+                      {n} วิ
                     </button>
                   ))}
                 </div>
@@ -511,15 +652,17 @@ export default function NoiseMeterApp() {
                 onClick={resetGame}
                 className="flex-1 whitespace-nowrap rounded-[11px] border border-border bg-white py-3 font-sans text-sm font-semibold hover:bg-surface-light"
               >
-                ล้างดาว
+                ล้างสถิติ
               </button>
             </div>
           </div>
 
           {/* Desktop layout */}
-          <div className="hidden md:grid md:grid-cols-[minmax(0,1fr)_300px] md:items-start md:gap-[22px]">
+          <div
+            className={`${styles.desktopLayout} hidden md:grid md:grid-cols-[minmax(0,1fr)_300px] md:items-start md:gap-[22px]`}
+          >
             <div
-              className="rounded-[24px] px-[34px] py-[34px] text-center"
+              className={`${styles.meterPanel} rounded-[24px] px-[34px] py-[34px] text-center`}
               style={{ background: zone.bg, border: `2px solid ${zone.border}` }}
             >
               <div className="mb-[10px] text-[86px] leading-none">{zone.icon}</div>
@@ -539,6 +682,9 @@ export default function NoiseMeterApp() {
               >
                 {level}
               </div>
+              <div className="mt-1 text-sm font-semibold" style={{ color: zone.color }}>
+                {statusDetail}
+              </div>
               <div className="mt-4 h-5 overflow-hidden rounded-full bg-[rgba(26,29,38,.10)]">
                 <div
                   className="h-full rounded-full"
@@ -552,16 +698,16 @@ export default function NoiseMeterApp() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[14px]">
+            <div className={`${styles.controls} flex flex-col gap-[14px]`}>
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-border bg-white p-4 text-center">
                   <div
                     className="text-[30px] font-semibold text-[#0A7A66]"
                     style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                   >
-                    {starText}
+                    {totalOverText}
                   </div>
-                  <div className="text-xs text-ink-faint">ดาวที่ได้</div>
+                  <div className="text-xs text-ink-faint">เวลาดังเกินรวม</div>
                 </div>
                 <div className="rounded-2xl border border-border bg-white p-4 text-center">
                   <div
@@ -570,7 +716,41 @@ export default function NoiseMeterApp() {
                   >
                     {overText}
                   </div>
-                  <div className="text-xs text-ink-faint">เสียงเกินเกณฑ์</div>
+                  <div className="text-xs text-ink-faint">ดังเกินทั้งหมด</div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-white p-4">
+                <div className="mb-2.5 flex items-center justify-between">
+                  <label
+                    htmlFor="mic-sensitivity-desktop"
+                    className="text-[13.5px] font-bold"
+                  >
+                    ความไวไมโครโฟน
+                  </label>
+                  <span
+                    className="text-[13.5px] text-ink-secondary"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    {sensitivityText}
+                  </span>
+                </div>
+                <input
+                  id="mic-sensitivity-desktop"
+                  type="range"
+                  min={50}
+                  max={500}
+                  step={25}
+                  value={sensitivity}
+                  onChange={onSensitivity}
+                  aria-describedby="mic-sensitivity-help-desktop"
+                  className="w-full accent-primary"
+                />
+                <div
+                  id="mic-sensitivity-help-desktop"
+                  className="mt-2 text-xs leading-[1.6] text-ink-faint"
+                >
+                  เพิ่มเมื่อคอมอยู่ไกลเด็ก · 100% ปกติ · สูงสุด 500%
                 </div>
               </div>
 
@@ -594,32 +774,28 @@ export default function NoiseMeterApp() {
                   className="w-full accent-primary"
                 />
                 <div className="mt-2 text-xs leading-[1.6] text-ink-faint">
-                  เกินเกณฑ์ค้างไว้ 3 วินาที = เสียดาวรอบนั้น
+                  เส้นที่ใช้ตัดสินว่าห้องดังเกินไปหรือไม่
                 </div>
               </div>
 
               <div className="rounded-2xl border border-border bg-white p-4">
-                <div className="mb-2.5 text-[13.5px] font-bold">เก็บดาวทุก ๆ</div>
+                <div className="mb-2.5 text-[13.5px] font-bold">
+                  นับเมื่อดังเกินต่อเนื่อง
+                </div>
                 <div className="flex gap-2">
-                  {WIN_OPTS.map((n) => (
+                  {HOLD_OPTS.map((n) => (
                     <button
                       key={n}
                       type="button"
-                      onClick={() => setWinOpt(n)}
-                      className={`${winBtnClass(n)} px-3.5 py-2.5 text-[13.5px]`}
+                      onClick={() => setHoldOpt(n)}
+                      className={`${holdBtnClass(n)} px-3.5 py-2.5 text-[13.5px]`}
                     >
-                      {winLabel(n)}
+                      {n} วิ
                     </button>
                   ))}
                 </div>
                 <div className="mt-2.5 text-xs leading-[1.6] text-ink-faint">
-                  รอบนี้เหลืออีก{" "}
-                  <b
-                    className="text-ink"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                  >
-                    {countdownText}
-                  </b>
+                  เสียงสั้นกว่านี้จะยังไม่นับเป็นเหตุการณ์
                 </div>
               </div>
 
@@ -636,7 +812,7 @@ export default function NoiseMeterApp() {
                   onClick={resetGame}
                   className="flex-1 whitespace-nowrap rounded-[11px] border border-border bg-white py-3 font-sans text-sm font-semibold hover:bg-surface-light"
                 >
-                  ล้างดาว
+                  ล้างสถิติ
                 </button>
               </div>
             </div>
@@ -648,10 +824,14 @@ export default function NoiseMeterApp() {
         <button
           type="button"
           onClick={toggleFull}
-          title="เต็มจอ"
+          title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
           className="flex items-center gap-1.5 rounded-[10px] border border-border bg-white px-3 py-2 font-sans text-xs font-medium text-ink hover:bg-surface-light md:px-[13px] md:text-[13px]"
         >
-          ⛶ <span className="hidden md:inline">เต็มจอ</span>
+          ⛶{" "}
+          <span className="hidden md:inline">
+            {isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          </span>
         </button>
       </div>
     </div>

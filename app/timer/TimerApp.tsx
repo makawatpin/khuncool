@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
+import styles from "./TimerApp.module.css";
 
 type Preset = { label: string; sec: number };
 
@@ -320,7 +321,7 @@ export default function TimerApp() {
 
   const toggleSound = useCallback(() => setSoundOn((s) => !s), []);
 
-  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
+  const { isFull, fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
   useEffect(() => {
     return () => {
@@ -365,13 +366,14 @@ export default function TimerApp() {
   return (
     <div
       ref={frameRef}
-      className={`tool-stage bg-white ${fullscreenClassName}`}
+      className={`tool-stage bg-white ${styles.shell} ${fullscreenClassName}`}
+      data-fullscreen={isFull}
       style={flashing ? { animation: "flash .5s ease 4" } : undefined}
     >
-      <div className="md:grid md:grid-cols-[1fr_360px] md:items-center md:gap-10">
+      <div className={`${styles.layout} md:grid md:grid-cols-[1fr_360px] md:items-center md:gap-10`}>
         {/* Dial */}
-        <div className="mb-5 flex justify-center md:mb-0">
-          <div className="relative flex justify-center">
+        <div className={`${styles.dialColumn} mb-5 flex justify-center md:mb-0`}>
+          <div className={`${styles.dialWrap} relative flex justify-center`}>
             <div className="absolute bottom-2 left-1/2 z-0 h-8 w-[210px] -translate-x-1/2 blur-[5px] md:h-11 md:w-[300px]">
               <div
                 className="h-full w-full"
@@ -383,17 +385,17 @@ export default function TimerApp() {
             </div>
             <canvas
               ref={registerCanvas}
-              className="relative z-[1] block h-[280px] w-[280px] md:h-[380px] md:w-[380px]"
+              className={`${styles.dialCanvas} relative z-[1] block h-[280px] w-[280px] md:h-[380px] md:w-[380px]`}
               style={{ filter: "drop-shadow(0 18px 26px rgba(26,29,38,.28))" }}
             />
             <div className="pointer-events-none absolute inset-0 z-[2] flex flex-col items-center justify-center">
               <div
-                className="font-mono text-[52px] font-semibold leading-none tracking-[-0.02em] md:text-[76px]"
+                className={`${styles.clock} font-mono text-[52px] font-semibold leading-none tracking-[-0.02em] md:text-[76px]`}
                 style={{ fontFamily: "'IBM Plex Mono', monospace", color: timeColor }}
               >
                 {clockMm}:{clockSs}
               </div>
-              <div className="mt-0.5 text-xs text-ink-faint md:mt-1 md:text-sm">
+              <div className={`${styles.status} mt-0.5 text-xs text-ink-faint md:mt-1 md:text-sm`}>
                 {statusText}
               </div>
             </div>
@@ -401,8 +403,8 @@ export default function TimerApp() {
         </div>
 
         {/* Controls */}
-        <div>
-          <div className="mb-3.5 grid grid-cols-2 gap-2 md:mb-[18px]">
+        <div className={styles.controls}>
+          <div className={`${styles.modeRow} mb-3.5 grid grid-cols-2 gap-2 md:mb-[18px]`}>
             <button
               type="button"
               onClick={() => switchMode("down")}
@@ -428,7 +430,7 @@ export default function TimerApp() {
           </div>
 
           <div
-            className={`mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px] ${
+            className={`${styles.presetRow} mb-3.5 grid grid-cols-4 gap-2 md:mb-[18px] md:gap-[9px] ${
               mode === "down" ? "" : "invisible"
             }`}
             aria-hidden={mode !== "down"}
@@ -446,7 +448,7 @@ export default function TimerApp() {
             ))}
           </div>
 
-          <div className="mb-3.5 flex gap-[9px] md:mb-0 md:flex-col md:gap-3">
+          <div className={`${styles.primaryControls} mb-3.5 flex gap-[9px] md:mb-0 md:flex-col md:gap-3`}>
             <button
               type="button"
               onClick={toggleRun}
@@ -498,7 +500,7 @@ export default function TimerApp() {
           </div>
 
           {mode === "down" && (
-            <div className="mt-3.5 rounded-2xl border border-border bg-surface-light p-[15px] md:mt-5 md:rounded-2xl md:p-[18px]">
+            <div className={`${styles.customPanel} mt-3.5 rounded-2xl border border-border bg-surface-light p-[15px] md:mt-5 md:rounded-2xl md:p-[18px]`}>
               <div className="mb-2.5 text-[13px] font-semibold md:mb-[11px] md:text-[13.5px]">
                 <span className="md:hidden">ตั้งเวลาเอง</span>
                 <span className="hidden md:inline">
@@ -540,7 +542,7 @@ export default function TimerApp() {
         </div>
       </div>
 
-      <div className="tool-stage-actions flex justify-end gap-2">
+      <div className={`${styles.actions} tool-stage-actions flex justify-end gap-2`}>
         <button
           type="button"
           onClick={toggleSound}
@@ -552,10 +554,11 @@ export default function TimerApp() {
         <button
           type="button"
           onClick={toggleFull}
-          title="เต็มจอ"
+          title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
           className="flex items-center gap-1.5 rounded-[10px] border border-border bg-white px-3 py-2 font-sans text-xs font-medium text-ink hover:bg-surface-light md:px-[13px] md:text-[13px]"
         >
-          ⛶ <span className="hidden md:inline">เต็มจอ</span>
+          {isFull ? "↙" : "⛶"} <span className="hidden md:inline">{isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}</span>
         </button>
       </div>
     </div>

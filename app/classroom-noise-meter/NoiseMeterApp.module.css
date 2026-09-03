@@ -1,0 +1,250 @@
+.shell {
+  container: noisemeter / inline-size;
+}
+
+.desktopLayout,
+.mobileLayout,
+.meterPanel,
+.controls,
+.statePanel {
+  min-width: 0;
+}
+
+.shell[data-fullscreen="true"] {
+  container-type: size;
+  display: grid;
+  place-items: center;
+  overflow: hidden !important;
+}
+
+.shell[data-fullscreen="true"] .desktopLayout {
+  width: min(100%, 1760px);
+  height: 100%;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+  align-items: center;
+  gap: clamp(24px, 3cqi, 58px);
+}
+
+.shell[data-fullscreen="true"] .meterPanel {
+  display: flex;
+  min-height: clamp(500px, 70cqb, 740px);
+  flex-direction: column;
+  justify-content: center;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:first-child {
+  font-size: clamp(96px, 14cqb, 148px) !important;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:nth-child(2) {
+  font-size: clamp(38px, 5cqb, 54px) !important;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:nth-child(3) {
+  font-size: clamp(96px, 13cqb, 142px) !important;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:nth-child(4) {
+  font-size: clamp(15px, 2cqb, 21px) !important;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:nth-child(5) {
+  height: clamp(22px, 3cqb, 32px) !important;
+}
+
+.shell[data-fullscreen="true"] .meterPanel > div:nth-child(6) {
+  font-size: clamp(14px, 1.8cqb, 19px) !important;
+}
+
+.shell[data-fullscreen="true"] .controls {
+  width: 100%;
+  max-width: 430px;
+  justify-self: center;
+}
+
+.shell[data-fullscreen="true"] .statePanel {
+  width: min(100%, 1100px);
+  padding-block: clamp(80px, 20cqb, 220px) !important;
+}
+
+@container noisemeter (aspect-ratio < .9) {
+  .shell[data-fullscreen="true"] {
+    overflow: auto !important;
+  }
+
+  .shell[data-fullscreen="true"] .desktopLayout {
+    height: auto;
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: clamp(14px, 2cqb, 24px);
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel {
+    min-height: clamp(320px, 42cqb, 470px);
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:first-child {
+    font-size: clamp(68px, 10cqb, 100px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(2) {
+    font-size: clamp(28px, 4cqb, 40px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(3) {
+    font-size: clamp(68px, 9cqb, 94px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .controls {
+    max-width: 680px;
+  }
+}
+
+@container noisemeter (aspect-ratio >= .9) and (height < 520px) {
+  .shell[data-fullscreen="true"] .desktopLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(310px, 390px);
+    gap: clamp(12px, 2cqi, 24px);
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel {
+    min-height: 78cqb;
+    padding: 16px 24px !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:first-child {
+    margin-bottom: 2px !important;
+    font-size: clamp(56px, 18cqb, 78px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(2) {
+    font-size: clamp(25px, 8cqb, 34px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(3) {
+    font-size: clamp(58px, 18cqb, 80px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .controls {
+    gap: 6px !important;
+  }
+
+  .shell[data-fullscreen="true"] .controls > div {
+    padding: 8px 11px !important;
+  }
+
+  .shell[data-fullscreen="true"] .controls :is(input[type="range"]) {
+    height: 15px;
+  }
+
+  .shell[data-fullscreen="true"] .controls button {
+    padding-block: 7px !important;
+  }
+
+  .shell[data-fullscreen="true"] :global(.tool-stage-actions) {
+    right: auto;
+    left: 8px;
+    top: 8px;
+  }
+}
+
+@container noisemeter (width < 768px) {
+  .shell[data-fullscreen="true"] {
+    display: block;
+    overflow: auto !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout {
+    width: min(100%, 620px);
+    margin-inline: auto;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel {
+    min-height: clamp(260px, 42cqb, 390px);
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:first-child {
+    font-size: clamp(52px, 10cqb, 82px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(2) {
+    font-size: clamp(25px, 4.5cqb, 36px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(3) {
+    font-size: clamp(58px, 10cqb, 86px) !important;
+  }
+}
+
+/* Keep the whole game visible on short phones in landscape. The result panel
+   becomes the large left-hand teaching surface while controls stay together
+   in a compact right-hand column. */
+@container noisemeter (width < 768px) and (aspect-ratio >= .9) and (height < 520px) {
+  .shell[data-fullscreen="true"] .mobileLayout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(235px, .72fr);
+    grid-template-rows: auto 1fr auto;
+    gap: 7px 10px;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div {
+    margin-bottom: 0 !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    min-height: calc(100cqb - 28px);
+    padding: 14px 18px !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:first-child {
+    font-size: clamp(52px, 18cqb, 76px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(2) {
+    font-size: clamp(24px, 7.5cqb, 32px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .meterPanel > div:nth-child(3) {
+    font-size: clamp(56px, 18cqb, 78px) !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 6px;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(2) > div {
+    padding: 7px !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 8px 10px !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(3) > div {
+    margin-top: 5px !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(3) > div:last-child {
+    margin-top: 2px !important;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .shell[data-fullscreen="true"] .mobileLayout > div:nth-child(4) button {
+    padding-block: 8px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell {
+    animation: none !important;
+  }
+}

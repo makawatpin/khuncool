@@ -7,14 +7,26 @@ type Props = {
   children: ReactNode;
   title: string;
   actions?: ReactNode;
+  className?: string;
+  contentClassName?: string;
 };
 
-export default function ToolFullscreenFrame({ children, title, actions }: Props) {
+export default function ToolFullscreenFrame({
+  children,
+  title,
+  actions,
+  className = "",
+  contentClassName = "",
+}: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(ref);
 
   return (
-    <div ref={ref} className={`tool-stage bg-white ${fullscreenClassName}`}>
+    <div
+      ref={ref}
+      data-fullscreen={isFull}
+      className={`tool-stage bg-white ${className} ${fullscreenClassName}`}
+    >
       <div className="tool-stage-bar">
         <span>{title}</span>
         <div className="flex items-center gap-2">
@@ -24,7 +36,7 @@ export default function ToolFullscreenFrame({ children, title, actions }: Props)
           </button>
         </div>
       </div>
-      <div className="tool-stage-content">{children}</div>
+      <div className={`tool-stage-content ${contentClassName}`}>{children}</div>
     </div>
   );
 }

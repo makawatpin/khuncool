@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
+import stageStyles from "@/components/ToolPresentationLayouts.module.css";
 
 const LS_KEY = "khuncool.scoreboard";
 const COLORS = [
@@ -142,7 +143,8 @@ export default function ScoreboardApp() {
     );
   }, []);
 
-  const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
+  const { isFull, fullscreenClassName, toggle: toggleFull } =
+    useToolFullscreen(frameRef);
 
   const sorted = [...teams].sort((a, b) => b.score - a.score);
   const top = sorted.length ? sorted[0].score : 0;
@@ -164,7 +166,11 @@ export default function ScoreboardApp() {
   const showEmpty = teams.length === 0;
 
   return (
-    <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
+    <div
+      ref={frameRef}
+      data-fullscreen={isFull}
+      className={`tool-stage bg-white ${stageStyles.scoreFrame} ${fullscreenClassName}`}
+    >
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์
@@ -172,7 +178,7 @@ export default function ScoreboardApp() {
       )}
 
       {/* Title + step selector + import */}
-      <div className="mb-3.5 flex flex-wrap items-center gap-2 md:mb-[18px] md:gap-3">
+      <div className={`${stageStyles.scoreToolbar} mb-3.5 flex flex-wrap items-center gap-2 md:mb-[18px] md:gap-3`}>
         <input
           value={title}
           onChange={onTitle}
@@ -210,7 +216,7 @@ export default function ScoreboardApp() {
       </div>
 
       {showEmpty ? (
-        <div className="rounded-2xl border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light p-8 text-center md:rounded-[20px] md:p-[70px_24px]">
+        <div className={`${stageStyles.scoreEmpty} rounded-2xl border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light p-8 text-center md:rounded-[20px] md:p-[70px_24px]`}>
           <div className="mx-auto mb-3 flex h-13 w-13 items-center justify-center rounded-2xl bg-[#E1E3FD] text-[26px] md:mb-3.5 md:h-16 md:w-16 md:rounded-[18px] md:text-[32px]">
             🏆
           </div>
@@ -254,7 +260,7 @@ export default function ScoreboardApp() {
           </div>
         </div>
       ) : (
-        <div>
+        <div className={stageStyles.scoreBoard}>
           {/* Mobile team list */}
           <div className="flex flex-col gap-[9px] md:hidden">
             {teams.map((t, i) => {
@@ -319,7 +325,7 @@ export default function ScoreboardApp() {
           </div>
 
           {/* Desktop team grid */}
-          <div className="hidden md:grid md:grid-cols-[repeat(auto-fit,minmax(210px,1fr))] md:gap-4">
+          <div className={`${stageStyles.scoreGrid} hidden md:grid md:grid-cols-[repeat(auto-fit,minmax(210px,1fr))] md:gap-4`}>
             {teams.map((t, i) => {
               const rank = rankOf(t);
               const lead = t.score === top && top > 0;
@@ -327,7 +333,7 @@ export default function ScoreboardApp() {
               return (
                 <div
                   key={t.id}
-                  className="animate-[pop_.25s_ease] rounded-[18px] border-2 p-[18px] text-center"
+                  className={`${stageStyles.scoreCard} animate-[pop_.25s_ease] rounded-[18px] border-2 p-[18px] text-center`}
                   style={{
                     borderColor: lead ? color : "#E5E8EE",
                     background: lead ? "#F5F6FF" : "#fff",
@@ -355,7 +361,7 @@ export default function ScoreboardApp() {
                     </button>
                   </div>
                   <div
-                    className="mb-3 font-mono text-[56px] font-semibold leading-[1.1] tabular-nums"
+                    className={`${stageStyles.scoreNumber} mb-3 font-mono text-[56px] font-semibold leading-[1.1] tabular-nums`}
                     style={{ color }}
                   >
                     {t.score}
@@ -416,7 +422,7 @@ export default function ScoreboardApp() {
           </div>
 
           {/* Desktop leader bar */}
-          <div className="mt-5 hidden flex-wrap items-center gap-3.5 rounded-2xl border border-border bg-surface-light px-5 py-4 md:flex">
+          <div className={`${stageStyles.scoreLeader} mt-5 hidden flex-wrap items-center gap-3.5 rounded-2xl border border-border bg-surface-light px-5 py-4 md:flex`}>
             <span className="flex-none text-[30px]">{leaderIcon}</span>
             <div className="min-w-[200px] flex-1">
               <div className="text-[12.5px] font-bold text-ink-faint">
@@ -447,10 +453,14 @@ export default function ScoreboardApp() {
         <button
           type="button"
           onClick={toggleFull}
-          title="เต็มจอ"
+          title={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
+          aria-label={isFull ? "ออกจากเต็มจอ" : "เต็มจอ"}
           className="flex items-center gap-1.5 rounded-[10px] border border-border bg-white px-3 py-2 font-sans text-xs font-medium text-ink hover:bg-surface-light md:px-[13px] md:text-[13px]"
         >
-          ⛶ <span className="hidden md:inline">ฉายเต็มจอ</span>
+          ⛶{" "}
+          <span className="hidden md:inline">
+            {isFull ? "ออกจากเต็มจอ" : "ฉายเต็มจอ"}
+          </span>
         </button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ShareActivityButton from "@/components/ShareActivityButton";
 import QuestionSetPicker from "@/components/QuestionSetPicker";
+import stageStyles from "@/components/ToolPresentationLayouts.module.css";
 
 const SAMPLE_QUESTIONS = [
   "อธิบายสิ่งที่เรียนวันนี้ให้เพื่อนฟัง 1 ประโยค",
@@ -283,6 +284,8 @@ export default function QuestionApp({ initialQuestions }: { initialQuestions?: r
   return (
     <ToolFullscreenFrame
       title="สุ่มคำถาม"
+      className={stageStyles.frame}
+      contentClassName={stageStyles.content}
       actions={
         <ShareActivityButton
           title="ชุดสุ่มคำถาม"
@@ -292,11 +295,11 @@ export default function QuestionApp({ initialQuestions }: { initialQuestions?: r
         />
       }
     >
-    <div className="md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9">
+    <div className={`${stageStyles.questionLayout} md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9`}>
       {/* Display + pick */}
-      <div>
+      <div className={stageStyles.questionMain}>
         <div
-          className="relative mb-4 flex min-h-[210px] flex-col items-center justify-center overflow-hidden rounded-[20px] px-5 py-7 text-center text-white shadow-[0_18px_40px_-14px_rgba(42,39,117,.5)] md:mb-5 md:min-h-[340px] md:rounded-3xl md:px-10 md:py-14 md:shadow-[0_24px_50px_-16px_rgba(42,39,117,.5)]"
+          className={`${stageStyles.questionCard} relative mb-4 flex min-h-[210px] flex-col items-center justify-center overflow-hidden rounded-[20px] px-5 py-7 text-center text-white shadow-[0_18px_40px_-14px_rgba(42,39,117,.5)] md:mb-5 md:min-h-[340px] md:rounded-3xl md:px-10 md:py-14 md:shadow-[0_24px_50px_-16px_rgba(42,39,117,.5)]`}
           style={{
             background: "linear-gradient(150deg,#2A2775,#0A9380)",
           }}
@@ -308,7 +311,7 @@ export default function QuestionApp({ initialQuestions }: { initialQuestions?: r
             </div>
             <div
               key={animKey}
-              className="animate-[pop_.3s_ease] break-words text-[22px] font-bold leading-[1.4] md:text-[34px]"
+              className={`${stageStyles.questionText} animate-[pop_.3s_ease] break-words text-[22px] font-bold leading-[1.4] md:text-[34px]`}
             >
               {current}
             </div>
@@ -327,7 +330,7 @@ export default function QuestionApp({ initialQuestions }: { initialQuestions?: r
       </div>
 
       {/* Bank column (desktop) */}
-      <div className="mt-4 md:mt-0">
+      <div className={`${stageStyles.sideColumn} mt-4 md:mt-0`}>
         <div className="md:hidden">{bank}</div>
         <div className="hidden md:block">
           {bank}

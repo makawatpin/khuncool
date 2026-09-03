@@ -5,6 +5,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
+import stageStyles from "@/components/ToolPresentationLayouts.module.css";
 
 const NAMES_KEY = "khuncool.wheel.names";
 
@@ -586,11 +587,15 @@ export default function WheelApp() {
   const disabled = spinning || names.length < 2;
 
   return (
-    <ToolFullscreenFrame title="วงล้อสุ่มชื่อ">
-    <div className="md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9">
+    <ToolFullscreenFrame
+      title="วงล้อสุ่มชื่อ"
+      className={stageStyles.frame}
+      contentClassName={stageStyles.content}
+    >
+    <div className={`${stageStyles.wheelLayout} md:grid md:grid-cols-[1fr_380px] md:items-start md:gap-9`}>
       {/* Wheel column */}
-      <div className="flex flex-col items-center">
-        <div className="relative mb-4 flex justify-center md:mb-[22px]">
+      <div className={`${stageStyles.wheelColumn} flex flex-col items-center`}>
+        <div className={`${stageStyles.wheelWrap} relative mb-4 flex justify-center md:mb-[22px]`}>
           <div
             className="absolute left-1/2 top-[-2px] z-[3] h-0 w-0 -translate-x-1/2 md:top-[-4px]"
             style={{
@@ -610,12 +615,12 @@ export default function WheelApp() {
           <canvas
             ref={registerCanvas}
             onClick={spin}
-            className="relative z-[1] block h-[310px] w-[310px] cursor-pointer md:h-[420px] md:w-[420px]"
+            className={`${stageStyles.wheelCanvas} relative z-[1] block h-[310px] w-[310px] cursor-pointer md:h-[420px] md:w-[420px]`}
             style={{ filter: "drop-shadow(0 18px 26px rgba(26,29,38,.32))" }}
           />
         </div>
 
-        <div className="flex w-full items-center gap-2.5 md:w-auto">
+        <div className={`${stageStyles.wheelActions} flex w-full items-center gap-2.5 md:w-auto`}>
           <button
             type="button"
             onClick={spin}
@@ -638,7 +643,7 @@ export default function WheelApp() {
       </div>
 
       {/* Controls column */}
-      <div>
+      <div className={stageStyles.sideColumn}>
         <div className="rounded-2xl border border-border bg-surface-light p-[15px] md:rounded-[18px] md:p-5">
           <div className="mb-[11px] flex items-center justify-between md:mb-[13px]">
             <span className="text-sm font-bold md:text-[15px]">

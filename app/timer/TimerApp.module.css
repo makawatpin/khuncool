@@ -1,0 +1,160 @@
+.shell {
+  container: timerstage / inline-size;
+}
+
+.layout,
+.dialColumn,
+.dialWrap,
+.dialCanvas,
+.clock,
+.status,
+.controls,
+.modeRow,
+.presetRow,
+.primaryControls,
+.customPanel,
+.actions {
+  min-width: 0;
+}
+
+/* Fullscreen is a presentation mode: use the available height as well as the
+   width, rather than leaving the normal 380px desktop dial at the top. */
+.shell[data-fullscreen="true"] {
+  container-type: size;
+  display: grid;
+  place-items: center;
+  overflow: hidden !important;
+}
+
+.shell[data-fullscreen="true"] .layout {
+  width: min(100%, 1680px);
+  height: 100%;
+  margin: auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(420px, .72fr);
+  align-items: center;
+  gap: clamp(36px, 4cqi, 80px);
+}
+
+.shell[data-fullscreen="true"] .dialColumn {
+  margin: 0;
+}
+
+.shell[data-fullscreen="true"] .dialCanvas {
+  width: clamp(480px, 61cqb, 680px);
+  height: clamp(480px, 61cqb, 680px);
+}
+
+.shell[data-fullscreen="true"] .clock {
+  font-size: clamp(82px, 9.5cqb, 112px);
+}
+
+.shell[data-fullscreen="true"] .status {
+  margin-top: 8px;
+  font-size: clamp(16px, 2cqb, 22px);
+}
+
+.shell[data-fullscreen="true"] .controls {
+  width: 100%;
+  max-width: 520px;
+  justify-self: center;
+}
+
+@container timerstage (aspect-ratio < .9) {
+  .shell[data-fullscreen="true"] .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-content: center;
+    gap: clamp(8px, 1.5cqb, 18px);
+  }
+
+  .shell[data-fullscreen="true"] .dialCanvas {
+    width: clamp(260px, 44cqb, 440px);
+    height: clamp(260px, 44cqb, 440px);
+  }
+
+  .shell[data-fullscreen="true"] .clock {
+    font-size: clamp(52px, 8cqb, 88px);
+  }
+
+  .shell[data-fullscreen="true"] .status {
+    margin-top: 3px;
+    font-size: clamp(12px, 1.7cqb, 17px);
+  }
+
+  .shell[data-fullscreen="true"] .controls {
+    width: min(100%, 620px);
+  }
+}
+
+/* Phones in landscape have very little height. Preserve a large classroom
+   clock while keeping every control reachable without scrolling. */
+@container timerstage (aspect-ratio >= .9) and (height < 480px) {
+  .shell[data-fullscreen="true"] .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(330px, .9fr);
+    gap: clamp(12px, 2cqi, 24px);
+  }
+
+  .shell[data-fullscreen="true"] .dialCanvas {
+    width: clamp(250px, 76cqb, 310px);
+    height: clamp(250px, 76cqb, 310px);
+  }
+
+  .shell[data-fullscreen="true"] .clock {
+    font-size: clamp(48px, 18cqb, 72px);
+  }
+
+  .shell[data-fullscreen="true"] .status {
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  .shell[data-fullscreen="true"] .modeRow,
+  .shell[data-fullscreen="true"] .presetRow {
+    margin-bottom: 6px;
+  }
+
+  .shell[data-fullscreen="true"] :is(.modeRow, .presetRow) button {
+    padding-block: 7px;
+  }
+
+  .shell[data-fullscreen="true"] .primaryControls {
+    gap: 6px;
+  }
+
+  .shell[data-fullscreen="true"] .primaryControls > button:first-child {
+    padding-block: 9px;
+  }
+
+  .shell[data-fullscreen="true"] .primaryControls > div {
+    gap: 6px;
+  }
+
+  .shell[data-fullscreen="true"] .primaryControls > div button {
+    padding-block: 7px;
+  }
+
+  .shell[data-fullscreen="true"] .customPanel {
+    margin-top: 8px;
+    padding: 9px 11px;
+  }
+
+  .shell[data-fullscreen="true"] .customPanel > div:first-child {
+    margin-bottom: 4px;
+  }
+
+  .shell[data-fullscreen="true"] .customPanel :is(input, button) {
+    padding-block: 7px;
+  }
+
+  .shell[data-fullscreen="true"] .actions {
+    right: auto;
+    left: 8px;
+    top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell {
+    animation: none !important;
+  }
+}

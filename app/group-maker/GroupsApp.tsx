@@ -5,6 +5,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
+import stageStyles from "@/components/ToolPresentationLayouts.module.css";
 
 const NAMES_KEY = "khuncool.groupmaker.names";
 
@@ -214,10 +215,14 @@ export default function GroupsApp() {
   const divideDisabled = n < 2;
 
   return (
-    <ToolFullscreenFrame title="สุ่มแบ่งกลุ่ม">
-    <div className="md:grid md:grid-cols-[360px_1fr] md:items-start md:gap-9">
+    <ToolFullscreenFrame
+      title="สุ่มแบ่งกลุ่ม"
+      className={stageStyles.frame}
+      contentClassName={stageStyles.content}
+    >
+    <div className={`${stageStyles.groupLayout} md:grid md:grid-cols-[360px_1fr] md:items-start md:gap-9`}>
       {/* Left controls */}
-      <div>
+      <div className={stageStyles.groupControls}>
         <div className="mb-3.5 rounded-2xl border border-border bg-surface-light p-[15px] md:mb-4 md:rounded-[18px] md:p-5">
           <div className="mb-3.5 flex gap-2 md:mb-4 md:gap-[9px]">
             <button
@@ -425,9 +430,9 @@ export default function GroupsApp() {
       </div>
 
       {/* Right result (desktop only, mirrors mobile block above) */}
-      <div className="hidden md:block">
+      <div className={`${stageStyles.groupResult} hidden md:block`}>
         {groups.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`${stageStyles.groupGrid} grid grid-cols-2 gap-4`}>
             {groups.map((g) => (
               <div
                 key={g.name}
@@ -456,7 +461,7 @@ export default function GroupsApp() {
             ))}
           </div>
         ) : (
-          <div className="flex h-[420px] flex-col items-center justify-center rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light p-6 text-center text-ink-faint">
+          <div className={`${stageStyles.groupEmpty} flex h-[420px] flex-col items-center justify-center rounded-[18px] border-[1.5px] border-dashed border-[#D3D8E1] bg-surface-light p-6 text-center text-ink-faint`}>
             <div className="mb-3 text-[44px]">🧩</div>
             <div className="text-[15px] font-semibold text-ink-secondary">
               ผลการแบ่งกลุ่มจะแสดงที่นี่
