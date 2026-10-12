@@ -344,3 +344,246 @@
     display: none;
   }
 }
+
+/* ===== จอตั้งค่า ===== */
+.setupWrap {
+  display: grid;
+  gap: 12px;
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.setupCard {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.6);
+}
+
+.setupHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.setupTitle {
+  margin: 0;
+  font-size: 20px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink-secondary);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 12px 14px;
+  border: 1px solid #d3d8e1;
+  border-radius: 12px;
+  font-family: var(--font-sarabun), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: 3px solid #c6c9fb;
+  border-color: #5c5ee6;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-ink-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  max-width: 14em;
+  padding: 6px 12px;
+  overflow: hidden;
+  border: 1px solid #d3d8e1;
+  border-radius: 999px;
+  background: #f1f3f6;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: #a5b4fc;
+  background: #eef0ff;
+}
+
+.chip[aria-pressed="false"] {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.chip:disabled {
+  cursor: not-allowed;
+}
+
+.setupFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.countPill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #d0fbef;
+  color: #0a9380;
+  font-weight: 700;
+}
+
+.resumeBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  background: #fffbeb;
+  color: #92600a;
+  font-weight: 600;
+}
+
+.resumeActions {
+  display: flex;
+  gap: 8px;
+}
+
+.primaryBtnSm {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  color: #3b1d00;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* ===== จอสุ่มคนเริ่ม ===== */
+.starter {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  padding: 24px 12px;
+  text-align: center;
+}
+
+.starterLead {
+  margin: 0;
+  font-size: clamp(18px, 3.4cqi, 30px);
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.slotWindow {
+  display: grid;
+  place-items: center;
+  width: min(560px, 92cqi);
+  height: clamp(84px, 16cqi, 150px);
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(#fff, #f3f0ff);
+  color: #1a1d26;
+  box-shadow:
+    inset 0 6px 12px rgba(0, 0, 0, 0.18),
+    0 0 0 6px #fbbf24,
+    0 0 40px rgba(251, 191, 36, 0.45);
+}
+
+.slotName {
+  max-width: 94%;
+  overflow: hidden;
+  font-size: clamp(30px, 8cqi, 84px);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: slotTick 110ms ease-out;
+}
+
+@keyframes slotTick {
+  from {
+    transform: translateY(-45%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slotDone {
+  animation: slotGlow 1.2s ease-in-out infinite;
+}
+
+@keyframes slotGlow {
+  0%,
+  100% {
+    box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.18), 0 0 0 6px #fbbf24, 0 0 40px rgba(251, 191, 36, 0.45);
+  }
+  50% {
+    box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.18), 0 0 0 8px #fde68a, 0 0 80px rgba(251, 191, 36, 0.85);
+  }
+}
+
+.starterResult {
+  margin: 0;
+  font-size: clamp(22px, 4.6cqi, 46px);
+  font-weight: 800;
+  color: #fde68a;
+}
+
+.appear {
+  animation: fadeUp 450ms ease-out both;
+}
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slotName,
+  .slotDone,
+  .appear {
+    animation: none;
+  }
+}
