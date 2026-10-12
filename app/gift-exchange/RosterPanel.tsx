@@ -19,14 +19,21 @@ export default function RosterPanel({ players, labels, chainIds, canToggle, onTo
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const inChain = new Set(chainIds);
 
+  // onClose เป็น arrow ใหม่ทุก render ของ App — เก็บไว้ใน ref เพื่อให้ effect (ที่โฟกัสแผง)
+  // ทำงานครั้งเดียวตอนเปิด ไม่ดึงโฟกัสออกจากช่องพิมพ์ทุกครั้งที่เกมอัปเดต
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     dialogRef.current?.focus();
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, []);
 
   return (
     <div

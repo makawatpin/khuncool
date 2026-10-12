@@ -13,6 +13,7 @@ import {
   nextTurn,
   openBox,
   parseNames,
+  playersToText,
   pickStarter,
   playerLabels,
   pool,
@@ -63,6 +64,20 @@ function playToEnd(start: GameState, rng: Rng) {
 describe("parseNames", () => {
   it("ตัดช่องว่างหัวท้ายและข้ามบรรทัดว่าง รองรับ CRLF", () => {
     expect(parseNames("  ต้น \r\n\r\nฝน\n  \nบี")).toEqual(["ต้น", "ฝน", "บี"]);
+  });
+});
+
+describe("playersToText", () => {
+  it("เขียนรายชื่อคืนลง textarea โดยคนที่เพิ่มกลางเกมไม่หายเมื่อแก้ข้อความต่อ", () => {
+    let s = withNames("ก", "ข", "ค");
+    s = setActive(s, idOf(s, "ข"), false);
+    s = addPlayer(s, "มาสาย");
+    const text = playersToText(s.players);
+    expect(text).toBe("ก\nข\nค\nมาสาย");
+    const edited = setNames(resetGame(s), parseNames(text + "\nเพิ่มอีกคน"));
+    expect(edited.players.map((p) => p.name)).toEqual(["ก", "ข", "ค", "มาสาย", "เพิ่มอีกคน"]);
+    expect(edited.players.slice(0, 4).map((p) => p.id)).toEqual(s.players.map((p) => p.id));
+    expect(edited.players[1].active).toBe(false);
   });
 });
 

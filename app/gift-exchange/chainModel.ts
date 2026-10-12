@@ -78,6 +78,11 @@ export function syncPlayers(prev: Player[], names: string[]): Player[] {
   });
 }
 
+/** รายชื่อทั้งหมด (รวมคนที่เพิ่มกลางเกม) กลับเป็นข้อความใน textarea ให้ซิงก์กับชิป */
+export function playersToText(players: Player[]): string {
+  return players.map((p) => p.name).join("\n");
+}
+
 export function setNames(state: GameState, names: string[]): GameState {
   if (state.phase !== "setup") return state;
   return { ...state, players: syncPlayers(state.players, names) };

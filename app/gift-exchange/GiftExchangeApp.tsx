@@ -18,6 +18,7 @@ import {
   parseNames,
   pickStarter,
   playerLabels,
+  playersToText,
   pool,
   readSaved,
   resetGame,
@@ -124,6 +125,7 @@ export default function GiftExchangeApp() {
     setFinaleIntro(false);
     setRosterOpen(false);
     setResumable(false);
+    setNamesText(playersToText(game.players));
     setGame((g) => resetGame(g));
   };
 
@@ -271,7 +273,10 @@ export default function GiftExchangeApp() {
           chainIds={game.chain}
           canToggle={(id) => canToggle(game, id)}
           onToggle={handleToggle}
-          onAdd={(name) => setGame((g) => addPlayer(g, name))}
+          onAdd={(name) => {
+            setNamesText(playersToText(addPlayer(game, name).players));
+            setGame((g) => addPlayer(g, name));
+          }}
           onClose={() => setRosterOpen(false)}
         />
       )}
