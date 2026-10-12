@@ -220,6 +220,29 @@ export function createGiftScene(opts: SceneOptions): GiftSceneController {
   let statsSent = false;
   const dummy = new THREE.Object3D();
 
+  /**
+   * คอมไพล์ shader ทุกตัวล่วงหน้า (ลำแสง ร่องฝา ขอบปาก ดาว คอนเฟตตีแบบมีสีรายชิ้น) ไม่งั้นครั้งแรกจะไปค้างตอนระเบิด
+   * ซึ่งเป็นจังหวะสำคัญที่สุด — ต้องเรียกใหม่หลังเปลี่ยน quality เพราะเงาเปลี่ยน program key
+   */
+  function warmUp() {
+    for (let i = 0; i < CONFETTI_CAP; i++) confetti.setColorAt(i, confettiColors[0]);
+    const hidden: THREE.Object3D[] = [];
+    scene.traverse((o) => {
+      if (!o.visible) {
+        hidden.push(o);
+        o.visible = true;
+      }
+    });
+    const stars0 = stars.count;
+    const confetti0 = confetti.count;
+    stars.count = 1;
+    confetti.count = 1;
+    renderer.compile(scene, camera);
+    stars.count = stars0;
+    confetti.count = confetti0;
+    hidden.forEach((o) => (o.visible = false));
+  }
+
   function applyQuality() {
     const high = quality === "high";
     renderer.setPixelRatio(high ? Math.min(window.devicePixelRatio || 1, 1.5) : 1);
@@ -227,6 +250,7 @@ export function createGiftScene(opts: SceneOptions): GiftSceneController {
     floor.visible = high;
     halo.visible = high;
     starHalos.visible = high;
+    warmUp();
   }
 
   function enter(p: ScenePhase) {

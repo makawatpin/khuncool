@@ -4,21 +4,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { browserStorage } from "../chainModel";
 import { reducedMotion } from "../fx";
 import type { GiftSceneController } from "./giftScene";
-import { initialMode, judgeFrames, readSavedMode, writeSavedMode, type RenderMode } from "./renderMode";
+import { initialMode, judgeFrames, readSavedMode, supportsWebGL2, writeSavedMode, type RenderMode } from "./renderMode";
 
 /** three.js ทั้งก้อนอยู่หลัง import() นี้ — โหลดเฉพาะหน้า /gift-exchange */
 const loadScene = () => import("./giftScene");
 
 function detectWebGL(): boolean {
-  try {
-    const c = document.createElement("canvas");
-    const gl = c.getContext("webgl2") ?? c.getContext("webgl");
-    if (!gl) return false;
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return true;
-  } catch {
-    return false;
+  const c = document.createElement("canvas");
+  const ok = supportsWebGL2(() => c);
+  if (ok) {
+    // ปล่อย context ทดสอบทันที ไม่ให้นับเข้าเพดานของเบราว์เซอร์
+    (c.getContext("webgl2") as WebGL2RenderingContext | null)?.getExtension("WEBGL_lose_context")?.loseContext();
   }
+  return ok;
 }
 
 /**

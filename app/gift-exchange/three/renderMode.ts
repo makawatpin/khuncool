@@ -17,6 +17,15 @@ const LOW_MS = 28;
 /** ช้ากว่านี้ (≈ ต่ำกว่า 25 fps) → กลับไปใช้ SVG */
 const FAIL_MS = 40;
 
+/** three r185 สร้าง renderer ได้เฉพาะ WebGL2 — เครื่องที่มีแค่ WebGL1 ต้องใช้ 2D */
+export function supportsWebGL2(createCanvas: () => { getContext(id: string): unknown }): boolean {
+  try {
+    return !!createCanvas().getContext("webgl2");
+  } catch {
+    return false;
+  }
+}
+
 export function parseSavedMode(raw: string | null): SavedMode | null {
   if (!raw) return null;
   const parts = raw.split(":");

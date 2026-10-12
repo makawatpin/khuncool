@@ -5,6 +5,7 @@ import {
   judgeFrames,
   parseSavedMode,
   readSavedMode,
+  supportsWebGL2,
   serializeSavedMode,
   writeSavedMode,
 } from "./renderMode";
@@ -77,6 +78,29 @@ describe("judgeFrames", () => {
 
   it("2d คงเป็น 2d", () => {
     expect(judgeFrames("2d", frames(5), false)).toBe("2d");
+  });
+});
+
+describe("supportsWebGL2", () => {
+  const canvasWith = (...ids: string[]) => () => ({ getContext: (id: string) => (ids.includes(id) ? {} : null) });
+
+  it("มี WebGL2 → true", () => {
+    expect(supportsWebGL2(canvasWith("webgl2", "webgl"))).toBe(true);
+  });
+
+  it("three r185 ใช้ WebGL2 เท่านั้น: เครื่องที่มีแค่ WebGL1 → false", () => {
+    expect(supportsWebGL2(canvasWith("webgl"))).toBe(false);
+  });
+
+  it("ไม่มีเลย หรือสร้าง context แล้วโยน error → false", () => {
+    expect(supportsWebGL2(canvasWith())).toBe(false);
+    expect(
+      supportsWebGL2(() => ({
+        getContext: () => {
+          throw new Error("blocked");
+        },
+      })),
+    ).toBe(false);
   });
 });
 

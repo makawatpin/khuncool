@@ -70,9 +70,12 @@ export default function GiftStage({
   const lastBox = isLastBox || closesLoop;
   const palette = lastBox ? GOLD : paletteFor(paletteIndex);
   const animRef = useRef(anim);
+  // timer ระเบิด/เผยชื่อต้องดูโหมดภาพ "ตอนนั้น" ไม่ใช่ตอนกดกล่อง (ครูอาจสลับ 2D/3D หรือ GPU รีเซ็ตกลางการลุ้น)
+  const sceneRef = useRef(scene);
 
   useEffect(() => {
     animRef.current = anim;
+    sceneRef.current = scene;
   });
 
   // ฉาก 3D ตัวเดียวใช้ข้ามตา: turnKey เปลี่ยน = ท่าสลับกล่อง; mount ตอนกล่องเปิดแล้ว = กลับจากเกมค้าง
@@ -97,15 +100,15 @@ export default function GiftStage({
       window.setTimeout(() => {
         setAnim("burst");
         play("pop");
-        if (!scene) onCannons();
+        if (!sceneRef.current) onCannons();
       }, charge),
       window.setTimeout(() => {
         setAnim("shown");
         play(final ? "finale" : "celebrate");
-        if (final && !scene) onFireworks();
+        if (final && !sceneRef.current) onFireworks();
       }, charge + BURST_MS),
     );
-  }, [anim, isLastBox, onCannons, onFireworks, onOpen, play, scene]);
+  }, [anim, isLastBox, onCannons, onFireworks, onOpen, play]);
 
   const revealed = anim === "shown" && receiverLabel !== null;
   // ระหว่างลุ้น ห้ามแถบโซ่/ตัวนับเฉลยก่อนกล่องเปิด
