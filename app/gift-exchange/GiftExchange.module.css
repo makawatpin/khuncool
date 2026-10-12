@@ -1,0 +1,346 @@
+/* ===== shell ===== */
+.shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+  overflow: hidden;
+  container: giftexchange / inline-size;
+  border-radius: 20px;
+  background: radial-gradient(120% 90% at 50% 0%, #3b2a7a 0%, #1d1b4f 45%, #0f1030 100%);
+  color: #fff;
+  font-family: var(--font-anuphan), sans-serif;
+}
+
+/* คู่กับ useToolFullscreen: native :fullscreen และ fallback ของ iOS ต้องหน้าตาเหมือนกัน */
+.shell:fullscreen,
+.shell.fsFallback {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483646 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 0;
+  border-radius: 0 !important;
+}
+
+.fxLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ===== แถบบน ===== */
+.bar {
+  position: relative;
+  z-index: 5;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.barTitle {
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.barActions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.iconBtn {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.iconBtnLabel {
+  display: none;
+}
+
+@container giftexchange (min-width: 640px) {
+  .iconBtnLabel {
+    display: inline;
+  }
+}
+
+.body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px 14px 20px;
+}
+
+/* ===== หิมะ/ประกายลอยตลอดเวลา ===== */
+.snow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flake {
+  position: absolute;
+  top: -12px;
+  left: var(--x);
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  opacity: 0.7;
+  animation: flakeFall var(--d) linear var(--delay) infinite;
+}
+
+@keyframes flakeFall {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--drift), 120vh, 0);
+  }
+}
+
+/* ===== ปุ่ม ===== */
+.primaryBtn {
+  min-height: 52px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  color: #3b1d00;
+  font: inherit;
+  font-size: clamp(16px, 2.6cqi, 22px);
+  font-weight: 800;
+  box-shadow: 0 10px 24px -8px rgba(249, 115, 22, 0.7);
+  cursor: pointer;
+}
+
+.primaryBtn:hover {
+  filter: brightness(1.06);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.primaryBtn:focus-visible,
+.ghostBtn:focus-visible,
+.iconBtn:focus-visible {
+  outline: 3px solid #fde68a;
+  outline-offset: 3px;
+}
+
+.ghostBtn {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #d3d8e1;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ghostBtn:hover {
+  background: #f1f3f6;
+}
+
+/* ===== กล่องของขวัญ (GiftBox.tsx) ===== */
+.gift {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.giftFloat,
+.giftShake,
+.giftJitter,
+.lid,
+.bodyRibbon,
+.sheen {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.giftShake {
+  transform-origin: center bottom;
+}
+
+.sheen {
+  transform: skewX(-18deg);
+  animation: sheen 3.4s ease-in-out infinite;
+}
+
+@keyframes sheen {
+  0%,
+  45% {
+    transform: translateX(-80px) skewX(-18deg);
+  }
+  75%,
+  100% {
+    transform: translateX(200px) skewX(-18deg);
+  }
+}
+
+.leak,
+.innerGlow {
+  opacity: 0;
+}
+
+.gift[data-state="idle"] .giftFloat {
+  animation: giftFloat 2.6s ease-in-out infinite;
+}
+
+@keyframes giftFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ลุ้น: สั่นแรงขึ้นเรื่อยๆ + ขยาย + แสงรั่วตามรอยต่อฝา */
+.gift[data-state="charging"] .giftShake {
+  animation: giftCharge var(--charge-ms, 2000ms) cubic-bezier(0.5, 0, 1, 1) forwards;
+}
+
+.gift[data-state="charging"] .giftJitter {
+  animation: giftJitter 90ms linear infinite;
+}
+
+.gift[data-state="charging"] .leak {
+  animation: leakGrow var(--charge-ms, 2000ms) ease-in forwards;
+}
+
+@keyframes giftCharge {
+  0% { transform: scale(1) rotate(0deg); }
+  10% { transform: scale(1.01) rotate(-2deg); }
+  20% { transform: scale(1.02) rotate(2deg); }
+  30% { transform: scale(1.03) rotate(-3deg); }
+  40% { transform: scale(1.05) rotate(3deg) translateX(-2px); }
+  50% { transform: scale(1.06) rotate(-4deg) translateX(3px); }
+  60% { transform: scale(1.08) rotate(5deg) translateX(-4px); }
+  70% { transform: scale(1.1) rotate(-6deg) translateX(5px); }
+  80% { transform: scale(1.12) rotate(7deg) translateX(-6px); }
+  90% { transform: scale(1.14) rotate(-8deg) translateX(6px); }
+  100% { transform: scale(1.15) rotate(0deg); }
+}
+
+@keyframes giftJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1.5px, -1px); }
+  50% { transform: translate(-1.5px, 1px); }
+  75% { transform: translate(1px, 1.5px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes leakGrow {
+  0% { opacity: 0; }
+  60% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* ระเบิด: ฝาพุ่งหมุนออกนอกจอ ริบบิ้นขาดหลุด แสงในกล่องสว่าง */
+.gift[data-state="burst"] .giftShake,
+.gift[data-state="open"] .giftShake {
+  transform: scale(1.15);
+}
+
+.gift[data-state="burst"] .lid {
+  animation: lidFly 800ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+.gift[data-state="open"] .lid {
+  display: none;
+}
+
+.gift[data-state="burst"] .bodyRibbon,
+.gift[data-state="open"] .bodyRibbon {
+  animation: ribbonSnap 600ms ease-in forwards;
+}
+
+.gift[data-state="burst"] .innerGlow,
+.gift[data-state="open"] .innerGlow {
+  opacity: 1;
+}
+
+.gift[data-state="burst"] .sheen,
+.gift[data-state="open"] .sheen {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes lidFly {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(150px, -380px) rotate(200deg); opacity: 0; }
+}
+
+@keyframes ribbonSnap {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-40px, 40px) rotate(-35deg); opacity: 0; }
+}
+
+@keyframes lidFade {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift .giftFloat,
+  .gift .giftShake,
+  .gift .giftJitter,
+  .gift .sheen,
+  .gift .bodyRibbon {
+    animation: none !important;
+  }
+  .gift[data-state="burst"] .lid {
+    animation: lidFade 300ms ease forwards !important;
+  }
+  .snow {
+    display: none;
+  }
+}
