@@ -6,7 +6,7 @@ export default defineConfig({
     environment: "node",
     // Scoped to this module: the repo also has pre-existing *.test.mjs
     // files under app/media/**/ that run via node:test, not Vitest.
-    include: ["lib/**/*.test.ts"],
+    include: ["lib/**/*.test.ts", "app/gift-exchange/**/*.test.ts"],
   },
   resolve: {
     alias: {
