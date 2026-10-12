@@ -4,9 +4,9 @@ import { useEffect, useId, useRef, type CSSProperties } from "react";
 import styles from "./GiftExchange.module.css";
 
 const C = 320;
-const R = 230;
-const RN = 268;
 const MAX_NAME = 10;
+/** ห้องใหญ่: วางชื่อตามแนวรัศมีให้ใหญ่ขึ้นและไม่ชนกันที่ขอบบน/ล่างของวง */
+const RADIAL_FROM = 25;
 
 function shorten(label: string): string {
   return label.length > MAX_NAME ? `${label.slice(0, MAX_NAME - 1)}…` : label;
@@ -15,9 +15,9 @@ function shorten(label: string): string {
 function fontSizeFor(n: number): number {
   if (n <= 10) return 26;
   if (n <= 20) return 20;
-  if (n <= 30) return 15;
-  if (n <= 40) return 12;
-  return 10;
+  if (n <= 30) return 16;
+  if (n <= 40) return 14;
+  return 11;
 }
 
 type Props = { labels: string[]; onComplete: () => void; onRestart: () => void };
@@ -27,6 +27,9 @@ export default function FinaleChain({ labels, onComplete, onRestart }: Props) {
   const n = labels.length;
   const step = Math.min(220, 3200 / n);
   const fontSize = fontSizeFor(n);
+  const radial = n >= RADIAL_FROM;
+  const R = radial ? 205 : 230;
+  const RN = R + (radial ? 18 : 38);
   const markerId = `arrow${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
   const completeRef = useRef(onComplete);
 
@@ -86,7 +89,17 @@ export default function FinaleChain({ labels, onComplete, onRestart }: Props) {
         ))}
         {pts.map((p, i) => {
           const cos = Math.cos(p.a);
-          const anchor = Math.abs(cos) < 0.2 ? "middle" : cos > 0 ? "start" : "end";
+          const deg = (p.a * 180) / Math.PI;
+          const flip = cos < 0;
+          const anchor = radial
+            ? flip
+              ? "end"
+              : "start"
+            : Math.abs(cos) < 0.2
+              ? "middle"
+              : cos > 0
+                ? "start"
+                : "end";
           return (
             <text
               key={`t${i}`}
@@ -96,6 +109,7 @@ export default function FinaleChain({ labels, onComplete, onRestart }: Props) {
               fontSize={fontSize}
               textAnchor={anchor}
               dominantBaseline="middle"
+              transform={radial ? `rotate(${(flip ? deg + 180 : deg).toFixed(1)} ${p.nx.toFixed(1)} ${p.ny.toFixed(1)})` : undefined}
               style={delay(i)}
             >
               {shorten(labels[i])}
