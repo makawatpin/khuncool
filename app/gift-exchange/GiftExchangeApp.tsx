@@ -35,6 +35,7 @@ import SetupPanel from "./SetupPanel";
 import StarterSpin from "./StarterSpin";
 import { clearFx, fireworks, sideCannons } from "./fx";
 import { useGiftSound } from "./useGiftSound";
+import { useGiftScene } from "./three/useGiftScene";
 import styles from "./GiftExchange.module.css";
 
 // ตำแหน่งหิมะคงที่ (ไม่สุ่มตอน render) กัน hydration mismatch
@@ -153,6 +154,7 @@ export default function GiftExchangeApp() {
   };
 
   const screen = resumable ? "setup" : game.phase === "finale" && finaleIntro ? "stage" : game.phase;
+  const { scene, mode: renderMode, chooseMode } = useGiftScene(screen === "stage");
   const active = activePlayers(game);
   const remaining = pool(game).length;
 
@@ -174,6 +176,16 @@ export default function GiftExchangeApp() {
           {screen !== "setup" && (
             <button type="button" className={styles.iconBtn} onClick={handleEndGame} aria-label="จบเกม">
               ⏹ <span className={styles.iconBtnLabel}>จบเกม</span>
+            </button>
+          )}
+          {screen === "stage" && (
+            <button
+              type="button"
+              className={styles.iconBtn}
+              aria-label={renderMode === "2d" ? "เปลี่ยนเป็นภาพ 3D" : "เปลี่ยนเป็นภาพ 2D"}
+              onClick={() => chooseMode(renderMode === "2d" ? "3d-high" : "2d")}
+            >
+              ✨ <span className={styles.iconBtnLabel}>{renderMode === "2d" ? "3D" : "2D"}</span>
             </button>
           )}
           <button
@@ -233,6 +245,8 @@ export default function GiftExchangeApp() {
         {screen === "stage" && turn && (
           <GiftStage
             key={turn.giverId}
+            turnKey={turn.giverId}
+            scene={scene}
             giverLabel={labels[turn.giverId]}
             receiverLabel={turn.receiverId ? labels[turn.receiverId] : null}
             boxOpen={game.boxOpen}

@@ -105,26 +105,28 @@ export function createGiftScene(opts: SceneOptions): GiftSceneController {
   const room = new RoomEnvironment();
   const envTex = pmrem.fromScene(room, 0.04).texture;
   scene.environment = envTex;
+  scene.environmentIntensity = 0.5;
   room.dispose();
   pmrem.dispose();
 
-  scene.add(new THREE.HemisphereLight(0xc7d2fe, 0x1e1b4b, 0.6));
-  const key = new THREE.DirectionalLight(0xfff1d6, 2.4);
-  key.position.set(3, 5, 4);
+  scene.add(new THREE.HemisphereLight(0xc7d2fe, 0x1e1b4b, 0.35));
+  const key = new THREE.DirectionalLight(0xfff1d6, 1.9);
+  key.position.set(2, 7, 3.5);
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.near = 0.5;
   key.shadow.camera.far = 20;
-  key.shadow.camera.left = -3;
-  key.shadow.camera.right = 3;
-  key.shadow.camera.top = 3;
-  key.shadow.camera.bottom = -3;
-  key.shadow.radius = 4;
+  key.shadow.camera.left = -4;
+  key.shadow.camera.right = 4;
+  key.shadow.camera.top = 4;
+  key.shadow.camera.bottom = -4;
+  key.shadow.radius = 8;
+  key.shadow.bias = -0.0004;
   scene.add(key);
   const rim = new THREE.DirectionalLight(0x8b9cff, 1.8);
   rim.position.set(-4, 3, -4);
   scene.add(rim);
 
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.35 }));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.3 }));
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   scene.add(floor);
@@ -272,7 +274,7 @@ export function createGiftScene(opts: SceneOptions): GiftSceneController {
     beam.visible = p.beam > 0.01;
     beamMat.opacity = p.beam * 0.55;
     halo.material.opacity = Math.min(1, p.bloom * 0.45);
-    renderer.toneMappingExposure = 1 - 0.35 * p.dim;
+    renderer.toneMappingExposure = 0.9 - 0.3 * p.dim;
     sparkles.rotation.y = orbitMs * 0.00012;
   }
 

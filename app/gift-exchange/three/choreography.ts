@@ -61,10 +61,11 @@ const KICK_UP_MS = 120;
 const KICK_BACK_MS = 480;
 const BURST_SHAKE = 0.08;
 
-const REVEAL_DIST = 5.0;
-const REVEAL_HEIGHT = 2.0;
-const REVEAL_TARGET_Y = 2.4;
-const REVEAL_FOV = 36;
+// ท่าเชิดขึ้นต้องยังเห็นกล่องทั้งใบ (spec เดิมให้จุดมองสูงถึง 2.4 แต่กล่องหลุดล่างเฟรมเมื่อดูในเบราว์เซอร์)
+const REVEAL_DIST = 5.6;
+const REVEAL_HEIGHT = 1.7;
+const REVEAL_TARGET_Y = 1.7;
+const REVEAL_FOV = 38;
 
 const BOB = 0.05;
 const BOB_PERIOD_MS = 2600;

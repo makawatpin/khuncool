@@ -5,6 +5,8 @@ import ChainStrip from "./ChainStrip";
 import GiftBox, { GOLD, paletteFor } from "./GiftBox";
 import { reducedMotion } from "./fx";
 import type { GiftSound } from "./useGiftSound";
+import SceneHost from "./three/SceneHost";
+import type { GiftSceneController } from "./three/giftScene";
 import styles from "./GiftExchange.module.css";
 
 const CHARGE_MS = 2000;
@@ -32,6 +34,8 @@ type Props = {
   onNext: () => void;
   onShowFinale: () => void;
   rosterButton: ReactNode;
+  turnKey: string;
+  scene: GiftSceneController | null;
 };
 
 export default function GiftStage({
@@ -50,6 +54,8 @@ export default function GiftStage({
   onNext,
   onShowFinale,
   rosterButton,
+  turnKey,
+  scene,
 }: Props) {
   // กลับมาจากเกมค้างที่เปิดกล่องไปแล้ว → แสดงผลเลยไม่เล่นแอนิเมชันซ้ำ
   const [anim, setAnim] = useState<Anim>(boxOpen ? "shown" : "idle");
@@ -62,6 +68,21 @@ export default function GiftStage({
   }, []);
 
   const lastBox = isLastBox || closesLoop;
+  const palette = lastBox ? GOLD : paletteFor(paletteIndex);
+  const animRef = useRef(anim);
+
+  useEffect(() => {
+    animRef.current = anim;
+  });
+
+  // ฉาก 3D ตัวเดียวใช้ข้ามตา: turnKey เปลี่ยน = ท่าสลับกล่อง; mount ตอนกล่องเปิดแล้ว = กลับจากเกมค้าง
+  useEffect(() => {
+    scene?.setTurn({ turnKey, palette, isGold: lastBox, resumedOpen: animRef.current === "shown" });
+  }, [scene, turnKey, palette, lastBox]);
+
+  useEffect(() => {
+    scene?.setAnim(anim, chargeMs);
+  }, [scene, anim, chargeMs]);
 
   const open = useCallback(() => {
     if (anim !== "idle") return;
@@ -76,15 +97,15 @@ export default function GiftStage({
       window.setTimeout(() => {
         setAnim("burst");
         play("pop");
-        onCannons();
+        if (!scene) onCannons();
       }, charge),
       window.setTimeout(() => {
         setAnim("shown");
         play(final ? "finale" : "celebrate");
-        if (final) onFireworks();
+        if (final && !scene) onFireworks();
       }, charge + BURST_MS),
     );
-  }, [anim, isLastBox, onCannons, onFireworks, onOpen, play]);
+  }, [anim, isLastBox, onCannons, onFireworks, onOpen, play, scene]);
 
   const revealed = anim === "shown" && receiverLabel !== null;
   // ระหว่างลุ้น ห้ามแถบโซ่/ตัวนับเฉลยก่อนกล่องเปิด
@@ -95,7 +116,7 @@ export default function GiftStage({
   return (
     <div className={styles.stage} data-anim={anim}>
       {anim === "charging" && <div className={styles.dim} />}
-      {anim === "burst" && <div className={styles.flash} />}
+      {anim === "burst" && !scene && <div className={styles.flash} />}
 
       <p className={styles.turnTitle}>
         {lastBox && <span className={styles.lastTag}>🌟 กล่องสุดท้าย! </span>}
@@ -104,8 +125,14 @@ export default function GiftStage({
       </p>
 
       <div className={styles.boxArea}>
-        <div className={styles.spotlight} />
-        <div className={`${styles.beams} ${anim === "burst" || anim === "shown" ? styles.beamsOn : ""}`} />
+        {scene ? (
+          <SceneHost scene={scene} />
+        ) : (
+          <>
+            <div className={styles.spotlight} />
+            <div className={`${styles.beams} ${anim === "burst" || anim === "shown" ? styles.beamsOn : ""}`} />
+          </>
+        )}
         <button
           type="button"
           className={styles.boxBtn}
@@ -113,11 +140,7 @@ export default function GiftStage({
           disabled={anim !== "idle"}
           aria-label={`เปิดกล่องของขวัญของ ${giverLabel}`}
         >
-          <GiftBox
-            palette={lastBox ? GOLD : paletteFor(paletteIndex)}
-            state={anim === "shown" ? "open" : anim}
-            chargeMs={chargeMs}
-          />
+          {!scene && <GiftBox palette={palette} state={anim === "shown" ? "open" : anim} chargeMs={chargeMs} />}
         </button>
         {revealed && (
           <div className={styles.reveal}>

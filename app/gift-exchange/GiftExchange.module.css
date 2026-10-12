@@ -1026,3 +1026,16 @@
     animation-delay: 0ms;
   }
 }
+
+/* ===== ฉาก 3D ===== */
+/* canvas ใหญ่กว่า .boxArea โดยเผื่อด้านบนมาก ให้กล้องเชิดขึ้นและดาวพุ่งได้ ส่วนด้านล่างเผื่อน้อยเพื่อไม่ให้กล่องทับเส้นคู่/ปุ่ม; .shell ซ่อนส่วนที่ล้น */
+.sceneHost {
+  position: absolute;
+  inset: -50% -45% -24%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.boxArea > .boxBtn {
+  z-index: 1;
+}

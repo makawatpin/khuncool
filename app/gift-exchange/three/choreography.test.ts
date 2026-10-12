@@ -62,9 +62,9 @@ describe("กล้องดอลลี่และกระตุก", () => {
     expect(horizontalDist(poseAt("burst", 120, base))).toBeCloseTo(4.3 + 0.45, 6);
   });
 
-  it("ช่วงเผยชื่อกล้องเชิดขึ้น: จุดมองสูงขึ้นจาก 0.9 ไป 2.4", () => {
+  it("ช่วงเผยชื่อกล้องเชิดขึ้น: จุดมองสูงขึ้นจาก 0.9 ไป 1.7", () => {
     expect(poseAt("burst", 0, base).camTarget[1]).toBeCloseTo(0.9, 6);
-    expect(poseAt("reveal", AFTER_BURST_END_MS, base).camTarget[1]).toBeCloseTo(2.4, 6);
+    expect(poseAt("reveal", AFTER_BURST_END_MS, base).camTarget[1]).toBeCloseTo(1.7, 6);
   });
 
   it("สั่นแรงขึ้นตลอดช่วงลุ้น", () => {
