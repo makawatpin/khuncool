@@ -5,7 +5,7 @@ import sharp from "sharp";
 const W = 960;
 const H = 540;
 
-function gift({ x, y, s, box, dark, ribbon, ribbonDark, lidLift = 0, tilt = 0 }) {
+function gift({ x, y, s, box, ribbon, ribbonDark, lidLift = 0, tilt = 0 }) {
   return `
   <g transform="translate(${x} ${y}) rotate(${tilt}) scale(${s})">
     <ellipse cx="0" cy="118" rx="88" ry="10" fill="#4c1d95" opacity=".14"/>
