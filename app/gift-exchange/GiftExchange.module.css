@@ -587,3 +587,355 @@
     animation: none;
   }
 }
+
+/* ===== เวทีเปิดกล่อง ===== */
+.stage {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 520px;
+  text-align: center;
+}
+
+.turnTitle {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  font-size: clamp(20px, 4.2cqi, 44px);
+  font-weight: 700;
+}
+
+.turnTitle strong {
+  color: #fde68a;
+}
+
+.turnHint {
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.lastTag {
+  color: #fbbf24;
+}
+
+.boxArea {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: min(72cqi, 400px);
+  aspect-ratio: 1;
+}
+
+.shell:fullscreen .boxArea,
+.shell.fsFallback .boxArea {
+  width: min(48vh, 70cqi, 560px);
+}
+
+.shell:fullscreen .stage,
+.shell.fsFallback .stage {
+  min-height: 0;
+}
+
+.spotlight {
+  position: absolute;
+  inset: -30% -45% -5%;
+  background: radial-gradient(closest-side, rgba(255, 236, 170, 0.33), transparent 72%);
+  pointer-events: none;
+}
+
+.boxBtn {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 28px;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.boxBtn:disabled {
+  cursor: default;
+}
+
+.boxBtn:focus-visible {
+  outline: 4px solid #fde68a;
+  outline-offset: 6px;
+}
+
+.dim {
+  position: absolute;
+  inset: -40px;
+  z-index: 2;
+  background: rgba(3, 4, 18, 0.55);
+  animation: dimIn 900ms ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes dimIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.flash {
+  position: absolute;
+  inset: -40px;
+  z-index: 40;
+  background: #fff;
+  pointer-events: none;
+  animation: flashOnce 160ms ease-out forwards;
+}
+
+@keyframes flashOnce {
+  from { opacity: 0.9; }
+  to { opacity: 0; }
+}
+
+.beams {
+  position: absolute;
+  inset: -40%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 230, 150, 0.35) 0deg 8deg, transparent 8deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 66%);
+  mask: radial-gradient(circle, #000 18%, transparent 66%);
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+.beamsOn {
+  animation:
+    beamsIn 600ms ease-out forwards,
+    beamsSpin 16s linear infinite;
+}
+
+@keyframes beamsIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes beamsSpin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.reveal {
+  position: absolute;
+  left: 50%;
+  top: 2%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 100cqi;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.revealName {
+  display: block;
+  max-width: 96cqi;
+  font-family: var(--font-anuphan), sans-serif;
+  font-size: clamp(32px, min(11cqi, calc(150cqi / var(--len))), 128px);
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #fffbe0 0%, #fde047 45%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 0 #7c2d12) drop-shadow(0 0 24px rgba(251, 191, 36, 0.65));
+  animation: nameRise 700ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes nameRise {
+  0% {
+    transform: translateY(70%) scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-8%) scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.starBurst {
+  position: absolute;
+  inset: 0;
+}
+
+.starBurst span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px;
+  background: #fde68a;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  rotate: var(--a);
+  opacity: 0;
+  animation: starOut 1000ms ease-out 120ms forwards;
+}
+
+@keyframes starOut {
+  0% {
+    transform: translateX(0) scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(min(34cqi, 220px)) scale(1);
+    opacity: 0;
+  }
+}
+
+.stageAfter {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  min-height: 112px;
+}
+
+.pairLine {
+  margin: 0;
+  font-size: clamp(18px, 3.6cqi, 36px);
+  font-weight: 700;
+  animation: fadeUp 500ms ease-out 900ms both;
+}
+
+.nextBtn {
+  animation: fadeUp 400ms ease-out 1300ms both;
+}
+
+.stageFooter {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.counter {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 700;
+}
+
+/* ===== แถบโซ่ ===== */
+.chainStrip {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 4px 2px 6px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+.chainChip {
+  flex: none;
+  max-width: 12em;
+  padding: 4px 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chainChipLast {
+  background: #fbbf24;
+  color: #3b1d00;
+  font-weight: 700;
+}
+
+.chainArrow {
+  flex: none;
+  opacity: 0.5;
+}
+
+/* ===== แผงรายชื่อกลางเกม ===== */
+.panelBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(5, 6, 20, 0.6);
+}
+
+.panel {
+  display: grid;
+  gap: 12px;
+  width: min(560px, 100%);
+  max-height: 90%;
+  padding: 18px;
+  overflow: auto;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.addRow {
+  display: flex;
+  gap: 8px;
+}
+
+.addInput {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d3d8e1;
+  border-radius: 12px;
+  font-family: var(--font-sarabun), sans-serif;
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash,
+  .beams,
+  .starBurst,
+  .dim {
+    display: none;
+  }
+  .revealName {
+    animation: fadeUp 300ms ease-out both;
+  }
+  .pairLine,
+  .nextBtn {
+    animation-delay: 0ms;
+  }
+}
