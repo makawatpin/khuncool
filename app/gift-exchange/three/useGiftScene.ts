@@ -76,6 +76,10 @@ export function useGiftScene(active: boolean) {
             onFailure: fail,
           });
           setScene(created);
+          // ให้ตรวจ renderer.info (หน่วยความจำ GPU) จากคอนโซลได้ตอนพัฒนา
+          if (process.env.NODE_ENV !== "production") {
+            (window as unknown as { __giftScene?: GiftSceneController }).__giftScene = created;
+          }
         } catch {
           fail();
         }
