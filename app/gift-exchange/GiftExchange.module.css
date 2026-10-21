@@ -7,9 +7,20 @@
   overflow: hidden;
   container: giftexchange / inline-size;
   border-radius: 20px;
-  background: radial-gradient(120% 90% at 50% 0%, #3b2a7a 0%, #1d1b4f 45%, #0f1030 100%);
+  /* ท้องฟ้าฟ้าสดใสกับของขวัญ/ลูกโป่งตามมุม: จอกว้างใช้ภาพแนวนอน จอแคบ/สูงใช้ภาพแนวตั้ง
+     (data-bg ตั้งจากสัดส่วนจริงของกรอบใน GiftExchangeApp; ไม่มี JS ก็ได้ภาพแนวนอน) */
+  background: #62b6ff url("/assets/gift-exchange/bg-wide.webp") center / cover no-repeat;
   color: #fff;
   font-family: var(--font-anuphan), sans-serif;
+}
+
+.shell[data-bg="tall"] {
+  background-image: url("/assets/gift-exchange/bg-tall.webp");
+}
+
+/* ตัวอักษรบนท้องฟ้าสว่าง: ขาวขอบน้ำเงินเข้มแบบชื่อเกม */
+.shell {
+  --ink-outline: #1c3f94;
 }
 
 /* คู่กับ useToolFullscreen: native :fullscreen และ fallback ของ iOS ต้องหน้าตาเหมือนกัน */
@@ -1038,4 +1049,70 @@
 
 .boxArea > .boxBtn {
   z-index: 1;
+}
+
+/* ===== ตัวอักษรบนท้องฟ้าสว่าง (override ของค่าเดิมที่ออกแบบไว้สำหรับพื้นมืด) ===== */
+.bar {
+  background: rgba(18, 48, 120, 0.42);
+}
+
+.turnTitle,
+.starterLead,
+.starterResult,
+.pairLine,
+.finaleTitle,
+.finaleSub {
+  -webkit-text-stroke: 0.14em var(--ink-outline);
+  paint-order: stroke fill;
+  text-shadow: 0 0.06em 0 rgba(28, 63, 148, 0.55);
+  opacity: 1;
+}
+
+.finaleTitle {
+  text-shadow: 0 0.06em 0 rgba(28, 63, 148, 0.55);
+}
+
+.counter,
+.chainChip {
+  background: rgba(18, 48, 120, 0.62);
+}
+
+.chainChipLast {
+  background: #fbbf24;
+}
+
+.revealName {
+  filter: drop-shadow(0 0 2px var(--ink-outline)) drop-shadow(0 3px 0 #7c2d12) drop-shadow(0 0 18px rgba(251, 191, 36, 0.55));
+}
+
+.ringName {
+  fill: #fff;
+  stroke: var(--ink-outline);
+  stroke-width: 0.28em;
+  paint-order: stroke fill;
+  stroke-linejoin: round;
+}
+
+.ringDot {
+  stroke: var(--ink-outline);
+  stroke-width: 3;
+}
+
+.ringLink {
+  stroke: #f59e0b;
+  stroke-width: 5;
+}
+
+.flake {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 1);
+}
+
+.stageFooter .iconBtn {
+  background: rgba(18, 48, 120, 0.62);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.stageFooter .iconBtn:hover {
+  background: rgba(18, 48, 120, 0.8);
 }

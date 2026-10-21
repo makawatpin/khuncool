@@ -296,7 +296,7 @@ export function createGiftScene(opts: SceneOptions): GiftSceneController {
     gift.innerLight.intensity = p.innerLight;
     gift.setMouthGlow(p.innerLight / 6);
     beam.visible = p.beam > 0.01;
-    beamMat.opacity = p.beam * 0.55;
+    beamMat.opacity = p.beam * 0.3;
     halo.material.opacity = Math.min(1, p.bloom * 0.45);
     renderer.toneMappingExposure = 0.9 - 0.3 * p.dim;
     sparkles.rotation.y = orbitMs * 0.00012;

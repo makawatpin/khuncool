@@ -66,6 +66,19 @@ export default function GiftExchangeApp() {
   const { isFull, fullscreenClassName, toggle } = useToolFullscreen(frameRef, styles.fsFallback);
   const { play, startMusic, stopMusic } = useGiftSound(game.soundOn);
 
+  // เลือกพื้นหลังแนวนอน/แนวตั้งจากสัดส่วนจริงของกรอบ (ไม่ใช่ของ viewport — กรอบบนเดสก์ท็อปสูงกว่ากว้างได้)
+  // เขียน data-bg ลง DOM ตรงๆ จาก observer ไม่ผ่าน state จึงไม่ re-render
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      el.dataset.bg = width / Math.max(1, height) < 1.15 ? "tall" : "wide";
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   // โหลดหลัง mount เท่านั้น กัน hydration mismatch
   useEffect(() => {
     const t = window.setTimeout(() => {
