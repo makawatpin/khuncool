@@ -471,6 +471,7 @@ export default function WeatherSeasonsApp() {
     setPracticeCorrect(0);
     setQuizResults([]);
     setScrambleRound(0);
+    setScrambleTiles([]);
     setScrambleBuilt([]);
     setScrambleStatus(null);
     setDressRound(0);
@@ -517,6 +518,10 @@ export default function WeatherSeasonsApp() {
       finish("practice", practiceCorrect, questions.length);
       return;
     }
+    // Clear the previous word's letters in the same update, otherwise the next render indexes the shorter word with stale tile indexes.
+    setScrambleTiles([]);
+    setScrambleBuilt([]);
+    setScrambleStatus(null);
     setScrambleRound(next);
     KcSfx.play("whoosh");
   }, [finish, practiceCorrect, questions.length, scrambleRound]);
