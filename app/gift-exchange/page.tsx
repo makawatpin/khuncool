@@ -6,6 +6,12 @@ const TITLE = "จับฉลากแลกของขวัญออนไ�
 const DESCRIPTION =
   "เครื่องมือจับฉลากแลกของขวัญปีใหม่สำหรับห้องเรียน ฉายขึ้นจอให้นักเรียนออกมาเปิดกล่องของขวัญทีละคนต่อกันเป็นห่วงโซ่ ไม่มีใครได้ชื่อตัวเอง มีแอนิเมชันและเสียงประกอบ ใช้ฟรี ไม่ต้องติดตั้ง";
 const URL = "https://www.khuncool.com/gift-exchange";
+const OG_IMAGE = {
+  url: "https://www.khuncool.com/assets/gift-exchange/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: "กล่องของขวัญสามกล่องกับคอนเฟตตี — เครื่องมือจับฉลากแลกของขวัญสำหรับห้องเรียน",
+};
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -19,8 +25,8 @@ export const metadata: Metadata = {
     "เครื่องมือครู",
   ],
   alternates: { canonical: URL },
-  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: URL, locale: "th_TH" },
-  twitter: { card: "summary_large_image" },
+  openGraph: { type: "website", title: TITLE, description: DESCRIPTION, url: URL, locale: "th_TH", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [OG_IMAGE.url] },
 };
 
 const HOWTO_STEPS = [
@@ -75,6 +81,14 @@ const USE_CASES = [
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "หน้าแรก", item: "https://www.khuncool.com/" },
+        { "@type": "ListItem", position: 2, name: "เครื่องมือครู", item: "https://www.khuncool.com/tools" },
+        { "@type": "ListItem", position: 3, name: "จับฉลากแลกของขวัญ", item: URL },
+      ],
+    },
     {
       "@type": "WebApplication",
       name: "จับฉลากแลกของขวัญ Khuncool",
