@@ -86,3 +86,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 
 await sharp(Buffer.from(svg)).webp({ quality: 84 }).toFile("public/assets/tool-covers/gift-exchange.webp");
 console.log("wrote public/assets/tool-covers/gift-exchange.webp");
+
+// ภาพสำหรับแชร์ลิงก์ (Open Graph) ขนาดมาตรฐาน 1200×630 เป็น JPEG เพื่อให้ LINE/Facebook รับได้ทุกตัว
+// เรนเดอร์จาก SVG โดยตรงด้วย density สูงขึ้นเพื่อไม่ให้ภาพแตกจากการขยาย
+await sharp(Buffer.from(svg), { density: 96 })
+  .resize(1200, 630, { fit: "cover" })
+  .jpeg({ quality: 86, mozjpeg: true })
+  .toFile("public/assets/gift-exchange/og.jpg");
+console.log("wrote public/assets/gift-exchange/og.jpg");
