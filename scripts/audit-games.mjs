@@ -798,6 +798,79 @@ const GAMES = {
       { name: "fill-blank", enter: backToHub(/เติมคำในเรื่อง/) },
     ],
   },
+  "halloween-wordle": {
+    path: "/media/english/halloween-wordle",
+    // State carries from one screen to the next, like a real round. Every word
+    // is lost on purpose ("xxxxx" × 6): it needs no knowledge of the answer,
+    // and a lost word is the screen with the most on it — the answer revealed,
+    // all three clue slots open, and the listen/next buttons showing.
+    // Keyboard presses go to the window, as they do for a player.
+    screens: [
+      { name: "menu" },
+      {
+        name: "play",
+        enter: click(/เริ่มเล่น/),
+        expect: '[data-stage="play"]',
+      },
+      {
+        // Assisted play is the default: clue open, first letter given, one guess in.
+        name: "play-one-guess",
+        async enter(page) {
+          await page.keyboard.type("xxxxx");
+          await page.keyboard.press("Enter");
+          await page.waitForTimeout(900);
+        },
+        expect: '[data-stage="play"] [class*="tileGiven"]',
+      },
+      {
+        name: "word-lost",
+        async enter(page) {
+          for (let i = 0; i < 5; i++) {
+            await page.keyboard.type("xxxxx");
+            await page.keyboard.press("Enter");
+            await page.waitForTimeout(150);
+          }
+          await page.waitForTimeout(900);
+        },
+        expect: '[data-stage="play"] [class*="nextButton"]',
+      },
+      {
+        name: "summary",
+        async enter(page) {
+          // Word 1 is already lost; play out words 2-5, then open the summary.
+          for (let word = 1; word < 5; word++) {
+            await page.keyboard.press("Enter");
+            await page.waitForTimeout(150);
+            for (let g = 0; g < 6; g++) {
+              await page.keyboard.type("xxxxx");
+              await page.keyboard.press("Enter");
+              await page.waitForTimeout(150);
+            }
+            await page.waitForTimeout(500);
+          }
+          await page.keyboard.press("Enter");
+          await page.waitForTimeout(600);
+        },
+        expect: '[data-stage="summary"]',
+      },
+      {
+        // The widest board and the challenge mode's three hints: seven columns,
+        // the tightest case for every shape.
+        name: "play-7-challenge",
+        async enter(page) {
+          await page.getByRole("button", { name: /เปลี่ยนระดับ/ }).click();
+          await page.getByRole("button", { name: /7 ตัวอักษร/ }).click();
+          await page.getByRole("button", { name: /ท้าทาย/ }).click();
+          await page.getByRole("button", { name: /เริ่มเล่น/ }).click();
+          for (let i = 0; i < 3; i++) await page.getByRole("button", { name: /ขอคำใบ้/ }).click();
+          await page.keyboard.type("xxxxxxx");
+          await page.keyboard.press("Enter");
+          await page.waitForTimeout(900);
+        },
+        expect: '[data-stage="play"]',
+      },
+    ],
+  },
   "weather-seasons": {
     path: "/media/english/weather-seasons",
     // The lesson contains four teaching layouts followed by three deliberately

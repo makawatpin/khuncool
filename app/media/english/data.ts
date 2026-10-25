@@ -26,6 +26,19 @@ export type MediaItem = {
 export const MEDIA: MediaItem[] = [
   {
     skill: "Vocabulary",
+    title: "Halloween Wordle",
+    icon: "🎃",
+    bg: "#F1E8FF",
+    image: "/assets/game-covers/halloween-wordle.webp",
+    short: "ทายคำศัพท์ฮาโลวีน 4–7 ตัวอักษร ใน 6 ครั้ง",
+    long: "เกมทายคำแบบ Wordle กับคำศัพท์ฮาโลวีน เช่น ghost, witch, pumpkin เลือกความยาวคำได้ 4–7 ตัวอักษร มีรูป คำแปลไทย ประโยคตัวอย่างเป็นคำใบ้ ดาวสะสม และเสียงอ่านท้ายข้อ",
+    grade: "ป.1–ป.6",
+    time: "5–10 นาที",
+    mode: "ทั้งห้อง / เดี่ยว",
+    href: "/media/english/halloween-wordle",
+  },
+  {
+    skill: "Vocabulary",
     title: "Weather & Seasons Adventure",
     icon: "☀️",
     bg: "#E8F5FF",
@@ -139,6 +152,7 @@ export const SKILLS: (MediaSkill | "ทั้งหมด")[] = [
 ];
 
 export const CASES = [
+  { q: "อยากได้กิจกรรมวันฮาโลวีน", a: "Halloween Wordle", href: "/media/english/halloween-wordle" },
   { q: "เด็กยังจำคำศัพท์ครอบครัวไม่ได้", a: "Family Tree", href: "/media/english/family-tree" },
   { q: "อยากให้เด็กท่องศัพท์หมวดที่กำลังสอน", a: "Vocabulary Arcade", href: "/media/english/vocabulary-arcade" },
   { q: "อยากอุ่นเครื่อง 5 นาทีต้นคาบ", a: "Vocabulary Arcade", href: "/media/english/vocabulary-arcade" },

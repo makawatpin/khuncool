@@ -1,4 +1,4 @@
-// Covers are 960x540, except the two newest (thai-kingdom, weather-seasons) at 1200x675.
+// Covers are 960x540, except the newest (thai-kingdom, weather-seasons, halloween-wordle) at 1200x675.
 const COVER = (slug: string, alt: string, width = 960, height = 540) => ({
   url: `https://www.khuncool.com/assets/game-covers/${slug}.webp`,
   width,
@@ -21,7 +21,7 @@ export const ENGLISH_AUTHOR = {
   url: "https://www.khuncool.com",
 };
 
-export const ENGLISH_DATE_MODIFIED = "2026-08-24";
+export const ENGLISH_DATE_MODIFIED = "2026-10-21";
 
 export const gameFaqs = (title: string, grade: string) => [
   {
