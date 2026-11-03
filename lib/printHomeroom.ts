@@ -353,14 +353,34 @@ export function readAppLS<T>(key: string): T | null {
 interface RawAttendanceState {
   room?: string;
   students?: string[];
+  /** Per-day records (date → name → status), the current format. */
+  days?: Record<string, Record<string, string>>;
+  /** The first format: a single check-in, aligned to `students`. */
   statuses?: (string | null)[];
   savedAt?: number;
 }
 
-/** Builds an AttendanceSnapshot from the attendance app's raw localStorage shape. */
-export function attendanceSnapshotFrom(d: RawAttendanceState | null): AttendanceSnapshot | null {
+/**
+ * Builds an AttendanceSnapshot from the attendance app's raw localStorage shape.
+ * With per-day records it uses `date` when that day was checked, otherwise the
+ * most recent checked day.
+ */
+export function attendanceSnapshotFrom(
+  d: RawAttendanceState | null,
+  date?: string,
+): AttendanceSnapshot | null {
   if (!d || !Array.isArray(d.students) || !d.students.length) return null;
-  const st = Array.isArray(d.statuses) ? d.statuses : [];
+  let st: (string | null)[] = Array.isArray(d.statuses) ? d.statuses : [];
+  let savedAt = d.savedAt || 0;
+  if (d.days && typeof d.days === "object") {
+    const recorded = Object.keys(d.days).sort();
+    const pick = date && d.days[date] ? date : recorded[recorded.length - 1];
+    if (!pick) return null;
+    const day = d.days[pick];
+    st = d.students.map((n) => day[n] ?? null);
+    const [y, m, dd] = pick.split("-").map(Number);
+    savedAt = new Date(y, m - 1, dd).getTime();
+  }
   const absent: string[] = [];
   const late: string[] = [];
   const leave: string[] = [];
@@ -379,7 +399,7 @@ export function attendanceSnapshotFrom(d: RawAttendanceState | null): Attendance
     absent,
     late,
     leave,
-    savedAt: d.savedAt || 0,
+    savedAt,
   };
 }
 

@@ -164,6 +164,20 @@ export const APPS = [
     bg: "#FFEAD5",
     href: "/tools/savings",
   },
+  {
+    icon: "🪥",
+    title: "บันทึกการแปรงฟัน",
+    sub: "บันทึกรายวัน พิมพ์ตารางรายเดือน",
+    bg: "#E0F7FA",
+    href: "/tools/toothbrushing",
+  },
+  {
+    icon: "🥛",
+    title: "บันทึกการดื่มนม",
+    sub: "บันทึกรายวัน พิมพ์ตารางรายเดือน",
+    bg: "#FFF4D6",
+    href: "/tools/milk",
+  },
 ];
 
 export const CASES = [

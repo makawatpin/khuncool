@@ -4,11 +4,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
+import { isExportFooterRow } from "@/lib/excelImport";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
+import {
+  balanceOf,
+  balancesFor,
+  ensureTxnIds,
+  migrateSavings,
+  newTxnId,
+  parseHistorySheet,
+  signedAmount,
+  TYPE_TEXT,
+  withBalanceAdjustments,
+  parseImportedBalance,
+  parseWholeBaht,
+  reconcileRoster,
+  type Txn,
+} from "@/lib/savings";
 
 const LS_KEY = "khuncool_savings_v1";
 const PRESET_VALS = [5, 10, 20, 50];
@@ -23,27 +39,26 @@ const DEFAULT_STUDENTS = [
   "เด็กชายวรเมธ พูนผล",
   "เด็กหญิงอริสา บุญมี",
 ];
-const DEFAULT_BALANCES = [320, 150, 80, 210, 45, 175, 60, 130];
 
 const HELP_STEPS = [
   "ใส่จำนวนเงินในช่องของนักเรียนแต่ละคน แล้วกด “ฝาก” (สีเขียว) หรือ “ถอน”",
   "อยากให้ทุกคนฝากเท่ากัน กดปุ่มลัด +5 +10 +20 หรือพิมพ์เอง แล้วกด “ฝากทุกคน”",
   "ยอดคงเหลือรายคนและยอดรวมทั้งห้องอัปเดตให้อัตโนมัติ",
-  "กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด",
+  "กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด · ยอดคงเหลือคำนวณจากประวัติทุกครั้ง",
   "กด “🗑 ลบรายชื่อ” เพื่อเปิดโหมดลบ แล้วแตะ ✕ ท้ายชื่อที่ต้องการลบออก",
   "กด “↺ ล้างยอดเงิน” เพื่อตั้งยอดทุกคนเป็น ฿0 และล้างประวัติทั้งหมด (ยืนยันก่อนลบ ทำแล้วกู้คืนไม่ได้)",
   "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้ — รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและบันทึกโฮมรูมด้วย",
-  "“ส่งออก” เป็น Excel (มีประวัติครบ) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)",
+  "“ส่งออก” เป็น Excel (มีประวัติครบ นำเข้าที่เครื่องอื่นแล้วได้ประวัติกลับมาด้วย) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)",
 ];
 
 const DEVICE_NOTE =
   "ผู้ใช้ที่ไม่ได้ล็อกอิน ยอดเงินและประวัติจะถูกบันทึกในเครื่อง/เบราว์เซอร์นี้เท่านั้น หากต้องการใช้ต่อบนเครื่องอื่นโดยไม่สมัครสมาชิก ให้ “ส่งออก Excel” จากเครื่องเดิม แล้ว “นำเข้า Excel” ที่อีกเครื่อง — หรือสมัครสมาชิกฟรีเพื่อให้ข้อมูลซิงก์ขึ้นบัญชีอัตโนมัติและใช้ได้ทุกเครื่องที่ล็อกอิน";
 
-type Txn = { name: string; amt: number; type: "deposit" | "withdraw"; ts: number };
 
 type Persisted = {
   students: string[];
-  balances: number[];
+  /** Written for other apps (homeroom) and for data saved before balances came from history. */
+  balances?: number[];
   txns: Txn[];
   room: string;
   lastTs: number;
@@ -71,10 +86,7 @@ function isToday(ts: number) {
   return d.toDateString() === n.toDateString();
 }
 
-function parseAmt(v: string) {
-  const n = parseInt(String(v == null ? "" : v).replace(/[^0-9]/g, ""), 10);
-  return isNaN(n) ? 0 : n;
-}
+const AMOUNT_HINT = "ใส่จำนวนเงินเป็นบาทเต็ม เช่น 10 หรือ 1,000";
 
 function fileStamp() {
   const d = new Date();
@@ -84,8 +96,9 @@ function fileStamp() {
 export default function SavingsApp() {
   useTrackToolUse("savings");
   const [students, setStudents] = useState<string[]>(DEFAULT_STUDENTS);
-  const [balances, setBalances] = useState<number[]>(DEFAULT_BALANCES);
   const [txns, setTxns] = useState<Txn[]>([]);
+  // Every balance is the sum of that student's history, so they cannot drift apart.
+  const balances = useMemo(() => balancesFor(students, txns), [students, txns]);
   const [room, setRoom] = useState("ป.5/2");
   const [lastTs, setLastTs] = useState(0);
   const [entryDate, setEntryDate] = useState(() => todayISO());
@@ -110,27 +123,37 @@ export default function SavingsApp() {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const activeChipRef = useRef<HTMLButtonElement | null>(null);
 
-  // Mirrors `balances` synchronously (updated the instant we compute a new
-  // array, not on the next render) so apply() can read the true latest
+  // Set on the first change the teacher makes. Until then nothing is pushed
+  // to the account, so opening the page alone stores nothing in the cloud.
+  const [edited, setEdited] = useState(false);
+
+  // Mirrors `txns` synchronously (updated the instant we compute a new
+  // list, not on the next render) so apply() can read the true latest
   // balance even when two withdraw clicks fire back-to-back before React
   // has re-rendered. Prevents a stale-closure race that could let a rapid
   // double-click withdraw push a balance negative.
-  const balancesRef = useRef<number[]>(balances);
-  const setBalancesSynced = useCallback(
-    (updater: number[] | ((prev: number[]) => number[])) => {
-      const next =
-        typeof updater === "function"
-          ? (updater as (prev: number[]) => number[])(balancesRef.current)
-          : updater;
-      balancesRef.current = next;
-      setBalances(next);
-      return next;
-    },
-    [],
-  );
+  const txnsRef = useRef<Txn[]>(txns);
+  const loadTxns = useCallback((next: Txn[]) => {
+    txnsRef.current = next;
+    setTxns(next);
+  }, []);
+  const editTxns = useCallback((updater: (prev: Txn[]) => Txn[]) => {
+    const next = updater(txnsRef.current);
+    txnsRef.current = next;
+    setTxns(next);
+    setEdited(true);
+  }, []);
+  const editStudents = useCallback((next: React.SetStateAction<string[]>) => {
+    setEdited(true);
+    setStudents(next);
+  }, []);
+  const editRoom = useCallback((next: string) => {
+    setEdited(true);
+    setRoom(next);
+  }, []);
 
   const state = { students, balances, txns, room, lastTs };
-  const { pulled, status: cloudStatus } = useCloudSync("savings", state);
+  const { pulled, status: cloudStatus } = useCloudSync("savings", state, { push: edited });
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
@@ -142,10 +165,8 @@ export default function SavingsApp() {
           const d: Persisted = JSON.parse(raw);
           if (Array.isArray(d.students) && d.students.length) {
             setStudents(d.students);
-            setBalancesSynced(
-              Array.isArray(d.balances) ? d.balances : d.students.map(() => 0),
-            );
-            setTxns(Array.isArray(d.txns) ? d.txns : []);
+            const history = Array.isArray(d.txns) ? ensureTxnIds(d.txns) : [];
+            loadTxns(migrateSavings(d.students, d.balances, history, Date.now()).txns);
             if (d.room) setRoom(d.room);
             setLastTs(d.lastTs || 0);
             setHydrated(true);
@@ -155,8 +176,7 @@ export default function SavingsApp() {
         const r = loadActiveRosterNames();
         if (r.length > 0) {
           setStudents(r);
-          setBalancesSynced(r.map(() => 0));
-          setTxns([]);
+          loadTxns([]);
         }
       } catch {
         /* ignore */
@@ -164,7 +184,7 @@ export default function SavingsApp() {
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(restoreTimer);
-  }, [pulled, setBalancesSynced]);
+  }, [pulled, loadTxns]);
 
   // Keep the selected date chip centered — including on first mount, so
   // today's chip starts in the middle of the strip instead of pinned to
@@ -264,21 +284,17 @@ export default function SavingsApp() {
     (i: number, amt: number, type: "deposit" | "withdraw") => {
       if (amt <= 0) return;
       // Read the live balance from the ref (kept in sync synchronously by
-      // setBalancesSynced), not from the `balances` state closure — this is
-      // what makes back-to-back withdraw clicks compose correctly instead
-      // of both computing against the same stale balance.
-      const cur = balancesRef.current[i] || 0;
-      let usedAmt = amt;
-      if (type === "withdraw") {
-        usedAmt = Math.min(amt, cur);
-        if (usedAmt <= 0) return;
+      // editTxns), not from the `balances` closure — this is what makes
+      // back-to-back withdraw clicks compose correctly instead of both
+      // computing against the same stale balance.
+      const cur = balanceOf(students[i], txnsRef.current);
+      if (type === "withdraw" && amt > cur) {
+        // Refuse rather than quietly withdrawing less than was asked.
+        flashToast(`ยอดคงเหลือไม่พอ · ${students[i]} มี ${money(cur)}`);
+        return;
       }
-      const nextBal = [...balancesRef.current];
-      nextBal[i] =
-        type === "withdraw" ? Math.max(0, cur - usedAmt) : cur + usedAmt;
-      setBalancesSynced(nextBal);
       const ts = entryTs();
-      setTxns((t) => [...t, { name: students[i], amt: usedAmt, type, ts }]);
+      editTxns((t) => [...t, { id: newTxnId(), name: students[i], amt, type, ts }]);
       setLastTs(ts);
       setRowAmts((r) => {
         const next = { ...r };
@@ -287,35 +303,47 @@ export default function SavingsApp() {
       });
       flashToast();
     },
-    [setBalancesSynced, entryTs, students, flashToast],
+    [editTxns, entryTs, students, flashToast],
+  );
+
+  // Reads a typed amount; a non-empty entry that is not whole baht is
+  // refused with a hint instead of being guessed at.
+  const readAmount = useCallback(
+    (raw: string) => {
+      if (!raw.trim()) return null;
+      const amt = parseWholeBaht(raw);
+      if (amt === null) flashToast(AMOUNT_HINT);
+      return amt;
+    },
+    [flashToast],
   );
 
   const deposit = useCallback(
     (i: number) => {
-      const amt = parseAmt(rowAmts[i] || "");
+      const amt = readAmount(rowAmts[i] || "");
       if (!amt) return;
       apply(i, amt, "deposit");
     },
-    [rowAmts, apply],
+    [rowAmts, readAmount, apply],
   );
 
   const withdraw = useCallback(
     (i: number) => {
-      const amt = parseAmt(rowAmts[i] || "");
+      const amt = readAmount(rowAmts[i] || "");
       if (!amt) return;
       apply(i, amt, "withdraw");
     },
-    [rowAmts, apply],
+    [rowAmts, readAmount, apply],
   );
 
   const depositAll = useCallback(() => {
-    const amt = parseAmt(quickAmt);
+    const amt = readAmount(quickAmt);
     if (!amt) return;
     const ts = entryTs();
-    setBalancesSynced((current) => current.map((b) => (b || 0) + amt));
-    setTxns((current) => [
+    editTxns((current) => [
       ...current,
       ...students.map((name, idx) => ({
+        id: newTxnId(),
         name,
         amt,
         type: "deposit" as const,
@@ -325,40 +353,43 @@ export default function SavingsApp() {
     setLastTs(ts);
     setQuickAmt("");
     flashToast();
-  }, [quickAmt, entryTs, students, flashToast, setBalancesSynced]);
+  }, [quickAmt, readAmount, entryTs, students, flashToast, editTxns]);
 
   const undoTxn = useCallback(
-    (ts: number) => {
-      const t = txns.find((x) => x.ts === ts);
+    (id: string) => {
+      const t = txnsRef.current.find((x) => x.id === id);
       if (!t) return;
-      const i = students.indexOf(t.name);
-      if (i >= 0) {
-        setBalancesSynced((bal) => {
-          const next = [...bal];
-          next[i] = (next[i] || 0) + (t.type === "deposit" ? -t.amt : t.amt);
-          if (next[i] < 0) next[i] = 0;
-          return next;
-        });
+      const after = balanceOf(t.name, txnsRef.current) - signedAmount(t);
+      if (after < 0) {
+        // Undoing this would leave money withdrawn that was never there.
+        flashToast("เลิกทำไม่ได้ ยอดจะติดลบ — เลิกทำรายการถอนที่ใหม่กว่าก่อน");
+        return;
       }
-      setTxns((current) => current.filter((x) => x.ts !== ts));
+      editTxns((current) => current.filter((x) => x.id !== id));
       flashToast();
     },
-    [txns, students, flashToast, setBalancesSynced],
+    [editTxns, flashToast],
   );
 
   const addName = useCallback(() => {
     const v = newName.trim();
     if (!v) return;
-    setStudents((current) => [...current, v]);
-    setBalancesSynced((current) => [...current, 0]);
+    editStudents((current) => [...current, v]);
     setNewName("");
     flashToast();
-  }, [newName, flashToast, setBalancesSynced]);
+  }, [newName, flashToast, editStudents]);
 
   const removeStudent = useCallback(
     (i: number) => {
-      setStudents((current) => current.filter((_, idx) => idx !== i));
-      setBalancesSynced((current) => current.filter((_, idx) => idx !== i));
+      const bal = balanceOf(students[i], txnsRef.current);
+      if (
+        bal > 0 &&
+        !window.confirm(
+          `${students[i]} ยังมียอดเงิน ${money(bal)} — ลบชื่อออกจากรายชื่อไหม? (ประวัติยังอยู่ เพิ่มชื่อเดิมกลับมาจะได้ยอดคืน)`,
+        )
+      )
+        return;
+      editStudents((current) => current.filter((_, idx) => idx !== i));
       setRowAmts((r) => {
         const next = { ...r };
         delete next[i];
@@ -366,7 +397,7 @@ export default function SavingsApp() {
       });
       flashToast("ลบแล้ว ✓");
     },
-    [flashToast, setBalancesSynced],
+    [students, flashToast, editStudents],
   );
 
   const clearBalances = useCallback(() => {
@@ -376,12 +407,11 @@ export default function SavingsApp() {
       )
     )
       return;
-    setBalancesSynced(students.map(() => 0));
-    setTxns([]);
+    editTxns(() => []);
     setLastTs(0);
     setRowAmts({});
     flashToast("ล้างยอดเงินแล้ว ✓");
-  }, [students, flashToast, setBalancesSynced]);
+  }, [flashToast, editTxns]);
 
   const onKeyName = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -397,21 +427,53 @@ export default function SavingsApp() {
     });
   }, [students]);
 
+  // Swaps in a new name list without losing anyone's money: balances follow
+  // the name, a name corrected in the same row keeps its balance (and its
+  // history is renamed), and dropping a student who still has money needs a
+  // yes from the teacher. `fileBalances` (an imported balance column) wins
+  // over the carried-over balances, and `fileHistory` (an imported history
+  // sheet) replaces the history. Returns false when the teacher cancels.
+  const replaceRoster = useCallback(
+    (list: string[], fileBalances?: number[], fileHistory?: Txn[]) => {
+      const { renames, dropped } = reconcileRoster(
+        students,
+        balancesFor(students, txnsRef.current),
+        list,
+      );
+      if (
+        dropped.length &&
+        !window.confirm(
+          "นักเรียนต่อไปนี้ยังมียอดเงิน แต่ไม่อยู่ในรายชื่อใหม่:\n" +
+            dropped.map((d) => `• ${d.name} ${money(d.balance)}`).join("\n") +
+            "\n\nถ้าดำเนินการต่อ ยอดเงินของคนเหล่านี้จะถูกลบ (ประวัติยังอยู่) ต้องการดำเนินการต่อไหม?",
+        )
+      )
+        return false;
+      const to = new Map(renames.map((r) => [r.from, r.to]));
+      editTxns((current) => {
+        const base =
+          fileHistory ??
+          current.map((t) => (to.has(t.name) ? { ...t, name: to.get(t.name)! } : t));
+        // A balance column in the file is the truth; any gap from the
+        // history becomes a visible "ยอดยกมา" line.
+        return fileBalances ? withBalanceAdjustments(list, fileBalances, base, Date.now()) : base;
+      });
+      editStudents(list);
+      setRowAmts({});
+      return true;
+    },
+    [students, editTxns, editStudents],
+  );
+
   const applyBulk = useCallback(() => {
     const list = bulkText
       .split("\n")
       .map((x) => x.trim())
       .filter(Boolean);
-    const prev: Record<string, number> = {};
-    students.forEach((n, i) => {
-      prev[n] = balances[i] || 0;
-    });
-    setStudents(list);
-    setBalancesSynced(list.map((n) => prev[n] || 0));
+    if (!replaceRoster(list)) return;
     setBulkMode(false);
-    setRowAmts({});
     flashToast();
-  }, [bulkText, students, balances, flashToast, setBalancesSynced]);
+  }, [bulkText, replaceRoster, flashToast]);
 
   const importPaste = useCallback(() => {
     const list = importText
@@ -422,17 +484,11 @@ export default function SavingsApp() {
       setImportMsg("ยังไม่มีรายชื่อให้นำเข้า");
       return;
     }
-    const prev: Record<string, number> = {};
-    students.forEach((n, i) => {
-      prev[n] = balances[i] || 0;
-    });
-    setStudents(list);
-    setBalancesSynced(list.map((n) => prev[n] || 0));
+    if (!replaceRoster(list)) return;
     setShowImport(false);
     setImportText("");
-    setRowAmts({});
     flashToast();
-  }, [importText, students, balances, flashToast, setBalancesSynced]);
+  }, [importText, replaceRoster, flashToast]);
 
   const onFile = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -484,29 +540,49 @@ export default function SavingsApp() {
           }
           const newStudents: string[] = [];
           const newBalances: number[] = [];
+          let adjusted = 0;
           for (let i = start; i < aoa.length; i++) {
             const row = (aoa[i] || []) as unknown[];
+            if (isExportFooterRow(header, row)) continue;
             let name = String(row[nameCol] == null ? "" : row[nameCol]).trim();
             if (!name && nameCol !== 0)
               name = String(row[0] == null ? "" : row[0]).trim();
             if (!name) continue;
             newStudents.push(name);
-            newBalances.push(
-              balCol >= 0
-                ? parseAmt(String(row[balCol] == null ? "" : row[balCol]))
-                : 0,
-            );
+            const bal = balCol >= 0 ? parseImportedBalance(row[balCol]) : { value: 0, adjusted: false };
+            if (bal.adjusted) adjusted++;
+            newBalances.push(bal.value);
           }
           if (!newStudents.length) {
             setImportMsg("ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)");
             return;
           }
-          setStudents(newStudents);
-          setBalancesSynced(newBalances);
+          // A file this app exported also has the history ("รายการ" sheet).
+          // Bringing it back keeps the ฝาก/ถอน lines when moving devices.
+          const histSheet = wb.Sheets["รายการ"];
+          let fileHistory: Txn[] | undefined;
+          if (histSheet) {
+            const parsed = parseHistorySheet(
+              XLSX.utils.sheet_to_json(histSheet, { header: 1, blankrows: false }) as unknown[][],
+            );
+            if (
+              parsed?.length &&
+              window.confirm(
+                `ไฟล์นี้มีประวัติฝาก-ถอน ${parsed.length} รายการ ใช้แทนประวัติในเครื่องนี้ไหม? (กด “ยกเลิก” เพื่อนำเข้าเฉพาะรายชื่อและยอด)`,
+              )
+            )
+              fileHistory = parsed;
+          }
+          // Without a balance column the file is just a name list, so keep
+          // everyone's money as for a pasted list.
+          if (!replaceRoster(newStudents, balCol >= 0 ? newBalances : undefined, fileHistory)) return;
           setShowImport(false);
           setImportMsg("");
-          setRowAmts({});
-          flashToast();
+          flashToast(
+            adjusted
+              ? `นำเข้าแล้ว · ปัดยอดที่มีสตางค์หรือติดลบ ${adjusted} คนเป็นบาทเต็ม`
+              : undefined,
+          );
         } catch {
           setImportMsg("อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls");
         } finally {
@@ -515,7 +591,7 @@ export default function SavingsApp() {
       };
       reader.readAsArrayBuffer(file);
     },
-    [flashToast, setBalancesSynced],
+    [flashToast, replaceRoster],
   );
 
   const exportExcel = useCallback(() => {
@@ -535,19 +611,23 @@ export default function SavingsApp() {
     ws["!cols"] = [{ wch: 8 }, { wch: 30 }, { wch: 14 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "ยอดออม");
+    // "เวลา (ระบบ)" lets an import restore each line's exact time.
     const trows: (string | number)[][] = [
-      ["วันที่-เวลา", "ชื่อ-สกุล", "ประเภท", "จำนวน"],
+      ["วันที่-เวลา", "ชื่อ-สกุล", "ประเภท", "จำนวน", "เวลา (ระบบ)"],
     ];
-    [...txns].reverse().forEach((t) =>
-      trows.push([
-        new Date(t.ts).toLocaleString("th-TH"),
-        t.name,
-        t.type === "deposit" ? "ฝาก" : "ถอน",
-        Math.round(t.amt),
-      ]),
-    );
+    [...txns]
+      .sort((a, b) => b.ts - a.ts)
+      .forEach((t) =>
+        trows.push([
+          new Date(t.ts).toLocaleString("th-TH"),
+          t.name,
+          TYPE_TEXT[t.type],
+          Math.round(t.amt),
+          t.ts,
+        ]),
+      );
     const tws = XLSX.utils.aoa_to_sheet(trows);
-    tws["!cols"] = [{ wch: 22 }, { wch: 30 }, { wch: 10 }, { wch: 12 }];
+    tws["!cols"] = [{ wch: 22 }, { wch: 30 }, { wch: 10 }, { wch: 12 }, { wch: 15 }];
     XLSX.utils.book_append_sheet(wb, tws, "รายการ");
     XLSX.writeFile(wb, `ออมเงิน_${room || "ห้อง"}_${fileStamp()}.xlsx`);
     setShowExport(false);
@@ -575,18 +655,21 @@ export default function SavingsApp() {
   const txnRows = useMemo(
     () =>
       [...txns]
-        .reverse()
+        .sort((a, b) => b.ts - a.ts)
         .slice(0, 80)
         .map((t) => {
           const dep = t.type === "deposit";
+          const adj = t.type === "adjust";
+          const signed = signedAmount(t);
           return {
+            id: t.id,
             ts: t.ts,
             name: t.name,
-            typeText: dep ? "ฝากเงิน" : "ถอนเงิน",
-            icon: dep ? "↑" : "↓",
-            color: dep ? "#0A7A66" : "#DC2626",
-            bg: dep ? "#DFF5EF" : "#FCE9E9",
-            amtText: (dep ? "+" : "−") + money(t.amt).slice(1),
+            typeText: adj ? "ยอดยกมา" : dep ? "ฝากเงิน" : "ถอนเงิน",
+            icon: adj ? "=" : dep ? "↑" : "↓",
+            color: adj ? "#5B6372" : dep ? "#0A7A66" : "#DC2626",
+            bg: adj ? "#EEF0F3" : dep ? "#DFF5EF" : "#FCE9E9",
+            amtText: (signed >= 0 ? "+" : "−") + money(Math.abs(signed)).slice(1),
             timeText: new Date(t.ts).toLocaleString("th-TH", {
               day: "numeric",
               month: "short",
@@ -686,7 +769,7 @@ export default function SavingsApp() {
               <div className="flex flex-1 flex-col gap-[7px] overflow-y-auto pb-[18px] md:gap-2 md:pb-6">
                 {txnRows.map((t) => (
                   <div
-                    key={t.ts}
+                    key={t.id}
                     className="flex items-center gap-2.5 rounded-xl border border-[#E5E8EE] bg-white p-[9px_11px] md:gap-3 md:rounded-[13px] md:p-[11px_14px]"
                   >
                     <div
@@ -713,7 +796,7 @@ export default function SavingsApp() {
                       {t.amtText}
                     </span>
                     <span
-                      onClick={() => undoTxn(t.ts)}
+                      onClick={() => undoTxn(t.id)}
                       title="เลิกทำ"
                       className="flex-none cursor-pointer p-[2px_4px] text-[15px] text-[#A9B0BE] hover:text-[#DC2626] md:hidden"
                     >
@@ -721,7 +804,7 @@ export default function SavingsApp() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => undoTxn(t.ts)}
+                      onClick={() => undoTxn(t.id)}
                       className="hidden flex-none items-center gap-1 rounded-[9px] border border-[#E5E8EE] bg-white px-[11px] py-1.5 text-xs font-semibold text-[#7C8494] hover:border-[#DC2626] hover:text-[#DC2626] md:flex"
                     >
                       ↺ เลิกทำ
@@ -857,7 +940,7 @@ export default function SavingsApp() {
           <div className="text-[11px] text-[#A9B0BE]">ห้อง</div>
           <input
             value={room}
-            onChange={(e) => setRoom(e.target.value)}
+            onChange={(e) => editRoom(e.target.value)}
             placeholder="ห้อง"
             className="mt-0.5 w-full rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-[11px] py-2 text-sm font-semibold outline-none focus:border-[#C2500B]"
           />
@@ -1007,7 +1090,7 @@ export default function SavingsApp() {
         <div className="flex gap-2">
           <input
             value={quickAmt}
-            onChange={(e) => setQuickAmt(e.target.value.replace(/[^0-9]/g, ""))}
+            onChange={(e) => setQuickAmt(e.target.value.replace(/[^0-9.,-]/g, ""))}
             inputMode="numeric"
             placeholder="จำนวนบาท"
             className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-[#E4C79A] bg-white px-3 py-2.5 text-sm font-semibold outline-none focus:border-[#C2500B]"
@@ -1088,7 +1171,7 @@ export default function SavingsApp() {
             </div>
             <input
               value={quickAmt}
-              onChange={(e) => setQuickAmt(e.target.value.replace(/[^0-9]/g, ""))}
+              onChange={(e) => setQuickAmt(e.target.value.replace(/[^0-9.,-]/g, ""))}
               inputMode="numeric"
               placeholder="จำนวนบาท"
               className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-[#E4C79A] bg-white px-3 py-[9px] text-sm font-semibold outline-none focus:border-[#C2500B]"
@@ -1148,7 +1231,7 @@ export default function SavingsApp() {
                       onChange={(e) =>
                         setRowAmts((r) => ({
                           ...r,
-                          [i]: e.target.value.replace(/[^0-9]/g, ""),
+                          [i]: e.target.value.replace(/[^0-9.,-]/g, ""),
                         }))
                       }
                       onKeyDown={(e) => {

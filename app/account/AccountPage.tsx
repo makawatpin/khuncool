@@ -33,6 +33,8 @@ const QUICK_LINK_APPS = [
   { icon: "📋", title: "บันทึกโฮมรูม", bg: "bg-[#E1E3FD]", href: "/tools/homeroom" },
   { icon: "✅", title: "เช็กชื่อนักเรียน", bg: "bg-[#D0FBEF]", href: "/tools/attendance" },
   { icon: "💰", title: "ออมเงินนักเรียน", bg: "bg-[#FFEAD5]", href: "/tools/savings" },
+  { icon: "🪥", title: "บันทึกการแปรงฟัน", bg: "bg-[#E0F7FA]", href: "/tools/toothbrushing" },
+  { icon: "🥛", title: "บันทึกการดื่มนม", bg: "bg-[#FFF4D6]", href: "/tools/milk" },
   { icon: "🔀", title: "สุ่มแบ่งกลุ่ม", bg: "bg-[#E1E3FD]", href: "/group-maker" },
   { icon: "🎡", title: "วงล้อสุ่มชื่อ", bg: "bg-[#E1E3FD]", href: "/random-name-picker" },
   { icon: "🎯", title: "สุ่มคำถามหน้าชั้น", bg: "bg-[#FFEAD5]", href: "/random-question" },

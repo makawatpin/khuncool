@@ -106,6 +106,20 @@ export const APPS = [
     href: "/tools/savings",
   },
   {
+    icon: "🪥",
+    title: "บันทึกการแปรงฟัน",
+    sub: "บันทึกรายวัน พิมพ์ตารางรายเดือน",
+    bg: "bg-[#E0F7FA]",
+    href: "/tools/toothbrushing",
+  },
+  {
+    icon: "🥛",
+    title: "บันทึกการดื่มนม",
+    sub: "บันทึกรายวัน พิมพ์ตารางรายเดือน",
+    bg: "bg-[#FFF4D6]",
+    href: "/tools/milk",
+  },
+  {
     icon: "🔀",
     title: "สุ่มแบ่งกลุ่ม",
     sub: "แบ่งกลุ่มเท่า ๆ กันอัตโนมัติ",

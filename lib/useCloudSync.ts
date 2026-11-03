@@ -30,6 +30,8 @@ const PUSH_DEBOUNCE_MS = 1200;
 const LOCAL_STORAGE_KEY: Record<string, string> = {
   attendance: "khuncool_attendance_v1",
   savings: "khuncool_savings_v1",
+  toothbrushing: "khuncool_toothbrushing_v1",
+  milk: "khuncool_milk_v1",
   homeroom: "khuncool.homeroom",
   classrooms: "khuncool.classrooms.v1",
   questionSets: "khuncool.questionsets.v1",
@@ -47,8 +49,16 @@ function stampKey(key: string) {
  *
  * Signed-out (guest) users get `local-only` and this hook makes zero
  * network calls — Phase 1 behavior is preserved for guests.
+ *
+ * Pass `{ push: false }` until the user has actually changed something, so
+ * merely opening a tool (and filling it from a saved roster) writes nothing
+ * to the account.
  */
-export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
+export function useCloudSync<T>(
+  key: string,
+  state: T,
+  { push = true }: { push?: boolean } = {},
+): CloudSyncResult {
   const { user } = useAuth();
   // Tracks only the signed-in sync lifecycle (syncing/synced/error). The
   // signed-out case is derived below instead of being set from an effect,
@@ -124,6 +134,12 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
   const stateJson = JSON.stringify(state);
   useEffect(() => {
     if (!user) return;
+    if (!push) {
+      // Nothing to push yet. Drop any pending skip too, so the first real
+      // edit is the one that gets pushed.
+      skipNextPush.current = false;
+      return;
+    }
     if (skipNextPush.current) {
       skipNextPush.current = false;
       return;
@@ -178,7 +194,7 @@ export function useCloudSync<T>(key: string, state: T): CloudSyncResult {
     return () => {
       if (pushTimer.current) clearTimeout(pushTimer.current);
     };
-  }, [user, key, stateJson]);
+  }, [user, key, stateJson, push]);
 
   return { status, pulled };
 }

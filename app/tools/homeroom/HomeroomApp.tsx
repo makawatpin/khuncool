@@ -20,6 +20,7 @@ import {
   thaiDate,
   weekOf,
 } from "@/lib/printHomeroom";
+import { toIsoDate } from "@/lib/dailyCheck/days";
 
 const LS = "khuncool.homeroom";
 const ATTENDANCE_LS = "khuncool_attendance_v1";
@@ -62,6 +63,7 @@ interface RawSavingsState {
 interface RawAttendanceState {
   room?: string;
   students?: string[];
+  days?: Record<string, Record<string, string>>;
   statuses?: (string | null)[];
   savedAt?: number;
 }
@@ -366,22 +368,27 @@ export default function HomeroomApp() {
     reader.readAsArrayBuffer(file);
   }, []);
 
-  const attendanceSnapshot = useCallback(() => {
+  const attendanceSnapshot = useCallback((date?: string) => {
     const raw = readAppLS<RawAttendanceState>(ATTENDANCE_LS);
-    return attendanceSnapshotFrom(raw);
+    return attendanceSnapshotFrom(raw, date);
   }, []);
 
   const applyAttendance = useCallback(
     (id: string) => {
-      const a = attendanceSnapshot();
+      const session = sessionsRef.current.find((x) => x.id === id);
+      const a = attendanceSnapshot(session?.date);
       if (!a) {
         setPackStatus("ยังไม่มีข้อมูลจากแอปเช็กชื่อ — เปิดแอปเช็กชื่อและบันทึกก่อน");
         return;
       }
       const names = [...a.absent, ...a.leave.map((n) => n + " (ลา)")];
       patch(id, { total: String(a.total), present: String(a.present), absent: names.join("\n") });
+      // Per-day attendance falls back to the latest checked day, so say which day it was.
+      const checkedOn = a.savedAt ? thaiDate(toIsoDate(new Date(a.savedAt))) : "";
       setPackStatus(
-        "ดึงจากเช็กชื่อแล้ว: มา " +
+        "ดึงจากเช็กชื่อ" +
+          (checkedOn ? "วันที่ " + checkedOn : "") +
+          "แล้ว: มา " +
           a.present +
           " ขาด " +
           a.absent.length +
