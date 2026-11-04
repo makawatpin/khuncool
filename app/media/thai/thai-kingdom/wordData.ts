@@ -1,7 +1,7 @@
 import type { ThaiVowel, ThaiWord, VowelPosition } from "./types";
 import { thaiVowelLabel } from "./thaiText.ts";
 
-const asset = (id: string, type: "words" | "audio", extension: "svg" | "wav") => `/assets/thai-kingdom/${type}/${id}.${extension}`;
+const asset = (id: string, type: "words" | "audio", extension: "svg" | "m4a") => `/assets/thai-kingdom/${type}/${id}.${extension}`;
 const position: Record<ThaiVowel, VowelPosition> = { "า": "right", "ี": "above", "ู": "below" };
 
 type Row = [id: string, word: string, consonant: string, vowel: ThaiVowel, distractors: string[], difficulty: 1 | 2 | 3, tags: string[], toneMark?: "่" | "้"];
@@ -39,7 +39,7 @@ export const THAI_WORDS: ThaiWord[] = rows.map(([id, word, consonant, vowel, dis
   consonant,
   vowel,
   image: asset(id, "words", "svg"),
-  audio: asset(id, "audio", "wav"),
+  audio: asset(id, "audio", "m4a"),
   distractors,
   difficulty,
   tags,
