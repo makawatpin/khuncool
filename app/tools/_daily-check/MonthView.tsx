@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { statusOption, type DailyCheckConfig } from "@/lib/dailyCheck/config";
 import { positiveKeys, printCheckMonth } from "@/lib/dailyCheck/print";
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
+import type { ReportHeaderSettings } from "@/lib/reportHeader";
 import {
   fromIsoDate,
   isWeekend,
@@ -27,6 +28,8 @@ type Props = {
   room: string;
   month: string;
   today: string;
+  /** The school letterhead printed at the top of the sheet. */
+  reportHeader: ReportHeaderSettings;
   onMonthChange: (month: string) => void;
   /** Shows a short message (the app's toast). */
   onNotify: (message: string) => void;
@@ -42,6 +45,7 @@ export default function MonthView({
   room,
   month,
   today,
+  reportHeader,
   onMonthChange,
   onNotify,
   onPickDay,
@@ -134,7 +138,7 @@ export default function MonthView({
           <button
             type="button"
             onClick={() => {
-              if (!printCheckMonth(config, room, students, month, days, holidays)) onNotify(PRINT_BLOCKED_MESSAGE);
+              if (!printCheckMonth(config, room, students, month, days, holidays, reportHeader)) onNotify(PRINT_BLOCKED_MESSAGE);
             }}
             className={actionBtn}
           >

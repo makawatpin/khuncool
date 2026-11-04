@@ -118,6 +118,7 @@ export function buildCheckMonthPrintHtml(
   month: string,
   days: Readonly<Record<string, Readonly<Record<string, CheckStatus>>>>,
   holidays: readonly string[] = [],
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): string {
   const allDays = monthDays(month);
   const off = (d: string) => isWeekend(d) || holidays.includes(d);
@@ -167,13 +168,21 @@ export function buildCheckMonthPrintHtml(
   return (
     `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(config.title)} ${safeRoom} ${monthText}</title>` +
     `<style>@page{size:A4 landscape;margin:10mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}` +
-    `h1{font-size:20px;margin:0 0 2px}.meta{font-size:13px;color:#555;margin-bottom:8px}` +
+    REPORT_HEADER_CSS +
+    // The landscape sheet is dense, so the letterhead sits a little tighter.
+    `.rh{margin-bottom:8px}.rh-top{padding-bottom:6px}.rh-logo{width:48px;height:48px}.rh-title{font-size:20px}` +
     `table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #999;padding:3px 2px;text-align:center}` +
     `th{background:#eee}.n{width:24px}.name{text-align:left;padding-left:5px;white-space:nowrap}.d{width:16px}.we{background:#bbb;-webkit-print-color-adjust:exact;print-color-adjust:exact}.t{width:30px}` +
     `.sum{margin-top:8px;font-size:13px}.sign{display:flex;justify-content:space-around;margin-top:28px;font-size:14px}` +
     `.sign div{text-align:center}</style></head>` +
-    `<body><h1>${escapeHtml(config.monthFormTitle)} · ห้อง ${safeRoom || "-"}</h1>` +
-    `<div class="meta">ประจำเดือน ${monthText} · นักเรียน ${students.length} คน</div>` +
+    `<body>` +
+    reportHeaderHtml(
+      {
+        title: config.monthFormTitle,
+        meta: [`ห้อง ${room || "-"}`, `ประจำเดือน ${monthText}`, `นักเรียน ${students.length} คน`],
+      },
+      header,
+    ) +
     `<table><thead><tr>${head}</tr></thead><tbody>${body}${foot}</tbody></table>` +
     `<div class="sum">${legend(config, "mark")} · ช่องว่าง = ไม่ได้บันทึก · ช่องสีเทา = เสาร์-อาทิตย์และวันหยุด</div>` +
     `<div class="sign"><div>ลงชื่อ ...................................... ครูประจำชั้น<br>(......................................)</div>` +
@@ -190,6 +199,7 @@ export function printCheckMonth(
   month: string,
   days: Readonly<Record<string, Readonly<Record<string, CheckStatus>>>>,
   holidays: readonly string[] = [],
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): boolean {
-  return openPrint(buildCheckMonthPrintHtml(config, room, students, month, days, holidays));
+  return openPrint(buildCheckMonthPrintHtml(config, room, students, month, days, holidays, header));
 }

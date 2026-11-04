@@ -851,6 +851,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
           room={room}
           month={month}
           today={today}
+          reportHeader={reportHeader}
           onMonthChange={setMonth}
           onNotify={flashToast}
           onPickDay={(iso) => {
