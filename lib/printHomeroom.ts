@@ -383,8 +383,11 @@ interface RawAttendanceState {
 export function attendanceSnapshotFrom(
   d: RawAttendanceState | null,
   date?: string,
+  { exact = false }: { exact?: boolean } = {},
 ): AttendanceSnapshot | null {
   if (!d || !Array.isArray(d.students) || !d.students.length) return null;
+  // `exact`: only that day's own check, never a neighbouring day's.
+  if (exact && !(date && d.days && d.days[date])) return null;
   let st: (string | null)[] = Array.isArray(d.statuses) ? d.statuses : [];
   let savedAt = d.savedAt || 0;
   if (d.days && typeof d.days === "object") {
@@ -432,4 +435,22 @@ export function printHomeroomTermPack(
   w.document.write(html);
   w.document.close();
   return true;
+}
+
+/**
+ * A homeroom day with its มา/ขาด filled from that same day's attendance check,
+ * when the teacher has not filled them in yet. Anything already typed stays.
+ */
+export function withAttendanceFilled<
+  S extends { date: string; total: string; present: string; absent: string },
+>(session: S, attendance: RawAttendanceState | null): S {
+  if (session.present || session.absent) return session;
+  const a = attendanceSnapshotFrom(attendance, session.date, { exact: true });
+  if (!a) return session;
+  return {
+    ...session,
+    total: String(a.total),
+    present: String(a.present),
+    absent: [...a.absent, ...a.leave.map((n) => n + " (ลา)")].join("\n"),
+  };
 }

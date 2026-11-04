@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import { isExportFooterRow } from "@/lib/excelImport";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
+import SaveIndicator from "@/components/SaveIndicator";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
@@ -170,7 +171,7 @@ export default function SavingsApp() {
   }, []);
 
   const state = { students, balances, txns, room, lastTs };
-  const { pulled, status: cloudStatus } = useCloudSync("savings", state, { push: edited });
+  const { pulled, savedAt, status: cloudStatus } = useCloudSync("savings", state, { push: edited });
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS_KEY.
@@ -720,6 +721,9 @@ export default function SavingsApp() {
   return (
     <div ref={frameRef} className={`tool-stage bg-white ${fullscreenClassName}`}>
       <SyncStatus status={cloudStatus} />
+      <div className="mb-2 flex justify-end">
+        <SaveIndicator savedAt={savedAt} status={cloudStatus} />
+      </div>
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์
