@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import * as XLSX from "xlsx";
+import { getXlsx } from "@/lib/excel/getXlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
 import SaveIndicator from "@/components/SaveIndicator";
@@ -379,9 +379,12 @@ export default function HomeroomApp() {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
+        // Read off the event before yielding: the result is not guaranteed
+        // to still be reachable through `ev.target` after an await.
         const data = ev.target?.result;
+        const XLSX = await getXlsx();
         const wb = XLSX.read(data, { type: "array" });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const aoa: unknown[][] = XLSX.utils.sheet_to_json(ws, {
@@ -665,7 +668,14 @@ export default function HomeroomApp() {
     if (!printHomeroomForm(formMeta, reportHeader)) setPackStatus(PRINT_BLOCKED_MESSAGE);
   }, [formMeta, reportHeader]);
 
-  const doExcel = useCallback(() => {
+  const doExcel = useCallback(async () => {
+    let XLSX;
+    try {
+      XLSX = await getXlsx();
+    } catch {
+      window.alert("โหลดตัวสร้างไฟล์ Excel ไม่สำเร็จ — เช็กอินเทอร์เน็ตแล้วลองใหม่");
+      return;
+    }
     const head = [
       "สัปดาห์ที่",
       "วัน/เดือน/ปี",
