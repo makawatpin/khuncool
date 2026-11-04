@@ -21,6 +21,8 @@ import {
   weekOf,
 } from "@/lib/printHomeroom";
 import { toIsoDate } from "@/lib/dailyCheck/days";
+import { isExportFooterRow } from "@/lib/excelImport";
+import { weekToAdd } from "@/lib/homeroomDates";
 
 const LS = "khuncool.homeroom";
 const ATTENDANCE_LS = "khuncool_attendance_v1";
@@ -36,6 +38,11 @@ const DEFAULT_TOPICS = [
   "รักความเป็นไทย",
   "มีจิตสาธารณะ",
 ];
+
+// Date.now() alone can repeat when two days are added in the same millisecond.
+function newSessionId(): string {
+  return "h" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
 
 function defaultTopics(): HomeroomTopic[] {
   return DEFAULT_TOPICS.map((label, i) => ({ id: "t" + i, label }));
@@ -87,16 +94,16 @@ interface Persisted {
 
 export default function HomeroomApp() {
   useTrackToolUse("homeroom");
-  const [school, setSchool] = useState("");
-  const [level, setLevel] = useState("");
-  const [term, setTerm] = useState("1");
-  const [year, setYear] = useState(() => String(new Date().getFullYear() + 543));
-  const [teacher, setTeacher] = useState("");
-  const [topics, setTopics] = useState<HomeroomTopic[]>(defaultTopics);
-  const [sessions, setSessions] = useState<HomeroomSession[]>([]);
+  const [school, setSchoolRaw] = useState("");
+  const [level, setLevelRaw] = useState("");
+  const [term, setTermRaw] = useState("1");
+  const [year, setYearRaw] = useState(() => String(new Date().getFullYear() + 543));
+  const [teacher, setTeacherRaw] = useState("");
+  const [topics, setTopicsRaw] = useState<HomeroomTopic[]>(defaultTopics);
+  const [sessions, setSessionsRaw] = useState<HomeroomSession[]>([]);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [newTopic, setNewTopic] = useState("");
-  const [students, setStudents] = useState<string[]>([]);
+  const [students, setStudentsRaw] = useState<string[]>([]);
   const [newName, setNewName] = useState("");
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkText, setBulkText] = useState("");
@@ -104,17 +111,61 @@ export default function HomeroomApp() {
   const [importText, setImportText] = useState("");
   const [importMsg, setImportMsg] = useState("");
   const [showHelp, setShowHelp] = useState(false);
-  const [blankRows, setBlankRows] = useState(4);
-  const [plan, setPlan] = useState<Record<number, string[]>>({});
+  const [blankRows, setBlankRowsRaw] = useState(4);
+  const [plan, setPlanRaw] = useState<Record<number, string[]>>({});
   const [planWeek, setPlanWeek] = useState(1);
-  const [showSign, setShowSign] = useState(true);
-  const [showPrincipal, setShowPrincipal] = useState(false);
-  const [principal, setPrincipal] = useState("");
-  const [principalRole, setPrincipalRole] = useState("ผู้อำนวยการโรงเรียน");
+  const [showSign, setShowSignRaw] = useState(true);
+  const [showPrincipal, setShowPrincipalRaw] = useState(false);
+  const [principal, setPrincipalRaw] = useState("");
+  const [principalRole, setPrincipalRoleRaw] = useState("ผู้อำนวยการโรงเรียน");
   const [packStatus, setPackStatus] = useState("");
   const [offline, setOffline] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [mobileView, setMobileView] = useState<"list" | "settings">("list");
+
+  // Set on the first change the teacher makes. Until then nothing is pushed
+  // to the account, so opening the page alone stores nothing in the cloud.
+  // Loading saved data uses the *Raw setters and does not count.
+  const [edited, setEdited] = useState(false);
+  const {
+    setSchool,
+    setLevel,
+    setTerm,
+    setYear,
+    setTeacher,
+    setTopics,
+    setSessions,
+    setBlankRows,
+    setPlan,
+    setShowSign,
+    setShowPrincipal,
+    setPrincipal,
+    setPrincipalRole,
+    setStudents,
+  } = useMemo(() => {
+    const edit =
+      <T,>(set: React.Dispatch<React.SetStateAction<T>>) =>
+      (v: React.SetStateAction<T>) => {
+        setEdited(true);
+        set(v);
+      };
+    return {
+      setSchool: edit(setSchoolRaw),
+      setLevel: edit(setLevelRaw),
+      setTerm: edit(setTermRaw),
+      setYear: edit(setYearRaw),
+      setTeacher: edit(setTeacherRaw),
+      setTopics: edit(setTopicsRaw),
+      setSessions: edit(setSessionsRaw),
+      setBlankRows: edit(setBlankRowsRaw),
+      setPlan: edit(setPlanRaw),
+      setShowSign: edit(setShowSignRaw),
+      setShowPrincipal: edit(setShowPrincipalRaw),
+      setPrincipal: edit(setPrincipalRaw),
+      setPrincipalRole: edit(setPrincipalRoleRaw),
+      setStudents: edit(setStudentsRaw),
+    };
+  }, []);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -132,7 +183,7 @@ export default function HomeroomApp() {
       setSessions(next);
       return next;
     },
-    [],
+    [setSessions],
   );
 
   const state = {
@@ -151,7 +202,9 @@ export default function HomeroomApp() {
     principalRole,
     students,
   };
-  const { pulled, status: cloudStatus } = useCloudSync("homeroom", state);
+  const { pulled, status: cloudStatus } = useCloudSync("homeroom", state, {
+    push: edited,
+  });
 
   // Load persisted state on mount, and re-run if a cloud pull (after
   // sign-in) writes newer data into LS.
@@ -162,40 +215,41 @@ export default function HomeroomApp() {
       if (raw) {
         const d: Partial<Persisted> = JSON.parse(raw);
         if (Array.isArray(d.topics) && d.topics.length) {
-          setSchool(d.school || "");
-          setLevel(d.level || "");
-          setTerm(d.term || "1");
-          if (d.year) setYear(d.year);
-          setTeacher(d.teacher || "");
-          setTopics(d.topics);
+          setSchoolRaw(d.school || "");
+          setLevelRaw(d.level || "");
+          setTermRaw(d.term || "1");
+          if (d.year) setYearRaw(d.year);
+          setTeacherRaw(d.teacher || "");
+          setTopicsRaw(d.topics);
           const loadedSessions = Array.isArray(d.sessions) ? d.sessions : [];
-          setSessionsSynced(loadedSessions);
+          sessionsRef.current = loadedSessions;
+          setSessionsRaw(loadedSessions);
           setCurrentId(loadedSessions.length ? loadedSessions[loadedSessions.length - 1].id : null);
-          setBlankRows(typeof d.blankRows === "number" ? d.blankRows : 4);
-          setPlan(d.plan || {});
-          setShowSign(d.showSign !== false);
-          setShowPrincipal(!!d.showPrincipal);
-          setPrincipal(d.principal || "");
-          setPrincipalRole(d.principalRole || "ผู้อำนวยการโรงเรียน");
+          setBlankRowsRaw(typeof d.blankRows === "number" ? d.blankRows : 4);
+          setPlanRaw(d.plan || {});
+          setShowSignRaw(d.showSign !== false);
+          setShowPrincipalRaw(!!d.showPrincipal);
+          setPrincipalRaw(d.principal || "");
+          setPrincipalRoleRaw(d.principalRole || "ผู้อำนวยการโรงเรียน");
           if (Array.isArray(d.students) && d.students.length) {
-            setStudents(d.students);
+            setStudentsRaw(d.students);
           } else {
             const r = loadActiveRosterNames();
-            if (r.length > 0) setStudents(r);
+            if (r.length > 0) setStudentsRaw(r);
           }
           setHydrated(true);
           return;
         }
       }
       const r = loadActiveRosterNames();
-      if (r.length > 0) setStudents(r);
+      if (r.length > 0) setStudentsRaw(r);
       } catch {
         /* ignore */
       }
       setHydrated(true);
     }, 0);
     return () => window.clearTimeout(restoreTimer);
-  }, [pulled, setSessionsSynced]);
+  }, [pulled]);
 
   // Online/offline banner + cleanup.
   useEffect(() => {
@@ -267,7 +321,7 @@ export default function HomeroomApp() {
     if (!v) return;
     setStudents((current) => [...current, v]);
     setNewName("");
-  }, [newName]);
+  }, [newName, setStudents]);
 
   const onKeyName = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -290,7 +344,7 @@ export default function HomeroomApp() {
       .filter(Boolean);
     setStudents(list);
     setBulkMode(false);
-  }, [bulkText]);
+  }, [bulkText, setStudents]);
 
   const importPaste = useCallback(() => {
     const list = importText
@@ -304,7 +358,7 @@ export default function HomeroomApp() {
     setStudents(list);
     setShowImport(false);
     setImportText("");
-  }, [importText]);
+  }, [importText, setStudents]);
 
   const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -346,6 +400,7 @@ export default function HomeroomApp() {
         const newStudents: string[] = [];
         for (let i = start; i < aoa.length; i++) {
           const row = (aoa[i] || []) as unknown[];
+          if (isExportFooterRow(header, row)) continue;
           let name = String(row[nameCol] == null ? "" : row[nameCol]).trim();
           if (!name && nameCol !== 0)
             name = String(row[0] == null ? "" : row[0]).trim();
@@ -366,7 +421,7 @@ export default function HomeroomApp() {
       }
     };
     reader.readAsArrayBuffer(file);
-  }, []);
+  }, [setStudents]);
 
   const attendanceSnapshot = useCallback((date?: string) => {
     const raw = readAppLS<RawAttendanceState>(ATTENDANCE_LS);
@@ -407,8 +462,8 @@ export default function HomeroomApp() {
   }, [currentId, applyAttendance]);
 
   const addSession = useCallback(() => {
-    const iso = new Date().toISOString().slice(0, 10);
-    const id = "h" + Date.now();
+    const iso = toIsoDate(new Date());
+    const id = newSessionId();
     const last = sessionsRef.current[sessionsRef.current.length - 1];
     const next: HomeroomSession = {
       id,
@@ -430,24 +485,12 @@ export default function HomeroomApp() {
 
   const addWeek = useCallback(() => {
     const cur = sessionsRef.current;
-    let base: Date;
-    if (cur.length) {
-      const last = [...cur].map((x) => x.date).filter(Boolean).sort().pop()!;
-      base = new Date(last + "T00:00:00");
-      base.setDate(base.getDate() - ((base.getDay() + 6) % 7) + 7);
-    } else {
-      base = new Date();
-      base.setDate(base.getDate() - ((base.getDay() + 6) % 7));
-    }
     const exist = new Set(cur.map((x) => x.date));
     const adds: HomeroomSession[] = [];
-    for (let i = 0; i < 5; i++) {
-      const d = new Date(base);
-      d.setDate(base.getDate() + i);
-      const iso = d.toISOString().slice(0, 10);
+    for (const iso of weekToAdd(cur.map((x) => x.date), new Date())) {
       if (exist.has(iso)) continue;
       adds.push({
-        id: "h" + Date.now() + "_" + i,
+        id: newSessionId(),
         date: iso,
         dayNote: "",
         checked: [],
@@ -479,6 +522,15 @@ export default function HomeroomApp() {
 
   const removeSession = useCallback(
     (id: string) => {
+      const s = sessionsRef.current.find((x) => x.id === id);
+      const filled =
+        s &&
+        ((s.checked || []).length > 0 || s.other || s.dayNote || s.present || s.absent);
+      if (
+        filled &&
+        !window.confirm(`ลบบันทึกวันที่ ${thaiDate(s.date)}? หัวข้อที่ติ๊ก จำนวนคนมา/ขาด และหมายเหตุของวันนี้จะหายและกู้คืนไม่ได้`)
+      )
+        return;
       setSessionsSynced((cur) => {
         const nextSessions = cur.filter((x) => x.id !== id);
         setCurrentId((curId) =>
@@ -495,17 +547,47 @@ export default function HomeroomApp() {
     if (!label) return;
     setTopics((cur) => [...cur, { id: "t" + Date.now(), label }]);
     setNewTopic("");
-  }, [newTopic]);
+  }, [newTopic, setTopics]);
 
   const renameTopic = useCallback((id: string, label: string) => {
     setTopics((cur) => cur.map((x) => (x.id === id ? { ...x, label } : x)));
-  }, []);
+  }, [setTopics]);
 
-  const removeTopic = useCallback((id: string) => {
-    setTopics((cur) => cur.filter((x) => x.id !== id));
-  }, []);
+  // Days that ticked a topic; removing the topic drops it from their printouts.
+  const daysUsing = useCallback(
+    (topicIds: Set<string>) =>
+      sessionsRef.current.filter((x) => (x.checked || []).some((t) => topicIds.has(t))).length,
+    [],
+  );
 
-  const resetTopics = useCallback(() => setTopics(defaultTopics()), []);
+  const removeTopic = useCallback(
+    (id: string) => {
+      const t = topics.find((x) => x.id === id);
+      const used = daysUsing(new Set([id]));
+      if (
+        used > 0 &&
+        !window.confirm(`ลบหัวข้อ “${t?.label ?? ""}”? มี ${used} วันที่ติ๊กหัวข้อนี้ไว้ จะหายจากบันทึกและใบพิมพ์ของวันเหล่านั้น`)
+      )
+        return;
+      setTopics((cur) => cur.filter((x) => x.id !== id));
+    },
+    [topics, daysUsing, setTopics],
+  );
+
+  const resetTopics = useCallback(() => {
+    const defaults = new Set(defaultTopics().map((t) => t.id));
+    const custom = topics.filter((t) => !defaults.has(t.id));
+    const used = daysUsing(new Set(custom.map((t) => t.id)));
+    if (
+      !window.confirm(
+        "คืนค่าเป็นคุณลักษณะอันพึงประสงค์ 8 ข้อ?" +
+          (custom.length ? ` หัวข้อที่ตั้งเอง ${custom.length} หัวข้อจะถูกลบ` : "") +
+          (used ? ` และจะหายจากบันทึก ${used} วัน` : ""),
+      )
+    )
+      return;
+    setTopics(defaultTopics());
+  }, [topics, daysUsing, setTopics]);
 
   const toggleTopicOnSession = useCallback(
     (sessId: string, topicId: string, checked: string[]) => {
@@ -523,7 +605,7 @@ export default function HomeroomApp() {
         return { ...cur, [planWeek]: on ? list.filter((x) => x !== topicId) : [...list, topicId] };
       });
     },
-    [planWeek],
+    [planWeek, setPlan],
   );
 
   const applyPlanToWeek = useCallback(() => {
