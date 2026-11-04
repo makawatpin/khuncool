@@ -702,6 +702,15 @@
   --font-mono: var(--font-plex-mono), monospace;
 }
 
+/* Font families, loaded from the Fontsource imports in app/layout.tsx
+   (formerly the classes next/font/google put on <html>). */
+:root {
+  --font-sarabun: "Sarabun";
+  --font-anuphan: "Anuphan";
+  --font-fredoka: "Fredoka";
+  --font-plex-mono: "IBM Plex Mono";
+}
+
 @layer base {
   body {
     background: var(--color-surface-app);

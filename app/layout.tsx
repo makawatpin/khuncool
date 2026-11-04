@@ -1,6 +1,30 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Sarabun, Anuphan, Fredoka, IBM_Plex_Mono } from "next/font/google";
+/* Fonts ship with the site (Fontsource packages) instead of next/font/google:
+   that downloads from Google Fonts at build time, and when the download fails
+   the production build fails with it. The --font-* variables are set in
+   globals.css. Same families, weights and Thai/Latin subsets as before. */
+import "@fontsource/sarabun/thai-400.css";
+import "@fontsource/sarabun/latin-400.css";
+import "@fontsource/sarabun/thai-500.css";
+import "@fontsource/sarabun/latin-500.css";
+import "@fontsource/sarabun/thai-600.css";
+import "@fontsource/sarabun/latin-600.css";
+import "@fontsource/sarabun/thai-700.css";
+import "@fontsource/sarabun/latin-700.css";
+import "@fontsource/anuphan/thai-400.css";
+import "@fontsource/anuphan/latin-400.css";
+import "@fontsource/anuphan/thai-500.css";
+import "@fontsource/anuphan/latin-500.css";
+import "@fontsource/anuphan/thai-600.css";
+import "@fontsource/anuphan/latin-600.css";
+import "@fontsource/anuphan/thai-700.css";
+import "@fontsource/anuphan/latin-700.css";
+import "@fontsource/fredoka/latin-500.css";
+import "@fontsource/fredoka/latin-600.css";
+import "@fontsource/fredoka/latin-700.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,30 +33,6 @@ import {
   AccountSheetOverlay,
 } from "@/components/AccountSheet";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
-
-const sarabun = Sarabun({
-  variable: "--font-sarabun",
-  subsets: ["latin", "thai"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const anuphan = Anuphan({
-  variable: "--font-anuphan",
-  subsets: ["latin", "thai"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const fredoka = Fredoka({
-  variable: "--font-fredoka",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 /* Games and tools go fullscreen on phones and tablets. `viewport-fit: cover`
    makes env(safe-area-inset-*) meaningful so those surfaces can keep clear of
@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html
       lang="th"
-      className={`${sarabun.variable} ${anuphan.variable} ${fredoka.variable} ${plexMono.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <head>
         <Script
