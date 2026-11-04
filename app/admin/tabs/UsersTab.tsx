@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAdminFetch } from "../useAdminFetch";
 import { ErrorCard, TableSkeleton } from "./ErrorCard";
+import { bangkokDay } from "@/lib/admin/bangkokDay";
 
 interface AdminUser {
   id: string;
@@ -84,8 +85,11 @@ export default function UsersTab() {
                 </td>
                 <td className="p-3">{u.fullName || "-"}</td>
                 <td className="p-3">{u.school || "-"}</td>
-                <td className="p-3">{u.createdAt.slice(0, 10)}</td>
-                <td className="p-3">{u.lastSignInAt?.slice(0, 10) ?? "-"}</td>
+                {/* Thai calendar days, not the UTC half of the timestamp:
+                    slicing it showed anyone who signed up or signed in
+                    before 07:00 local under the previous day. */}
+                <td className="p-3">{bangkokDay(u.createdAt)}</td>
+                <td className="p-3">{u.lastSignInAt ? bangkokDay(u.lastSignInAt) : "-"}</td>
               </tr>
             ))}
           </tbody>

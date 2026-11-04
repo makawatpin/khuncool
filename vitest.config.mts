@@ -19,6 +19,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "."),
+      // `server-only`'s main entry throws the moment it is imported, and
+      // only resolves to a no-op under the `react-server` export condition,
+      // which Next applies and a node test run does not. Every module
+      // carrying the marker was therefore untestable — which is why the
+      // server-side admin helpers had no tests at all. See the stub for why
+      // this does not weaken the real build.
+      "server-only": path.resolve(import.meta.dirname, "test/server-only-stub.ts"),
     },
   },
 });
