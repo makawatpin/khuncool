@@ -10,6 +10,8 @@ import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
+import { ReportHeaderDialog } from "@/components/ReportHeaderDialog";
+import { useReportHeader } from "@/lib/useReportHeader";
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
 import { useToday } from "@/lib/useToday";
 import {
@@ -125,6 +127,8 @@ export default function SavingsApp() {
   const [showHistory, setShowHistory] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [showHeaderDlg, setShowHeaderDlg] = useState(false);
+  const { header: reportHeader, setHeader: setReportHeader } = useReportHeader();
   const [importText, setImportText] = useState("");
   const [importMsg, setImportMsg] = useState("");
   const [toast, setToast] = useState("");
@@ -664,9 +668,9 @@ export default function SavingsApp() {
   }, [students, balances, room, txns]);
 
   const exportPDF = useCallback(() => {
-    if (!printSavings(room, students, balances)) flashToast(PRINT_BLOCKED_MESSAGE);
+    if (!printSavings(room, students, balances, reportHeader)) flashToast(PRINT_BLOCKED_MESSAGE);
     setShowExport(false);
-  }, [room, students, balances, flashToast]);
+  }, [room, students, balances, reportHeader, flashToast]);
 
   const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
@@ -909,6 +913,14 @@ export default function SavingsApp() {
         </div>
       )}
 
+      {showHeaderDlg && (
+        <ReportHeaderDialog
+          header={reportHeader}
+          onSave={setReportHeader}
+          onClose={() => setShowHeaderDlg(false)}
+        />
+      )}
+
       {/* EXPORT modal */}
       {showExport && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(26,29,38,.55)] p-[22px] backdrop-blur-[3px]">
@@ -961,6 +973,13 @@ export default function SavingsApp() {
                   สรุปยอดออมรายคน สำหรับแนบรายงาน
                 </span>
               </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowHeaderDlg(true)}
+              className="mt-2.5 w-full rounded-[10px] border border-dashed border-[#D3D8E1] bg-white px-3 py-2.5 text-[13px] font-semibold text-[#5C5EE6] hover:bg-[#F8F9FB]"
+            >
+              🏫 ตั้งค่าหัวกระดาษ / โลโก้โรงเรียน
             </button>
           </div>
         </div>

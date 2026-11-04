@@ -1,5 +1,11 @@
-// Print-document HTML builder ported 1:1 from screens/Savings.dc.html's
+// Print-document HTML builder ported from screens/Savings.dc.html's
 // exportPDF() method (window.open + document.write + window.print()).
+import {
+  EMPTY_REPORT_HEADER,
+  REPORT_HEADER_CSS,
+  reportHeaderHtml,
+  type ReportHeaderSettings,
+} from "@/lib/reportHeader";
 
 /** Escapes text for safe interpolation into an HTML string. */
 export function escapeHtml(value: string): string {
@@ -15,6 +21,7 @@ export function buildSavingsPrintHtml(
   room: string,
   students: string[],
   balances: number[],
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): string {
   const dateText = new Date().toLocaleDateString("th-TH", {
     weekday: "long",
@@ -42,11 +49,17 @@ export function buildSavingsPrintHtml(
   return (
     `<!doctype html><html><head><meta charset="utf-8"><title>ออมเงิน ${safeRoom}</title>` +
     `<style>@page{margin:18mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}` +
-    `h1{font-size:22px;margin:0 0 4px}.meta{font-size:14px;color:#555;margin-bottom:14px}` +
+    REPORT_HEADER_CSS +
     `table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid #999;padding:7px 10px;text-align:left}` +
     `th{background:#eee}.c{text-align:center;width:70px}.r{text-align:right;width:130px}.sum{margin-top:14px;font-size:16px;font-weight:bold;text-align:right}</style></head>` +
-    `<body><h1>สมุดบัญชีเงินออมนักเรียน · ห้อง ${safeRoom || "-"}</h1>` +
-    `<div class="meta">ณ วันที่ ${dateText} · จำนวน ${students.length} คน</div>` +
+    `<body>` +
+    reportHeaderHtml(
+      {
+        title: "สมุดบัญชีเงินออมนักเรียน",
+        meta: [`ห้อง ${room || "-"}`, `ณ วันที่ ${dateText}`, `จำนวน ${students.length} คน`],
+      },
+      header,
+    ) +
     `<table><thead><tr><th class="c">เลขที่</th><th>ชื่อ-สกุล</th><th class="r">ยอดคงเหลือ (บาท)</th></tr></thead><tbody>${body}</tbody></table>` +
     `<div class="sum">รวมเงินออมทั้งห้อง: ${total} บาท</div>` +
     runner +
@@ -62,8 +75,9 @@ export function printSavings(
   room: string,
   students: string[],
   balances: number[],
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): boolean {
-  const html = buildSavingsPrintHtml(room, students, balances);
+  const html = buildSavingsPrintHtml(room, students, balances, header);
   const w = window.open("", "_blank");
   if (!w) return false;
   w.document.open();

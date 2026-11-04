@@ -48,4 +48,5 @@ export const SYNCED_LOCAL_KEYS: Record<string, string> = {
   homeroom: "khuncool.homeroom",
   classrooms: "khuncool.classrooms.v1",
   questionSets: "khuncool.questionsets.v1",
+  reportHeader: "khuncool.reportHeader",
 };

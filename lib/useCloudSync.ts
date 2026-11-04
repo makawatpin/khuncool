@@ -31,6 +31,7 @@ const APP_NAME: Record<string, string> = {
   homeroom: "บันทึกโฮมรูม",
   classrooms: "ห้องเรียนของฉัน",
   questionSets: "คลังคำถาม",
+  reportHeader: "หัวกระดาษรายงาน",
 };
 
 function stampKey(key: string) {

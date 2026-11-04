@@ -1,4 +1,10 @@
 import { statusOption, type DailyCheckConfig } from "@/lib/dailyCheck/config";
+import {
+  EMPTY_REPORT_HEADER,
+  REPORT_HEADER_CSS,
+  reportHeaderHtml,
+  type ReportHeaderSettings,
+} from "@/lib/reportHeader";
 import { isWeekend, monthDays, monthSummary, type CheckStatus } from "@/lib/dailyCheck/days";
 
 /** Escapes text for safe interpolation into an HTML string. */
@@ -53,6 +59,7 @@ export function buildCheckDayPrintHtml(
   students: string[],
   statuses: (CheckStatus | null)[],
   date: Date = new Date(),
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): string {
   const dateText = date.toLocaleDateString("th-TH", {
     weekday: "long",
@@ -76,11 +83,11 @@ export function buildCheckDayPrintHtml(
   return (
     `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(config.title)} ${safeRoom}</title>` +
     `<style>@page{margin:18mm}*{font-family:'TH Sarabun New','Sarabun',sans-serif}` +
-    `h1{font-size:22px;margin:0 0 4px}.meta{font-size:14px;color:#555;margin-bottom:14px}` +
+    REPORT_HEADER_CSS +
     `table{width:100%;border-collapse:collapse;font-size:15px}th,td{border:1px solid #999;padding:7px 10px;text-align:left}` +
     `th{background:#eee}.c{text-align:center;width:80px}.sum{margin-top:14px;font-size:15px}</style></head>` +
-    `<body><h1>${escapeHtml(config.title)} · ห้อง ${safeRoom || "-"}</h1>` +
-    `<div class="meta">วันที่ ${dateText}</div>` +
+    `<body>` +
+    reportHeaderHtml({ title: config.title, meta: [`ห้อง ${room || "-"}`, `วันที่ ${dateText}`] }, header) +
     `<table><thead><tr><th class="c">เลขที่</th><th>ชื่อ-สกุล</th><th class="c">สถานะ</th></tr></thead><tbody>${body}</tbody></table>` +
     `<div class="sum">${key ? `${key}<br>` : ""}สรุป: ${sum} · รวม ${students.length} คน</div>` +
     PRINT_RUNNER +
@@ -94,8 +101,9 @@ export function printCheckDay(
   students: string[],
   statuses: (CheckStatus | null)[],
   date: Date = new Date(),
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): boolean {
-  return openPrint(buildCheckDayPrintHtml(config, room, students, statuses, date));
+  return openPrint(buildCheckDayPrintHtml(config, room, students, statuses, date, header));
 }
 
 /**

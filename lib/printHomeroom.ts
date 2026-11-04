@@ -1,4 +1,10 @@
 import type { PeriodAttendance } from "@/lib/attendanceToday";
+import {
+  EMPTY_REPORT_HEADER,
+  REPORT_HEADER_CSS,
+  reportHeaderHtml,
+  type ReportHeaderSettings,
+} from "@/lib/reportHeader";
 // Print-document HTML builders ported 1:1 from screens/Homeroom.dc.html's
 // printHtml()/tableHtml()/signHtml() (weekly form) and printTermPack()
 // (term document combining homeroom + attendance + savings) methods.
@@ -116,19 +122,17 @@ export function weekOf(iso: string, sessions: HomeroomSession[]): number {
   return Math.max(1, Math.floor((d.getTime() - monday.getTime()) / (7 * 864e5)) + 1);
 }
 
-function formTitle(m: Pick<HomeroomFormMeta, "school" | "level" | "term" | "year">) {
-  return {
-    line1:
-      "แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม (Homeroom)  โรงเรียน" +
-      (m.school || "......................"),
-    line2:
-      "ชั้น" +
-      (m.level ? " " + m.level : "..........") +
-      "   ภาคเรียนที่ " +
-      th(m.term || "") +
-      "   ปีการศึกษา " +
-      th(m.year || ""),
-  };
+/** School name typed into the form, as the letterhead's fallback when none is set. */
+function formSchool(m: Pick<HomeroomFormMeta, "school">): string {
+  return "โรงเรียน" + (m.school || "......................");
+}
+
+/** The form's class and term, as the letterhead's right-hand lines. */
+function formMeta(m: Pick<HomeroomFormMeta, "level" | "term" | "year">): string[] {
+  return [
+    "ชั้น" + (m.level ? " " + m.level : ".........."),
+    "ภาคเรียนที่ " + th(m.term || "") + " ปีการศึกษา " + th(m.year || ""),
+  ];
 }
 
 function signHtml(m: Pick<HomeroomFormMeta, "showSign" | "showPrincipal" | "teacher" | "principal" | "principalRole">): string {
@@ -190,8 +194,10 @@ function tableHtml(m: HomeroomFormMeta): string {
 }
 
 /** Builds the weekly homeroom-log print form (doPrint). */
-export function buildHomeroomFormHtml(m: HomeroomFormMeta): string {
-  const t = formTitle(m);
+export function buildHomeroomFormHtml(
+  m: HomeroomFormMeta,
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
+): string {
   const closeTag = "<" + "/script>";
   const runner =
     "<" +
@@ -203,9 +209,7 @@ export function buildHomeroomFormHtml(m: HomeroomFormMeta): string {
     `<style>@page{size:A4 portrait;margin:14mm}` +
     `*{font-family:'Sarabun','TH Sarabun New',sans-serif;box-sizing:border-box}` +
     `body{margin:0;color:#000;font-size:13px}` +
-    `.hd{border:2.5px solid #E0A80A;padding:10px 14px;margin-bottom:12px;text-align:center;box-shadow:inset 0 0 0 2px #fff}` +
-    `.hd b{display:block;font-size:16px;font-weight:700;line-height:1.6}` +
-    `.hd span{display:block;font-size:15px;line-height:1.6}` +
+    REPORT_HEADER_CSS +
     `table{width:100%;border-collapse:collapse}` +
     `th{background:#FBEAC8;border:1px solid #000;padding:6px;font-size:13.5px;font-weight:700}` +
     `td{border:1px solid #000;padding:8px 9px;vertical-align:middle;font-size:12.5px}` +
@@ -219,7 +223,10 @@ export function buildHomeroomFormHtml(m: HomeroomFormMeta): string {
     `.signs{margin-top:28px;display:flex;justify-content:space-around;gap:30px;text-align:center;line-height:2;font-size:13px}` +
     `tr{page-break-inside:avoid}` +
     `</style></head><body>` +
-    `<div class="hd"><b>${escapeHtml(t.line1)}</b><span>${escapeHtml(t.line2)}</span></div>` +
+    reportHeaderHtml(
+      { title: "แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม (Homeroom)", meta: formMeta(m), school: formSchool(m) },
+      header,
+    ) +
     tableHtml(m) +
     signHtml(m) +
     runner +
@@ -228,8 +235,11 @@ export function buildHomeroomFormHtml(m: HomeroomFormMeta): string {
 }
 
 /** Opens a new window and triggers window.print() with the weekly form. */
-export function printHomeroomForm(m: HomeroomFormMeta): boolean {
-  const html = buildHomeroomFormHtml(m);
+export function printHomeroomForm(
+  m: HomeroomFormMeta,
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
+): boolean {
+  const html = buildHomeroomFormHtml(m, header);
   const w = window.open("", "_blank");
   if (!w) return false;
   w.document.open();
@@ -247,6 +257,7 @@ export function buildTermPackHtml(
   m: HomeroomFormMeta,
   att: PeriodAttendance | null,
   sav: SavingsSnapshot | null,
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): string {
   const closeTag = "<" + "/script>";
   const runner =
@@ -256,8 +267,10 @@ export function buildTermPackHtml(
 
   const cover =
     `<section class="pg cov">` +
+    (header.logo ? `<img class="cl" src="${escapeHtml(header.logo)}" alt="">` : "") +
     `<div class="ct">รายงานสรุปงานที่ปรึกษาประจำชั้น</div>` +
-    `<div class="cs">${escapeHtml(m.school || "โรงเรียน......................")}</div>` +
+    `<div class="cs">${escapeHtml(header.school || formSchool(m))}</div>` +
+    (header.subtitle ? `<div class="cm">${escapeHtml(header.subtitle)}</div>` : "") +
     `<div class="cm">ชั้น ${escapeHtml(m.level || "..........")} &nbsp;·&nbsp; ภาคเรียนที่ ${escapeHtml(
       m.term,
     )} &nbsp;·&nbsp; ปีการศึกษา ${escapeHtml(m.year)}</div>` +
@@ -265,12 +278,15 @@ export function buildTermPackHtml(
     (m.teacher ? `<div class="cby">ครูที่ปรึกษา: ${escapeHtml(m.teacher)}</div>` : "") +
     `</section>`;
 
+  const sectionHead = (title: string) =>
+    reportHeaderHtml({ title, meta: formMeta(m), school: formSchool(m) }, header);
+
   const homeroom =
-    `<section class="pg"><h2>๑. แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม</h2>${tableHtml(m)}${signHtml(m)}</section>`;
+    `<section class="pg">${sectionHead("๑. แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม")}${tableHtml(m)}${signHtml(m)}</section>`;
 
   const totalAbsentAll = m.sessions.reduce((n, x) => n + absentCount(x), 0);
   const attSec =
-    `<section class="pg"><h2>๒. สรุปการมาเรียนทั้งภาคเรียน</h2>` +
+    `<section class="pg">${sectionHead("๒. สรุปการมาเรียนทั้งภาคเรียน")}` +
     (att && att.checkedDays
       ? `<p class="note">ข้อมูลจากแอปเช็กชื่อ ห้อง ${escapeHtml(att.room || m.level || "-")} · ${thaiDate(
           att.from,
@@ -287,7 +303,7 @@ export function buildTermPackHtml(
       : `<p class="note">ยังไม่มีข้อมูลเช็กชื่อในภาคเรียนนี้ (ตรวจภาคเรียนและปีการศึกษาที่หัวแบบฟอร์ม)</p>`) +
     `</section>`;
 
-  let savSec = `<section class="pg"><h2>๓. สรุปเงินออมนักเรียน</h2>`;
+  let savSec = `<section class="pg">${sectionHead("๓. สรุปเงินออมนักเรียน")}`;
   if (sav && Array.isArray(sav.students) && sav.students.length) {
     const bal = Array.isArray(sav.balances) ? sav.balances : [];
     const total = bal.reduce((n, v) => n + (Number(v) || 0), 0);
@@ -317,7 +333,8 @@ export function buildTermPackHtml(
     `*{font-family:'Sarabun','TH Sarabun New',sans-serif;box-sizing:border-box}` +
     `body{margin:0;color:#000;font-size:13px}` +
     `.pg{page-break-after:always}.pg:last-child{page-break-after:auto}` +
-    `h2{font-size:17px;margin:0 0 12px}` +
+    REPORT_HEADER_CSS +
+    `.cl{width:96px;height:96px;object-fit:contain;margin:0 auto 18px}` +
     `.cov{display:flex;flex-direction:column;justify-content:center;min-height:250mm;text-align:center}` +
     `.ct{font-size:26px;font-weight:700;margin-bottom:10px}.cs{font-size:20px;margin-bottom:6px}.cm{font-size:16px;color:#333}` +
     `.toc{text-align:left;max-width:340px;margin:34px auto 0;font-size:15px;line-height:2.1}` +
@@ -406,8 +423,9 @@ export function printHomeroomTermPack(
   m: HomeroomFormMeta,
   att: PeriodAttendance | null,
   sav: SavingsSnapshot | null,
+  header: ReportHeaderSettings = EMPTY_REPORT_HEADER,
 ): boolean {
-  const html = buildTermPackHtml(m, att, sav);
+  const html = buildTermPackHtml(m, att, sav, header);
   const w = window.open("", "_blank");
   if (!w) return false;
   w.document.open();
