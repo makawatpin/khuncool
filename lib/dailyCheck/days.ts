@@ -1,3 +1,4 @@
+import { renameKeys } from "@/lib/roster";
 /** A status key from the activity's config ("present", "done", …). */
 export type CheckStatus = string;
 
@@ -206,4 +207,12 @@ export function periodSummary(
     return { counts, percent: n ? Math.round((good / n) * 100) : null };
   });
   return { recordedDays, perStudent };
+}
+
+/** Moves each renamed student's records, on every day, to their new name. */
+export function renameInDays(days: CheckDays, renames: readonly { from: string; to: string }[]): CheckDays {
+  if (!renames.length) return days;
+  const out: CheckDays = {};
+  for (const [date, day] of Object.entries(days)) out[date] = renameKeys(day, renames);
+  return out;
 }

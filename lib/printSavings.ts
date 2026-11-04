@@ -54,16 +54,20 @@ export function buildSavingsPrintHtml(
   );
 }
 
-/** Opens a new window and triggers window.print() with the built document. */
+/**
+ * Opens a new window and triggers window.print() with the built document.
+ * False when the browser blocked the window.
+ */
 export function printSavings(
   room: string,
   students: string[],
   balances: number[],
-): void {
+): boolean {
   const html = buildSavingsPrintHtml(room, students, balances);
   const w = window.open("", "_blank");
-  if (!w) return;
+  if (!w) return false;
   w.document.open();
   w.document.write(html);
   w.document.close();
+  return true;
 }

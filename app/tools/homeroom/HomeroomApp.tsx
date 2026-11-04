@@ -23,6 +23,7 @@ import {
 import { toIsoDate } from "@/lib/dailyCheck/days";
 import { isExportFooterRow } from "@/lib/excelImport";
 import { academicTermFor, termBounds, weekToAdd } from "@/lib/homeroomDates";
+import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
 import { attendanceForPeriod } from "@/lib/attendanceToday";
 
 const LS = "khuncool.homeroom";
@@ -51,7 +52,7 @@ function defaultTopics(): HomeroomTopic[] {
 
 const HELP_STEPS = [
   "ตั้งข้อมูลหัวกระดาษ (โรงเรียน ชั้น ภาคเรียน ครูที่ปรึกษา) ที่การ์ด “หัวแบบฟอร์ม”",
-  "นำเข้ารายชื่อนักเรียนทั้งห้อง (Excel หรือวางรายชื่อ) — ใช้รายชื่อร่วมกับแอปเช็กชื่อและออมเงิน",
+  "นำเข้ารายชื่อนักเรียนทั้งห้อง (Excel หรือวางรายชื่อ) — ครั้งแรกที่เปิด รายชื่อจะดึงมาจาก “ห้องเรียนของฉัน” · แก้รายชื่อที่นี่จะไม่เปลี่ยนในแอปอื่น ควรสะกดชื่อให้ตรงกันทุกแอปเพื่อให้ดึงข้อมูลข้ามแอปได้",
   "กด “+ บันทึกวันนี้” หรือ “+ จ–ศ” เพื่อเพิ่มวันบันทึก แล้วติ๊กหัวข้อที่อบรมของวันนั้น",
   "กด “✅ ดึงจากเช็กชื่อ” เพื่อดึงจำนวนคนมา/ขาดจากแอปเช็กชื่อมาใส่ให้อัตโนมัติ",
   "ตั้ง “แผนหัวข้อรายสัปดาห์” ล่วงหน้าได้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กหัวข้อให้เอง",
@@ -645,7 +646,7 @@ export default function HomeroomApp() {
   );
 
   const doPrint = useCallback(() => {
-    printHomeroomForm(formMeta);
+    if (!printHomeroomForm(formMeta)) setPackStatus(PRINT_BLOCKED_MESSAGE);
   }, [formMeta]);
 
   const doExcel = useCallback(() => {
@@ -747,7 +748,7 @@ export default function HomeroomApp() {
           <span className="whitespace-nowrap text-[11.5px] text-[#A9B0BE]">{students.length} คน</span>
         </div>
         <p className="m-0 mb-3 text-xs leading-[1.5] text-[#7C8494]">
-          ใช้นับจำนวนนักเรียนทั้งหมดอัตโนมัติ · รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและออมเงิน
+          ใช้นับจำนวนนักเรียนทั้งหมดอัตโนมัติ · แก้รายชื่อที่นี่ไม่เปลี่ยนในแอปอื่น
         </p>
         <div className="mb-2.5 flex items-center justify-between">
           <button

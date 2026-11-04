@@ -11,12 +11,16 @@ import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import MonthView from "./MonthView";
 import { ATTENDANCE_LS_KEY, notInClassOn } from "@/lib/attendanceToday";
+import { reconcileRoster } from "@/lib/roster";
+import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
+import { useToday } from "@/lib/useToday";
 import { printCheckDay, statusCell } from "@/lib/dailyCheck/print";
 import { DAILY_CHECKS, type DailyCheckConfig, type DailyCheckKind } from "@/lib/dailyCheck/config";
 import {
   dayStatuses,
   fromIsoDate,
   parseCheckState,
+  renameInDays,
   fillBlanks,
   latestSchoolDay,
   shiftSchoolDay,
@@ -58,7 +62,7 @@ function helpSteps(c: DailyCheckConfig): string[] {
       ? [`ถ้าเช็กชื่อในแอปเช็กชื่อของวันนั้นแล้ว คนที่ขาดหรือลาจะมีป้าย “ไม่มาเรียน” และได้ ✗ เมื่อกด “${c.allDoneLabel}”`]
       : ["แอปแปรงฟันและดื่มนมดึงรายชื่อคนที่ขาดหรือลาจากที่นี่ไปใช้ให้อัตโนมัติ"]),
     "กด “🗑 ลบรายชื่อ” เพื่อเปิดโหมดลบ แล้วแตะ ✕ ท้ายชื่อที่ต้องการลบออก",
-    "“นำเข้า Excel” เพื่อดึงรายชื่อทั้งห้องจากไฟล์ หรือวางรายชื่อก็ได้ — รายชื่อนี้ใช้ร่วมกับแอปออมเงินและบันทึกโฮมรูมด้วย",
+    "“นำเข้า Excel” เพื่อดึงรายชื่อทั้งห้องจากไฟล์ หรือวางรายชื่อก็ได้ · แก้ตัวสะกดชื่อแล้วประวัติของคนนั้นตามไปด้วย — ครั้งแรกที่เปิด รายชื่อจะดึงมาจาก “ห้องเรียนของฉัน” · แก้รายชื่อที่นี่จะไม่เปลี่ยนในแอปอื่น ควรสะกดชื่อให้ตรงกันทุกแอปเพื่อให้ดึงข้อมูลข้ามแอปได้",
     `“ส่งออก” เป็น Excel (ทำสถิติต่อ) หรือ PDF (พิมพ์${c.title}ของวันนั้น)`,
     `ยอดสรุป ${c.statuses.map((s) => s.label).join("/")} อัปเดตให้อัตโนมัติด้านบน`,
     "แท็บ “ตารางรายเดือน” ดูทุกวันในเดือนเดียว พิมพ์แบบฟอร์ม A4 แนวนอนหรือส่งออก Excel ได้ · แตะวันที่เพื่อเปิดบันทึกวันนั้น",
@@ -83,6 +87,15 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   const [date, setDate] = useState(() => latestSchoolDay(toIsoDate(new Date())));
   const [view, setView] = useState<"day" | "month">("day");
   const [month, setMonth] = useState(() => toIsoDate(new Date()).slice(0, 7));
+  // When the page stays open past midnight, a teacher looking at "today"
+  // (or this month) moves on with the calendar; a day picked on purpose stays.
+  const today = useToday();
+  const [seenToday, setSeenToday] = useState(today);
+  if (seenToday !== today) {
+    setSeenToday(today);
+    if (date === latestSchoolDay(seenToday)) setDate(latestSchoolDay(today));
+    if (month === seenToday.slice(0, 7)) setMonth(today.slice(0, 7));
+  }
   const [room, setRoom] = useState("ป.5/2");
   const [newName, setNewName] = useState("");
   const [deleteMode, setDeleteMode] = useState(false);
@@ -244,10 +257,19 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
 
   const removeStudent = useCallback(
     (i: number) => {
+      const name = students[i];
+      const recorded = Object.values(days).filter((day) => day[name]).length;
+      if (
+        recorded > 0 &&
+        !window.confirm(
+          `ลบ “${name}” ออกจากรายชื่อ? มีบันทึก ${recorded} วัน จะหายจากตารางและใบพิมพ์ (ประวัติยังเก็บไว้ เพิ่มชื่อเดิมกลับมาจะเห็นอีกครั้ง)`,
+        )
+      )
+        return;
       editStudents((current) => current.filter((_, idx) => idx !== i));
       flashToast("ลบแล้ว ✓");
     },
-    [editStudents, flashToast],
+    [students, days, editStudents, flashToast],
   );
 
   const toggleBulk = useCallback(() => {
@@ -257,15 +279,29 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
     });
   }, [students]);
 
+  // Swaps in a new name list. Records are keyed by name, so a name corrected
+  // in the same row carries its history across instead of leaving it behind.
+  const replaceRoster = useCallback(
+    (list: string[]) => {
+      const { renames } = reconcileRoster(students, students.map(() => 0), list);
+      if (renames.length) {
+        setEdited(true);
+        setDays((current) => renameInDays(current, renames));
+      }
+      editStudents(list);
+    },
+    [students, editStudents],
+  );
+
   const applyBulk = useCallback(() => {
     const list = bulkText
       .split("\n")
       .map((x) => x.trim())
       .filter(Boolean);
-    editStudents(list);
+    replaceRoster(list);
     setBulkMode(false);
     flashToast();
-  }, [bulkText, editStudents, flashToast]);
+  }, [bulkText, replaceRoster, flashToast]);
 
   const importPaste = useCallback(() => {
     const list = importText
@@ -276,11 +312,11 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       setImportMsg("ยังไม่มีรายชื่อให้นำเข้า");
       return;
     }
-    editStudents(list);
+    replaceRoster(list);
     setShowImport(false);
     setImportText("");
     flashToast();
-  }, [importText, editStudents, flashToast]);
+  }, [importText, replaceRoster, flashToast]);
 
   const onFile = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -356,7 +392,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
             setImportMsg("ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)");
             return;
           }
-          editStudents(newStudents);
+          replaceRoster(newStudents);
           if (statusCol >= 0) writeDay(newStatuses, newStudents);
           setShowImport(false);
           setImportMsg("");
@@ -369,7 +405,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       };
       reader.readAsArrayBuffer(file);
     },
-    [config, editStudents, flashToast, writeDay],
+    [config, replaceRoster, flashToast, writeDay],
   );
 
   const exportExcel = useCallback(() => {
@@ -396,16 +432,15 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   }, [config, defs, students, statuses, room, date]);
 
   const exportPDF = useCallback(() => {
-    printCheckDay(config, room, students, statuses, fromIsoDate(date));
+    if (!printCheckDay(config, room, students, statuses, fromIsoDate(date))) flashToast(PRINT_BLOCKED_MESSAGE);
     setShowExport(false);
-  }, [config, room, students, statuses, date]);
+  }, [config, room, students, statuses, date, flashToast]);
 
   const { fullscreenClassName, toggle: toggleFull } =
     useToolFullscreen(frameRef);
 
   const total = students.length;
   const checked = statuses.filter((x) => x !== null).length;
-  const today = toIsoDate(new Date());
   // On a weekend, the day to record and come back to is the Friday before.
   const currentDay = latestSchoolDay(today);
   const dateTextShort = fromIsoDate(date).toLocaleDateString("th-TH", {
@@ -777,6 +812,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
           month={month}
           today={today}
           onMonthChange={setMonth}
+          onNotify={flashToast}
           onPickDay={(iso) => {
             setDate(iso > currentDay ? currentDay : iso);
             setView("day");

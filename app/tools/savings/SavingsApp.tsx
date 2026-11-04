@@ -10,6 +10,8 @@ import SyncStatus from "@/components/SyncStatus";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import { printSavings } from "@/lib/printSavings";
+import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
+import { useToday } from "@/lib/useToday";
 import {
   balanceOf,
   balancesFor,
@@ -47,7 +49,7 @@ const HELP_STEPS = [
   "กด “ประวัติ” เพื่อดูรายการฝาก/ถอนย้อนหลัง และกด ↺ เพื่อเลิกทำรายการที่ผิด · ยอดคงเหลือคำนวณจากประวัติทุกครั้ง",
   "กด “🗑 ลบรายชื่อ” เพื่อเปิดโหมดลบ แล้วแตะ ✕ ท้ายชื่อที่ต้องการลบออก",
   "กด “↺ ล้างยอดเงิน” เพื่อตั้งยอดทุกคนเป็น ฿0 และล้างประวัติทั้งหมด (ยืนยันก่อนลบ ทำแล้วกู้คืนไม่ได้)",
-  "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้ — รายชื่อนี้ใช้ร่วมกับแอปเช็กชื่อและบันทึกโฮมรูมด้วย",
+  "“นำเข้า” รายชื่อทั้งห้องจาก Excel หรือวางรายชื่อ · ยอดของชื่อเดิมจะถูกเก็บไว้ — ครั้งแรกที่เปิด รายชื่อจะดึงมาจาก “ห้องเรียนของฉัน” · แก้รายชื่อที่นี่จะไม่เปลี่ยนในแอปอื่น ควรสะกดชื่อให้ตรงกันทุกแอปเพื่อให้ดึงข้อมูลข้ามแอปได้",
   "“ส่งออก” เป็น Excel (มีประวัติครบ นำเข้าที่เครื่องอื่นแล้วได้ประวัติกลับมาด้วย) หรือ PDF (สมุดบัญชีสำหรับพิมพ์แนบรายงาน)",
 ];
 
@@ -102,8 +104,18 @@ export default function SavingsApp() {
   const [room, setRoom] = useState("ป.5/2");
   const [lastTs, setLastTs] = useState(0);
   const [entryDate, setEntryDate] = useState(() => todayISO());
+  // Left open past midnight, entries made "today" must not land on yesterday:
+  // follow the calendar unless the teacher picked a past date on purpose.
+  const today = useToday();
+  const [seenToday, setSeenToday] = useState(today);
+  if (seenToday !== today) {
+    setSeenToday(today);
+    if (entryDate === seenToday) setEntryDate(today);
+  }
   const [quickAmt, setQuickAmt] = useState("");
-  const [rowAmts, setRowAmts] = useState<Record<number, string>>({});
+  // Amounts typed but not yet saved, keyed by student name so a box stays
+  // with its student when someone above them is removed.
+  const [rowAmts, setRowAmts] = useState<Record<string, string>>({});
   const [newName, setNewName] = useState("");
   const [deleteMode, setDeleteMode] = useState(false);
   const [bulkMode, setBulkMode] = useState(false);
@@ -262,7 +274,6 @@ export default function SavingsApp() {
   const backdating = entryDate !== todayISO();
 
   const dateChips = useMemo(() => {
-    const today = todayISO();
     const out: { iso: string; dow: string; day: number; isToday: boolean }[] = [];
     for (let k = 20; k >= 0; k--) {
       const dt = new Date();
@@ -278,7 +289,7 @@ export default function SavingsApp() {
       });
     }
     return out;
-  }, []);
+  }, [today]);
 
   const apply = useCallback(
     (i: number, amt: number, type: "deposit" | "withdraw") => {
@@ -298,7 +309,7 @@ export default function SavingsApp() {
       setLastTs(ts);
       setRowAmts((r) => {
         const next = { ...r };
-        delete next[i];
+        delete next[students[i]];
         return next;
       });
       flashToast();
@@ -320,20 +331,20 @@ export default function SavingsApp() {
 
   const deposit = useCallback(
     (i: number) => {
-      const amt = readAmount(rowAmts[i] || "");
+      const amt = readAmount(rowAmts[students[i]] || "");
       if (!amt) return;
       apply(i, amt, "deposit");
     },
-    [rowAmts, readAmount, apply],
+    [rowAmts, students, readAmount, apply],
   );
 
   const withdraw = useCallback(
     (i: number) => {
-      const amt = readAmount(rowAmts[i] || "");
+      const amt = readAmount(rowAmts[students[i]] || "");
       if (!amt) return;
       apply(i, amt, "withdraw");
     },
-    [rowAmts, readAmount, apply],
+    [rowAmts, students, readAmount, apply],
   );
 
   const depositAll = useCallback(() => {
@@ -392,7 +403,7 @@ export default function SavingsApp() {
       editStudents((current) => current.filter((_, idx) => idx !== i));
       setRowAmts((r) => {
         const next = { ...r };
-        delete next[i];
+        delete next[students[i]];
         return next;
       });
       flashToast("ลบแล้ว ✓");
@@ -634,9 +645,9 @@ export default function SavingsApp() {
   }, [students, balances, room, txns]);
 
   const exportPDF = useCallback(() => {
-    printSavings(room, students, balances);
+    if (!printSavings(room, students, balances)) flashToast(PRINT_BLOCKED_MESSAGE);
     setShowExport(false);
-  }, [room, students, balances]);
+  }, [room, students, balances, flashToast]);
 
   const { fullscreenClassName, toggle: toggleFull } = useToolFullscreen(frameRef);
 
@@ -1227,11 +1238,11 @@ export default function SavingsApp() {
                   </div>
                   <div className="flex gap-1.5 md:flex-none md:gap-2">
                     <input
-                      value={rowAmts[i] || ""}
+                      value={rowAmts[students[i]] || ""}
                       onChange={(e) =>
                         setRowAmts((r) => ({
                           ...r,
-                          [i]: e.target.value.replace(/[^0-9.,-]/g, ""),
+                          [students[i]]: e.target.value.replace(/[^0-9.,-]/g, ""),
                         }))
                       }
                       onKeyDown={(e) => {

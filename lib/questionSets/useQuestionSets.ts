@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCloudSync } from "@/lib/useCloudSync";
 import {
@@ -15,9 +16,18 @@ export function useQuestionSets() {
   const [store, setStore] = useState<QuestionSetStore>(EMPTY_QUESTION_SET_STORE);
   const [hydrated, setHydrated] = useState(false);
 
+  // Set on the first change the teacher makes. Until then nothing is pushed,
+  // so opening a page that reads the library stores nothing in the cloud.
+  // Loading saved data uses setStore and does not count.
+  const [edited, setEdited] = useState(false);
+  const editStore = useCallback((next: React.SetStateAction<QuestionSetStore>) => {
+    setEdited(true);
+    setStore(next);
+  }, []);
+
   // Guests get `local-only` and zero network calls; signed-in teachers get the
   // library mirrored into their account, same path the classroom store uses.
-  const { pulled, status: cloudStatus } = useCloudSync("questionSets", store);
+  const { pulled, status: cloudStatus } = useCloudSync("questionSets", store, { push: edited });
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -42,19 +52,19 @@ export function useQuestionSets() {
         createdAt: now,
         updatedAt: now,
       };
-      setStore((current) => ({
+      editStore((current) => ({
         ...current,
         activeSetId: set.id,
         sets: [set, ...current.sets],
       }));
       return set.id;
     },
-    [],
+    [editStore],
   );
 
   const updateSet = useCallback(
     (id: string, patch: { name?: string; questions?: readonly string[] }) => {
-      setStore((current) => ({
+      editStore((current) => ({
         ...current,
         activeSetId: id,
         sets: current.sets.map((set) =>
@@ -73,11 +83,11 @@ export function useQuestionSets() {
         ),
       }));
     },
-    [],
+    [editStore],
   );
 
   const removeSet = useCallback((id: string) => {
-    setStore((current) => {
+    editStore((current) => {
       const sets = current.sets.filter((set) => set.id !== id);
       return {
         ...current,
@@ -86,15 +96,15 @@ export function useQuestionSets() {
           current.activeSetId === id ? sets[0]?.id ?? null : current.activeSetId,
       };
     });
-  }, []);
+  }, [editStore]);
 
   const setActiveSet = useCallback((id: string) => {
-    setStore((current) =>
+    editStore((current) =>
       current.sets.some((set) => set.id === id)
         ? { ...current, activeSetId: id }
         : current,
     );
-  }, []);
+  }, [editStore]);
 
   const summaries = useMemo<QuestionSetSummary[]>(
     () =>
