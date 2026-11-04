@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 import { createQuestion, generateQuestions, makeNumericOptions } from "./questionGenerator.ts";
 
 function seeded(seed) {

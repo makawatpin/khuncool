@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 import { readFraction, slicePath, stripBounds, unequalWeights } from "./fractionGeometry.ts";
 
 test("slicePath ของแต่ละชิ้นต่อกันสนิท", () => {
