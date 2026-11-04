@@ -160,7 +160,7 @@ function GuestAccount() {
 }
 
 function MemberAccount() {
-  const { user, updateProfile, resetPassword, signOut } = useAuth();
+  const { user, updateProfile, resetPassword, signOut, deleteAccount } = useAuth();
   const meta = (user?.user_metadata || {}) as { full_name?: string; school?: string };
   const email = user?.email || "";
   // Lazy-initialized from `user_metadata`/localStorage on first render
@@ -196,6 +196,28 @@ function MemberAccount() {
         ? `ส่งลิงก์เปลี่ยนรหัสผ่านไปที่ ${email} แล้ว`
         : r.error || "ส่งลิงก์ไม่สำเร็จ"
     );
+  };
+
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  // Typing the words guards against a stray tap: this cannot be undone.
+  const handleDeleteAccount = async () => {
+    const typed = window.prompt(
+      "ลบบัญชีและข้อมูลทั้งหมดถาวร (รายชื่อ เช็กชื่อ แปรงฟัน ดื่มนม ออมเงิน โฮมรูม ห้องเรียน และคลังคำถาม) กู้คืนไม่ได้\n\nแนะนำให้ส่งออก Excel เก็บไว้ก่อน\n\nพิมพ์คำว่า ลบบัญชี เพื่อยืนยัน",
+    );
+    if (typed === null) return;
+    if (typed.trim() !== "ลบบัญชี") {
+      setDeleteError("พิมพ์ไม่ตรง — ยังไม่ได้ลบบัญชี");
+      return;
+    }
+    setDeleting(true);
+    setDeleteError("");
+    const r = await deleteAccount();
+    if (!r.ok) {
+      setDeleting(false);
+      setDeleteError(r.error || "ลบบัญชีไม่สำเร็จ");
+    }
   };
 
   const handleSignOut = async (keepLocal: boolean) => {
@@ -366,6 +388,22 @@ function MemberAccount() {
             <p className="mt-3 text-[11.5px] leading-[1.6] text-ink-faint">
               ใช้เครื่องสาธารณะ (คอมห้องพักครู) ควรเลือกแบบล้างข้อมูล — ข้อมูลบนคลาวด์ยังอยู่ครบ
             </p>
+            <div className="mt-4 border-t border-border pt-4">
+              <button
+                type="button"
+                disabled={deleting || signingOut}
+                onClick={handleDeleteAccount}
+                className="flex w-full items-center gap-2.5 rounded-[11px] px-2.5 py-[11px] text-left text-[13.5px] font-semibold text-danger transition-colors hover:bg-error-bg disabled:opacity-60"
+              >
+                🗑 {deleting ? "กำลังลบบัญชี…" : "ลบบัญชีและข้อมูลทั้งหมดถาวร"}
+              </button>
+              <p className="mt-1 px-2.5 text-[11.5px] leading-[1.6] text-ink-faint">
+                ลบบัญชีและข้อมูลที่ซิงก์ไว้ทั้งหมด รวมถึงข้อมูลในเครื่องนี้ กู้คืนไม่ได้
+              </p>
+              {deleteError && (
+                <p className="mt-1 px-2.5 text-[12px] font-semibold text-danger">{deleteError}</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

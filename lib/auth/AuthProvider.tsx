@@ -89,6 +89,11 @@ interface AuthContextValue {
    * machines. When true, signs out but leaves local data untouched.
    */
   signOut: (keepLocal?: boolean) => Promise<void>;
+  /**
+   * Permanently deletes the signed-in account and everything synced to it,
+   * then signs out and clears this browser's local copies.
+   */
+  deleteAccount: () => Promise<AuthResult>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -255,6 +260,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const deleteAccount = useCallback(async (): Promise<AuthResult> => {
+    try {
+      const supabase = await getSupabase();
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) return { ok: false, error: "กรุณาเข้าสู่ระบบใหม่แล้วลองอีกครั้ง" };
+      const res = await fetch("/api/account/delete", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return { ok: false, error: "ลบบัญชีไม่สำเร็จ ลองใหม่อีกครั้ง หรือติดต่อทางอีเมล" };
+      await signOut(false);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: translateUnknown(err) };
+    }
+  }, [signOut]);
+
   const value = useMemo(
     () => ({
       ready,
@@ -266,8 +289,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       resetPassword,
       updateProfile,
       signOut,
+      deleteAccount,
     }),
-    [ready, user, session, signUp, signIn, signInGoogle, resetPassword, updateProfile, signOut]
+    [ready, user, session, signUp, signIn, signInGoogle, resetPassword, updateProfile, signOut, deleteAccount]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
