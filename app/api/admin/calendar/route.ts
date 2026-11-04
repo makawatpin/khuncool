@@ -3,13 +3,9 @@ import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { CALENDAR_EVENTS } from "@/lib/teacher-calendar/events";
 import { buildAgenda, resolveDate, computeStatus } from "@/lib/teacher-calendar/resolve";
 import type { AgendaItem } from "@/lib/teacher-calendar/types";
+import { bangkokDay } from "@/lib/admin/bangkokDay";
 
 const MONTHS_AHEAD = 6;
-
-function bangkokToday(): string {
-  // en-CA gives YYYY-MM-DD directly.
-  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Bangkok" });
-}
 
 function parseMonthParam(param: string | null, fallbackToday: string): { year: number; month: number } {
   if (param && /^\d{4}-\d{2}$/.test(param)) {
@@ -30,7 +26,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
 
-  const today = bangkokToday();
+  const today = bangkokDay();
   const { searchParams } = new URL(request.url);
   const { year, month } = parseMonthParam(searchParams.get("month"), today);
 

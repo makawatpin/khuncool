@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
+import { fetchAllUsers, type UserLister } from "@/lib/admin/fetchAllUsers";
 
 export async function GET(request: Request) {
   const auth = await requireAdmin(request);
@@ -9,12 +10,15 @@ export async function GET(request: Request) {
   }
 
   const supabase = createServiceRoleClient();
-  const { data, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  let rows;
+  try {
+    rows = await fetchAllUsers(supabase as unknown as UserLister);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "query failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
-  const users = data.users
+  const users = rows
     .map((u) => ({
       id: u.id,
       email: u.email ?? "",
