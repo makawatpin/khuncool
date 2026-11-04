@@ -1,3 +1,4 @@
+import type { PeriodAttendance } from "@/lib/attendanceToday";
 // Print-document HTML builders ported 1:1 from screens/Homeroom.dc.html's
 // printHtml()/tableHtml()/signHtml() (weekly form) and printTermPack()
 // (term document combining homeroom + attendance + savings) methods.
@@ -238,12 +239,12 @@ export function printHomeroomForm(m: HomeroomFormMeta): void {
 
 /**
  * Builds the term-level document: cover page + homeroom log + attendance
- * summary (from the attendance app's localStorage snapshot) + savings
+ * for the whole term (from the attendance app's per-day records) + savings
  * summary (from the savings app's localStorage snapshot).
  */
 export function buildTermPackHtml(
   m: HomeroomFormMeta,
-  att: AttendanceSnapshot | null,
+  att: PeriodAttendance | null,
   sav: SavingsSnapshot | null,
 ): string {
   const closeTag = "<" + "/script>";
@@ -259,7 +260,7 @@ export function buildTermPackHtml(
     `<div class="cm">ชั้น ${escapeHtml(m.level || "..........")} &nbsp;·&nbsp; ภาคเรียนที่ ${escapeHtml(
       m.term,
     )} &nbsp;·&nbsp; ปีการศึกษา ${escapeHtml(m.year)}</div>` +
-    `<ol class="toc"><li>แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม</li><li>สรุปการมาเรียน (ข้อมูลล่าสุดจากแอปเช็กชื่อ)</li><li>สรุปเงินออมนักเรียน</li></ol>` +
+    `<ol class="toc"><li>แบบบันทึกการเข้าร่วมกิจกรรมโฮมรูม</li><li>สรุปการมาเรียนทั้งภาคเรียน (จากแอปเช็กชื่อ)</li><li>สรุปเงินออมนักเรียน</li></ol>` +
     (m.teacher ? `<div class="cby">ครูที่ปรึกษา: ${escapeHtml(m.teacher)}</div>` : "") +
     `</section>`;
 
@@ -268,25 +269,21 @@ export function buildTermPackHtml(
 
   const totalAbsentAll = m.sessions.reduce((n, x) => n + absentCount(x), 0);
   const attSec =
-    `<section class="pg"><h2>๒. สรุปการมาเรียน</h2>` +
-    (att
-      ? `<p class="note">ข้อมูลจากแอปเช็กชื่อ ห้อง ${escapeHtml(
-          att.room || m.level || "-",
-        )} · นักเรียน ${att.total} คน</p>` +
-        `<table class="sum"><thead><tr><th>รายการ</th><th>จำนวน (คน)</th><th>รายชื่อ</th></tr></thead><tbody>` +
-        `<tr><td>มาเรียน</td><td class="c">${att.present}</td><td>—</td></tr>` +
-        `<tr><td>มาสาย</td><td class="c">${att.late.length}</td><td>${
-          escapeHtml(att.late.join(", ")) || "—"
-        }</td></tr>` +
-        `<tr><td>ลา</td><td class="c">${att.leave.length}</td><td>${
-          escapeHtml(att.leave.join(", ")) || "—"
-        }</td></tr>` +
-        `<tr><td>ขาดเรียน</td><td class="c">${att.absent.length}</td><td>${
-          escapeHtml(att.absent.join(", ")) || "—"
-        }</td></tr>` +
+    `<section class="pg"><h2>๒. สรุปการมาเรียนทั้งภาคเรียน</h2>` +
+    (att && att.checkedDays
+      ? `<p class="note">ข้อมูลจากแอปเช็กชื่อ ห้อง ${escapeHtml(att.room || m.level || "-")} · ${thaiDate(
+          att.from,
+        )} – ${thaiDate(att.to)} · เช็กชื่อ ${att.checkedDays} วัน · นักเรียน ${att.rows.length} คน</p>` +
+        `<table class="sum"><thead><tr><th class="c">ที่</th><th>ชื่อ-สกุล</th><th class="c">มา</th><th class="c">สาย</th><th class="c">ลา</th><th class="c">ขาด</th><th class="c">% มาเรียน</th></tr></thead><tbody>` +
+        att.rows
+          .map(
+            (r, i) =>
+              `<tr><td class="c">${i + 1}</td><td>${escapeHtml(r.name)}</td><td class="c">${r.present}</td><td class="c">${r.late}</td><td class="c">${r.leave}</td><td class="c">${r.absent}</td><td class="c">${r.percent ?? "—"}</td></tr>`,
+          )
+          .join("") +
         `</tbody></table>` +
-        `<p class="note">ยอดขาดรวมจากบันทึกโฮมรูมทั้งภาคเรียน: ${totalAbsentAll} คน-ครั้ง</p>`
-      : `<p class="note">ยังไม่มีข้อมูลจากแอปเช็กชื่อ</p>`) +
+        `<p class="note">% มาเรียน นับมาสายเป็นมาเรียน คิดจากวันที่เช็กชื่อแล้วเท่านั้น · ยอดขาดรวมจากบันทึกโฮมรูม: ${totalAbsentAll} คน-ครั้ง</p>`
+      : `<p class="note">ยังไม่มีข้อมูลเช็กชื่อในภาคเรียนนี้ (ตรวจภาคเรียนและปีการศึกษาที่หัวแบบฟอร์ม)</p>`) +
     `</section>`;
 
   let savSec = `<section class="pg"><h2>๓. สรุปเงินออมนักเรียน</h2>`;
@@ -406,7 +403,7 @@ export function attendanceSnapshotFrom(
 /** Opens a new window and triggers window.print() with the term document. */
 export function printHomeroomTermPack(
   m: HomeroomFormMeta,
-  att: AttendanceSnapshot | null,
+  att: PeriodAttendance | null,
   sav: SavingsSnapshot | null,
 ): boolean {
   const html = buildTermPackHtml(m, att, sav);

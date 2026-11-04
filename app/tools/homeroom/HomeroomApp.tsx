@@ -22,7 +22,8 @@ import {
 } from "@/lib/printHomeroom";
 import { toIsoDate } from "@/lib/dailyCheck/days";
 import { isExportFooterRow } from "@/lib/excelImport";
-import { weekToAdd } from "@/lib/homeroomDates";
+import { academicTermFor, termBounds, weekToAdd } from "@/lib/homeroomDates";
+import { attendanceForPeriod } from "@/lib/attendanceToday";
 
 const LS = "khuncool.homeroom";
 const ATTENDANCE_LS = "khuncool_attendance_v1";
@@ -54,7 +55,7 @@ const HELP_STEPS = [
   "กด “+ บันทึกวันนี้” หรือ “+ จ–ศ” เพื่อเพิ่มวันบันทึก แล้วติ๊กหัวข้อที่อบรมของวันนั้น",
   "กด “✅ ดึงจากเช็กชื่อ” เพื่อดึงจำนวนคนมา/ขาดจากแอปเช็กชื่อมาใส่ให้อัตโนมัติ",
   "ตั้ง “แผนหัวข้อรายสัปดาห์” ล่วงหน้าได้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กหัวข้อให้เอง",
-  "“🖨 พิมพ์” แบบฟอร์มรายสัปดาห์ หรือ “🗂 พิมพ์ชุดเอกสารสิ้นเทอม” รวมเช็กชื่อ+ออมเงินไว้ในไฟล์เดียว",
+  "“🖨 พิมพ์” แบบฟอร์มรายสัปดาห์ หรือ “🗂 พิมพ์ชุดเอกสารสิ้นเทอม” รวมบันทึกโฮมรูม สรุปการมาเรียนทั้งภาคเรียน และเงินออมไว้ในไฟล์เดียว (ใช้ภาคเรียนและปีการศึกษาที่หัวแบบฟอร์ม)",
 ];
 
 const DEVICE_NOTE =
@@ -96,8 +97,10 @@ export default function HomeroomApp() {
   useTrackToolUse("homeroom");
   const [school, setSchoolRaw] = useState("");
   const [level, setLevelRaw] = useState("");
-  const [term, setTermRaw] = useState("1");
-  const [year, setYearRaw] = useState(() => String(new Date().getFullYear() + 543));
+  // Defaults follow the Thai school calendar (Nov–Apr is term 2 of the year
+  // that began the May before); saved values replace them on load.
+  const [term, setTermRaw] = useState(() => academicTermFor(new Date()).term);
+  const [year, setYearRaw] = useState(() => academicTermFor(new Date()).year);
   const [teacher, setTeacherRaw] = useState("");
   const [topics, setTopicsRaw] = useState<HomeroomTopic[]>(defaultTopics);
   const [sessions, setSessionsRaw] = useState<HomeroomSession[]>([]);
@@ -217,7 +220,7 @@ export default function HomeroomApp() {
         if (Array.isArray(d.topics) && d.topics.length) {
           setSchoolRaw(d.school || "");
           setLevelRaw(d.level || "");
-          setTermRaw(d.term || "1");
+          if (d.term) setTermRaw(d.term);
           if (d.year) setYearRaw(d.year);
           setTeacherRaw(d.teacher || "");
           setTopicsRaw(d.topics);
@@ -682,7 +685,8 @@ export default function HomeroomApp() {
   }, [topics, sessions, school, level, term, year]);
 
   const printTermPack = useCallback(() => {
-    const att = attendanceSnapshot();
+    const bounds = termBounds(term, year);
+    const att = bounds ? attendanceForPeriod(window.localStorage.getItem(ATTENDANCE_LS), bounds.from, bounds.to) : null;
     const sav = readAppLS<RawSavingsState>(SAVINGS_LS);
     const savSnap =
       sav && Array.isArray(sav.students) && sav.students.length
@@ -695,7 +699,7 @@ export default function HomeroomApp() {
         : null;
     const ok = printHomeroomTermPack(formMeta, att, savSnap);
     setPackStatus(ok ? "เปิดหน้าพิมพ์ชุดเอกสารแล้ว" : "เบราว์เซอร์บล็อกหน้าต่างใหม่ — อนุญาต pop-up แล้วลองอีกครั้ง");
-  }, [attendanceSnapshot, formMeta]);
+  }, [term, year, formMeta]);
 
   const cur = sessions.find((x) => x.id === currentId) || null;
   const doneCount = sessions.length;

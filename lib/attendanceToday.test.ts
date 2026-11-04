@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { notInClassOn } from "./attendanceToday";
+import { attendanceForPeriod, notInClassOn } from "./attendanceToday";
 
 const at = (y: number, m: number, d: number, h = 9) => new Date(y, m - 1, d, h).getTime();
 
@@ -36,5 +36,36 @@ describe("notInClassOn", () => {
   it("ignores bad input", () => {
     expect(notInClassOn("nope", "2026-11-03")).toEqual([]);
     expect(notInClassOn(null, "2026-11-03")).toEqual([]);
+  });
+});
+
+describe("attendanceForPeriod", () => {
+  const raw = JSON.stringify({
+    students: ["ก", "ข"],
+    room: "ป.5/2",
+    holidays: ["2026-11-04"],
+    days: {
+      "2026-10-30": { ก: "absent", ข: "absent" },
+      "2026-11-02": { ก: "present", ข: "late" },
+      "2026-11-03": { ก: "absent", ข: "present" },
+      "2026-11-04": { ก: "absent", ข: "absent" },
+    },
+  });
+
+  it("totals each student over the period, leaving out other dates and holidays", () => {
+    expect(attendanceForPeriod(raw, "2026-11-01", "2027-04-30")).toEqual({
+      room: "ป.5/2",
+      from: "2026-11-01",
+      to: "2027-04-30",
+      checkedDays: 2,
+      rows: [
+        { name: "ก", present: 1, late: 0, leave: 0, absent: 1, percent: 50 },
+        { name: "ข", present: 1, late: 1, leave: 0, absent: 0, percent: 100 },
+      ],
+    });
+  });
+
+  it("is null without attendance data", () => {
+    expect(attendanceForPeriod(null, "2026-11-01", "2027-04-30")).toBeNull();
   });
 });

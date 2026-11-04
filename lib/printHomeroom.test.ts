@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { attendanceSnapshotFrom } from "./printHomeroom";
+import { attendanceSnapshotFrom, buildTermPackHtml } from "./printHomeroom";
 
 describe("attendanceSnapshotFrom", () => {
   const perDay = {
@@ -33,5 +33,44 @@ describe("attendanceSnapshotFrom", () => {
 
   it("returns null with no checked day", () => {
     expect(attendanceSnapshotFrom({ students: ["ก"], days: {} })).toBeNull();
+  });
+});
+
+describe("buildTermPackHtml attendance section", () => {
+  const meta = {
+    school: "โรงเรียนทดสอบ",
+    level: "ป.5/2",
+    term: "2",
+    year: "2569",
+    teacher: "",
+    topics: [],
+    sessions: [],
+    blankRows: 0,
+    showSign: false,
+    showPrincipal: false,
+    principal: "",
+    principalRole: "",
+  };
+
+  it("lists each student's totals for the term", () => {
+    const html = buildTermPackHtml(
+      meta,
+      {
+        room: "ป.5/2",
+        from: "2026-11-01",
+        to: "2027-04-30",
+        checkedDays: 2,
+        rows: [{ name: "ก <ไก่>", present: 1, late: 1, leave: 0, absent: 0, percent: 100 }],
+      },
+      null,
+    );
+    expect(html).toContain("สรุปการมาเรียนทั้งภาคเรียน");
+    expect(html).toContain("เช็กชื่อ 2 วัน");
+    expect(html).toContain("ก &lt;ไก่&gt;");
+    expect(html).toContain('<td class="c">100</td>');
+  });
+
+  it("says when the term has no attendance yet", () => {
+    expect(buildTermPackHtml(meta, null, null)).toContain("ยังไม่มีข้อมูลเช็กชื่อในภาคเรียนนี้");
   });
 });

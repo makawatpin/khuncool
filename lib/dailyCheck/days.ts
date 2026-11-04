@@ -177,7 +177,21 @@ export function monthSummary(
   holidays: readonly string[],
   positive: ReadonlySet<CheckStatus>,
 ): { recordedDays: string[]; perStudent: StudentMonthTotals[] } {
-  const recordedDays = monthSchoolDays(month).filter((d) => days[d] && !holidays.includes(d));
+  return periodSummary(days, monthSchoolDays(month), students, holidays, positive);
+}
+
+/**
+ * Per-student totals over the given school days (a month, a term…). Same
+ * rules as monthSummary: only recorded days count, holidays never do.
+ */
+export function periodSummary(
+  days: Readonly<Record<string, Readonly<Record<string, CheckStatus>>>>,
+  schoolDays: readonly string[],
+  students: string[],
+  holidays: readonly string[],
+  positive: ReadonlySet<CheckStatus>,
+): { recordedDays: string[]; perStudent: StudentMonthTotals[] } {
+  const recordedDays = schoolDays.filter((d) => days[d] && !holidays.includes(d));
   const perStudent = students.map((name) => {
     const counts: Record<CheckStatus, number> = {};
     let n = 0;

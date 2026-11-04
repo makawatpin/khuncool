@@ -17,3 +17,24 @@ export function weekToAdd(existingDates: string[], now: Date): string[] {
     return toIsoDate(d);
   });
 }
+
+/**
+ * The term and Buddhist-era academic year a date falls in. Thai schools run
+ * term 1 from mid-May to October and term 2 from November to March; January
+ * to April still belong to the academic year that started the May before.
+ */
+export function academicTermFor(now: Date): { term: string; year: string } {
+  const m = now.getMonth(); // 0 = January
+  const be = now.getFullYear() + 543;
+  if (m >= 4 && m <= 9) return { term: "1", year: String(be) };
+  return { term: "2", year: String(m >= 10 ? be : be - 1) };
+}
+
+/** First and last calendar day a term can hold, for summing up its records. */
+export function termBounds(term: string, year: string): { from: string; to: string } | null {
+  const ad = parseInt(year, 10) - 543;
+  if (!Number.isFinite(ad) || ad < 1900) return null;
+  if (term === "1") return { from: `${ad}-05-01`, to: `${ad}-10-31` };
+  if (term === "2") return { from: `${ad}-11-01`, to: `${ad + 1}-04-30` };
+  return null;
+}
