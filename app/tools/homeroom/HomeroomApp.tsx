@@ -6,6 +6,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
+import SaveIndicator from "@/components/SaveIndicator";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import ToolFullscreenFrame from "@/components/ToolFullscreenFrame";
 import {
@@ -14,6 +15,7 @@ import {
   absentCount,
   absentList,
   attendanceSnapshotFrom,
+  withAttendanceFilled,
   printHomeroomForm,
   printHomeroomTermPack,
   readAppLS,
@@ -56,7 +58,7 @@ const HELP_STEPS = [
   "ตั้งข้อมูลหัวกระดาษ (โรงเรียน ชั้น ภาคเรียน ครูที่ปรึกษา) ที่การ์ด “หัวแบบฟอร์ม”",
   "นำเข้ารายชื่อนักเรียนทั้งห้อง (Excel หรือวางรายชื่อ) — ครั้งแรกที่เปิด รายชื่อจะดึงมาจาก “ห้องเรียนของฉัน” · แก้รายชื่อที่นี่จะไม่เปลี่ยนในแอปอื่น ควรสะกดชื่อให้ตรงกันทุกแอปเพื่อให้ดึงข้อมูลข้ามแอปได้",
   "กด “+ บันทึกวันนี้” หรือ “+ จ–ศ” เพื่อเพิ่มวันบันทึก แล้วติ๊กหัวข้อที่อบรมของวันนั้น",
-  "กด “✅ ดึงจากเช็กชื่อ” เพื่อดึงจำนวนคนมา/ขาดจากแอปเช็กชื่อมาใส่ให้อัตโนมัติ",
+  "ถ้าเช็กชื่อในแอปเช็กชื่อของวันนั้นแล้ว จำนวนคนมา/ขาดจะเติมให้เอง · กด “✅ ดึงจากเช็กชื่อ” เพื่อดึงใหม่ทับของเดิม",
   "ตั้ง “แผนหัวข้อรายสัปดาห์” ล่วงหน้าได้ วันที่เพิ่มใหม่ในสัปดาห์นั้นจะติ๊กหัวข้อให้เอง",
   "“🖨 พิมพ์” แบบฟอร์มรายสัปดาห์ หรือ “🗂 พิมพ์ชุดเอกสารสิ้นเทอม” รวมบันทึกโฮมรูม สรุปการมาเรียนทั้งภาคเรียน และเงินออมไว้ในไฟล์เดียว (ใช้ภาคเรียนและปีการศึกษาที่หัวแบบฟอร์ม)",
 ];
@@ -210,7 +212,7 @@ export default function HomeroomApp() {
     principalRole,
     students,
   };
-  const { pulled, status: cloudStatus } = useCloudSync("homeroom", state, {
+  const { pulled, savedAt, status: cloudStatus } = useCloudSync("homeroom", state, {
     push: edited,
   });
 
@@ -229,7 +231,12 @@ export default function HomeroomApp() {
           if (d.year) setYearRaw(d.year);
           setTeacherRaw(d.teacher || "");
           setTopicsRaw(d.topics);
-          const loadedSessions = Array.isArray(d.sessions) ? d.sessions : [];
+          // Days whose มา/ขาด are still blank pick them up from that day's
+          // attendance check, so checking attendance first needs no extra step here.
+          const attendance = readAppLS<RawAttendanceState>(ATTENDANCE_LS);
+          const loadedSessions = (Array.isArray(d.sessions) ? d.sessions : []).map((x) =>
+            withAttendanceFilled(x, attendance),
+          );
           sessionsRef.current = loadedSessions;
           setSessionsRaw(loadedSessions);
           setCurrentId(loadedSessions.length ? loadedSessions[loadedSessions.length - 1].id : null);
@@ -483,6 +490,7 @@ export default function HomeroomApp() {
       present: "",
       absent: "",
     };
+    Object.assign(next, withAttendanceFilled(next, readAppLS<RawAttendanceState>(ATTENDANCE_LS)));
     const nextSessions = [...sessionsRef.current, next];
     next.week = weekOf(iso, nextSessions);
     const planTopics = plan[next.week];
@@ -515,6 +523,10 @@ export default function HomeroomApp() {
       setPackStatus("สัปดาห์นั้นมีครบแล้ว");
       return;
     }
+    const attendance = readAppLS<RawAttendanceState>(ATTENDANCE_LS);
+    adds.forEach((x, i) => {
+      adds[i] = withAttendanceFilled(x, attendance);
+    });
     const nextSessions = [...cur, ...adds];
     nextSessions.forEach((x) => {
       x.week = weekOf(x.date, nextSessions);
@@ -1081,6 +1093,9 @@ export default function HomeroomApp() {
     <ToolFullscreenFrame title="บันทึกโฮมรูม">
     <div className="bg-white">
       <SyncStatus status={cloudStatus} />
+      <div className="mb-2 flex justify-end">
+        <SaveIndicator savedAt={savedAt} status={cloudStatus} />
+      </div>
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์

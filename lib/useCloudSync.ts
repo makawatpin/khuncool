@@ -17,6 +17,12 @@ export interface CloudSyncResult {
    * synchronous localStorage read still gets picked up.
    */
   pulled: number;
+  /**
+   * When the teacher's latest change was saved on this device (epoch ms), or
+   * null before any change this visit. Saving to the device is immediate;
+   * `status` says whether it has reached the account too.
+   */
+  savedAt: number | null;
 }
 
 const TABLE = "kc_state";
@@ -87,6 +93,7 @@ export function useCloudSync<T>(
   // inside an effect body (react-hooks/set-state-in-effect).
   const [asyncStatus, setStatus] = useState<CloudSyncStatus>("local-only");
   const [pulled, setPulled] = useState(0);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
   // Bumped when the pull decides this device's unsynced copy should go up.
   const [forcePush, setForcePush] = useState(0);
   const status: CloudSyncStatus = user ? asyncStatus : "local-only";
@@ -178,6 +185,10 @@ export function useCloudSync<T>(
       return;
     }
     if (typeof window !== "undefined") setDirty(key, true);
+    // A real change has just been written locally by the app; note when, for
+    // the "saved" indicator. Deferred so no state is set inside the effect body.
+    const at = Date.now();
+    queueMicrotask(() => setSavedAt(at));
     if (!user) return;
 
     if (pushTimer.current) clearTimeout(pushTimer.current);
@@ -237,5 +248,5 @@ export function useCloudSync<T>(
     };
   }, [user, key, stateJson, push, forcePush]);
 
-  return { status, pulled };
+  return { status, pulled, savedAt };
 }

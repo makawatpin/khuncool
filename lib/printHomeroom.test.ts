@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { attendanceSnapshotFrom, buildTermPackHtml } from "./printHomeroom";
+import { attendanceSnapshotFrom, buildTermPackHtml, withAttendanceFilled } from "./printHomeroom";
 
 describe("attendanceSnapshotFrom", () => {
   const perDay = {
@@ -72,5 +72,31 @@ describe("buildTermPackHtml attendance section", () => {
 
   it("says when the term has no attendance yet", () => {
     expect(buildTermPackHtml(meta, null, null)).toContain("ยังไม่มีข้อมูลเช็กชื่อในภาคเรียนนี้");
+  });
+});
+
+describe("withAttendanceFilled", () => {
+  const att = {
+    students: ["ก", "ข", "ค"],
+    days: { "2026-11-03": { ก: "present", ข: "absent", ค: "leave" } },
+  };
+  const day = (date: string, present = "", absent = "") => ({ id: "h1", date, total: "3", present, absent });
+
+  it("fills a blank day from that day's attendance check", () => {
+    expect(withAttendanceFilled(day("2026-11-03"), att)).toEqual({
+      id: "h1",
+      date: "2026-11-03",
+      total: "3",
+      present: "1",
+      absent: "ข\nค (ลา)",
+    });
+  });
+
+  it("never uses another day's check", () => {
+    expect(withAttendanceFilled(day("2026-11-04"), att)).toEqual(day("2026-11-04"));
+  });
+
+  it("keeps what the teacher already typed", () => {
+    expect(withAttendanceFilled(day("2026-11-03", "3"), att)).toEqual(day("2026-11-03", "3"));
   });
 });

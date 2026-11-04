@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import * as XLSX from "xlsx";
 import { isExportFooterRow } from "@/lib/excelImport";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
+import SaveIndicator from "@/components/SaveIndicator";
 import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import MonthView from "./MonthView";
@@ -124,7 +126,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   // The attendance app's saved data, to see who was absent on the chosen day.
   const [attendanceRaw, setAttendanceRaw] = useState<string | null>(null);
   const state = { students, room, days, holidays };
-  const { pulled, status: cloudStatus } = useCloudSync(kind, state, {
+  const { pulled, savedAt, status: cloudStatus } = useCloudSync(kind, state, {
     push: edited,
   });
   const editStudents = useCallback((next: React.SetStateAction<string[]>) => {
@@ -538,6 +540,9 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       className={`tool-stage bg-white ${fullscreenClassName}`}
     >
       <SyncStatus status={cloudStatus} />
+      <div className="mb-2 flex justify-end">
+        <SaveIndicator savedAt={savedAt} status={cloudStatus} />
+      </div>
       {offline && (
         <div className="fixed left-1/2 top-3.5 z-[99] -translate-x-1/2 rounded-pill border border-[#FDE68A] bg-[#FFFBEB] px-[18px] py-[9px] text-[13px] font-semibold text-[#92600A] shadow-[0_12px_30px_-12px_rgba(26,29,38,.35)]">
           📶 ออฟไลน์อยู่ · บันทึกไว้ในเครื่องก่อน จะซิงก์ให้เมื่อกลับมาออนไลน์
@@ -946,6 +951,24 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
                   🗑 ลบรายชื่อ
                 </button>
               </div>
+
+              {config.kind === "attendance" && total > 0 && checked === total && !isHolidayDay && (
+                <Link
+                  href="/tools/homeroom"
+                  className="mb-3 flex items-center gap-3 rounded-2xl border border-[#C6C9FB] bg-[#F4F5FF] p-3.5 no-underline hover:border-primary md:p-4"
+                >
+                  <span className="text-[22px]">📋</span>
+                  <span className="flex-1">
+                    <span className="block text-[14px] font-bold text-ink md:text-[15px]">
+                      เช็กชื่อครบแล้ว · ไปบันทึกโฮมรูม
+                    </span>
+                    <span className="block text-[12px] leading-[1.5] text-[#5A6273] md:text-[13px]">
+                      จำนวนคนมา/ขาดของวันนี้จะเติมให้เองในบันทึกโฮมรูม
+                    </span>
+                  </span>
+                  <span className="text-[18px] font-bold text-primary">→</span>
+                </Link>
+              )}
 
               {repeated.length > 0 && (
                 <div className="mb-3 rounded-xl border border-[#F5D08A] bg-[#FFF8E6] px-3.5 py-2.5 text-[12.5px] leading-[1.6] text-[#8A5A1A] md:text-[13.5px]">
