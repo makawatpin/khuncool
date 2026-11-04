@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import * as XLSX from "xlsx";
+import { getXlsx } from "@/lib/excel/getXlsx";
 import { statusOption, type DailyCheckConfig } from "@/lib/dailyCheck/config";
 import { positiveKeys, printCheckMonth } from "@/lib/dailyCheck/print";
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
@@ -73,7 +73,14 @@ export default function MonthView({
     (_, i) => negative.reduce((n, s) => n + (perStudent[i].counts[s.key] ?? 0), 0) > 3,
   );
 
-  const exportExcel = useCallback(() => {
+  const exportExcel = useCallback(async () => {
+    let XLSX;
+    try {
+      XLSX = await getXlsx();
+    } catch {
+      onNotify("โหลดตัวสร้างไฟล์ Excel ไม่สำเร็จ — เช็กอินเทอร์เน็ต");
+      return;
+    }
     const head: (string | number)[] = ["เลขที่", "ชื่อ-สกุล"];
     allDays.forEach((d) => head.push(Number(d.slice(8))));
     config.statuses.forEach((st) => head.push(st.label));
@@ -100,7 +107,7 @@ export default function MonthView({
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `${config.fileStem}รายเดือน`);
     XLSX.writeFile(wb, `${config.fileStem}_${room || "ห้อง"}_${month.replace("-", "")}.xlsx`);
-  }, [config, allDays, students, days, holidays, perStudent, room, month, monthText]);
+  }, [config, allDays, students, days, holidays, perStudent, room, month, monthText, onNotify]);
 
   const navBtn =
     "flex h-11 w-11 flex-none items-center justify-center rounded-[10px] border border-[#D3D8E1] bg-white text-xl font-semibold hover:bg-surface-light disabled:cursor-not-allowed disabled:opacity-35 md:h-10 md:w-10";
