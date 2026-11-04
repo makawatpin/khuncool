@@ -23,6 +23,20 @@ describe("buildCheckMonthPrintHtml", () => {
     expect(html).toContain("ผู้บริหารสถานศึกษา");
   });
 
+  it("prints the school letterhead like the other reports", () => {
+    const h = buildCheckMonthPrintHtml(TB, "ป.5/2", ["ก"], "2026-11", {}, [], {
+      school: "โรงเรียนบ้านทดสอบ",
+      subtitle: "สพป.ทดสอบ เขต 1",
+      logo: "data:image/png;base64,AAAA",
+    });
+    expect(h).toContain('<header class="rh">');
+    expect(h).toContain('<img class="rh-logo" src="data:image/png;base64,AAAA"');
+    expect(h).toContain("โรงเรียนบ้านทดสอบ");
+    expect(h).toContain("สพป.ทดสอบ เขต 1");
+    expect(h).toContain(`<h1 class="rh-title">${TB.monthFormTitle}</h1>`);
+    expect(h).toContain("ห้อง ป.5/2<br>ประจำเดือน");
+  });
+
   it("greys out a holiday like a weekend", () => {
     const h = buildCheckMonthPrintHtml(TB, "ป.5/2", ["ก"], "2026-11", {}, ["2026-11-04"]);
     expect(h.match(/<th class="d we">/g)).toHaveLength(10);
