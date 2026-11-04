@@ -9,7 +9,7 @@ import type { CloudSyncStatus } from "@/lib/useCloudSync";
  * the common already-synced case stay visually unchanged.
  *
  * Placed as a small fixed pill matching the existing offline/toast banners
- * in Attendance/Savings/Homeroom (see AttendanceApp.tsx's offline banner).
+ * in Attendance/Savings/Homeroom (see app/tools/_daily-check/DailyCheckApp.tsx's offline banner).
  */
 export default function SyncStatus({ status }: { status: CloudSyncStatus }) {
   if (status !== "error" && status !== "syncing") return null;
