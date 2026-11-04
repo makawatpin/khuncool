@@ -11,7 +11,7 @@ import SaveScopeNote from "@/components/SaveScopeNote";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import MonthView from "./MonthView";
 import { ATTENDANCE_LS_KEY, notInClassOn } from "@/lib/attendanceToday";
-import { reconcileRoster } from "@/lib/roster";
+import { cleanName, duplicateNames, reconcileRoster, uniqueNames } from "@/lib/roster";
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
 import { useToday } from "@/lib/useToday";
 import { printCheckDay, statusCell } from "@/lib/dailyCheck/print";
@@ -241,12 +241,17 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   }, [students, writeDay, flashToast]);
 
   const addName = useCallback(() => {
-    const v = newName.trim();
+    const v = cleanName(newName);
     if (!v) return;
+    if (students.includes(v)) {
+      // Records are keyed by name; a second "สมชาย" would share the first one's.
+      flashToast("มีชื่อนี้แล้ว — ถ้าเป็นคนละคน เติมเลขที่หรือชื่อเล่นต่อท้าย");
+      return;
+    }
     editStudents((current) => [...current, v]);
     setNewName("");
     flashToast();
-  }, [newName, editStudents, flashToast]);
+  }, [newName, students, editStudents, flashToast]);
 
   const onKey = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -281,14 +286,23 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
 
   // Swaps in a new name list. Records are keyed by name, so a name corrected
   // in the same row carries its history across instead of leaving it behind.
+  // Repeated names are numbered so each row keeps its own record; the
+  // returned message (if any) tells the teacher which ones changed.
   const replaceRoster = useCallback(
-    (list: string[]) => {
-      const { renames } = reconcileRoster(students, students.map(() => 0), list);
+    (list: string[]): { names: string[]; message?: string } => {
+      const { names, renamed } = uniqueNames(list);
+      const { renames } = reconcileRoster(students, students.map(() => 0), names);
       if (renames.length) {
         setEdited(true);
         setDays((current) => renameInDays(current, renames));
       }
-      editStudents(list);
+      editStudents(names);
+      return {
+        names,
+        message: renamed.length
+          ? `ชื่อซ้ำ ${renamed.length} คน เติม (2) ต่อท้ายให้แล้ว — แก้เป็นเลขที่หรือชื่อเล่นได้`
+          : undefined,
+      };
     },
     [students, editStudents],
   );
@@ -298,9 +312,9 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       .split("\n")
       .map((x) => x.trim())
       .filter(Boolean);
-    replaceRoster(list);
+    const { message } = replaceRoster(list);
     setBulkMode(false);
-    flashToast();
+    flashToast(message);
   }, [bulkText, replaceRoster, flashToast]);
 
   const importPaste = useCallback(() => {
@@ -312,10 +326,10 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       setImportMsg("ยังไม่มีรายชื่อให้นำเข้า");
       return;
     }
-    replaceRoster(list);
+    const { message } = replaceRoster(list);
     setShowImport(false);
     setImportText("");
-    flashToast();
+    flashToast(message);
   }, [importText, replaceRoster, flashToast]);
 
   const onFile = useCallback(
@@ -392,11 +406,11 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
             setImportMsg("ไม่พบรายชื่อในไฟล์ (ตรวจคอลัมน์ชื่อ)");
             return;
           }
-          replaceRoster(newStudents);
-          if (statusCol >= 0) writeDay(newStatuses, newStudents);
+          const { names, message } = replaceRoster(newStudents);
+          if (statusCol >= 0) writeDay(newStatuses, names);
           setShowImport(false);
           setImportMsg("");
-          flashToast();
+          flashToast(message);
         } catch {
           setImportMsg("อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls");
         } finally {
@@ -454,6 +468,8 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   // Nothing is filled in for an unrecorded day, so a blank day stays distinct
   // from a day where everyone did it. This prompt makes the one-tap start obvious.
   const isHolidayDay = holidays.includes(date);
+  // Saved before names were kept unique; such rows share one record.
+  const repeated = duplicateNames(students);
   const dayUnrecorded = total > 0 && checked === 0 && !isHolidayDay;
   const absentShown = new Set(notInClass);
   const canGoNext = shiftSchoolDay(date, 1) <= today;
@@ -911,6 +927,13 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
                   🗑 ลบรายชื่อ
                 </button>
               </div>
+
+              {repeated.length > 0 && (
+                <div className="mb-3 rounded-xl border border-[#F5D08A] bg-[#FFF8E6] px-3.5 py-2.5 text-[12.5px] leading-[1.6] text-[#8A5A1A] md:text-[13.5px]">
+                  <b>มีชื่อซ้ำ:</b> {repeated.join(", ")} — บันทึกของคนชื่อเดียวกันจะรวมกัน
+                  แก้ชื่อให้ต่างกันที่ “วางหลายชื่อ” เช่น เติมเลขที่ต่อท้าย
+                </div>
+              )}
 
               {dayUnrecorded && (
                 <div className="mb-3 flex flex-col gap-3 rounded-2xl border-[1.5px] border-[#9FE3D3] bg-[#EEFBF7] p-4 md:flex-row md:items-center md:gap-4 md:p-[18px]">

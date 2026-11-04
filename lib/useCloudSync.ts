@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase/client";
-import { UPDATED_AT_FIELD, cloudUpdatedAt, decidePull } from "@/lib/cloudSyncPolicy";
+import { SYNCED_LOCAL_KEYS, UPDATED_AT_FIELD, cloudUpdatedAt, decidePull } from "@/lib/cloudSyncPolicy";
 
 export type CloudSyncStatus = "local-only" | "syncing" | "synced" | "error";
 
@@ -21,22 +21,6 @@ export interface CloudSyncResult {
 
 const TABLE = "kc_state";
 const PUSH_DEBOUNCE_MS = 1200;
-
-/**
- * Maps each `useCloudSync` key to the localStorage key the corresponding
- * app already reads/writes on its own. A cloud pull is dropped into that
- * same localStorage slot so the app's existing hydration logic picks it up
- * naturally, instead of the hook reaching into each app's React state.
- */
-const LOCAL_STORAGE_KEY: Record<string, string> = {
-  attendance: "khuncool_attendance_v1",
-  savings: "khuncool_savings_v1",
-  toothbrushing: "khuncool_toothbrushing_v1",
-  milk: "khuncool_milk_v1",
-  homeroom: "khuncool.homeroom",
-  classrooms: "khuncool.classrooms.v1",
-  questionSets: "khuncool.questionsets.v1",
-};
 
 /** How each key is named to the teacher when sign-in needs a decision. */
 const APP_NAME: Record<string, string> = {
@@ -142,7 +126,7 @@ export function useCloudSync<T>(
         const cloudAt = cloudUpdatedAt(cloudData, key, data?.updated_at);
         const localAt = parseInt(window.localStorage.getItem(stampKey(key)) || "0", 10);
         const dirty = window.localStorage.getItem(dirtyKey(key)) === "1";
-        const lsKey = LOCAL_STORAGE_KEY[key];
+        const lsKey = SYNCED_LOCAL_KEYS[key];
 
         let decision = decidePull({ hasCloud: cloudValue !== undefined, cloudAt, localAt, dirty });
         if (decision === "ask") {

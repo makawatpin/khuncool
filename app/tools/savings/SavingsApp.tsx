@@ -27,6 +27,7 @@ import {
   reconcileRoster,
   type Txn,
 } from "@/lib/savings";
+import { cleanName, duplicateNames, uniqueNames } from "@/lib/roster";
 
 const LS_KEY = "khuncool_savings_v1";
 const PRESET_VALS = [5, 10, 20, 50];
@@ -383,12 +384,17 @@ export default function SavingsApp() {
   );
 
   const addName = useCallback(() => {
-    const v = newName.trim();
+    const v = cleanName(newName);
     if (!v) return;
+    if (students.includes(v)) {
+      // Balances are keyed by name; a second "สมชาย" would share the first one's money.
+      flashToast("มีชื่อนี้แล้ว — ถ้าเป็นคนละคน เติมเลขที่หรือชื่อเล่นต่อท้าย");
+      return;
+    }
     editStudents((current) => [...current, v]);
     setNewName("");
     flashToast();
-  }, [newName, flashToast, editStudents]);
+  }, [newName, students, flashToast, editStudents]);
 
   const removeStudent = useCallback(
     (i: number) => {
@@ -445,7 +451,13 @@ export default function SavingsApp() {
   // over the carried-over balances, and `fileHistory` (an imported history
   // sheet) replaces the history. Returns false when the teacher cancels.
   const replaceRoster = useCallback(
-    (list: string[], fileBalances?: number[], fileHistory?: Txn[]) => {
+    (
+      typed: string[],
+      fileBalances?: number[],
+      fileHistory?: Txn[],
+    ): false | { message?: string } => {
+      // Repeated names are numbered so each student keeps their own money.
+      const { names: list, renamed } = uniqueNames(typed);
       const { renames, dropped } = reconcileRoster(
         students,
         balancesFor(students, txnsRef.current),
@@ -471,7 +483,11 @@ export default function SavingsApp() {
       });
       editStudents(list);
       setRowAmts({});
-      return true;
+      return {
+        message: renamed.length
+          ? `ชื่อซ้ำ ${renamed.length} คน เติม (2) ต่อท้ายให้แล้ว — แก้เป็นเลขที่หรือชื่อเล่นได้`
+          : undefined,
+      };
     },
     [students, editTxns, editStudents],
   );
@@ -481,9 +497,10 @@ export default function SavingsApp() {
       .split("\n")
       .map((x) => x.trim())
       .filter(Boolean);
-    if (!replaceRoster(list)) return;
+    const done = replaceRoster(list);
+    if (!done) return;
     setBulkMode(false);
-    flashToast();
+    flashToast(done.message);
   }, [bulkText, replaceRoster, flashToast]);
 
   const importPaste = useCallback(() => {
@@ -495,10 +512,11 @@ export default function SavingsApp() {
       setImportMsg("ยังไม่มีรายชื่อให้นำเข้า");
       return;
     }
-    if (!replaceRoster(list)) return;
+    const done = replaceRoster(list);
+    if (!done) return;
     setShowImport(false);
     setImportText("");
-    flashToast();
+    flashToast(done.message);
   }, [importText, replaceRoster, flashToast]);
 
   const onFile = useCallback(
@@ -586,13 +604,14 @@ export default function SavingsApp() {
           }
           // Without a balance column the file is just a name list, so keep
           // everyone's money as for a pasted list.
-          if (!replaceRoster(newStudents, balCol >= 0 ? newBalances : undefined, fileHistory)) return;
+          const done = replaceRoster(newStudents, balCol >= 0 ? newBalances : undefined, fileHistory);
+          if (!done) return;
           setShowImport(false);
           setImportMsg("");
           flashToast(
             adjusted
               ? `นำเข้าแล้ว · ปัดยอดที่มีสตางค์หรือติดลบ ${adjusted} คนเป็นบาทเต็ม`
-              : undefined,
+              : done.message,
           );
         } catch {
           setImportMsg("อ่านไฟล์ไม่สำเร็จ — ต้องเป็น .xlsx/.xls");
@@ -658,6 +677,8 @@ export default function SavingsApp() {
     .reduce((a, t) => a + t.amt, 0);
   const avg = total ? totalBal / total : 0;
   const showEmpty = total === 0;
+  // Saved before names were kept unique; such rows share one balance.
+  const repeated = duplicateNames(students);
   const lastText = lastTs
     ? new Date(lastTs).toLocaleDateString("th-TH", { day: "numeric", month: "short" })
     : "—";
@@ -1195,6 +1216,13 @@ export default function SavingsApp() {
               ฝากทุกคน
             </button>
           </div>
+
+          {repeated.length > 0 && (
+            <div className="mb-3 rounded-xl border border-[#F5D08A] bg-[#FFF8E6] px-3.5 py-2.5 text-[12.5px] leading-[1.6] text-[#8A5A1A] md:text-[13.5px]">
+              <b>มีชื่อซ้ำ:</b> {repeated.join(", ")} — คนชื่อเดียวกันใช้ยอดเงินร่วมกัน
+              แก้ชื่อให้ต่างกันที่ “วางหลายชื่อ” เช่น เติมเลขที่ต่อท้าย
+            </div>
+          )}
 
           {showEmpty ? (
             <div className="rounded-2xl border-[1.5px] border-dashed border-[#E4C79A] bg-[#FFF8EE] p-[30px_20px] text-center md:rounded-[18px] md:p-[56px_24px]">

@@ -57,3 +57,41 @@ export function renameKeys<T>(
   }
   return out;
 }
+
+/** Trims a typed or pasted name and collapses runs of spaces to one. */
+export function cleanName(name: string): string {
+  return name.trim().replace(/\s+/g, " ");
+}
+
+/**
+ * Records are keyed by name, so two students with the same name would share
+ * one record. Repeats get " (2)", " (3)"… so each row is its own student;
+ * `renamed` lists the names that changed, for telling the teacher.
+ */
+export function uniqueNames(names: readonly string[]): { names: string[]; renamed: string[] } {
+  const cleaned = names.map(cleanName).filter(Boolean);
+  const taken = new Set(cleaned);
+  const seen = new Set<string>();
+  const renamed: string[] = [];
+  const out = cleaned.map((name) => {
+    if (!seen.has(name)) {
+      seen.add(name);
+      return name;
+    }
+    let n = 2;
+    while (taken.has(`${name} (${n})`)) n++;
+    const next = `${name} (${n})`;
+    taken.add(next);
+    renamed.push(next);
+    return next;
+  });
+  return { names: out, renamed };
+}
+
+/** Names that appear more than once (for data saved before names were kept unique). */
+export function duplicateNames(names: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const dup = new Set<string>();
+  for (const n of names) (seen.has(n) ? dup : seen).add(n);
+  return [...dup];
+}
