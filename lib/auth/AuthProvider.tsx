@@ -12,6 +12,7 @@ import {
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase/client";
 import { getKhuncoolLocalStorageKeys } from "@/lib/khuncoolLocalKeys";
+import { claimDeviceFor } from "@/lib/deviceAccount";
 
 /* ---------------------------------------------------------------------- */
 /* Error translation — ported verbatim from reference/khuncool-cloud.js   */
@@ -132,6 +133,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       unsubscribe?.();
     };
   }, []);
+
+  // A shared device may still hold another teacher's class data. When a
+  // different account signs in, set that data aside and reload, so it is
+  // never shown in, or synced into, this account.
+  const userId = user?.id;
+  useEffect(() => {
+    if (!userId || typeof window === "undefined") return;
+    try {
+      if (claimDeviceFor(window.localStorage, userId).reload) window.location.reload();
+    } catch {
+      // best-effort: storage unavailable (e.g. private mode)
+    }
+  }, [userId]);
 
   const signUp = useCallback(
     async (email: string, password: string, meta?: ProfileMeta): Promise<AuthResult> => {

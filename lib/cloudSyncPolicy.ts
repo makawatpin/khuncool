@@ -34,3 +34,18 @@ export function decidePull(p: {
   if (p.hasCloud && p.cloudAt > p.localAt) return p.dirty ? "ask" : "use-cloud";
   return p.dirty ? "push-local" : "nothing";
 }
+
+/**
+ * Each `useCloudSync` key and the localStorage slot its app already reads
+ * and writes. A cloud pull lands in that slot so the app's own hydration
+ * picks it up.
+ */
+export const SYNCED_LOCAL_KEYS: Record<string, string> = {
+  attendance: "khuncool_attendance_v1",
+  savings: "khuncool_savings_v1",
+  toothbrushing: "khuncool_toothbrushing_v1",
+  milk: "khuncool_milk_v1",
+  homeroom: "khuncool.homeroom",
+  classrooms: "khuncool.classrooms.v1",
+  questionSets: "khuncool.questionsets.v1",
+};
