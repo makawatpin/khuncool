@@ -9,6 +9,7 @@ import {
   monthSummary,
   shiftMonth,
   parseCheckState,
+  renameInDays,
   shiftSchoolDay,
   toIsoDate,
   withDayStatuses,
@@ -221,5 +222,18 @@ describe("monthSummary", () => {
     };
     const s = monthSummary(att, "2026-11", ["ก"], [], new Set(["present", "late"]));
     expect(s.perStudent[0]).toEqual({ counts: { present: 1, late: 1, absent: 1, leave: 1 }, percent: 50 });
+  });
+});
+
+describe("renameInDays", () => {
+  it("moves a renamed student's records on every day", () => {
+    const days = {
+      "2026-11-02": { "ข ไข่": "absent", ก: "present" },
+      "2026-11-03": { "ข ไข่": "late" },
+    };
+    expect(renameInDays(days, [{ from: "ข ไข่", to: "ข ไข่ ดีใจ" }])).toEqual({
+      "2026-11-02": { "ข ไข่ ดีใจ": "absent", ก: "present" },
+      "2026-11-03": { "ข ไข่ ดีใจ": "late" },
+    });
   });
 });

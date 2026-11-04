@@ -34,13 +34,17 @@ const PRINT_RUNNER =
   "<" +
   "/script>";
 
-/** Opens a new window and triggers window.print() with the built document. */
-function openPrint(html: string): void {
+/**
+ * Opens a new window and triggers window.print() with the built document.
+ * False when the browser blocked the window, so the caller can say so.
+ */
+function openPrint(html: string): boolean {
   const w = window.open("", "_blank");
-  if (!w) return;
+  if (!w) return false;
   w.document.open();
   w.document.write(html);
   w.document.close();
+  return true;
 }
 
 export function buildCheckDayPrintHtml(
@@ -90,8 +94,8 @@ export function printCheckDay(
   students: string[],
   statuses: (CheckStatus | null)[],
   date: Date = new Date(),
-): void {
-  openPrint(buildCheckDayPrintHtml(config, room, students, statuses, date));
+): boolean {
+  return openPrint(buildCheckDayPrintHtml(config, room, students, statuses, date));
 }
 
 /**
@@ -178,6 +182,6 @@ export function printCheckMonth(
   month: string,
   days: Readonly<Record<string, Readonly<Record<string, CheckStatus>>>>,
   holidays: readonly string[] = [],
-): void {
-  openPrint(buildCheckMonthPrintHtml(config, room, students, month, days, holidays));
+): boolean {
+  return openPrint(buildCheckMonthPrintHtml(config, room, students, month, days, holidays));
 }

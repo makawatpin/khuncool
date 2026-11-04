@@ -228,13 +228,14 @@ export function buildHomeroomFormHtml(m: HomeroomFormMeta): string {
 }
 
 /** Opens a new window and triggers window.print() with the weekly form. */
-export function printHomeroomForm(m: HomeroomFormMeta): void {
+export function printHomeroomForm(m: HomeroomFormMeta): boolean {
   const html = buildHomeroomFormHtml(m);
   const w = window.open("", "_blank");
-  if (!w) return;
+  if (!w) return false;
   w.document.open();
   w.document.write(html);
   w.document.close();
+  return true;
 }
 
 /**

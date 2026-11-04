@@ -27,17 +27,17 @@ const FAQS = [
 ];
 
 export const metadata: Metadata = {
-  title: "บันทึกออมเงินนักเรียน ออนไลน์ ใช้ฟรี ส่งออก Excel | khuncool",
+  title: "บันทึกออมเงินนักเรียน ประวัติฝาก-ถอนครบ ยอดถูกต้อง ฟรี | khuncool",
   description:
-    "บันทึกเงินออมนักเรียนรายห้องรายคน พิมพ์ใบบันทึกออมเงินและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี ล็อกอินแล้วซิงก์ทุกเครื่อง",
+    "บันทึกเงินฝาก-ถอนของนักเรียนรายคน ยอดคงเหลือคำนวณจากประวัติทุกรายการ บันทึกย้อนหลังได้ เลิกทำรายการที่ผิดได้ พิมพ์สมุดบัญชีทั้งห้อง และส่งออก-นำเข้า Excel พร้อมประวัติ ใช้ฟรี ล็อกอินแล้วซิงก์ทุกเครื่อง",
   alternates: {
     canonical: "https://www.khuncool.com/tools/savings",
   },
   openGraph: {
     type: "website",
-    title: "บันทึกออมเงินนักเรียน ออนไลน์ ใช้ฟรี ส่งออก Excel | khuncool",
+    title: "บันทึกออมเงินนักเรียน ประวัติฝาก-ถอนครบ ยอดถูกต้อง ฟรี | khuncool",
     description:
-      "บันทึกเงินออมนักเรียนรายห้องรายคน พิมพ์ใบบันทึกออมเงินและส่งออกไฟล์ Excel ได้ทันที ใช้ฟรี",
+      "บันทึกเงินฝาก-ถอนของนักเรียนรายคน ยอดคงเหลือคำนวณจากประวัติทุกรายการ พิมพ์สมุดบัญชีทั้งห้อง และส่งออก Excel พร้อมประวัติ ใช้ฟรี",
     url: "https://www.khuncool.com/tools/savings",
     images: ["https://www.khuncool.com/assets/savings-cover.webp"],
     locale: "th_TH",
@@ -65,7 +65,7 @@ const jsonLd = {
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
       inLanguage: "th",
-      description: "บันทึกเงินออมนักเรียนรายห้องรายคน ส่งออกไฟล์ Excel ใช้ฟรี",
+      description: "บันทึกเงินฝาก-ถอนนักเรียนรายคน ประวัติครบทุกรายการ ส่งออก-นำเข้า Excel ใช้ฟรี",
       offers: { "@type": "Offer", price: "0", priceCurrency: "THB" },
     },
     {

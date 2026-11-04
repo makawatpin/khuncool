@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import * as XLSX from "xlsx";
 import { statusOption, type DailyCheckConfig } from "@/lib/dailyCheck/config";
 import { positiveKeys, printCheckMonth } from "@/lib/dailyCheck/print";
+import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
 import {
   fromIsoDate,
   isWeekend,
@@ -27,6 +28,8 @@ type Props = {
   month: string;
   today: string;
   onMonthChange: (month: string) => void;
+  /** Shows a short message (the app's toast). */
+  onNotify: (message: string) => void;
   /** Opens one day in the daily view, to fill it in or fix it. */
   onPickDay: (iso: string) => void;
 };
@@ -40,6 +43,7 @@ export default function MonthView({
   month,
   today,
   onMonthChange,
+  onNotify,
   onPickDay,
 }: Props) {
   const allDays = monthDays(month);
@@ -129,7 +133,9 @@ export default function MonthView({
           </button>
           <button
             type="button"
-            onClick={() => printCheckMonth(config, room, students, month, days, holidays)}
+            onClick={() => {
+              if (!printCheckMonth(config, room, students, month, days, holidays)) onNotify(PRINT_BLOCKED_MESSAGE);
+            }}
             className={actionBtn}
           >
             🖨️ พิมพ์

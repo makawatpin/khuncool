@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase/client";
+import { UPDATED_AT_FIELD, cloudUpdatedAt, decidePull } from "@/lib/cloudSyncPolicy";
 
 export type CloudSyncStatus = "local-only" | "syncing" | "synced" | "error";
 
@@ -37,15 +38,50 @@ const LOCAL_STORAGE_KEY: Record<string, string> = {
   questionSets: "khuncool.questionsets.v1",
 };
 
+/** How each key is named to the teacher when sign-in needs a decision. */
+const APP_NAME: Record<string, string> = {
+  attendance: "เช็กชื่อ",
+  savings: "ออมเงิน",
+  toothbrushing: "บันทึกการแปรงฟัน",
+  milk: "บันทึกการดื่มนม",
+  homeroom: "บันทึกโฮมรูม",
+  classrooms: "ห้องเรียนของฉัน",
+  questionSets: "คลังคำถาม",
+};
+
 function stampKey(key: string) {
   return `khuncool.__syncedAt.${key}`;
+}
+
+/** Set while this device has changes for `key` that the cloud has not received. */
+function dirtyKey(key: string) {
+  return `khuncool.__dirty.${key}`;
+}
+
+/** Where the device's own copy is kept when the teacher picks the cloud's. */
+function backupKey(key: string) {
+  return `khuncool.__backup.${key}`;
+}
+
+function setDirty(key: string, dirty: boolean) {
+  try {
+    if (dirty) window.localStorage.setItem(dirtyKey(key), "1");
+    else window.localStorage.removeItem(dirtyKey(key));
+  } catch {
+    /* ignore */
+  }
 }
 
 /**
  * Phase 2: mirrors the caller's own state into a per-key slot of the
  * shared `kc_state.data` JSONB column (one row per signed-in user), and
  * pulls that slot back down on sign-in with last-write-wins semantics
- * (comparing the cloud row's `updated_at` against a local per-key stamp).
+ * (comparing that slot's own push time against a local per-key stamp).
+ *
+ * Changes made while signed out, offline or before a push finished are
+ * marked "dirty" on this device. On sign-in they are sent up, or, when the
+ * account holds a newer copy from another device, the teacher is asked which
+ * to keep; the device's copy is backed up before it is ever replaced.
  *
  * Signed-out (guest) users get `local-only` and this hook makes zero
  * network calls — Phase 1 behavior is preserved for guests.
@@ -66,6 +102,8 @@ export function useCloudSync<T>(
   // inside an effect body (react-hooks/set-state-in-effect).
   const [asyncStatus, setStatus] = useState<CloudSyncStatus>("local-only");
   const [pulled, setPulled] = useState(0);
+  // Bumped when the pull decides this device's unsynced copy should go up.
+  const [forcePush, setForcePush] = useState(0);
   const status: CloudSyncStatus = user ? asyncStatus : "local-only";
 
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -94,30 +132,40 @@ export function useCloudSync<T>(
           .eq("user_id", user.id)
           .maybeSingle();
         if (error) throw error;
-        if (cancelled) return;
+        if (cancelled || typeof window === "undefined") return;
 
         const cloudData =
           data?.data && typeof data.data === "object"
             ? (data.data as Record<string, unknown>)
             : null;
         const cloudValue = cloudData ? cloudData[key] : undefined;
+        const cloudAt = cloudUpdatedAt(cloudData, key, data?.updated_at);
+        const localAt = parseInt(window.localStorage.getItem(stampKey(key)) || "0", 10);
+        const dirty = window.localStorage.getItem(dirtyKey(key)) === "1";
+        const lsKey = LOCAL_STORAGE_KEY[key];
 
-        if (cloudValue !== undefined && typeof window !== "undefined") {
-          const cloudAt = data?.updated_at ? Date.parse(data.updated_at) : 0;
-          const localAt = parseInt(
-            window.localStorage.getItem(stampKey(key)) || "0",
-            10,
-          );
-          const lsKey = LOCAL_STORAGE_KEY[key];
-          if (lsKey && cloudAt > localAt) {
-            window.localStorage.setItem(lsKey, JSON.stringify(cloudValue));
-            window.localStorage.setItem(
-              stampKey(key),
-              String(cloudAt || Date.now()),
-            );
-            skipNextPush.current = true;
-            setPulled(Date.now());
-          }
+        let decision = decidePull({ hasCloud: cloudValue !== undefined, cloudAt, localAt, dirty });
+        if (decision === "ask") {
+          const name = APP_NAME[key] ?? key;
+          decision = window.confirm(
+            `ข้อมูล${name}ในเครื่องนี้มีการแก้ไขที่ยังไม่ได้ซิงก์ และบัญชีของคุณมีข้อมูล${name}ที่บันทึกจากเครื่องอื่นใหม่กว่า\n\n` +
+              `กด “ตกลง” เพื่อใช้ข้อมูลในบัญชี (ข้อมูลในเครื่องนี้จะถูกสำรองไว้)\n` +
+              `กด “ยกเลิก” เพื่อใช้ข้อมูลในเครื่องนี้และส่งขึ้นบัญชีแทน`,
+          )
+            ? "use-cloud"
+            : "push-local";
+        }
+
+        if (decision === "use-cloud" && lsKey) {
+          const mine = window.localStorage.getItem(lsKey);
+          if (dirty && mine) window.localStorage.setItem(backupKey(key), mine);
+          window.localStorage.setItem(lsKey, JSON.stringify(cloudValue));
+          window.localStorage.setItem(stampKey(key), String(cloudAt || Date.now()));
+          setDirty(key, false);
+          skipNextPush.current = true;
+          setPulled(Date.now());
+        } else if (decision === "push-local") {
+          setForcePush((n) => n + 1);
         }
         if (!cancelled) setStatus("synced");
       } catch {
@@ -130,11 +178,11 @@ export function useCloudSync<T>(
     };
   }, [user, key]);
 
-  // Debounced push of the caller's own state, signed-in only.
+  // Debounced push of the caller's own state, signed-in only. Signed out,
+  // a real edit only marks this device as holding unsynced changes.
   const stateJson = JSON.stringify(state);
   useEffect(() => {
-    if (!user) return;
-    if (!push) {
+    if (!push && !forcePush) {
       // Nothing to push yet. Drop any pending skip too, so the first real
       // edit is the one that gets pushed.
       skipNextPush.current = false;
@@ -144,6 +192,8 @@ export function useCloudSync<T>(
       skipNextPush.current = false;
       return;
     }
+    if (typeof window !== "undefined") setDirty(key, true);
+    if (!user) return;
 
     if (pushTimer.current) clearTimeout(pushTimer.current);
     pushTimer.current = setTimeout(() => {
@@ -157,7 +207,7 @@ export function useCloudSync<T>(
           // Phase 2 tradeoff: two round trips instead of one atomic update,
           // so a push for a *different* key from another tab racing between
           // this read and this upsert could be overwritten. Acceptable for
-          // now since the 3 tools are rarely edited simultaneously in two
+          // now since the tools are rarely edited simultaneously in two
           // tabs by the same signed-in user; a Postgres RPC doing the merge
           // atomically would remove the race if this becomes a problem.
           const { data: existing } = await supabase
@@ -169,8 +219,16 @@ export function useCloudSync<T>(
             existing?.data && typeof existing.data === "object"
               ? (existing.data as Record<string, unknown>)
               : {};
-          const merged = { ...existingData, [key]: JSON.parse(stateJson) };
           const nowIso = new Date().toISOString();
+          const times = existingData[UPDATED_AT_FIELD];
+          const merged = {
+            ...existingData,
+            [key]: JSON.parse(stateJson),
+            [UPDATED_AT_FIELD]: {
+              ...(times && typeof times === "object" ? (times as Record<string, unknown>) : {}),
+              [key]: nowIso,
+            },
+          };
 
           const { error } = await supabase.from(TABLE).upsert(
             { user_id: user.id, data: merged, updated_at: nowIso },
@@ -179,10 +237,8 @@ export function useCloudSync<T>(
           if (error) throw error;
 
           if (typeof window !== "undefined") {
-            window.localStorage.setItem(
-              stampKey(key),
-              String(Date.parse(nowIso)),
-            );
+            window.localStorage.setItem(stampKey(key), String(Date.parse(nowIso)));
+            setDirty(key, false);
           }
           setStatus("synced");
         } catch {
@@ -194,7 +250,7 @@ export function useCloudSync<T>(
     return () => {
       if (pushTimer.current) clearTimeout(pushTimer.current);
     };
-  }, [user, key, stateJson, push]);
+  }, [user, key, stateJson, push, forcePush]);
 
   return { status, pulled };
 }
