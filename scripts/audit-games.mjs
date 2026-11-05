@@ -276,6 +276,25 @@ const clickFirst = (selector, count, waitMs) => async (page) => {
   }
 };
 
+/**
+ * Santa's Sleigh: deliver the gift the child asked for. In the assisted mode the
+ * status line spells out the request ("เด็กอยากได้ drum (กลอง)"), and each gift's
+ * aria-label ends in its word, so the right one can be found from the page alone.
+ */
+const deliverSantaGift = async (page) => {
+  // The gifts bob up and down forever (and pulse while hinting), so Playwright
+  // never sees them as "stable" and an unforced click times out. The bob is a
+  // 4px cosmetic transform that does not move the hit area, so hold the gifts
+  // still for the walk instead of reaching for { force: true }, which would also skip
+  // the check that nothing covers them.
+  await page.addStyleTag({ content: 'button[aria-label^="ของขวัญ"] { animation: none !important; }' });
+  await page.locator('[role="status"]', { hasText: "อยากได้" }).waitFor({ timeout: 8000 });
+  const status = (await page.locator('[role="status"]').first().textContent()) ?? "";
+  const word = /อยากได้ (.+?) \(/.exec(status)?.[1];
+  if (!word) throw new Error(`no request in status: ${status}`);
+  await page.locator(`button[aria-label$=": ${word}"]`).click();
+};
+
 
 /**
  * Phonics Bingo's win screen — written off earlier as un-drivable because
@@ -868,6 +887,37 @@ const GAMES = {
           await page.waitForTimeout(900);
         },
         expect: '[data-stage="play"]',
+      },
+    ],
+  },
+  "santa-sleigh": {
+    path: "/media/english/santa-sleigh",
+    // The sleigh flies between houses on timers (about 2.7s of celebration and
+    // 2s of travel per house), so each step waits for the state it expects.
+    screens: [
+      { name: "menu" },
+      {
+        name: "ask",
+        enter: click(/ออกเดินทาง/),
+        expect: '[data-stage="play"]',
+      },
+      {
+        name: "celebrate",
+        async enter(page) {
+          await deliverSantaGift(page);
+          await page.waitForTimeout(1500);
+        },
+        expect: '[class*="bubbleThanks"]',
+      },
+      {
+        name: "summary",
+        async enter(page) {
+          for (let house = 1; house < 6; house++) {
+            await deliverSantaGift(page);
+            await page.waitForTimeout(house < 5 ? 1200 : 4200);
+          }
+        },
+        expect: '[data-stage="summary"]',
       },
     ],
   },

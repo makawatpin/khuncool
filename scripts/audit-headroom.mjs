@@ -56,6 +56,7 @@ const GAMES = {
   "family-tree": { path: "/media/english/family-tree", start: /เริ่มเล่น/ },
   "weather-seasons": { path: "/media/english/weather-seasons", start: [/เลือกโหมดการสอน/, /เรียนรู้/] },
   "halloween-wordle": { path: "/media/english/halloween-wordle", start: /เริ่มเล่น/ },
+  "santa-sleigh": { path: "/media/english/santa-sleigh", start: /ออกเดินทาง/ },
   "phonics-bingo": { path: "/media/english/phonics-bingo", start: /เริ่มเล่น/ },
   "sound-wheel": { path: "/media/english/sound-wheel", start: /เริ่มเล่น/ },
   "talk-card": { path: "/media/english/talk-card", start: /เริ่มสุ่มการ์ด/ },
