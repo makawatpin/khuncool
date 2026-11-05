@@ -13,9 +13,9 @@ import WordBuilder from "./WordBuilder";
 type LessonTab = "consonant" | "vowel" | "builder";
 
 const VOWEL_AUDIO = {
-  "า": "/assets/thai-kingdom/audio/vowel-aa.wav",
-  "ี": "/assets/thai-kingdom/audio/vowel-ii.wav",
-  "ู": "/assets/thai-kingdom/audio/vowel-uu.wav",
+  "า": "/assets/thai-kingdom/audio/vowel-aa.m4a",
+  "ี": "/assets/thai-kingdom/audio/vowel-ii.m4a",
+  "ู": "/assets/thai-kingdom/audio/vowel-uu.m4a",
 } as const;
 
 export default function LessonPlayer({ sound, onBack, onPractice }: { sound: boolean; onBack: () => void; onPractice: () => void }) {
