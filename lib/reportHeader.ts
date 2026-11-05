@@ -7,6 +7,11 @@ export interface ReportHeaderSettings {
   subtitle: string;
   /** A small `data:image/...;base64,` URL, or "" when the teacher has no logo. */
   logo: string;
+  /**
+   * Never stored. The school from the teacher's profile, used only when neither
+   * `school` nor the report's own school is set (see `useReportHeader().printHeader`).
+   */
+  profileSchool?: string;
 }
 
 export const EMPTY_REPORT_HEADER: ReportHeaderSettings = { school: "", subtitle: "", logo: "" };
@@ -72,7 +77,7 @@ export interface ReportHeaderInput {
 
 /** The letterhead: logo (if any), school, report title and meta, over a gradient rule. */
 export function reportHeaderHtml(input: ReportHeaderInput, header: ReportHeaderSettings): string {
-  const school = header.school || input.school || "";
+  const school = header.school || input.school || header.profileSchool || "";
   const logo = header.logo ? `<img class="rh-logo" src="${esc(header.logo)}" alt="">` : "";
   const meta = (input.meta ?? []).filter(Boolean);
   return (

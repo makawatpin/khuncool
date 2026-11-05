@@ -58,6 +58,14 @@ describe("reportHeaderHtml", () => {
     expect(html).toContain("โรงเรียนจากฟอร์ม");
   });
 
+  it("uses the profile school only when nothing more specific is set", () => {
+    const profile = { ...EMPTY_REPORT_HEADER, profileSchool: "โรงเรียนจากโปรไฟล์" };
+    expect(reportHeaderHtml({ title: "t" }, profile)).toContain("โรงเรียนจากโปรไฟล์");
+    expect(reportHeaderHtml({ title: "t", school: "จากฟอร์ม" }, profile)).toContain("จากฟอร์ม");
+    expect(reportHeaderHtml({ title: "t", school: "จากฟอร์ม" }, profile)).not.toContain("โรงเรียนจากโปรไฟล์");
+    expect(reportHeaderHtml({ title: "t" }, { ...profile, school: "ตั้งเอง" })).not.toContain("โรงเรียนจากโปรไฟล์");
+  });
+
   it("escapes text", () => {
     const html = reportHeaderHtml({ title: "<b>x</b>" }, { ...EMPTY_REPORT_HEADER, school: "A & B" });
     expect(html).toContain("&lt;b&gt;x&lt;/b&gt;");

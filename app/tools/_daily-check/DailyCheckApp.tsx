@@ -17,7 +17,6 @@ import { cleanName, duplicateNames, reconcileRoster, uniqueNames } from "@/lib/r
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
 import { useToday } from "@/lib/useToday";
 import { printCheckDay, statusCell } from "@/lib/dailyCheck/print";
-import { ReportHeaderDialog } from "@/components/ReportHeaderDialog";
 import { useReportHeader } from "@/lib/useReportHeader";
 import { DAILY_CHECKS, type DailyCheckConfig, type DailyCheckKind } from "@/lib/dailyCheck/config";
 import {
@@ -108,8 +107,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
   const [showHelp, setShowHelp] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [showExport, setShowExport] = useState(false);
-  const [showHeaderDlg, setShowHeaderDlg] = useState(false);
-  const { header: reportHeader, setHeader: setReportHeader } = useReportHeader();
+  const { printHeader: reportHeader } = useReportHeader();
   const [importText, setImportText] = useState("");
   const [importMsg, setImportMsg] = useState("");
   const [toast, setToast] = useState("");
@@ -720,23 +718,14 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
                 </span>
               </span>
             </button>
-            <button
-              type="button"
-              onClick={() => setShowHeaderDlg(true)}
-              className="mt-2.5 w-full rounded-[10px] border border-dashed border-[#D3D8E1] bg-white px-3 py-2.5 text-[13px] font-semibold text-[#5C5EE6] hover:bg-[#F8F9FB]"
+            <Link
+              href="/account#report-header"
+              className="mt-2.5 block w-full rounded-[10px] border border-dashed border-[#D3D8E1] bg-white px-3 py-2.5 text-center text-[13px] font-semibold text-[#5C5EE6] hover:bg-[#F8F9FB]"
             >
-              🏫 ตั้งค่าหัวกระดาษ / โลโก้โรงเรียน
-            </button>
+              🏫 {reportHeader.school || reportHeader.profileSchool ? "แก้หัวกระดาษ / โลโก้ในหน้าบัญชี" : "ยังไม่ได้ตั้งหัวกระดาษ — ตั้งค่าในหน้าบัญชี"}
+            </Link>
           </div>
         </div>
-      )}
-
-      {showHeaderDlg && (
-        <ReportHeaderDialog
-          header={reportHeader}
-          onSave={setReportHeader}
-          onClose={() => setShowHeaderDlg(false)}
-        />
       )}
 
       {/* Day / month tabs */}

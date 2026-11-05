@@ -26,7 +26,7 @@ import { toIsoDate } from "@/lib/dailyCheck/days";
 import { isExportFooterRow } from "@/lib/excelImport";
 import { academicTermFor, termBounds, weekToAdd } from "@/lib/homeroomDates";
 import { PRINT_BLOCKED_MESSAGE } from "@/lib/printBlocked";
-import { ReportHeaderDialog } from "@/components/ReportHeaderDialog";
+import Link from "next/link";
 import { useReportHeader } from "@/lib/useReportHeader";
 import { attendanceForPeriod } from "@/lib/attendanceToday";
 
@@ -119,8 +119,7 @@ export default function HomeroomApp() {
   const [importText, setImportText] = useState("");
   const [importMsg, setImportMsg] = useState("");
   const [showHelp, setShowHelp] = useState(false);
-  const [showHeaderDlg, setShowHeaderDlg] = useState(false);
-  const { header: reportHeader, setHeader: setReportHeader } = useReportHeader();
+  const { printHeader: reportHeader } = useReportHeader();
   const [blankRows, setBlankRowsRaw] = useState(4);
   const [plan, setPlanRaw] = useState<Record<number, string[]>>({});
   const [planWeek, setPlanWeek] = useState(1);
@@ -1113,15 +1112,6 @@ export default function HomeroomApp() {
       )}
 
       {/* HELP modal */}
-      {showHeaderDlg && (
-        <ReportHeaderDialog
-          header={reportHeader}
-          schoolHint={school}
-          onSave={setReportHeader}
-          onClose={() => setShowHeaderDlg(false)}
-        />
-      )}
-
       {showHelp && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-[rgba(26,29,38,.55)] p-[22px] backdrop-blur-[3px]">
           <div className="max-h-[640px] w-full max-w-[520px] overflow-y-auto rounded-[22px] bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,.45)] md:rounded-3xl md:p-[34px_32px]">
@@ -1254,13 +1244,12 @@ export default function HomeroomApp() {
               >
                 🖨 พิมพ์
               </button>
-              <button
-                type="button"
-                onClick={() => setShowHeaderDlg(true)}
+              <Link
+                href="/account#report-header"
                 className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-3 py-2 text-[12.5px] font-semibold"
               >
                 🏫 หัวกระดาษ
-              </button>
+              </Link>
               <button
                 type="button"
                 onClick={doExcel}
@@ -1490,13 +1479,12 @@ export default function HomeroomApp() {
           >
             🖨 พิมพ์ / บันทึก PDF
           </button>
-          <button
-            type="button"
-            onClick={() => setShowHeaderDlg(true)}
+          <Link
+            href="/account#report-header"
             className="whitespace-nowrap rounded-[10px] border border-[#D3D8E1] bg-white px-4 py-2.5 text-[13.5px] font-semibold hover:bg-surface-light"
           >
             🏫 หัวกระดาษ / โลโก้
-          </button>
+          </Link>
           <button
             type="button"
             onClick={doExcel}
