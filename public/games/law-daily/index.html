@@ -8,12 +8,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Fredoka:wght@600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="./vendor/tailwindcss-3-cdn.js"></script>
   <script src="./vendor/gsap-3.12.2.min.js"></script>
   <script src="./vendor/canvas-confetti-1.6.0.min.js"></script>
   <style>
     :root { --ink:#171927; --indigo:#5c5ee6; --deep:#25206c; --gold:#f3bd3e; --cream:#fffaf0; }
-    * { box-sizing:border-box; }
+    /* The Tailwind CDN runtime used to be loaded above. The markup uses no
+       Tailwind utility classes at all, so the only thing those 407KB
+       actually contributed was Preflight, Tailwind's base reset — and the
+       game had come to depend on parts of it. These are those parts,
+       written out. Checked by pixel-comparing every screen before and
+       after; without them, buttons regain the browser's default padding
+       and images lose their max-width. */
+    /* The one that matters most: Preflight put line-height 1.5 on <html>,
+       and every line of text in the game inherited it. Dropping the script
+       without this reflows the whole layout. */
+    html { line-height: 1.5; -webkit-text-size-adjust: 100%; tab-size: 4; }
+    *, *::before, *::after { box-sizing: border-box; border-width: 0; border-style: solid; }
+    button { font-family: inherit; font-size: 100%; font-weight: inherit; line-height: inherit; color: inherit; margin: 0; padding: 0; background-color: transparent; background-image: none; }
+    img, svg, video, canvas { display: block; vertical-align: middle; }
+    img, video { max-width: 100%; height: auto; }
+    h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; margin: 0; }
+    p, figure, blockquote { margin: 0; }
+
     html,body { margin:0; width:100%; height:100%; min-height:0; background:#111329; color:var(--ink); font-family:'Sarabun',sans-serif; overflow:hidden; }
     button { font-family:inherit; }
     button:focus-visible { outline:4px solid #fff; outline-offset:3px; }
