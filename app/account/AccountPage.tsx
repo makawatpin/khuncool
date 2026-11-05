@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { AccountForm } from "@/components/AccountSheet";
+import ReportHeaderCard from "@/components/ReportHeaderCard";
 import { getKhuncoolLocalStorageKeys } from "@/lib/khuncoolLocalKeys";
 
 const GUEST_PERKS = [
@@ -132,6 +133,10 @@ function GuestAccount() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="mt-7">
+            <ReportHeaderCard />
           </div>
         </div>
 
@@ -283,7 +288,7 @@ function MemberAccount() {
           <div className="rounded-card-lg border border-border bg-surface-card p-6">
             <h2 className="m-0 mb-1 text-[18px] font-bold text-ink">โปรไฟล์ครู</h2>
             <p className="mb-[18px] text-[13.5px] leading-[1.6] text-ink-secondary">
-              ใช้แสดงในหัวรายงานเช็กชื่อและสรุปเงินออม — ไม่กรอกก็ใช้งานได้ปกติ
+              ชื่อและโรงเรียนของคุณ — ไม่กรอกก็ใช้งานได้ปกติ (หัวกระดาษรายงานตั้งได้ในการ์ดด้านล่าง)
             </p>
             <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
               <div>
@@ -323,6 +328,8 @@ function MemberAccount() {
               )}
             </div>
           </div>
+
+          <ReportHeaderCard schoolHint={meta.school} />
         </div>
 
         <div className="flex flex-col gap-5">

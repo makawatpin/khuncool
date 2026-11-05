@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import {
   EMPTY_REPORT_HEADER,
   REPORT_HEADER_LS,
@@ -13,13 +14,18 @@ import { useCloudSync, type CloudSyncStatus } from "@/lib/useCloudSync";
 /**
  * The teacher's report letterhead (school, line under it, logo). Kept in this
  * browser and, when signed in, in the account so it follows them to any device.
- * Tools pass `header` to their print builders.
+ * `header` is what the teacher saved (for editing). Tools pass `printHeader` to
+ * their print builders: the same, plus the profile's school as a last-resort
+ * name when nothing else is set.
  */
 export function useReportHeader(): {
   header: ReportHeaderSettings;
+  printHeader: ReportHeaderSettings;
   setHeader: (next: ReportHeaderSettings) => void;
   status: CloudSyncStatus;
 } {
+  const { user } = useAuth();
+  const profileSchool = (user?.user_metadata as { school?: string } | undefined)?.school?.trim() || "";
   const [header, setHeaderState] = useState<ReportHeaderSettings>(EMPTY_REPORT_HEADER);
   const [edited, setEdited] = useState(false);
   const { pulled, status } = useCloudSync("reportHeader", header, { push: edited });
@@ -41,5 +47,10 @@ export function useReportHeader(): {
     setHeaderState(clean);
   }, []);
 
-  return { header, setHeader, status };
+  const printHeader = useMemo(
+    () => (profileSchool ? { ...header, profileSchool } : header),
+    [header, profileSchool],
+  );
+
+  return { header, printHeader, setHeader, status };
 }
