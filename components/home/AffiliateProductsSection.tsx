@@ -38,7 +38,17 @@ export default function AffiliateProductsSection() {
             className="block overflow-hidden rounded-card-sm border border-border bg-surface-card text-inherit no-underline hover:shadow-[0_10px_24px_-10px_rgba(26,29,38,.16)] md:rounded-card"
           >
             <div className="relative aspect-square">
-              <Image src={p.cover} alt={p.name} fill className="object-cover" />
+              {/* Measured rendered widths: 172px on phones, 229px at md,
+                  171px above that. These were the worst offenders on the
+                  page — without `sizes` Next served the 1920px candidate
+                  for a 171px tile. */}
+              <Image
+                src={p.cover}
+                alt={p.name}
+                fill
+                sizes="(max-width: 767px) 180px, (max-width: 1023px) 240px, 180px"
+                className="object-cover"
+              />
             </div>
             <div className="p-2.5 md:p-3">
               <div className="mb-1.5 h-[33px] overflow-hidden text-xs font-semibold leading-snug md:text-[12.5px]">

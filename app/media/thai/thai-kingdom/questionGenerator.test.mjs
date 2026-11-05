@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 import { generateQuestions } from "./questionGenerator.ts";
 import { displayThaiVowel, hasValidThaiOrder, segmentThai, thaiVowelLabel } from "./thaiText.ts";
 import { THAI_WORDS } from "./wordData.ts";

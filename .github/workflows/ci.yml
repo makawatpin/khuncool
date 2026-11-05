@@ -1,0 +1,50 @@
+name: CI
+
+# Every pull request, plus main itself so a bad merge is caught even when no
+# PR ran. `concurrency` cancels superseded runs, so a branch pushed three
+# times in a minute spends CI minutes on the last push only.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` (not `install`): it installs exactly what package-lock.json
+      # pins and fails if the lockfile and package.json disagree, so a
+      # hand-edited dependency cannot slip through green.
+      - run: npm ci
+
+      # Each step named so a red check says what broke without opening logs.
+      # They run in cost order — the cheap checks fail fast before the build.
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      # No Supabase variables are set here on purpose. The build must not
+      # need them: it reads keys at request time, not at module scope, and a
+      # build that only passes with secrets present would hide that
+      # regression from forks and from this job.
+      - name: Build
+        run: npm run build

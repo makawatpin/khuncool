@@ -25,10 +25,18 @@
 *.pem
 
 # debug
+# Any log a local run drops in the working tree, not just the package
+# managers' own. `npm-debug.log*` did not match debug.log or .devserver.log,
+# so those showed up as untracked changes waiting to be committed by mistake.
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# npm's cache when it is pointed inside the repo (npm_config_cache=.npm-cache).
+# It is thousands of files and must never reach a commit.
+.npm-cache/
 
 # env files (can opt-in for committing if needed)
 .env*

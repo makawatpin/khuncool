@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { getXlsx } from "@/lib/excel/getXlsx";
 import { useEffect, useRef, useState } from "react";
 import { useQuestionSets } from "@/lib/questionSets/useQuestionSets";
 import { questionsFromText } from "@/lib/questionSets/storage";
@@ -79,7 +80,7 @@ export default function QuestionSetsApp() {
 
   const importExcel = async (file: File) => {
     try {
-      const XLSX = await import("xlsx");
+      const XLSX = await getXlsx();
       const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, {

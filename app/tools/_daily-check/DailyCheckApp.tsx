@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
-import * as XLSX from "xlsx";
+import { getXlsx } from "@/lib/excel/getXlsx";
 import { isExportFooterRow } from "@/lib/excelImport";
 import { useCloudSync } from "@/lib/useCloudSync";
 import SyncStatus from "@/components/SyncStatus";
@@ -341,9 +341,12 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = async (ev) => {
         try {
+          // Read off the event before yielding: the result is not guaranteed
+          // to still be reachable through `ev.target` after an await.
           const data = ev.target?.result;
+          const XLSX = await getXlsx();
           const wb = XLSX.read(data, { type: "array" });
           const ws = wb.Sheets[wb.SheetNames[0]];
           const aoa: unknown[][] = XLSX.utils.sheet_to_json(ws, {
@@ -426,7 +429,14 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
     [config, replaceRoster, flashToast, writeDay],
   );
 
-  const exportExcel = useCallback(() => {
+  const exportExcel = useCallback(async () => {
+    let XLSX;
+    try {
+      XLSX = await getXlsx();
+    } catch {
+      flashToast("โหลดตัวสร้างไฟล์ Excel ไม่สำเร็จ — เช็กอินเทอร์เน็ต");
+      return;
+    }
     const rows: (string | number)[][] = [["เลขที่", "ชื่อ-สกุล", "สถานะ"]];
     students.forEach((n, i) => rows.push([i + 1, n, statusCell(config, statuses[i])]));
     rows.push([]);
@@ -447,7 +457,7 @@ export default function DailyCheckApp({ kind }: { kind: DailyCheckKind }) {
       `${config.fileStem}_${room || "ห้อง"}_${date.replaceAll("-", "")}.xlsx`,
     );
     setShowExport(false);
-  }, [config, defs, students, statuses, room, date]);
+  }, [config, defs, students, statuses, room, date, flashToast]);
 
   const exportPDF = useCallback(() => {
     if (!printCheckDay(config, room, students, statuses, fromIsoDate(date), reportHeader)) flashToast(PRINT_BLOCKED_MESSAGE);

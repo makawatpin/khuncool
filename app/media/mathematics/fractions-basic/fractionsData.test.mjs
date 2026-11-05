@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import { test } from "vitest";
 import { CHOICE_QUESTIONS, LESSON_SLIDES, PAINT_QUESTIONS, QUIZ_QUESTIONS } from "./fractionsData.ts";
 import { UNEQUAL_PARTS } from "./fractionGeometry.ts";
 
