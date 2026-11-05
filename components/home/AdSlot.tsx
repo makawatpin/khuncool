@@ -10,7 +10,7 @@ export default function AdSlot() {
         className="group relative flex min-h-[164px] overflow-hidden rounded-card border border-sky-200 bg-[#eaf8ff] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:min-h-[190px] lg:min-h-[220px]"
       >
         <Image
-          src="/assets/house-ads/classroom-games-banner.png"
+          src="/assets/house-ads/classroom-games-banner.webp"
           alt="เกมและเครื่องมือห้องเรียนจาก KhunCool"
           fill
           sizes="(max-width: 767px) 100vw, (max-width: 1199px) 90vw, 1100px"
