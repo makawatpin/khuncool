@@ -35,7 +35,17 @@ export default function ArticlesSection() {
               <Link href={a.href} className="block text-inherit no-underline">
                 <div className="flex items-start gap-2.5 md:block">
                   <div className="relative aspect-video w-[132px] flex-none overflow-hidden rounded-card-sm md:mb-2.5 md:w-full lg:mb-[11px] lg:rounded-card">
-                    <Image src={a.cover} alt={a.title} fill className="object-cover" />
+                    {/* Measured rendered widths: 132px on phones, 352px at
+                        md, 295px at lg (a sidebar appears), 363px above that.
+                        Without `sizes`, `fill` defaults to 100vw and Next
+                        serves the 1920px candidate for a 363px thumbnail. */}
+                    <Image
+                      src={a.cover}
+                      alt={a.title}
+                      fill
+                      sizes="(max-width: 767px) 140px, (max-width: 1023px) 360px, (max-width: 1279px) 300px, 370px"
+                      className="object-cover"
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
                     <span
@@ -77,11 +87,23 @@ export default function ArticlesSection() {
               href="/tools"
               className="group relative block h-[220px] overflow-hidden rounded-card border border-sky-200 bg-[#eaf8ff] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:h-[310px]"
             >
+              {/* Measured as the LCP element on desktop, so it is fetched
+                  eagerly at high priority instead of waiting its turn:
+                  768ms -> 400ms.
+
+                  The 16px hint below md is not a typo. This sidebar is
+                  display:none on phones, where the LCP is the hero heading
+                  instead. A hidden image is normally never fetched, but
+                  `priority` means eager loading, which overrides that — so
+                  without this the phone downloaded a 1080px copy of a
+                  picture it never shows. The hint keeps that eager fetch
+                  down to the smallest candidate. */}
               <Image
-                src="/assets/house-ads/teacher-tools-sidebar.png"
+                src="/assets/house-ads/teacher-tools-sidebar.webp"
                 alt="เครื่องมือช่วยสอนฟรีจาก KhunCool"
                 fill
-                sizes="(max-width: 1023px) 90vw, 320px"
+                priority
+                sizes="(max-width: 767px) 16px, (max-width: 1023px) 90vw, 320px"
                 className="object-cover object-center transition duration-500 group-hover:scale-[1.025]"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-[#eaf8ff] via-[#eaf8ff]/90 to-transparent lg:via-[#eaf8ff]/75" />
