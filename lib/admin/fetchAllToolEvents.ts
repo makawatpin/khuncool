@@ -28,3 +28,25 @@ export async function fetchAllToolEvents(
   }
   return rows;
 }
+
+/** Same paging as fetchAllToolEvents, with the fields the live feed needs. */
+export async function fetchToolEventsDetailed(
+  supabase: SupabaseClient,
+  sinceIso: string
+): Promise<{ tool: string; event: string; user_id: string | null; created_at: string }[]> {
+  const rows: { tool: string; event: string; user_id: string | null; created_at: string }[] = [];
+  let from = 0;
+  while (true) {
+    const { data, error } = await supabase
+      .from("tool_events")
+      .select("tool, event, user_id, created_at")
+      .gte("created_at", sinceIso)
+      .order("id", { ascending: true })
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    rows.push(...data);
+    if (data.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return rows;
+}

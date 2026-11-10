@@ -55,13 +55,20 @@ export async function GET(request: Request) {
   }
   const topTool = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
+  // Seed every day in the window with 0 so the chart's bars are evenly
+  // spaced in time — without this, a quiet day simply vanished and two
+  // bars a week apart sat next to each other as if they were consecutive.
   const signupsByDay: Record<string, number> = {};
+  for (let i = 29; i >= 0; i--) {
+    signupsByDay[bangkokDay(new Date(now - i * DAY_MS))] = 0;
+  }
   const thirtyDaysAgo = now - 30 * DAY_MS;
   for (const u of users) {
     const t = new Date(u.created_at).getTime();
     if (t < thirtyDaysAgo) continue;
     const day = bangkokDay(u.created_at);
-    signupsByDay[day] = (signupsByDay[day] || 0) + 1;
+    if (!(day in signupsByDay)) continue;
+    signupsByDay[day] += 1;
   }
 
   return NextResponse.json({

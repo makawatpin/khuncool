@@ -6,6 +6,7 @@ export interface AdminUser {
   email?: string | null;
   created_at: string;
   last_sign_in_at?: string | null;
+  app_metadata?: Record<string, unknown> | null;
   user_metadata?: Record<string, unknown> | null;
 }
 
