@@ -890,6 +890,32 @@ const GAMES = {
       },
     ],
   },
+  "krathong-designer": {
+    path: "/media/social-studies/krathong-designer",
+    // Six build steps share one panel whose contents change per step; the
+    // flowers step has the widest option row and the wish step the text input.
+    screens: [
+      { name: "base" },
+      { name: "petals", enter: click(/ถัดไป/) },
+      { name: "center", enter: click(/ถัดไป/) },
+      { name: "flowers", enter: click(/ถัดไป/) },
+      { name: "candle", enter: click(/ถัดไป/) },
+      {
+        name: "wish",
+        async enter(page) {
+          await page.getByRole("button", { name: /จุดเทียน/ }).first().click();
+          await page.getByRole("button", { name: /ถัดไป/ }).click();
+        },
+      },
+      {
+        name: "river",
+        async enter(page) {
+          await page.getByRole("button", { name: /ลอยกระทง/ }).click();
+          await page.waitForTimeout(1800);
+        },
+      },
+    ],
+  },
   "santa-sleigh": {
     path: "/media/english/santa-sleigh",
     // The sleigh flies between houses on timers (about 2.7s of celebration and
