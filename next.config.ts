@@ -114,6 +114,18 @@ const nextConfig: NextConfig = {
         destination: "/duck-race",
         permanent: true,
       },
+      /*
+       * Folded into the tool page. Search Console showed every query this
+       * article ranked for was a head term the tool page also targets
+       * (เป็ดสุ่ม, สุ่มเป็ด, แข่งเป็ด) — 33 clicks over three months against
+       * the tool page's 2,350, and Google was splitting "สุ่มเป็ด" across
+       * three of our URLs instead of ranking one of them well.
+       */
+      {
+        source: "/blog/duck-race",
+        destination: "/duck-race",
+        permanent: true,
+      },
       {
         source: "/tools/wheel",
         destination: "/random-name-picker",

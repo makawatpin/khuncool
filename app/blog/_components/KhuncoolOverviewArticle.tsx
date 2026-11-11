@@ -46,7 +46,7 @@ const related = [
   { cat: "สื่อการสอน", title: "วงล้อสุ่ม สื่อการสอนที่ครูควรมี ใช้ฟรี ไม่ต้องติดตั้ง", date: "27 ก.ค. 2569", href: "/blog/wheel" },
   { cat: "สื่อการสอน", title: "เครื่องมือสุ่มแบ่งกลุ่มนักเรียนฟรี สำหรับครูยุคดิจิทัล", date: "2 ส.ค. 2569", href: "/blog/group-maker" },
   { cat: "สื่อการสอน", title: "เครื่องวัดเสียงในห้องเรียน ช่วยคุมความดังได้จริง", date: "31 ก.ค. 2569", href: "/blog/noise-meter" },
-  { cat: "สื่อการสอน", title: "เกมแข่งเป็ดสุ่มชื่อ สื่อการสอนสนุกที่ครูควรมี", date: "31 ก.ค. 2569", href: "/blog/duck-race" },
+  { cat: "สื่อการสอน", title: "สุ่มเลขที่นักเรียนด้วยเป็ดวิ่งแข่ง ใช้ยังไง", date: "18 ส.ค. 2569", href: "/blog/duck-race-roll-number" },
 ];
 
 export function KhuncoolOverviewArticle({ config }: { config: OverviewArticleConfig }) {

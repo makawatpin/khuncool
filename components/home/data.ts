@@ -35,7 +35,7 @@ export const TOOLS = [
   { icon: "🎡", title: "วงล้อสุ่มชื่อ", tag: "ยอดนิยม", bg: "bg-[#E1E3FD]", href: "/random-name-picker" },
   { icon: "🏆", title: "กระดานคะแนนกลุ่ม", tag: "ใหม่", bg: "bg-[#E1E3FD]", href: "/group-scoreboard" },
   { icon: "🎤", title: "เครื่องวัดเสียงในห้อง", tag: "ใหม่", bg: "bg-[#D0FBEF]", href: "/classroom-noise-meter" },
-  { icon: "🦆", title: "เกมเป็ดสุ่มชื่อ", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/duck-race" },
+  { icon: "🦆", title: "เกมสุ่มเป็ด", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/duck-race" },
 ];
 
 export const PRODUCTS = [

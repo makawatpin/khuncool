@@ -7,7 +7,7 @@ const CLUSTERS = [
     description: "สุ่มชื่อนักเรียน แบ่งกลุ่ม เลือกคำถาม และสร้างกิจกรรมแบบมีลุ้นหน้าชั้นเรียน",
     links: [
       { label: "วงล้อสุ่มชื่อ", href: "/random-name-picker" },
-      { label: "เกมเป็ดสุ่มชื่อ", href: "/duck-race" },
+      { label: "สุ่มเป็ดเข้าเส้นชัย", href: "/duck-race" },
       { label: "สุ่มแบ่งกลุ่ม", href: "/group-maker" },
       { label: "สุ่มคำถาม", href: "/random-question" },
     ],
@@ -80,7 +80,7 @@ export default function SeoHubSection() {
           <span aria-hidden="true">·</span>
           <Link href="/blog/duck-race-classroom-activities">10 กิจกรรมเกมเป็ดสุ่ม</Link>
           <span aria-hidden="true">·</span>
-          <Link href="/blog/duck-race-roll-number">สุ่มเลขที่นักเรียนด้วยเกมเป็ดสุ่ม</Link>
+          <Link href="/blog/duck-race-roll-number">สุ่มเลขที่นักเรียนด้วยเป็ดวิ่งแข่ง</Link>
           <span aria-hidden="true">·</span>
           <Link href="/blog/english-vocabulary-games">15 เกมคำศัพท์ภาษาอังกฤษ</Link>
         </div>

@@ -100,7 +100,7 @@ export const TOOLS = [
   },
   {
     icon: "🦆",
-    title: "เกมแข่งเป็ดสุ่มชื่อ",
+    title: "เกมสุ่มเป็ด แข่งเป็ดสุ่มชื่อ",
     href: "/duck-race",
     bg: "#D0FBEF",
     image: "/assets/tool-covers/duck-race.webp",
