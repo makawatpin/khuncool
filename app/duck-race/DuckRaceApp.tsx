@@ -5,6 +5,7 @@ import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
+import { ROLL_MAX, ROLL_MIN, buildRollNumbers, clampRoll } from "./rollNumbers";
 
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
@@ -119,8 +120,23 @@ export default function DuckRaceApp() {
   const [podium, setPodium] = useState<Podium[]>([]);
   const [removeWinner, setRemoveWinner] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
-  const [bulkMode, setBulkMode] = useState(false);
+  /*
+   * How the roster is being edited. This was a `bulkMode` boolean until
+   * เลขที่ became a third way in; a union keeps the panel from ever showing
+   * two editors at once, which two booleans would have allowed.
+   */
+  const [panelMode, setPanelMode] = useState<"single" | "bulk" | "roll">("single");
   const [bulkText, setBulkText] = useState("");
+  /*
+   * 1 ถึง 40 covers a normal Thai classroom without anyone touching the
+   * fields. Held as the raw strings the inputs carry, not as numbers:
+   * clamping on every keystroke meant that clearing the field to retype it —
+   * the ordinary way to change a number — read as "" and snapped the box to
+   * 1 before the first digit landed. The bounds are applied on blur and
+   * again when the roster is built.
+   */
+  const [rollFrom, setRollFrom] = useState("1");
+  const [rollTo, setRollTo] = useState("40");
   const [importMsg, setImportMsg] = useState("");
   const [showSettings, setShowSettings] = useState(true);
   const [duckScale, setDuckScale] = useState(100);
@@ -883,9 +899,9 @@ export default function DuckRaceApp() {
   }, [beep]);
 
   const toggleBulk = useCallback(() => {
-    setBulkMode((m) => {
-      if (!m) setBulkText(namesRef.current.join("\n"));
-      return !m;
+    setPanelMode((m) => {
+      if (m !== "bulk") setBulkText(namesRef.current.join("\n"));
+      return m === "bulk" ? "single" : "bulk";
     });
   }, []);
 
@@ -895,8 +911,28 @@ export default function DuckRaceApp() {
       .map((x) => x.trim())
       .filter(Boolean);
     setNames(list);
-    setBulkMode(false);
+    setPanelMode("single");
   }, [bulkText]);
+
+  const toggleRoll = useCallback(() => {
+    setPanelMode((m) => (m === "roll" ? "single" : "roll"));
+  }, []);
+
+  /*
+   * Replaces the roster outright, the same as picking a saved classroom:
+   * "สุ่มเลขที่ 1 ถึง 40" means race those forty numbers, not add them to
+   * whatever is already on the track.
+   */
+  const applyRoll = useCallback(() => {
+    const roster = buildRollNumbers(Number(rollFrom), Number(rollTo));
+    setNames(roster);
+    setShowResult(false);
+    setPanelMode("single");
+    setImportMsg(`ใช้เลขที่ ${roster[0]}-${roster[roster.length - 1]} · ${roster.length} คน`);
+    beep(660, 0.14, "sine", 0.06);
+    if (importTimerRef.current) clearTimeout(importTimerRef.current);
+    importTimerRef.current = setTimeout(() => setImportMsg(""), 2600);
+  }, [beep, rollFrom, rollTo]);
 
   const {
     isFull: isFullscreen,
@@ -913,6 +949,14 @@ export default function DuckRaceApp() {
 
   const busy = racing || countdown !== null;
   const disabled = busy || names.length < 2;
+  /*
+   * What "ใช้เลขที่" would produce right now, so the button can say how many
+   * ducks the teacher is about to get before they commit to it. Built from
+   * the same function that applies it, so the preview cannot drift from the
+   * result — including the clamping and the swap when the bounds are
+   * entered the other way round.
+   */
+  const rollPreview = buildRollNumbers(Number(rollFrom), Number(rollTo));
   const startLabel =
     countdown !== null ? countdown : racing ? "กำลังแข่ง…" : "🦆 ปล่อยเป็ดแข่ง!";
 
@@ -1044,11 +1088,18 @@ export default function DuckRaceApp() {
               <span className="text-sm font-bold md:text-[15px]">
                 รายชื่อเป็ด ({names.length})
               </span>
-              <div className="flex gap-2.5 md:gap-3">
+              <div className="flex flex-wrap justify-end gap-x-2.5 gap-y-1 md:gap-x-3">
                 <ClassroomRosterPicker
                   onSelect={applyClassroomRoster}
                   className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
                 />
+                <button
+                  type="button"
+                  onClick={toggleRoll}
+                  className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
+                >
+                  {panelMode === "roll" ? "🔢 กลับไปทีละชื่อ" : "🔢 สุ่มเลขที่"}
+                </button>
                 <button
                   type="button"
                   onClick={shuffle}
@@ -1061,7 +1112,7 @@ export default function DuckRaceApp() {
                   onClick={toggleBulk}
                   className="cursor-pointer border-none bg-transparent p-0 text-xs font-normal text-primary md:text-[12.5px]"
                 >
-                  {bulkMode ? "✎ กลับไปทีละชื่อ" : "✎ วางหลายชื่อ"}
+                  {panelMode === "bulk" ? "✎ กลับไปทีละชื่อ" : "✎ วางหลายชื่อ"}
                 </button>
               </div>
             </div>
@@ -1072,7 +1123,55 @@ export default function DuckRaceApp() {
               </div>
             )}
 
-            {bulkMode ? (
+            {panelMode === "roll" ? (
+              <div>
+                <div className="mb-2 text-[11.5px] leading-[1.6] text-ink-secondary md:text-xs">
+                  ใส่เลขที่แรกถึงเลขที่สุดท้ายของห้อง ระบบจะสร้างเป็ดให้ครบทุกเลขที่
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="flex min-w-0 flex-1 items-center gap-1.5">
+                    <span className="flex-none text-[12.5px] text-ink-secondary md:text-[13px]">
+                      จาก
+                    </span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min={ROLL_MIN}
+                      max={ROLL_MAX}
+                      value={rollFrom}
+                      onChange={(e) => setRollFrom(e.target.value)}
+                      onBlur={() => setRollFrom(String(clampRoll(Number(rollFrom))))}
+                      aria-label="เลขที่แรก"
+                      className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-2.5 py-2.5 font-sans text-[13.5px] outline-none focus:border-primary md:text-sm"
+                    />
+                  </label>
+                  <label className="flex min-w-0 flex-1 items-center gap-1.5">
+                    <span className="flex-none text-[12.5px] text-ink-secondary md:text-[13px]">
+                      ถึง
+                    </span>
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      min={ROLL_MIN}
+                      max={ROLL_MAX}
+                      value={rollTo}
+                      onChange={(e) => setRollTo(e.target.value)}
+                      onBlur={() => setRollTo(String(clampRoll(Number(rollTo))))}
+                      aria-label="เลขที่สุดท้าย"
+                      className="min-w-0 flex-1 rounded-[10px] border-[1.5px] border-[#D3D8E1] bg-white px-2.5 py-2.5 font-sans text-[13.5px] outline-none focus:border-primary md:text-sm"
+                    />
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  onClick={applyRoll}
+                  className="mt-2 w-full whitespace-nowrap rounded-[10px] border-none bg-primary px-2 py-2.5 font-sans text-[13.5px] font-semibold text-white hover:bg-primary-hover md:mt-[9px] md:text-sm"
+                >
+                  ใช้เลขที่ {rollPreview[0]}-{rollPreview[rollPreview.length - 1]} (
+                  {rollPreview.length} ตัว)
+                </button>
+              </div>
+            ) : panelMode === "bulk" ? (
               <div>
                 <textarea
                   value={bulkText}
