@@ -914,6 +914,16 @@ const GAMES = {
           await page.waitForTimeout(1800);
         },
       },
+      {
+        name: "save",
+        async enter(page) {
+          await page.getByRole("button", { name: /บันทึกผลงาน/ }).first().click();
+          // the preview is a full 1080x1350 3D render, which takes several
+          // seconds on the headless software renderer
+          await page.locator('[role="dialog"] img').waitFor({ timeout: 30000 });
+        },
+        expect: '[role="dialog"] img',
+      },
     ],
   },
   "santa-sleigh": {

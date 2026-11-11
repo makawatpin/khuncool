@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useStage } from "../../_stage/useStage";
 import { KcSfx } from "@/lib/kcSfx";
 import styles from "./KrathongDesigner.module.css";
+import SaveDialog from "./SaveDialog";
 import {
   CANDLES, CENTERS, DEFAULT_DESIGN, FLOWERS, MATERIALS, PETALS, SHAPES, STEPS, TRIMS, WISHES,
   fillSlots, flowerCount, labelOf, normalize, shapeLocked, toggleSlot,
@@ -81,6 +82,9 @@ export default function KrathongDesigner() {
   const [name, setName] = useState("");
   const [floated, setFloated] = useState(false);
   const [cardOpen, setCardOpen] = useState(true);
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [liveScene, setLiveScene] = useState<DesignerScene | null>(null);
+  const openSave = () => { KcSfx.play("click"); setSaveOpen(true); };
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -103,6 +107,7 @@ export default function KrathongDesigner() {
       });
       if (!scene) return;
       sceneRef.current = scene;
+      setLiveScene(scene);
       if (process.env.NODE_ENV !== "production") (window as unknown as { __krathong?: DesignerScene }).__krathong = scene;
       scene.setDesign(shownRef.current, "all");
       scene.setFocus(0);
@@ -315,7 +320,7 @@ export default function KrathongDesigner() {
       <div className={`kc-stage-body ${styles.shell} ${floated ? styles.night : ""}`} style={{ borderRadius: 20 }}>
         <div ref={hostRef} className={`${styles.canvas} ${ready ? styles.canvasReady : ""}`} />
 
-        <header className={styles.top}>
+        <header className={styles.top} inert={saveOpen} aria-hidden={saveOpen || undefined}>
           <div className={styles.title}>
             <span className={styles.kicker}>{floated ? "คืนวันเพ็ญเดือนสิบสอง" : `ขั้นที่ ${step + 1} จาก ${STEPS.length}`}</span>
             <span className={styles.titleText}>{floated ? "ลอยกระทง" : STEPS[step].title}</span>
@@ -353,17 +358,24 @@ export default function KrathongDesigner() {
         )}
 
         {floated && cardOpen && (
-          <section className={styles.endCard} aria-label="ลอยกระทงแล้ว">
+          <section className={styles.endCard} aria-label="ลอยกระทงแล้ว" inert={saveOpen} aria-hidden={saveOpen || undefined}>
             <p className={styles.endKicker}>{name.trim() ? `กระทงของ${name.trim()}` : "กระทงของเรา"} ลอยไปแล้ว</p>
             <p className={styles.endWish}>“{wish}”</p>
             <div className={styles.endBtns}>
+              <button type="button" className={`kc-tap ${styles.next} ${styles.saveBtn}`} onClick={openSave}>📸 บันทึกผลงาน</button>
               <button type="button" className={`kc-tap ${styles.next}`} onClick={newKrathong}>ทำกระทงใบใหม่</button>
               <button type="button" className={`kc-tap ${styles.back}`} onClick={() => setCardOpen(false)}>ดูแม่น้ำต่อ</button>
             </div>
           </section>
         )}
         {floated && !cardOpen && (
-          <button type="button" className={`kc-tap ${styles.next} ${styles.again}`} onClick={newKrathong}>ทำกระทงใบใหม่</button>
+          <div className={`${styles.endBtns} ${styles.again}`} inert={saveOpen} aria-hidden={saveOpen || undefined}>
+            <button type="button" className={`kc-tap ${styles.next} ${styles.saveBtn}`} onClick={openSave}>📸 บันทึกผลงาน</button>
+            <button type="button" className={`kc-tap ${styles.next}`} onClick={newKrathong}>ทำกระทงใบใหม่</button>
+          </div>
+        )}
+        {saveOpen && liveScene && (
+          <SaveDialog scene={liveScene} name={name.trim()} isFull={isFull} onToggleFull={toggle} onClose={() => setSaveOpen(false)} />
         )}
 
         {failed && (

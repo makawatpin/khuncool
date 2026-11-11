@@ -13,6 +13,8 @@ export interface FireworksAudio {
   launch(pan: number): void;
   burst(pan: number, kind: BurstSound): void;
   state(): string;
+  /** a live copy of everything this engine plays, for recording */
+  stream(): MediaStream | null;
   dispose(): void;
 }
 
@@ -20,6 +22,7 @@ export function createFireworksAudio(): FireworksAudio {
   let ctx: AudioContext | null = null;
   let master: GainNode | null = null;
   let noise: AudioBuffer | null = null;
+  let tap: MediaStreamAudioDestinationNode | null = null;
 
   function init(): AudioContext | null {
     if (ctx) return ctx;
@@ -114,6 +117,14 @@ export function createFireworksAudio(): FireworksAudio {
       }
     },
     state() { return ctx?.state ?? "none"; },
+    stream() {
+      if (!ctx || !master || ctx.state !== "running") return null;
+      if (!tap) {
+        tap = ctx.createMediaStreamDestination();
+        master.connect(tap);
+      }
+      return tap.stream;
+    },
     dispose() {
       void ctx?.close();
       ctx = null;

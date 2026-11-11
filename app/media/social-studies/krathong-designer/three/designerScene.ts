@@ -14,6 +14,20 @@ import { KcSfx } from "@/lib/kcSfx";
 
 export type ThumbFocus = "whole" | "center" | `flower:${FlowerKind}`;
 
+export interface CaptureOptions {
+  width: number;
+  height: number;
+  bg: "river" | "studio";
+  /** "orbit" sweeps the camera around the krathong over progress 0..1 */
+  motion: "still" | "orbit";
+}
+
+export interface CaptureSession {
+  /** advance the scene by dt seconds and draw one frame; the canvas is valid until the next frame */
+  frame(dt: number, progress: number, render?: boolean): HTMLCanvasElement;
+  end(): void;
+}
+
 export interface DesignerEvents {
   onSlotTap(slot: number): void;
   onFailure(): void;
@@ -28,6 +42,10 @@ export interface DesignerScene {
   float(label: string): void;
   backToStudio(): void;
   thumbnail(design: KrathongDesign, focus: ThumbFocus): Promise<string>;
+  /** take over the renderer to draw export frames at a fixed size */
+  beginCapture(options: CaptureOptions): CaptureSession;
+  /** the fireworks sound, for mixing into a recorded video (null until floated) */
+  audioStream(): MediaStream | null;
   /** dev-only inspection */
   debug(): Record<string, unknown>;
   dispose(): void;
@@ -176,8 +194,10 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
     return m;
   };
   /** lay a streak on the water from (ax, az) toward the camera */
+  /** the camera streaks face; the export camera while capturing */
+  let viewCam: THREE.Camera = camera;
   const aimStreak = (m: THREE.Mesh, ax: number, az: number, w: number, len: number) => {
-    let dx = camera.position.x - ax, dz = camera.position.z - az;
+    let dx = viewCam.position.x - ax, dz = viewCam.position.z - az;
     const l = Math.hypot(dx, dz) || 1;
     dx /= l; dz /= l;
     const L = Math.min(len, l * 0.9);
@@ -264,14 +284,18 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
 
   // ---------------------------------------------------------- post
   const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.35, 0.4, 2.2);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
   let insetBottom = 0;
   let mode: "studio" | "river" = "studio";
+  let capturing = false;
   function resize() {
+    // an export owns the renderer size until it ends
+    if (capturing) return;
     const w = Math.max(1, host.clientWidth), h = Math.max(1, host.clientHeight);
     renderer.setSize(w, h, false);
     composer.setPixelRatio(renderer.getPixelRatio());
@@ -552,8 +576,15 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
     if (disposed) return;
     raf = requestAnimationFrame(frame);
     const dt = Math.min(clock.getDelta(), 0.05);
-    const t = clock.elapsedTime;
+    // while exporting, the capture session drives the scene frame by frame
+    if (capturing) return;
+    step(dt, clock.elapsedTime, false);
+    controls.update();
+    composer.render();
+  }
 
+  /** advance everything that moves; `hero` holds the player's krathong in place for a photo */
+  function step(dt: number, t: number, hero: boolean) {
     if (anims.length) {
       anims = anims.filter((a) => {
         const p = clamp01((t - a.start) / a.dur);
@@ -562,7 +593,7 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
       });
     }
 
-    if (tween) {
+    if (tween && !hero) {
       const p = easeInOut(clamp01((t - tween.start) / tween.dur));
       const s = new THREE.Spherical(
         tween.from.radius + (tween.to.radius - tween.from.radius) * p,
@@ -600,10 +631,12 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
     }
 
     if (mode === "river") {
-      const ft = t - floatStart;
-      const ease = easeOutCubic(clamp01(ft / 14));
-      K.position.x = 0.9 * ease + (ft > 14 ? (ft - 14) * 0.18 : 0);
-      K.position.z = 2.2 - 5.2 * ease;
+      if (!hero) {
+        const ft = t - floatStart;
+        const ease = easeOutCubic(clamp01(ft / 14));
+        K.position.x = 0.9 * ease + (ft > 14 ? (ft - 14) * 0.18 : 0);
+        K.position.z = 2.2 - 5.2 * ease;
+      }
       K.position.y = 0.035 * Math.sin(t * 1.2);
       K.rotation.z = 0.018 * Math.sin(t * 0.9);
       K.rotation.x = 0.014 * Math.sin(t * 1.05 + 1);
@@ -629,14 +662,79 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
       waterMat.emissive.copy(fx.flash.color).multiplyScalar(fx.flash.value * 0.06);
       aimStreak(playerStreak, K.position.x, K.position.z, 0.75, 5);
       {
-        const dx = moon.position.x - camera.position.x, dz = moon.position.z - camera.position.z, l = Math.hypot(dx, dz) || 1;
-        aimStreak(moonStreak, camera.position.x + (dx / l) * 60, camera.position.z + (dz / l) * 60, 7, 52);
+        const dx = moon.position.x - viewCam.position.x, dz = moon.position.z - viewCam.position.z, l = Math.hypot(dx, dz) || 1;
+        aimStreak(moonStreak, viewCam.position.x + (dx / l) * 60, viewCam.position.z + (dz / l) * 60, 7, 52);
       }
       (playerStreak.material as THREE.MeshBasicMaterial).opacity = 0.5 + 0.08 * Math.sin(t * 9) * Math.sin(t * 3.7);
     }
+  }
 
-    controls.update();
-    composer.render();
+  // ---------------------------------------------------------- export capture
+  const capCam = new THREE.PerspectiveCamera(40, 1, 0.1, 160);
+  function beginCapture(o: CaptureOptions): CaptureSession {
+    capturing = true;
+    const saved = {
+      mode, kPos: K.position.clone(), kRot: K.rotation.clone(), slots: slotG.visible,
+      label: playerLabel?.visible ?? false, pr: renderer.getPixelRatio(), lit, litAt,
+    };
+    if (o.bg !== mode) { mode = o.bg; applyMode(); }
+    if (o.bg === "river") { makeAmbient(); fx.finale(); }
+    if (!lit) { lit = true; litAt = clock.elapsedTime - 2; }
+    slotG.visible = false;
+    if (playerLabel) playerLabel.visible = false;
+    anims.forEach((a) => applyAnim(a.obj, a.kind, 1));
+    anims = [];
+    K.position.set(0, 0, o.bg === "river" ? 1 : 0);
+    K.rotation.set(0, 0, 0);
+
+    renderer.setPixelRatio(1);
+    renderer.setSize(o.width, o.height, false);
+    composer.setPixelRatio(1);
+    composer.setSize(o.width, o.height);
+    capCam.aspect = o.width / o.height;
+    capCam.fov = o.bg === "river" ? 50 : 36;
+    // push the krathong toward the lower half: the top of the frame carries the title
+    capCam.setViewOffset(o.width, o.height, 0, -o.height * 0.07, o.width, o.height);
+    capCam.updateProjectionMatrix();
+    fx.setViewportHeight(o.height, capCam.fov);
+    renderPass.camera = capCam;
+    viewCam = capCam;
+
+    const h = built?.height ?? 2.4;
+    const target = new THREE.Vector3(0, h * 0.42, K.position.z);
+    const radius = (o.bg === "river" ? 7.4 : 8.8) + h * 0.35;
+    const polar = o.bg === "river" ? 1.2 : 1.1;
+    let ct = clock.elapsedTime;
+
+    return {
+      frame(dt, progress, render = true) {
+        ct += dt;
+        // a slow arc around the krathong with a gentle push in
+        const az = o.motion === "orbit" ? -0.5 + progress * 1.0 : 0.32;
+        const r = o.motion === "orbit" ? radius * (1.06 - 0.12 * easeInOut(progress)) : radius;
+        capCam.position.setFromSpherical(new THREE.Spherical(r, polar, az)).add(target);
+        capCam.lookAt(target);
+        K.rotation.y = o.motion === "orbit" ? progress * 0.6 : 0;
+        step(dt, ct, true);
+        if (render) composer.render();
+        return renderer.domElement;
+      },
+      end() {
+        renderPass.camera = camera;
+        viewCam = camera;
+        K.position.copy(saved.kPos);
+        K.rotation.copy(saved.kRot);
+        slotG.visible = saved.slots;
+        if (playerLabel) playerLabel.visible = saved.label;
+        lit = saved.lit;
+        litAt = saved.litAt;
+        if (saved.mode !== mode) { mode = saved.mode; applyMode(); }
+        renderer.setPixelRatio(saved.pr);
+        composer.setPixelRatio(saved.pr);
+        capturing = false;
+        resize();
+      },
+    };
   }
   applyMode();
   frame();
@@ -662,6 +760,8 @@ export function createDesignerScene(host: HTMLElement, opts: { reducedMotion: bo
     },
     backToStudio() { backToStudio(); frameStep(0); },
     thumbnail,
+    beginCapture,
+    audioStream: () => audio.stream(),
     dispose() {
       disposed = true;
       cancelAnimationFrame(raf);
