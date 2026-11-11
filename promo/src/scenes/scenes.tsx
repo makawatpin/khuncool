@@ -3,13 +3,12 @@ import { AbsoluteFill, Sequence, interpolate, useCurrentFrame, useVideoConfig } 
 import { C, FONT, SAFE } from "../theme";
 import { Background, Card, Chip, Footage, Laptop, Line, Logo, Phone, usePop } from "../components/ui";
 import { Confetti, LetterPop, Marker, Shake, Shockwave, Sparkles, Tilt, useBeat } from "../components/fx";
-import type { SceneId } from "../timeline";
+import type { Cue } from "../Reel";
 
 const sec = (s: number) => Math.round(s * 30);
 
-/** Sound-effect cues per scene, in seconds from the scene start (played by Promo). */
-export type Cue = { at: number; sfx: "pop" | "boom" | "sparkle" | "whoosh"; volume?: number };
-export const SCENE_SFX: Record<SceneId, Cue[]> = {
+/** Sound-effect cues per scene, in seconds from the scene start (played by the Reel). */
+export const SCENE_SFX: Record<string, Cue[]> = {
   hook: [{ at: 0.55, sfx: "pop", volume: 0.5 }, { at: 0.95, sfx: "boom", volume: 0.55 }],
   reveal: [{ at: 0, sfx: "boom", volume: 0.8 }, { at: 2.4, sfx: "sparkle", volume: 0.6 }],
   duck: [{ at: 2.1, sfx: "pop", volume: 0.55 }, { at: 2.15, sfx: "sparkle", volume: 0.35 }],
@@ -21,12 +20,12 @@ export const SCENE_SFX: Record<SceneId, Cue[]> = {
 };
 
 /** Headline block in the top safe area, left-aligned to stay clear of the right rail. */
-const Head: React.FC<{ children: React.ReactNode; top?: number }> = ({ children, top = SAFE.top + 10 }) => (
+export const Head: React.FC<{ children: React.ReactNode; top?: number }> = ({ children, top = SAFE.top + 10 }) => (
   <div style={{ position: "absolute", top, left: SAFE.left + 10, right: SAFE.left + 10 }}>{children}</div>
 );
 
 /** Cuts between shots at the given second marks; each cut lands with a small zoom punch. */
-const Cuts: React.FC<{ shots: { at: number; el: React.ReactNode }[]; total: number }> = ({ shots, total }) => (
+export const Cuts: React.FC<{ shots: { at: number; el: React.ReactNode }[]; total: number }> = ({ shots, total }) => (
   <>
     {shots.map((s, i) => {
       const from = sec(s.at);
@@ -52,7 +51,7 @@ const CutPunch: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 /** Emoji that flies along a path across the frame (for playful accents). */
-const Flyer: React.FC<{ emoji: string; from: [number, number]; to: [number, number]; at: number; frames: number; size?: number; spin?: number }> = ({
+export const Flyer: React.FC<{ emoji: string; from: [number, number]; to: [number, number]; at: number; frames: number; size?: number; spin?: number }> = ({
   emoji, from, to, at, frames, size = 90, spin = 0,
 }) => {
   const f = useCurrentFrame() - at;

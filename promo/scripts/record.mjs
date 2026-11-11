@@ -67,8 +67,156 @@ async function fullscreen(page) {
   await wait(900);
 }
 
+// ── Duck race helpers ──
+// Sets a React-controlled <input type=range> (fill() can't): native setter + input event.
+const setRange = (page, selector, value) =>
+  page.evaluate(([sel, v]) => {
+    const el = document.querySelector(sel);
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(el, String(v));
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  }, [selector, value]);
+const TRACK_RANGE = 'input[type=range][min="1"][max="5"]';
+const STUDENTS = ["น้องใบเตย", "น้องภูมิ", "น้องมายด์", "น้องต้นกล้า", "น้องแพรวา", "น้องกัปตัน", "น้องข้าวหอม", "น้องไอซ์", "น้องปุยฝ้าย", "น้องธันวา"];
+/** Race until the winner card shows, then hold on it. */
+async function raceToResult(p, hold = 3000) {
+  await btn(p, /ปล่อยเป็ดแข่ง/).click();
+  await p.getByText("เป็ดที่ชนะคือ").waitFor({ state: "visible", timeout: 60_000 });
+  await wait(hold);
+}
+/** Scrolls the duck race app to the top of the screen (track + controls in view). */
+async function showDuckShell(p) {
+  await p.evaluate(() => {
+    const el = document.querySelector(".duck-race-shell");
+    if (el) scrollTo(0, el.getBoundingClientRect().top + scrollY - 8);
+  });
+  await wait(600);
+}
+// The ⚙️ toggle's label text is hidden on phones, so find it by its open state.
+async function hideDuckSettings(p) {
+  const gear = p.locator('button[aria-expanded="true"]').first();
+  if (await gear.isVisible().catch(() => false)) { await gear.click({ timeout: 5000 }).catch(() => {}); await wait(600); }
+}
+async function rollNumbers(p, from, to, typeDelay = 90) {
+  await btn(p, /สุ่มเลขที่/).click();
+  await wait(500);
+  for (const [label, v] of [["เลขที่แรก", from], ["เลขที่สุดท้าย", to]]) {
+    const box = p.getByLabel(label);
+    await box.click({ clickCount: 3 });
+    await box.pressSequentially(String(v), { delay: typeDelay });
+    await wait(250);
+  }
+  await wait(400);
+  await btn(p, /^ใช้เลขที่/).click();
+}
+
 // Each shot: setup runs before filming starts; film runs while recording.
 const SHOTS = {
+  // ─── Duck race video ───
+  "dr-type": {
+    device: DESKTOP, url: "/duck-race",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(600);
+      const box = p.getByPlaceholder(/เพิ่มชื่อ/);
+      for (const name of STUDENTS.slice(0, 3)) {
+        await box.click();
+        await box.pressSequentially(name, { delay: 70 });
+        await wait(150);
+        await box.press("Enter");
+        await wait(500);
+      }
+      await wait(1200);
+    },
+  },
+  "dr-bulk": {
+    device: DESKTOP, url: "/duck-race",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(500);
+      await btn(p, /วางหลายชื่อ/).click();
+      await wait(600);
+      const area = p.getByPlaceholder(/วางรายชื่อ/);
+      await area.click();
+      await p.keyboard.press("Control+A"); // the box opens pre-filled with the current names
+      await p.keyboard.insertText(STUDENTS.join("\n")); // a paste, all at once
+      await wait(1000);
+      await btn(p, /ใช้รายชื่อนี้/).click();
+      await wait(2500);
+    },
+  },
+  "dr-roll": {
+    device: DESKTOP, url: "/duck-race",
+    setup: fullscreen,
+    film: async (p) => { await wait(500); await rollNumbers(p, 1, 40); await wait(2800); },
+  },
+  // 40 numbered ducks on the shortest track, through countdown, race and winner card.
+  "dr-race40": {
+    device: DESKTOP, url: "/duck-race",
+    setup: async (p) => {
+      await rollNumbers(p, 1, 40, 0);
+      await setRange(p, TRACK_RANGE, 1);
+      await wait(300);
+      await btn(p, /ซ่อนตั้งค่า/).click();
+      await fullscreen(p);
+    },
+    film: async (p) => { await wait(500); await raceToResult(p, 3500); },
+  },
+  // Named ducks, so the podium shows student names.
+  "dr-race": {
+    device: DESKTOP, url: "/duck-race",
+    setup: async (p) => {
+      await btn(p, /วางหลายชื่อ/).click();
+      await p.getByPlaceholder(/วางรายชื่อ/).fill(STUDENTS.slice(0, 8).join("\n"));
+      await btn(p, /ใช้รายชื่อนี้/).click();
+      await setRange(p, TRACK_RANGE, 1);
+      await wait(300);
+      await btn(p, /ซ่อนตั้งค่า/).click();
+      await fullscreen(p);
+    },
+    film: async (p) => { await wait(500); await raceToResult(p, 3500); },
+  },
+  "m-dr-race": {
+    device: MOBILE, url: "/duck-race",
+    setup: async (p) => {
+      await setRange(p, TRACK_RANGE, 1);
+      await fullscreen(p);
+      await hideDuckSettings(p);
+    },
+    film: async (p) => { await wait(500); await raceToResult(p, 3000); },
+  },
+  // Phone layout, NOT fullscreen: track on top, settings panel right under it,
+  // both legible. (In fullscreen the site's panel text turns white on white —
+  // globals.css gives .duck-race-controls `color:white` — so it can't be filmed there.)
+  "m-dr-type": {
+    device: MOBILE, url: "/duck-race",
+    setup: showDuckShell,
+    film: async (p) => {
+      await wait(500);
+      const box = p.getByPlaceholder(/เพิ่มชื่อ/);
+      for (const name of STUDENTS.slice(0, 3)) {
+        await box.click();
+        await box.pressSequentially(name, { delay: 70 });
+        await wait(150);
+        await box.press("Enter");
+        await wait(450);
+      }
+      await btn(p, /วางหลายชื่อ/).click();
+      await wait(500);
+      await p.getByPlaceholder(/วางรายชื่อ/).click();
+      await p.keyboard.press("Control+A"); // the box opens pre-filled with the current names
+      await p.keyboard.insertText(STUDENTS.join("\n"));
+      await wait(900);
+      await btn(p, /ใช้รายชื่อนี้/).click();
+      await wait(1800);
+    },
+  },
+  "m-dr-roll": {
+    device: MOBILE, url: "/duck-race",
+    setup: showDuckShell,
+    film: async (p) => { await wait(500); await rollNumbers(p, 1, 40); await wait(2800); },
+  },
+
+  // ─── Overview promo ───
   "d-home": {
     device: DESKTOP, url: "/",
     film: async (p) => { await wait(1200); await smoothScroll(p, 1300, 4000); await wait(800); },

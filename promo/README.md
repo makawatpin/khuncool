@@ -1,26 +1,38 @@
-# khuncool.com promo video
+# khuncool.com promo videos
 
-A vertical (1080×1920, 30 fps) ad for TikTok and Facebook Reels, built with
+Vertical (1080×1920, 30 fps) ads for TikTok and Facebook Reels, built with
 [Remotion](https://www.remotion.dev/). It is a separate project from the site:
 own `package.json`, excluded from the site's `tsconfig.json`, ESLint and git
 (generated audio/video are ignored).
+
+| Video | Script | Composition | Render |
+|---|---|---|---|
+| khuncool.com overview | `videos/promo.json` | `Promo` (`src/Promo.tsx`, scenes in `src/scenes/`) | `npm run render` |
+| สุ่มเป็ด (duck race) | `videos/duck-race.json` | `DuckRace` (`src/duck/DuckRace.tsx`) | `npm run render:duck` |
+
+Both share one engine (`src/Reel.tsx`): scene order, beat-snapped timing,
+transitions, voice, sound effects and music. A new video is a script in
+`videos/` plus a `ReelConfig` registered in `src/Root.tsx`.
 
 ## Pipeline
 
 | Step | Command | Output |
 |---|---|---|
-| 1. Voiceover (Gemini TTS, voice **Zephyr**) | `npm run voice` | `public/vo/<scene>.wav`, `public/vo/timings.json` |
+| 1. Voiceover (Gemini TTS, voice **Zephyr**) | `VIDEO=duck-race npm run voice` | `public/vo/<video>/<scene>.wav`, `timings.json` |
 | 2. Footage of the live site, fullscreen | `npm run record` | `public/footage/<shot>.mp4` |
 | 3. Music beat grid | `npm run beats` | `public/music/beats.json` (from `public/music/bgm.mp3`) |
 | 4. Sound effects (synthesised) | `npm run sfx` | `public/sfx/{whoosh,pop,boom,sparkle}.wav` |
 | 5. Preview / edit | `npm run studio` | Remotion Studio in the browser |
 | 6. Render | `npm run render` | `out/khuncool-promo.mp4` |
 
-- **Script** lives in `script.json` (`speech` is what the voice says — the
-  site name is spelled `คุณคูลดอทคอม` so TTS reads it right; `caption` is
+- **Scripts** live in `videos/<video>.json` (`speech` is what the voice says —
+  the site name is spelled `คุณคูลดอทคอม` so TTS reads it right; `caption` is
   what appears on screen).
 - **Voiceover** needs `GEMINI_API_KEY` (Windows user environment variable).
-  The free tier allows about 10 TTS requests per model per day.
+  The free tier allows about 10 TTS requests per model per day, resetting at
+  midnight Pacific (15:00 Thai time). `DRY=1` writes estimated timings without
+  audio or quota, so scenes can be built before the voice exists; the video
+  then renders without voice until the real clips are generated.
   `FORCE=reveal,cta npm run voice` regenerates only those scenes;
   `TEMPO=1.05` changes the speed-up (default 1.12). Takes that run far longer
   than the line (Gemini sometimes babbles on after it) are rejected and retried.

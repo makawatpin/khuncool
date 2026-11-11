@@ -54,10 +54,12 @@ type FootageProps = {
   fit?: "cover" | "contain";
   /** CSS object-position: which part of the frame survives a cover crop */
   position?: string;
+  /** play the clip faster (e.g. 2 to fit a 8 s demo into 4 s) */
+  rate?: number;
 };
 
 /** A recorded shot from public/footage, with an optional slow push-in. */
-export const Footage: React.FC<FootageProps> = ({ name, start = 0, zoom = [1, 1], focus = [50, 50], zoomFrames = 150, fit = "cover", position = "50% 50%" }) => {
+export const Footage: React.FC<FootageProps> = ({ name, start = 0, zoom = [1, 1], focus = [50, 50], zoomFrames = 150, fit = "cover", position = "50% 50%", rate = 1 }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const s = interpolate(f, [0, zoomFrames], zoom, { extrapolateRight: "clamp" });
@@ -66,6 +68,7 @@ export const Footage: React.FC<FootageProps> = ({ name, start = 0, zoom = [1, 1]
       <OffthreadVideo
         src={staticFile(`footage/${name}.mp4`)}
         trimBefore={Math.round(start * fps)}
+        playbackRate={rate}
         muted
         style={{ width: "100%", height: "100%", objectFit: fit, objectPosition: position, transform: `scale(${s})`, transformOrigin: `${focus[0]}% ${focus[1]}%` }}
       />

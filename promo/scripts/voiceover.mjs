@@ -1,18 +1,30 @@
-// Generates one voiceover clip per scene in script.json with Gemini TTS,
+// Generates one voiceover clip per scene of a video script with Gemini TTS,
 // trims the silence around each clip, speeds it up slightly, and writes
-//   public/vo/<scene>.wav   (48 kHz, used by the Remotion composition)
-//   public/vo/timings.json  ({ id: seconds })
+//   public/vo/<video>/<scene>.wav   (48 kHz, used by the Remotion composition)
+//   public/vo/<video>/timings.json  ({ id: seconds })
+// VIDEO picks videos/<video>.json (default "promo").
 // Clips that already exist are kept; FORCE=hook,cta regenerates those only,
 // FORCE=all regenerates everything. TEMPO overrides the speed-up (default 1.12).
+// DRY=1 writes estimated timings only (no audio, no quota), marked
+// "placeholder", so scenes can be built before the real voice exists.
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const script = JSON.parse(fs.readFileSync("script.json", "utf8"));
-const OUT = path.resolve("public/vo");
+const VIDEO = process.env.VIDEO ?? "promo";
+const script = JSON.parse(fs.readFileSync(`videos/${VIDEO}.json`, "utf8"));
+const OUT = path.resolve("public/vo", VIDEO);
 fs.mkdirSync(OUT, { recursive: true });
+
+if (process.env.DRY) {
+  // Measured on the promo's Zephyr takes after the 1.12x speed-up: ~13.5 characters a second.
+  const est = Object.fromEntries(script.scenes.map((s) => [s.id, Number((s.speech.replace(/\s/g, "").length / 13.5).toFixed(2))]));
+  fs.writeFileSync(path.join(OUT, "timings.json"), JSON.stringify({ ...est, placeholder: true }, null, 2));
+  console.log("estimated timings (no audio):", est);
+  process.exit(0);
+}
 
 const key = process.env.GEMINI_API_KEY;
 if (!key) throw new Error("GEMINI_API_KEY is not set");
