@@ -59,3 +59,13 @@ next-env.d.ts
 
 # codex worktrees (full repo copies incl. build output)
 /.codex/
+
+# promo video project: dependencies and generated media (large binaries)
+/promo/node_modules/
+/promo/out/
+/promo/footage/
+/promo/audio/
+/promo/public/vo/
+/promo/public/footage/
+/promo/public/music/
+/promo/public/sfx/

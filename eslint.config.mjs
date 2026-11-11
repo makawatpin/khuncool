@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "reference/**",
     ".codex/**",
     "public/games/**/vendor/**",
+    // Promo video project: its own package.json and toolchain (Remotion).
+    "promo/**",
   ]),
 ]);
 
