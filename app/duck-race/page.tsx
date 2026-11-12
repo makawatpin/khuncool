@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import DuckRaceApp from "./DuckRaceApp";
 
 /*
@@ -197,6 +198,15 @@ const WHEEL_VS_DUCK = [
   },
 ];
 
+// Shown right under the game: where a teacher usually goes next in the same
+// lesson. The longer RELATED_TOOLS list further down stays for reading.
+const NEXT_TOOLS = [
+  { title: "สุ่มแบ่งกลุ่ม", sub: "แบ่งทีมต่อจากการสุ่มชื่อ", cover: "/assets/tool-covers/group-maker.webp", href: "/group-maker" },
+  { title: "วงล้อสุ่มชื่อ", sub: "สุ่มไวเมื่อเวลาน้อย", cover: "/assets/tool-covers/random-name-wheel.webp", href: "/random-name-picker" },
+  { title: "จับเวลา", sub: "ตั้งเวลาทำกิจกรรม", cover: "/assets/tool-covers/timer.webp", href: "/timer" },
+  { title: "กระดานคะแนนกลุ่ม", sub: "ให้คะแนนทีมที่ชนะ", cover: "/assets/tool-covers/group-scoreboard.webp", href: "/group-scoreboard" },
+];
+
 const RELATED_TOOLS = [
   {
     icon: "🎡",
@@ -304,9 +314,44 @@ export default function DuckRacePage() {
       </div>
 
       {/* Duck race app */}
-      <div className="px-4 pb-8 md:px-8 md:pb-10">
+      <div className="px-4 pb-5 md:px-8 md:pb-6">
         <DuckRaceApp />
       </div>
+
+      {/* Next step in the same lesson */}
+      <section aria-labelledby="next-tools" className="pb-8 md:px-8 md:pb-10">
+        <div className="mb-2.5 flex items-baseline justify-between px-4 md:mb-3 md:px-0">
+          <h2 id="next-tools" className="m-0 text-base md:text-xl">
+            สุ่มเสร็จแล้ว ใช้ต่อในคาบนี้
+          </h2>
+          <Link href="/tools" className="flex-none text-[12.5px] font-semibold text-primary md:text-sm">
+            เครื่องมือทั้งหมด ›
+          </Link>
+        </div>
+        <div className="flex snap-x gap-2.5 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:grid md:grid-cols-4 md:gap-3.5 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
+          {NEXT_TOOLS.map((t) => (
+            <Link
+              key={t.href}
+              href={t.href}
+              className="group block w-[158px] flex-none snap-start overflow-hidden rounded-2xl border border-border bg-surface-card text-inherit no-underline transition hover:-translate-y-0.5 hover:border-primary/40 md:w-auto"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden bg-surface-panel">
+                <Image
+                  src={t.cover}
+                  alt=""
+                  fill
+                  sizes="(max-width: 767px) 160px, 260px"
+                  className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                />
+              </div>
+              <div className="px-3 pb-3 pt-2">
+                <div className="text-[13.5px] font-semibold leading-snug md:text-[15px]">{t.title}</div>
+                <div className="mt-0.5 text-[11.5px] text-ink-muted md:text-[12.5px]">{t.sub}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* How to use */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">

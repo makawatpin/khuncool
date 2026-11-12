@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTrackToolUse } from "@/lib/trackToolEvent";
 import { useToolFullscreen } from "@/components/useToolFullscreen";
@@ -10,6 +11,13 @@ import { ROLL_MAX, ROLL_MIN, buildRollNumbers, clampRoll } from "./rollNumbers";
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
 const GRAPHICS_KEY = "khuncool.duckrace.graphics";
+
+/** Follow-up links on the winner card. */
+const WINNER_NEXT = [
+  { label: "🔀 แบ่งกลุ่ม", href: "/group-maker" },
+  { label: "⏱️ จับเวลา", href: "/timer" },
+  { label: "🏆 ให้คะแนนกลุ่ม", href: "/group-scoreboard" },
+];
 
 const SAMPLE_NAMES = [
   "น้องปลา",
@@ -1314,6 +1322,19 @@ export default function DuckRaceApp() {
               >
                 ปิด
               </button>
+            </div>
+            {/* Kept small: this card is on the classroom screen. */}
+            <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5 border-t border-border pt-3 text-[12px] md:mt-2 md:text-[13px]">
+              <span className="text-ink-faint">ทำต่อ:</span>
+              {WINNER_NEXT.map((n) => (
+                <Link
+                  key={n.href}
+                  href={n.href}
+                  className="rounded-pill border border-border px-2.5 py-1 font-semibold text-ink-secondary no-underline hover:border-primary/40 hover:text-primary"
+                >
+                  {n.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
