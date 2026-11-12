@@ -7,7 +7,7 @@ const URL = "https://www.khuncool.com/media/social-studies/krathong-designer";
 const NAME = "ลอยกระทงออนไลน์ ทำกระทง 3 มิติ";
 const title = "ลอยกระทงออนไลน์ 2569 ทำกระทงออนไลน์ 3 มิติ ออกแบบเองได้ ฟรี | khuncool";
 const description = "ลอยกระทงออนไลน์ฟรี ไม่ต้องสมัคร ทำกระทงออนไลน์แบบ 3 มิติด้วยตัวเอง เลือกฐานหยวกกล้วย ขนมปัง กะลามะพร้าว หรือใบบัว ใส่กลีบใบตอง ยอดดอกบัว ดอกไม้ ธูปเทียน แล้วอธิษฐานลอยกระทงลงแม่น้ำคืนวันเพ็ญ ไม่สร้างขยะ เล่นได้ทั้งมือถือและจอห้องเรียน";
-const OG_IMAGE = { url: "https://www.khuncool.com/assets/game-covers/krathong-designer.webp", width: 1200, height: 675, alt: "ลอยกระทงออนไลน์ กระทงใบตอง 3 มิติ ยอดดอกบัว ดาวเรือง และธูปเทียน" };
+const OG_IMAGE = { url: "https://www.khuncool.com/assets/krathong-online-og.jpg", width: 1200, height: 675, alt: "ลอยกระทงออนไลน์ ทำกระทง 3 มิติด้วยตัวเอง ทำออนไลน์ได้เลย ใช้งานง่าย ฟรีทั้งหมด" };
 
 // How many krathongs the options can make, before counting the flower layout.
 const BASES = MATERIALS.reduce((n, m) => n + (shapeLocked(m.id) ? 1 : SHAPES.length), 0);
@@ -212,6 +212,7 @@ export default function KrathongDesignerPage() {
       <div className={section}>
         <h2 className={h2}>สื่อการสอนที่เกี่ยวข้อง</h2>
         <div className="flex flex-wrap gap-2.5">
+          <Link href="/blog/loy-krathong-online" className={chip}>📖 แผนกิจกรรมวันลอยกระทง 50 นาที</Link>
           <Link href="/media/social-studies" className={chip}>🗺️ สื่อสังคมศึกษาทั้งหมด</Link>
           <Link href="/random-name-picker" className={chip}>🎲 สุ่มชื่อคนออกมาทำกระทง</Link>
           <Link href="/timer" className={chip}>⏱ จับเวลา</Link>

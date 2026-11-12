@@ -29,7 +29,7 @@ export const MEDIA = [{
   title: "ลอยกระทงออนไลน์ ทำกระทง 3 มิติ",
   icon: "🪷",
   bg: "linear-gradient(135deg,#fff7f3,#efbfcf)",
-  image: "/assets/game-covers/krathong-designer.webp",
+  image: "/assets/game-covers/krathong-designer-v2.webp",
   short: "ต่อกระทงเองทีละชิ้น เลือกฐาน กลีบ ยอด ดอกไม้ ธูปเทียน แล้วลอยลงแม่น้ำพร้อมเพื่อนทั้งห้อง",
   grade: "ป.1–ป.6",
   time: "10–20 นาที",
