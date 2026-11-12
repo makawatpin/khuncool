@@ -227,5 +227,6 @@ export const Punch: React.FC<{ children: React.ReactNode; strength?: number }> =
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const p = spring({ frame: f, fps, config: { damping: 12, stiffness: 180 } });
-  return <AbsoluteFill style={{ transform: `scale(${1 + (1 - p) * strength})` }}>{children}</AbsoluteFill>;
+  // The spring overshoots past 1; never scale below 1 or the black backdrop shows at the edges.
+  return <AbsoluteFill style={{ transform: `scale(${1 + Math.max(0, 1 - p) * strength})` }}>{children}</AbsoluteFill>;
 };

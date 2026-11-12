@@ -210,11 +210,14 @@ const Roll: React.FC = () => {
   );
 };
 
-// ── 5. Race: 3-2-1 on the beat, then 40 ducks go ────────────────────────
+// ── 5. Race: 3-2-1 on the voice's words, then 40 ducks go ───────────────
+// Scene frames where the voiceover says สาม / สอง / หนึ่ง / ปล่อย(เป็ด), measured
+// from public/vo/duck-race/race.wav (word onsets 0.04 / 0.53 / 0.87 / 1.22 s,
+// plus the Reel's 3-frame voice lead). Re-measure if that clip is regenerated.
+const RACE_WORDS = { three: 2, two: 18, one: 28, go: 39 };
 const Race: React.FC = () => {
   const { durationInFrames } = useVideoConfig();
-  const beatF = 15; // ≈ one beat at 118 BPM (0.51 s)
-  const go = beatF * 3;
+  const { three, two, one, go } = RACE_WORDS;
   return (
     <AbsoluteFill>
       <Background />
@@ -228,15 +231,16 @@ const Race: React.FC = () => {
           <Cuts
             total={durationInFrames}
             shots={[
-              { at: 0, el: <Footage name="dr-race40" start={1.15} position="25% 60%" /> },
+              // Before the site's own countdown starts (~1.0 s in), so only our 3-2-1 is on screen.
+              { at: 0, el: <Footage name="dr-race40" start={0} rate={0.6} position="25% 60%" /> },
               { at: go / 30, el: <Footage name="dr-race40" start={4.1} position="35% 60%" zoom={[1.05, 1.2]} zoomFrames={120} /> },
             ]}
           />
         </Card>
       </Tilt>
-      <Count text="3" at={0} frames={beatF} />
-      <Count text="2" at={beatF} frames={beatF} />
-      <Count text="1" at={beatF * 2} frames={beatF} />
+      <Count text="3" at={three} frames={two - three} />
+      <Count text="2" at={two} frames={one - two} />
+      <Count text="1" at={one} frames={go - one} />
       <Flyer emoji="📣" from={[-120, 1400]} to={[1100, 1330]} at={go + 20} frames={sec(1.6)} size={100} />
       <div style={{ position: "absolute", top: 1410, left: SAFE.left + 10 }}>
         <Chip delay={go + 18} size={52} bg={C.sun}>🦆 ลุ้นกันทั้งห้อง!</Chip>
@@ -338,7 +342,10 @@ export const DUCK_RACE: ReelConfig = {
     { id: "roll", component: Roll, minSeconds: 5.2, sfx: [{ at: ROLL_CLICK, sfx: "pop", volume: 0.55 }, { at: ROLL_CLICK + 0.9, sfx: "sparkle", volume: 0.55 }] },
     {
       id: "race", component: Race, minSeconds: 5.4,
-      sfx: [{ at: 0, sfx: "pop", volume: 0.6 }, { at: 0.5, sfx: "pop", volume: 0.6 }, { at: 1.0, sfx: "pop", volume: 0.6 }, { at: 1.5, sfx: "boom", volume: 0.8 }],
+      sfx: [
+        ...[RACE_WORDS.three, RACE_WORDS.two, RACE_WORDS.one].map((f) => ({ at: f / 30, sfx: "pop" as const, volume: 0.45 })),
+        { at: RACE_WORDS.go / 30, sfx: "boom", volume: 0.8 },
+      ],
     },
     { id: "podium", component: Podium, minSeconds: 4.0, sfx: [{ at: 0.25, sfx: "sparkle", volume: 0.6 }, { at: 1.2, sfx: "pop", volume: 0.4 }, { at: 1.45, sfx: "pop", volume: 0.4 }, { at: 1.7, sfx: "pop", volume: 0.4 }] },
     { id: "screens", component: Screens, minSeconds: 4.0 },
