@@ -3,12 +3,18 @@ import CookieConsent from "@/components/CookieConsent";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import HeroSection from "@/components/home/HeroSection";
 import ArticlesSection from "@/components/home/ArticlesSection";
-import PillarsSection from "@/components/home/PillarsSection";
-import ToolsSection from "@/components/home/ToolsSection";
+import PopularToolsSection from "@/components/home/PopularToolsSection";
+import SeasonalSpotlight from "@/components/home/SeasonalSpotlight";
+import MomentsSection from "@/components/home/MomentsSection";
+import GamesSection from "@/components/home/GamesSection";
 import AdSlot from "@/components/home/AdSlot";
 import AffiliateProductsSection from "@/components/home/AffiliateProductsSection";
 import AppsSection from "@/components/home/AppsSection";
 import SeoHubSection from "@/components/home/SeoHubSection";
+
+// The seasonal spotlight is chosen by date at render time, so the otherwise
+// static page is rebuilt hourly to roll over at midnight.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "เครื่องมือครูและสื่อการสอนออนไลน์ฟรี | Khuncool",
@@ -79,13 +85,15 @@ export default function Home() {
       />
 
       <HeroSection />
+      <PopularToolsSection />
+      <SeasonalSpotlight />
+      <MomentsSection />
+      <GamesSection />
       <ArticlesSection />
-      <PillarsSection />
-      <SeoHubSection />
-      <ToolsSection />
+      <AppsSection />
       <AdSlot />
       <AffiliateProductsSection />
-      <AppsSection />
+      <SeoHubSection />
 
       <CookieConsent />
       <OfflineIndicator />

@@ -1,41 +1,86 @@
-// Static content for the home page sections, sourced from screens/Home.dc.html.
+// Static content for the home page sections.
 
-export const PILLARS = [
+// Order follows Google Search Console clicks for the 28 days to 10 Nov 2026
+// (duck race 363, group maker 17, homeroom 17, noise meter 7). Re-check the
+// report before reordering.
+export const POPULAR_TOOLS = [
   {
-    icon: "📰",
-    title: "บทความ",
-    path: "/articles",
-    bg: "bg-[#E1E3FD]",
-    href: "/articles",
+    title: "เกมเป็ดสุ่มชื่อ",
+    sub: "สุ่มแบบมีลุ้นทั้งห้อง",
+    cover: "/assets/tool-covers/duck-race.webp",
+    href: "/duck-race",
   },
   {
-    icon: "🎡",
-    title: "สื่อการสอนออนไลน์",
-    path: "/tools",
-    bg: "bg-[#D0FBEF]",
-    href: "/tools",
+    title: "สุ่มแบ่งกลุ่ม",
+    sub: "แบ่งเท่ากันในคลิกเดียว",
+    cover: "/assets/tool-covers/group-maker.webp",
+    href: "/group-maker",
   },
   {
-    icon: "🛒",
-    title: "แนะนำสินค้า",
-    path: "/shop",
-    bg: "bg-[#FFEAD5]",
-    href: "/shop",
+    title: "บันทึกโฮมรูม",
+    sub: "ตั้งหัวข้อเอง พิมพ์แบบฟอร์มได้",
+    cover: "/assets/homeroom-cover.webp",
+    href: "/tools/homeroom",
   },
   {
-    icon: "📱",
-    title: "แอป",
-    path: "/apps",
-    bg: "bg-[#E1E3FD]",
-    href: "/apps",
+    title: "เครื่องวัดเสียงในห้อง",
+    sub: "คุมเสียงแบบไม่ต้องดุ",
+    cover: "/assets/tool-covers/noise-meter.webp",
+    href: "/classroom-noise-meter",
   },
 ];
 
-export const TOOLS = [
-  { icon: "🎡", title: "วงล้อสุ่มชื่อ", tag: "ยอดนิยม", bg: "bg-[#E1E3FD]", href: "/random-name-picker" },
-  { icon: "🏆", title: "กระดานคะแนนกลุ่ม", tag: "ใหม่", bg: "bg-[#E1E3FD]", href: "/group-scoreboard" },
-  { icon: "🎤", title: "เครื่องวัดเสียงในห้อง", tag: "ใหม่", bg: "bg-[#D0FBEF]", href: "/classroom-noise-meter" },
-  { icon: "🦆", title: "เกมสุ่มเป็ด", tag: "สนุก สุ่มชื่อ", bg: "bg-[#D0FBEF]", href: "/duck-race" },
+/** "What are you about to do?" tiles: each goes straight to three tools. */
+export const MOMENTS = [
+  {
+    icon: "🎲",
+    title: "สุ่มและเล่นเกม",
+    bg: "bg-[#E1E3FD]",
+    links: [
+      { label: "วงล้อสุ่มชื่อ", href: "/random-name-picker" },
+      { label: "เกมเป็ดสุ่มชื่อ", href: "/duck-race" },
+      { label: "สุ่มคำถาม", href: "/random-question" },
+    ],
+  },
+  {
+    icon: "🏫",
+    title: "คุมห้องเรียน",
+    bg: "bg-[#D0FBEF]",
+    links: [
+      { label: "ตัวจับเวลา", href: "/timer" },
+      { label: "กระดานคะแนนกลุ่ม", href: "/group-scoreboard" },
+      { label: "เครื่องวัดเสียง", href: "/classroom-noise-meter" },
+    ],
+  },
+  {
+    icon: "📚",
+    title: "หาสื่อการสอน",
+    bg: "bg-[#FFEAD5]",
+    links: [
+      { label: "ภาษาอังกฤษ", href: "/media/english" },
+      { label: "คณิตศาสตร์", href: "/media/mathematics" },
+      { label: "สื่อทุกวิชา", href: "/media" },
+    ],
+  },
+  {
+    icon: "📋",
+    title: "งานเอกสารครู",
+    bg: "bg-[#FFF4D6]",
+    links: [
+      { label: "เช็กชื่อนักเรียน", href: "/tools/attendance" },
+      { label: "บันทึกโฮมรูม", href: "/tools/homeroom" },
+      { label: "ออมเงินนักเรียน", href: "/tools/savings" },
+    ],
+  },
+];
+
+export const GAMES = [
+  { title: "Vocabulary Arcade", meta: "ภาษาอังกฤษ", cover: "/assets/game-covers/vocabulary-arcade.webp", href: "/media/english/vocabulary-arcade" },
+  { title: "Math Adventure", meta: "คณิตศาสตร์", cover: "/assets/game-covers/math-adventure.webp", href: "/media/mathematics/math-adventure" },
+  { title: "Phonics Bingo", meta: "ภาษาอังกฤษ", cover: "/assets/game-covers/phonics-bingo.webp", href: "/media/english/phonics-bingo" },
+  { title: "เขาวงกตโค้ดดิ้ง", meta: "วิทยาการคำนวณ", cover: "/assets/game-covers/coding-maze.webp", href: "/media/computer/coding-maze" },
+  { title: "Science Lab Crisis", meta: "วิทยาศาสตร์", cover: "/assets/game-covers/science-lab-crisis.webp", href: "/media/science/science-lab-crisis" },
+  { title: "Thai Kingdom", meta: "ภาษาไทย", cover: "/assets/game-covers/thai-kingdom.webp", href: "/media/thai/thai-kingdom" },
 ];
 
 export const PRODUCTS = [
