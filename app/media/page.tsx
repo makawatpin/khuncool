@@ -13,7 +13,7 @@ import {
   TRUST_CHIPS,
   subjectMeta,
 } from "./data";
-import { mediaLabel } from "./catalog";
+import { SUBJECT_COVERS, mediaLabel } from "./catalog";
 
 export const metadata: Metadata = {
   title: "สื่อการสอนออนไลน์ ฟรี ทุกวิชา ป.1–ป.6 | khuncool",
@@ -173,58 +173,6 @@ export default function MediaPage() {
         </div>
       </div>
 
-      {/* Subjects grid */}
-      <div className="px-4 pb-6 md:px-8 md:pb-[34px]">
-        <h2 className="m-0 mb-1.5 text-lg md:text-2xl">เลือกตามวิชา</h2>
-        <p className="m-0 mb-3 max-w-[62ch] text-[13px] leading-[1.65] text-ink-secondary md:mb-[18px] md:text-[14.5px] md:leading-[1.7]">
-          แต่ละวิชามีหน้าของตัวเอง แยกสื่อตามทักษะและระดับชั้น
-          เพื่อให้ครูหยิบไปวางในแผนการสอนได้ตรงจุด
-        </p>
-        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3">
-          {SUBJECTS.map((s) => (
-            <Link
-              key={s.t}
-              href={s.href}
-              className="flex items-start gap-3 rounded-2xl border border-border bg-white p-3.5 text-inherit no-underline hover:border-[#C6C9FB] hover:bg-[#FBFBFE] md:gap-[15px] md:p-[18px]"
-            >
-              <div
-                className="flex h-[46px] w-[46px] flex-none items-center justify-center rounded-2xl text-[22px] md:h-[54px] md:w-[54px] md:text-[26px]"
-                style={{ background: s.bg }}
-              >
-                {s.icon}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="mb-1 flex flex-wrap items-center gap-1.5 md:mb-[5px] md:gap-2">
-                  <h3 className="m-0 text-[15.5px] md:text-lg">{s.t}</h3>
-                  <span
-                    className="rounded-md px-[7px] py-0.5 text-[10px] font-semibold md:px-2 md:py-[3px] md:text-[10.5px]"
-                    style={{ color: s.stFg, background: s.stBg }}
-                  >
-                    {mediaLabel(s.slug)}
-                  </span>
-                </div>
-                <p className="m-0 mb-1.5 text-[12.5px] leading-[1.6] text-ink-secondary md:mb-2 md:text-[13.5px] md:leading-[1.65]">
-                  {s.desc}
-                </p>
-                <div className="hidden flex-wrap gap-[7px] md:flex">
-                  {s.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-[#EEEEFD] px-2 py-[3px] text-[11px] font-semibold text-primary"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="text-[11px] text-ink-faint md:hidden">
-                  {subjectMeta(s)}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* Most popular */}
       <div className="border-y border-[#EEF0F4] bg-surface-light px-4 py-[22px] md:px-8 md:py-[26px]">
         <h2 className="m-0 mb-1.5 text-lg md:text-2xl">
@@ -261,6 +209,79 @@ export default function MediaPage() {
                 </p>
                 <div className="text-[11px] text-ink-faint">{p.meta}</div>
               </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Subjects grid */}
+      <div className="px-4 pb-6 md:px-8 md:pb-[34px]">
+        <h2 className="m-0 mb-1.5 text-lg md:text-2xl">เลือกตามวิชา</h2>
+        <p className="m-0 mb-3 max-w-[62ch] text-[13px] leading-[1.65] text-ink-secondary md:mb-[18px] md:text-[14.5px] md:leading-[1.7]">
+          แต่ละวิชามีหน้าของตัวเอง แยกสื่อตามทักษะและระดับชั้น
+          เพื่อให้ครูหยิบไปวางในแผนการสอนได้ตรงจุด
+        </p>
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3">
+          {SUBJECTS.map((s) => (
+            <Link
+              key={s.t}
+              href={s.href}
+              className="group block rounded-2xl border border-border bg-white p-3.5 text-inherit no-underline hover:border-[#C6C9FB] hover:bg-[#FBFBFE] md:p-[18px]"
+            >
+              <div className="flex items-start gap-3 md:gap-[15px]">
+              <div
+                className="flex h-[46px] w-[46px] flex-none items-center justify-center rounded-2xl text-[22px] md:h-[54px] md:w-[54px] md:text-[26px]"
+                style={{ background: s.bg }}
+              >
+                {s.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="mb-1 flex flex-wrap items-center gap-1.5 md:mb-[5px] md:gap-2">
+                  <h3 className="m-0 text-[15.5px] md:text-lg">{s.t}</h3>
+                  <span
+                    className="rounded-md px-[7px] py-0.5 text-[10px] font-semibold md:px-2 md:py-[3px] md:text-[10.5px]"
+                    style={{ color: s.stFg, background: s.stBg }}
+                  >
+                    {mediaLabel(s.slug)}
+                  </span>
+                </div>
+                <p className="m-0 mb-1.5 text-[12.5px] leading-[1.6] text-ink-secondary md:mb-2 md:text-[13.5px] md:leading-[1.65]">
+                  {s.desc}
+                </p>
+                <div className="hidden flex-wrap gap-[7px] md:flex">
+                  {s.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md bg-[#EEEEFD] px-2 py-[3px] text-[11px] font-semibold text-primary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-[11px] text-ink-faint md:hidden">
+                  {subjectMeta(s)}
+                </div>
+              </div>
+              </div>
+              {/* What is inside: the covers of this subject's first games. */}
+              {SUBJECT_COVERS[s.slug].length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-2 md:mt-3.5 md:gap-2.5">
+                  {SUBJECT_COVERS[s.slug].map((src) => (
+                    <div
+                      key={src}
+                      className="relative aspect-video overflow-hidden rounded-[10px] bg-surface-panel"
+                    >
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        sizes="(max-width: 767px) 30vw, 170px"
+                        className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </Link>
           ))}
         </div>

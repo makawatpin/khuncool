@@ -32,6 +32,19 @@ export const MEDIA_COUNTS: Record<SubjectSlug, number> = {
   computer: playable(COMPUTER_MEDIA),
 };
 
+/** Cover images of a subject's first three playable media, for the hub cards. */
+const covers = <T extends { href?: string; image?: string }>(items: readonly T[]) =>
+  items.filter((item) => item.href && item.image).slice(0, 3).map((item) => item.image as string);
+
+export const SUBJECT_COVERS: Record<SubjectSlug, string[]> = {
+  english: covers(ENGLISH_MEDIA),
+  mathematics: covers(SUBJECT_CONTENT.mathematics.resources),
+  science: covers(SUBJECT_CONTENT.science.resources),
+  thai: covers(SUBJECT_CONTENT.thai.resources),
+  "social-studies": covers(SOCIAL_MEDIA),
+  computer: covers(COMPUTER_MEDIA),
+};
+
 export const TOTAL_MEDIA = Object.values(MEDIA_COUNTS).reduce((sum, n) => sum + n, 0);
 
 /** "8 สื่อ" — the badge every subject card and cross-subject panel shows. */

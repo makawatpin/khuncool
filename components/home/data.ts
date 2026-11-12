@@ -80,7 +80,7 @@ export const GAMES = [
   { title: "Phonics Bingo", meta: "ภาษาอังกฤษ", cover: "/assets/game-covers/phonics-bingo.webp", href: "/media/english/phonics-bingo" },
   { title: "เขาวงกตโค้ดดิ้ง", meta: "วิทยาการคำนวณ", cover: "/assets/game-covers/coding-maze.webp", href: "/media/computer/coding-maze" },
   { title: "Science Lab Crisis", meta: "วิทยาศาสตร์", cover: "/assets/game-covers/science-lab-crisis.webp", href: "/media/science/science-lab-crisis" },
-  { title: "Thai Kingdom", meta: "ภาษาไทย", cover: "/assets/game-covers/thai-kingdom.webp", href: "/media/thai/thai-kingdom" },
+  { title: "อาณาจักรภาษาไทย", meta: "ภาษาไทย", cover: "/assets/game-covers/thai-kingdom.webp", href: "/media/thai/thai-kingdom" },
 ];
 
 export const PRODUCTS = [
