@@ -13,9 +13,9 @@ import { MEDIA as MEDIA_ENGLISH } from "@/app/media/english/data";
 import { MEDIA as MEDIA_SOCIAL_STUDIES } from "@/app/media/social-studies/data";
 import { SUBJECT_CONTENT } from "@/app/media/subjectContent";
 
-const LATEST_ARTICLES = [...ALL_ARTICLES]
-  .sort((a, b) => (a.dateISO < b.dateISO ? 1 : -1))
-  .slice(0, 6);
+const LATEST_ARTICLE = [...ALL_ARTICLES].sort((a, b) =>
+  a.dateISO < b.dateISO ? 1 : -1,
+)[0];
 
 function ArticleIcon() {
   return (
@@ -63,13 +63,8 @@ function AppsIcon() {
   );
 }
 
+// Ordered by what visitors come for: things to use first, reading after.
 const PILLARS = [
-  {
-    Icon: ArticleIcon,
-    title: "บทความ",
-    path: "/articles",
-    desc: "ข่าวครู รีวิวสินค้า ข่าวอบรมได้เกียรติบัตร และวิธีทำสื่อการสอน",
-  },
   {
     Icon: ToolsIcon,
     title: "เครื่องมือครู",
@@ -83,16 +78,22 @@ const PILLARS = [
     desc: "เกมและสื่อการสอนแยกตามวิชา เปิดฉายขึ้นจอหน้าชั้นได้ทันที",
   },
   {
+    Icon: AppsIcon,
+    title: "แอปช่วยงานครู",
+    path: "/apps",
+    desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
+  },
+  {
+    Icon: ArticleIcon,
+    title: "บทความ",
+    path: "/articles",
+    desc: "ข่าวครู รีวิวสินค้า ข่าวอบรมได้เกียรติบัตร และวิธีทำสื่อการสอน",
+  },
+  {
     Icon: ShopIcon,
     title: "แนะนำสินค้า",
     path: "/shop",
     desc: "คัดของใช้ในห้องเรียนพร้อมลิงก์ซื้อ (Affiliate) จากครูจริง",
-  },
-  {
-    Icon: AppsIcon,
-    title: "แอปจัดการห้องเรียน",
-    path: "/apps",
-    desc: "แอปช่วยงานครูใช้ผ่านเว็บ เช่น เช็กชื่อ ออมเงิน จัดกลุ่ม",
   },
 ];
 
@@ -160,7 +161,7 @@ export default function Header() {
   return (
     <>
       {/* announcement bar */}
-      <div className="flex items-center gap-2 bg-brand px-3.5 py-2 text-[12.5px] text-white">
+      <div className="flex items-center gap-2 bg-brand px-3.5 py-1.5 text-[12.5px] text-white">
         <div className="mx-auto flex w-full max-w-[1160px] items-center gap-2">
           <Link
             href="/articles"
@@ -168,19 +169,14 @@ export default function Header() {
           >
             บทความใหม่
           </Link>
-          <div className="flex-1 overflow-hidden">
-            <div className="flex w-max animate-marquee items-center gap-10 whitespace-nowrap">
-              {[...LATEST_ARTICLES, ...LATEST_ARTICLES].map((a, i) => (
-                <Link
-                  key={`${a.href}-${i}`}
-                  href={a.href}
-                  className="text-white no-underline hover:underline"
-                >
-                  {a.title}
-                </Link>
-              ))}
-            </div>
-          </div>
+          {/* One still line. It used to scroll six titles, which pulled the
+              eye on every page, tools and games included. */}
+          <Link
+            href={LATEST_ARTICLE.href}
+            className="min-w-0 flex-1 truncate text-white no-underline hover:underline"
+          >
+            {LATEST_ARTICLE.title}
+          </Link>
           <Link
             href="/articles"
             className="flex-none opacity-70 no-underline hover:opacity-100"
@@ -254,9 +250,9 @@ export default function Header() {
             <button
               type="button"
               onClick={openAccountSheet}
-              className="hidden rounded-pill bg-primary px-4 py-2 text-[13px] font-semibold text-white hover:bg-primary-hover md:block"
+              className="hidden rounded-pill border border-border-strong bg-surface-card px-4 py-2 text-[13px] font-semibold text-ink hover:border-primary/50 hover:text-primary md:block"
             >
-              สมัคร
+              เข้าสู่ระบบ
             </button>
           )}
         </div>

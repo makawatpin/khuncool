@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 /**
  * PDPA cookie-consent banner, ported from screens/Home.dc.html.
  * Copy/layout differs per breakpoint in the source:
- *  - mobile   (~lines 241-249): stacked full-width buttons, accept button first
+ *  - mobile: one short line and two compact buttons. The source design had
+ *    three lines of copy, which made the banner about 120px tall and covered
+ *    the main buttons at the bottom of a phone screen.
  *  - tablet   (~lines 472-481): 🍪 emoji + inline row, "เฉพาะที่จำเป็น" first
  *  - desktop  (~lines 715-724): 🍪 emoji + inline row, longer copy
  *
@@ -58,13 +61,12 @@ export default function CookieConsent() {
 
   return (
     <div className="sticky bottom-0 z-[25] mx-2.5 mb-2.5 rounded-card-sm bg-ink text-white shadow-device-frame md:mx-4 md:mb-4 md:flex md:items-center md:gap-4 md:rounded-card md:px-5 md:py-[15px] lg:mx-5 lg:mb-[18px] lg:gap-5 lg:px-6 lg:py-[18px]">
-      <div className="p-3.5 pb-0 md:hidden">
-        <p className="m-0 mb-[11px] text-xs leading-relaxed text-[#D8DBE2]">
-          เราใช้คุกกี้เพื่อให้เว็บใช้งานได้ดีขึ้น วิเคราะห์ทราฟฟิก
-          และแสดงโฆษณาตามความสนใจ ตาม{" "}
-          <span className="cursor-pointer underline">
-            นโยบายความเป็นส่วนตัว (PDPA)
-          </span>
+      <div className="px-3 pb-0 pt-2.5 md:hidden">
+        <p className="m-0 mb-2 text-[11.5px] leading-snug text-[#D8DBE2]">
+          เว็บนี้ใช้คุกกี้เพื่อวิเคราะห์การใช้งานและแสดงโฆษณา{" "}
+          <Link href="/privacy" className="text-white underline">
+            อ่านนโยบาย
+          </Link>
         </p>
       </div>
 
@@ -81,23 +83,23 @@ export default function CookieConsent() {
           เราใช้คุกกี้เพื่อให้เว็บใช้งานได้ดีขึ้น วิเคราะห์ทราฟฟิก
           และแสดงโฆษณา/คอนเทนต์ตามความสนใจ เราเคารพข้อมูลส่วนบุคคลตาม{" "}
         </span>
-        <span className="cursor-pointer underline">
+        <Link href="/privacy" className="text-white underline">
           นโยบายความเป็นส่วนตัว (PDPA)
-        </span>
+        </Link>
       </p>
 
-      <div className="flex gap-2 p-3.5 pt-0 md:flex-none md:gap-2.5 md:p-0 lg:gap-[10px]">
+      <div className="flex gap-2 p-3 pt-0 md:flex-none md:gap-2.5 md:p-0 lg:gap-[10px]">
         <button
           type="button"
           onClick={() => recordChoice("accepted")}
-          className="order-1 flex-1 whitespace-nowrap rounded-[9px] bg-primary py-2.5 text-[12.5px] font-semibold text-white hover:bg-primary-hover md:order-2 md:flex-none md:rounded-[10px] md:px-[18px] md:py-2.5 md:text-[13px] lg:px-[22px] lg:py-2.5"
+          className="order-1 flex-1 whitespace-nowrap rounded-[9px] bg-primary py-2 text-[12.5px] font-semibold text-white hover:bg-primary-hover md:order-2 md:flex-none md:rounded-[10px] md:px-[18px] md:py-2.5 md:text-[13px] lg:px-[22px] lg:py-2.5"
         >
           ยอมรับทั้งหมด
         </button>
         <button
           type="button"
           onClick={() => recordChoice("essential")}
-          className="order-2 flex-1 whitespace-nowrap rounded-[9px] border border-white/30 bg-transparent py-2.5 text-[12.5px] font-semibold text-white hover:bg-white/10 md:order-1 md:flex-none md:rounded-[10px] md:px-[15px] md:py-2.5 md:text-[13px] lg:px-[18px] lg:py-2.5"
+          className="order-2 flex-1 whitespace-nowrap rounded-[9px] border border-white/30 bg-transparent py-2 text-[12.5px] font-semibold text-white hover:bg-white/10 md:order-1 md:flex-none md:rounded-[10px] md:px-[15px] md:py-2.5 md:text-[13px] lg:px-[18px] lg:py-2.5"
         >
           เฉพาะที่จำเป็น
         </button>
