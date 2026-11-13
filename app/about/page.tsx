@@ -5,7 +5,7 @@ import Image from "next/image";
 export const metadata: Metadata = {
   title: "เกี่ยวกับเรา | khuncool",
   description:
-    "รู้จักทีมคูล (khuncool) ผู้อยู่เบื้องหลังเว็บไซต์รวมเครื่องมือครูและสื่อการสอนออนไลน์ฟรี ก่อตั้งโดยคุณอาวล์ เพื่อช่วยลดภาระงานครูไทย",
+    "รู้จักทีมคุณคูล (khuncool) ผู้อยู่เบื้องหลังเว็บไซต์รวมเครื่องมือครูและสื่อการสอนออนไลน์ฟรี ก่อตั้งโดยคุณอาวล์ เพื่อช่วยลดภาระงานครูไทย",
   alternates: {
     canonical: "https://www.khuncool.com/about",
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "เกี่ยวกับเรา | khuncool",
     description:
-      "รู้จักทีมคูล (khuncool) ผู้อยู่เบื้องหลังเว็บไซต์รวมเครื่องมือครูและสื่อการสอนออนไลน์ฟรี",
+      "รู้จักทีมคุณคูล (khuncool) ผู้อยู่เบื้องหลังเว็บไซต์รวมเครื่องมือครูและสื่อการสอนออนไลน์ฟรี",
     url: "https://www.khuncool.com/about",
     locale: "th_TH",
   },
@@ -72,7 +72,7 @@ export default function AboutPage() {
           เกี่ยวกับ khuncool
         </h1>
         <p className="m-0 max-w-[62ch] text-[13.5px] leading-[1.65] text-ink-secondary md:text-[14.5px] md:leading-[1.7]">
-          ทีมคูล (khuncool) ก่อตั้งขึ้นเพื่อช่วยลดภาระงานของคุณครูไทย
+          ทีมคุณคูล (khuncool) ก่อตั้งขึ้นเพื่อช่วยลดภาระงานของคุณครูไทย
           ด้วยเครื่องมือและสื่อการสอนออนไลน์ที่ใช้ได้ฟรี
         </p>
       </div>
