@@ -41,6 +41,16 @@ function ContentIcon() {
   );
 }
 
+function SupportIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5v6.5a1.5 1.5 0 0 1-1.5 1.5H8l-3.5 3v-3h0A1.5 1.5 0 0 1 3 11Z" />
+      <line x1="6" y1="6.5" x2="12" y2="6.5" />
+      <line x1="6" y1="9.2" x2="10" y2="9.2" />
+    </svg>
+  );
+}
+
 function SystemIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -85,6 +95,12 @@ export const TABS = [
     label: "เนื้อหา",
     description: "รายการบทความทั้งหมด",
     Icon: ContentIcon,
+  },
+  {
+    key: "support",
+    label: "ข้อความ",
+    description: "ข้อความจากกล่องเลี้ยงกาแฟ",
+    Icon: SupportIcon,
   },
   {
     key: "calendar",

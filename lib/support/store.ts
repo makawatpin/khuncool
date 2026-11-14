@@ -1,8 +1,7 @@
 import "server-only";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
 import type { SupportMessageInput, SupportStore } from "./message";
-
-export type SupportMessageStatus = "pending" | "approved" | "hidden";
+import type { SupportMessageStatus } from "./moderation";
 
 export type SupportMessageRow = {
   id: number;

@@ -11,6 +11,7 @@ interface OverviewData {
   signupsToday: number;
   topTool: string | null;
   signupsByDay: Record<string, number>;
+  pendingSupportMessages: number;
 }
 
 const LIVE_REFRESH_MS = 15_000;
@@ -257,7 +258,8 @@ function HourlyChart({
 /* ---------- overview (slower-moving totals) ---------- */
 
 function OverviewSection({ data }: { data: OverviewData }) {
-  const { totalUsers, activeLast7Days, signupsToday, topTool, signupsByDay } = data;
+  const { totalUsers, activeLast7Days, signupsToday, topTool, signupsByDay, pendingSupportMessages } =
+    data;
   const days = Object.keys(signupsByDay).sort();
   const max = Math.max(1, ...Object.values(signupsByDay));
   const total30 = sum(Object.values(signupsByDay));
@@ -273,6 +275,15 @@ function OverviewSection({ data }: { data: OverviewData }) {
         />
         <StatCard label="สมัครวันนี้" value={`+${signupsToday}`} />
         <StatCard label="เครื่องมือยอดนิยม (7 วัน)" value={topTool ?? "-"} />
+      </div>
+      {/* Its own row so the four totals above keep their grid. */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <StatCard
+          label="ข้อความรออนุมัติ"
+          value={pendingSupportMessages}
+          hint="ดูที่แท็บข้อความ"
+          accent={pendingSupportMessages > 0}
+        />
       </div>
       <div className={CARD}>
         <div className="mb-3 flex items-center justify-between">

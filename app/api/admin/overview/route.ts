@@ -4,6 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
 import { fetchAllToolEvents } from "@/lib/admin/fetchAllToolEvents";
 import { fetchAllUsers, type UserLister } from "@/lib/admin/fetchAllUsers";
 import { bangkokDay } from "@/lib/admin/bangkokDay";
+import { SUPPORT_TABLE } from "@/lib/support/store";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -71,7 +72,16 @@ export async function GET(request: Request) {
     signupsByDay[day] += 1;
   }
 
+  // A missing table or a failed count reads as 0 rather than failing the
+  // whole overview; the support tab shows the real error if there is one.
+  const { count: pendingSupportMessages, error: supportError } = await supabase
+    .from(SUPPORT_TABLE)
+    .select("id", { count: "exact", head: true })
+    .eq("status", "pending");
+  if (supportError) console.warn("pending support count failed:", supportError.message);
+
   return NextResponse.json({
+    pendingSupportMessages: supportError ? 0 : (pendingSupportMessages ?? 0),
     totalUsers,
     activeLast7Days,
     signupsToday,
