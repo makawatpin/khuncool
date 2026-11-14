@@ -13,7 +13,8 @@ export type SupportMessageInput = { name: string | null; message: string };
 
 export interface SupportStore {
   countPending(): Promise<number>;
-  insert(row: SupportMessageInput): Promise<void>;
+  /** "queue_full" when the database's own cap refuses the row. */
+  insert(row: SupportMessageInput): Promise<"ok" | "queue_full">;
 }
 
 export type SubmitResult = "ok" | "invalid" | "queue_full";
@@ -48,7 +49,8 @@ export async function submitSupportMessage(
 ): Promise<SubmitResult> {
   const checked = validateSupportMessage(body);
   if (!checked.ok) return "invalid";
+  // Fast path only: concurrent posts can all read a count under the cap.
+  // The insert trigger in the migration is the cap that actually holds.
   if ((await store.countPending()) >= SUPPORT_QUEUE_CAP) return "queue_full";
-  await store.insert(checked.value);
-  return "ok";
+  return store.insert(checked.value);
 }

@@ -4,7 +4,8 @@ import SupportPanel from "@/components/support/SupportPanel";
 import SupportStrip from "@/components/support/SupportStrip";
 import { fetchApprovedMessages } from "@/lib/support/store";
 
-// Approved messages show up within ten minutes, no redeploy needed.
+// The admin route revalidates this page on every approve, hide or delete;
+// the ten-minute window is only a backstop.
 export const revalidate = 600;
 
 export const metadata: Metadata = {

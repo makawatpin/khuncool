@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { trackToolEvent } from "@/lib/trackToolEvent";
+import { isAlreadyInView } from "@/lib/support/stripMotion";
 import CoffeeCup from "./CoffeeCup";
 import { useRaceBusy } from "./RaceStateProvider";
 import { useSupportSheet } from "./SupportSheet";
@@ -16,14 +17,17 @@ export default function SupportStrip() {
   const busy = useRaceBusy();
   const ref = useRef<HTMLDivElement>(null);
   const [seen, setSeen] = useState(false);
-  // Set once the observer is watching: only then is it safe to hide the strip
-  // until its pop-in plays. Without JS or an observer it simply shows.
+  // Set once the observer is watching a strip that starts off screen: only
+  // then is it safe to hide it until its pop-in plays. A strip already on
+  // screen at mount (top of /support, short pages) was painted visible by the
+  // server and stays that way; hiding it now would read as a blink. Without
+  // JS or an observer it simply shows.
   const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof IntersectionObserver === "undefined") return;
-    setArmed(true);
+    if (!isAlreadyInView(el.getBoundingClientRect(), window.innerHeight)) setArmed(true);
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {

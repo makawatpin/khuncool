@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
 import { fetchAllToolEvents } from "@/lib/admin/fetchAllToolEvents";
+import { isSiteTool } from "@/lib/admin/isSiteTool";
 
 const VALID_RANGES = { "7": 7, "30": 30, "90": 90 } as const;
 
@@ -27,6 +28,7 @@ export async function GET(request: Request) {
 
   const byTool = new Map<string, { total: number; guest: number; signedIn: number }>();
   for (const row of data) {
+    if (!isSiteTool(row.tool)) continue;
     const entry = byTool.get(row.tool) ?? { total: 0, guest: 0, signedIn: 0 };
     entry.total += 1;
     if (row.user_id) entry.signedIn += 1;

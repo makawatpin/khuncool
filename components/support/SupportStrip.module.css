@@ -9,7 +9,9 @@
 .armed:not(.play) {
   opacity: 0;
 }
-.strip.play {
+/* Only a strip that was hidden pops in; one already on screen just starts
+   its loops. */
+.armed.play {
   animation: card-pop 0.62s cubic-bezier(0.22, 0.9, 0.3, 1) both;
 }
 
@@ -74,7 +76,7 @@
   .armed:not(.play) {
     opacity: 1;
   }
-  .strip.play,
+  .armed.play,
   .play .cupBody,
   .play .brew,
   .play .smokeHeart,

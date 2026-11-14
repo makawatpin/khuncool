@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { trackToolEvent } from "@/lib/trackToolEvent";
+import { FOCUSABLE, wrapFocusIndex } from "@/lib/support/focusTrap";
 import SupportPanel from "./SupportPanel";
 
 /* Same shape as components/AccountSheet.tsx: a provider in the root layout,
@@ -53,6 +54,7 @@ export function useSupportSheet() {
 export function SupportSheetOverlay() {
   const { isOpen, closeSupportSheet } = useSupportSheet();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const headingId = useId();
 
   useEffect(() => {
@@ -62,6 +64,19 @@ export function SupportSheetOverlay() {
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeSupportSheet();
+      // aria-modal promises the page behind is out of reach; keep Tab inside.
+      if (e.key === "Tab" && dialogRef.current) {
+        const items = [...dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+        const next = wrapFocusIndex(
+          items.indexOf(document.activeElement as HTMLElement),
+          items.length,
+          e.shiftKey,
+        );
+        if (next !== null) {
+          e.preventDefault();
+          items[next].focus();
+        }
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => {
@@ -78,6 +93,7 @@ export function SupportSheetOverlay() {
       onClick={closeSupportSheet}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={headingId}

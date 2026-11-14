@@ -1,4 +1,9 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
+
+/* Every change re-renders /support at once. Waiting for the page's own
+   revalidate would leave a hidden or deleted message public until some
+   visitor happened to trigger a rebuild. */
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { createServiceRoleClient } from "@/lib/supabase/serviceClient";
 import {
@@ -49,6 +54,7 @@ export async function PATCH(request: Request) {
     .eq("id", update.id);
   if (error) return failed(error);
 
+  revalidatePath("/support");
   return NextResponse.json({ ok: true });
 }
 
@@ -63,5 +69,6 @@ export async function DELETE(request: Request) {
   const { error } = await createServiceRoleClient().from(SUPPORT_TABLE).delete().eq("id", id);
   if (error) return failed(error);
 
+  revalidatePath("/support");
   return NextResponse.json({ ok: true });
 }

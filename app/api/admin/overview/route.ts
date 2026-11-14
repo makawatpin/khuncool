@@ -5,6 +5,7 @@ import { fetchAllToolEvents } from "@/lib/admin/fetchAllToolEvents";
 import { fetchAllUsers, type UserLister } from "@/lib/admin/fetchAllUsers";
 import { bangkokDay } from "@/lib/admin/bangkokDay";
 import { SUPPORT_TABLE } from "@/lib/support/store";
+import { isSiteTool } from "@/lib/admin/isSiteTool";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -52,6 +53,7 @@ export async function GET(request: Request) {
   }
   const counts = new Map<string, number>();
   for (const row of topToolRows) {
+    if (!isSiteTool(row.tool)) continue;
     counts.set(row.tool, (counts.get(row.tool) || 0) + 1);
   }
   const topTool = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;

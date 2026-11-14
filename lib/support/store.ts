@@ -12,6 +12,8 @@ export type SupportMessageRow = {
 };
 
 export const SUPPORT_TABLE = "kc_support_messages";
+/** Must match the exception text in the migration's queue-cap trigger. */
+const QUEUE_FULL_SQL_MESSAGE = "kc_support_messages_queue_full";
 
 export function createSupportStore(): SupportStore {
   const supabase = createServiceRoleClient();
@@ -26,7 +28,10 @@ export function createSupportStore(): SupportStore {
     },
     async insert(row: SupportMessageInput) {
       const { error } = await supabase.from(SUPPORT_TABLE).insert(row);
+      // Raised by the kc_support_messages_queue_cap trigger.
+      if (error?.message.includes(QUEUE_FULL_SQL_MESSAGE)) return "queue_full";
       if (error) throw new Error(error.message);
+      return "ok";
     },
   };
 }

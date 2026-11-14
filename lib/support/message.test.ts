@@ -13,6 +13,7 @@ function fakeStore(pending: number) {
     countPending: async () => pending,
     insert: async (row) => {
       rows.push(row);
+      return "ok";
     },
   };
   return { store, rows };
@@ -67,6 +68,15 @@ describe("submitSupportMessage", () => {
   it("still accepts one below the cap", async () => {
     const { store } = fakeStore(SUPPORT_QUEUE_CAP - 1);
     expect(await submitSupportMessage(store, { message: "x" })).toBe("ok");
+  });
+  it("reports queue_full when the database refuses the insert at the cap", async () => {
+    // The count check is a fast path; concurrent posts can all pass it, so
+    // the database trigger is the real cap and the store relays its refusal.
+    const store: SupportStore = {
+      countPending: async () => 0,
+      insert: async () => "queue_full",
+    };
+    expect(await submitSupportMessage(store, { message: "x" })).toBe("queue_full");
   });
   it("validates before touching the store", async () => {
     const store: SupportStore = {
