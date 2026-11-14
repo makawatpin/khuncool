@@ -11,6 +11,7 @@ const FOOTER_LINKS = [
   { t: "ร้านค้าแนะนำ", href: "/shop" },
   { t: "เกี่ยวกับเรา", href: "/about" },
   { t: "ติดต่อเรา", href: "/about#contact" },
+  { t: "เลี้ยงกาแฟคุณคูล", href: "/support" },
   { t: "นโยบายความเป็นส่วนตัว", href: "/privacy" },
 ];
 

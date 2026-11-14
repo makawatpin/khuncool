@@ -4,6 +4,7 @@ import OfflineIndicator from "@/components/OfflineIndicator";
 import HeroSection from "@/components/home/HeroSection";
 import ArticlesSection from "@/components/home/ArticlesSection";
 import PopularToolsSection from "@/components/home/PopularToolsSection";
+import SupportStrip from "@/components/support/SupportStrip";
 import SeasonalSpotlight from "@/components/home/SeasonalSpotlight";
 import MomentsSection from "@/components/home/MomentsSection";
 import GamesSection from "@/components/home/GamesSection";
@@ -86,6 +87,9 @@ export default function Home() {
 
       <HeroSection />
       <PopularToolsSection />
+      <div className="px-4 pb-2 md:px-6 lg:px-8">
+        <SupportStrip />
+      </div>
       <SeasonalSpotlight />
       <MomentsSection />
       <GamesSection />

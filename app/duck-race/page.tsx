@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import DuckRaceApp from "./DuckRaceApp";
+import { RaceStateProvider } from "@/components/support/RaceStateProvider";
+import SupportStrip from "@/components/support/SupportStrip";
 
 /*
  * Wording here follows what Search Console says people actually type. Over
@@ -313,13 +315,15 @@ export default function DuckRacePage() {
         </p>
       </div>
 
+      {/* The provider lets the support strip hold still while a race runs. */}
+      <RaceStateProvider>
       {/* Duck race app */}
       <div className="px-4 pb-5 md:px-8 md:pb-6">
         <DuckRaceApp />
       </div>
 
       {/* Next step in the same lesson */}
-      <section aria-labelledby="next-tools" className="pb-8 md:px-8 md:pb-10">
+      <section aria-labelledby="next-tools" className="md:px-8">
         <div className="mb-2.5 flex items-baseline justify-between px-4 md:mb-3 md:px-0">
           <h2 id="next-tools" className="m-0 text-base md:text-xl">
             สุ่มเสร็จแล้ว ใช้ต่อในคาบนี้
@@ -352,6 +356,12 @@ export default function DuckRacePage() {
           ))}
         </div>
       </section>
+
+      {/* Where teachers actually are: 81% of Google clicks land on this page. */}
+      <div className="px-4 pb-8 md:px-8 md:pb-10">
+        <SupportStrip />
+      </div>
+      </RaceStateProvider>
 
       {/* How to use */}
       <div className="border-t border-border px-4 py-6 md:px-8 md:py-9">

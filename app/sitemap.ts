@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/articles`, priority: 0.9 },
     { url: `${BASE_URL}/shop`, priority: 0.8 },
     { url: `${BASE_URL}/about`, priority: 0.5 },
+    { url: `${BASE_URL}/support`, priority: 0.4 },
     { url: `${BASE_URL}/privacy`, priority: 0.3 },
   ];
 
