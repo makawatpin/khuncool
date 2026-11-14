@@ -20,6 +20,13 @@ import SupportStrip from "@/components/support/SupportStrip";
  * having it there invited us to park phrases in markup instead of writing
  * them into copy a teacher actually reads.
  */
+const OG_IMAGE = {
+  url: "https://www.khuncool.com/assets/duck-race-og.webp",
+  width: 1200,
+  height: 675,
+  alt: "สุ่มเป็ด เกมแข่งเป็ดเข้าเส้นชัย khuncool",
+};
+
 export const metadata: Metadata = {
   title: "สุ่มเป็ด เกมแข่งเป็ดเข้าเส้นชัย สุ่มชื่อ-เลขที่ ฟรี | Khuncool",
   description:
@@ -33,11 +40,12 @@ export const metadata: Metadata = {
     description:
       "เว็บสุ่มเป็ด ใส่รายชื่อหรือเลขที่นักเรียนแล้วปล่อยเป็ดว่ายน้ำแข่งได้ทันที ฟรี ไม่ต้องสมัครสมาชิก ใช้ได้ทั้งบนคอมพิวเตอร์ แท็บเล็ต และมือถือ",
     url: "https://www.khuncool.com/duck-race",
-    images: ["https://www.khuncool.com/assets/duck-race-cover.webp"],
+    images: [OG_IMAGE],
     locale: "th_TH",
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
   },
 };
 
@@ -102,6 +110,7 @@ const jsonLd = {
       "@type": "WebApplication",
       name: "สุ่มเป็ด เกมแข่งเป็ดเข้าเส้นชัย Khuncool",
       url: "https://www.khuncool.com/duck-race",
+      image: OG_IMAGE.url,
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
       inLanguage: "th",
