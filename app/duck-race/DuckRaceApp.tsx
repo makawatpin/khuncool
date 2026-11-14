@@ -7,6 +7,7 @@ import { useToolFullscreen } from "@/components/useToolFullscreen";
 import ClassroomRosterPicker from "@/components/ClassroomRosterPicker";
 import { loadActiveRosterNames } from "@/lib/classrooms/storage";
 import { ROLL_MAX, ROLL_MIN, buildRollNumbers, clampRoll } from "./rollNumbers";
+import { useReportRaceBusy } from "@/components/support/RaceStateProvider";
 
 const NAMES_KEY = "khuncool.duckrace.names";
 const TRACK_KEY = "khuncool.duckrace.trackLen";
@@ -956,6 +957,8 @@ export default function DuckRaceApp() {
   }, []);
 
   const busy = racing || countdown !== null;
+  // Keeps the support strip under the game still while a race runs.
+  useReportRaceBusy(busy);
   const disabled = busy || names.length < 2;
   /*
    * What "ใช้เลขที่" would produce right now, so the button can say how many

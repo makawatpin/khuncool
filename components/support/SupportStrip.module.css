@@ -1,0 +1,176 @@
+/* Motion for the เลี้ยงกาแฟ strip, ported from the approved mockup
+   (spec §5). Everything plays only once the strip has scrolled into view
+   (.play). Two switches turn it off: .still while a duck race is running, and
+   prefers-reduced-motion. Either leaves the smoke drawn as a still heart. */
+
+/* The strip pops in once; the cup, coffee and smoke loop. While armed and
+   not yet seen it is invisible, so the pop does not start from a strip that
+   was already showing. */
+.armed:not(.play) {
+  opacity: 0;
+}
+.strip.play {
+  animation: card-pop 0.62s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+}
+
+.cupBody,
+.brew,
+.smokeHeart {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.smokeHeart {
+  transform-origin: center bottom;
+}
+
+.smokeHeart path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  opacity: 0;
+}
+.shStem {
+  stroke-dasharray: 17;
+  stroke-dashoffset: 17;
+}
+.shL,
+.shR {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+}
+
+.play .cupBody {
+  animation: cup-float 3.4s ease-in-out infinite;
+}
+.play .brew {
+  animation: brew-ripple 4.2s ease-in-out infinite;
+}
+.play .smokeHeart {
+  animation: sh-rise 4.6s ease-in-out infinite;
+}
+.play .shStem {
+  animation: sh-stem-draw 4.6s ease-in-out infinite;
+}
+.play .shL,
+.play .shR {
+  animation: sh-draw 4.6s ease-in-out infinite;
+}
+
+/* Before it is seen, and whenever it must not move: a still, drawn heart. */
+.strip:not(.play) .smokeHeart path,
+.still .smokeHeart path {
+  opacity: 0.85;
+  stroke-dashoffset: 0;
+}
+.still .cupBody,
+.still .brew,
+.still .smokeHeart,
+.still .smokeHeart path {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .armed:not(.play) {
+    opacity: 1;
+  }
+  .strip.play,
+  .play .cupBody,
+  .play .brew,
+  .play .smokeHeart,
+  .play .smokeHeart path {
+    animation: none;
+  }
+  .smokeHeart path {
+    opacity: 0.85;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes card-pop {
+  0% {
+    transform: scale(0.93) translateY(11px);
+    opacity: 0;
+  }
+  62% {
+    transform: scale(1.015) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cup-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes brew-ripple {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.015, 0.93);
+  }
+}
+
+@keyframes sh-stem-draw {
+  0% {
+    stroke-dashoffset: 17;
+    opacity: 0;
+  }
+  9% {
+    opacity: 0.95;
+  }
+  24% {
+    stroke-dashoffset: 0;
+  }
+  74% {
+    stroke-dashoffset: 0;
+    opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes sh-draw {
+  0%,
+  15% {
+    stroke-dashoffset: 64;
+    opacity: 0;
+  }
+  22% {
+    opacity: 0.95;
+  }
+  60% {
+    stroke-dashoffset: 0;
+  }
+  78% {
+    stroke-dashoffset: 0;
+    opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes sh-rise {
+  0%,
+  76% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-10px) scale(1.12);
+  }
+}
