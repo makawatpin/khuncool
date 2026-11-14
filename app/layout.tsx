@@ -33,6 +33,10 @@ import {
   AccountSheetOverlay,
 } from "@/components/AccountSheet";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
+import {
+  SupportSheetProvider,
+  SupportSheetOverlay,
+} from "@/components/support/SupportSheet";
 
 /* Games and tools go fullscreen on phones and tablets. `viewport-fit: cover`
    makes env(safe-area-inset-*) meaningful so those surfaces can keep clear of
@@ -119,11 +123,14 @@ gtag('config', '${GA_ID}');`}
         </a>
         <AuthProvider>
           <AccountSheetProvider>
-            <Header />
-            <span id="kc-content" tabIndex={-1} />
-            {children}
-            <Footer />
-            <AccountSheetOverlay />
+            <SupportSheetProvider>
+              <Header />
+              <span id="kc-content" tabIndex={-1} />
+              {children}
+              <Footer />
+              <AccountSheetOverlay />
+              <SupportSheetOverlay />
+            </SupportSheetProvider>
           </AccountSheetProvider>
         </AuthProvider>
       </body>
