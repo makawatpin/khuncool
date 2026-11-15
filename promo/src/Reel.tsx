@@ -14,6 +14,8 @@ export type ReelConfig = {
   scenes: { id: string; component: React.FC; minSeconds: number; sfx?: Cue[]; punch?: number }[];
   /** transition into scene i (index 0 unused) */
   transitions: TransitionKind[];
+  /** seconds of picture + music before the first word (default 0). Viewers who just opened a video miss a first word that starts at once. */
+  lead?: number;
 };
 
 export type ReelProps = {
@@ -47,7 +49,7 @@ export const makeReel = (config: ReelConfig): React.FC<ReelProps> => {
     const total = slots.length ? slots[slots.length - 1].from + slots[slots.length - 1].duration : 1;
     const periodFrames = beats ? beats.period * FPS : 0;
     // Music ducks under the voice: quieter while someone is talking.
-    const speaking = (f: number) => !placeholderVoice && slots.some((s) => f >= s.from + VO_LEAD - 4 && f < s.from + VO_LEAD + s.voFrames + 4);
+    const speaking = (f: number) => !placeholderVoice && slots.some((s) => f >= s.from + s.lead + VO_LEAD - 4 && f < s.from + s.lead + VO_LEAD + s.voFrames + 4);
     const musicVolume = (f: number) => {
       const fade = Math.min(interpolate(f, [0, 8], [0, 1], { extrapolateRight: "clamp" }), interpolate(f, [total - 40, total], [1, 0], { extrapolateLeft: "clamp" }));
       return (speaking(f) ? 0.1 : 0.24) * fade;
@@ -65,7 +67,7 @@ export const makeReel = (config: ReelConfig): React.FC<ReelProps> => {
                 </Punch>
               </BeatContext.Provider>
               {placeholderVoice ? null : (
-                <Sequence from={VO_LEAD} layout="none">
+                <Sequence from={s.lead + VO_LEAD} layout="none">
                   <Audio src={staticFile(`vo/${config.id}/${s.id}.wav`)} />
                 </Sequence>
               )}

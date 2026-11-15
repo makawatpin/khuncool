@@ -9,8 +9,9 @@ own `package.json`, excluded from the site's `tsconfig.json`, ESLint and git
 |---|---|---|---|
 | khuncool.com overview | `videos/promo.json` | `Promo` (`src/Promo.tsx`, scenes in `src/scenes/`) | `npm run render` |
 | สุ่มเป็ด (duck race) | `videos/duck-race.json` | `DuckRace` (`src/duck/DuckRace.tsx`) | `npm run render:duck` |
+| ลอยกระทงออนไลน์ (krathong designer) | `videos/krathong.json` | `Krathong` (`src/krathong/Krathong.tsx`) | `npm run render:krathong` |
 
-Both share one engine (`src/Reel.tsx`): scene order, beat-snapped timing,
+All share one engine (`src/Reel.tsx`): scene order, beat-snapped timing,
 transitions, voice, sound effects and music. A new video is a script in
 `videos/` plus a `ReelConfig` registered in `src/Root.tsx`.
 
@@ -58,3 +59,8 @@ transitions, voice, sound effects and music. A new video is a script in
 
 Remotion is free for individuals and companies of up to 3 people; larger teams
 need a company licence.
+
+Noise meter video (`videos/noise-meter.json`, `npm run render:noise`) films the
+meter with a fake microphone (`audio: "noise-demo"` in `scripts/record.mjs`:
+a generated wav that goes quiet, just right, too loud) so the faces and alarm
+show on camera.

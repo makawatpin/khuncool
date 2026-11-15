@@ -8,6 +8,8 @@ import "@fontsource/fredoka/700.css";
 import React from "react";
 import { Composition, staticFile } from "remotion";
 import { DUCK_RACE, DuckRace } from "./duck/DuckRace";
+import { KRATHONG, Krathong } from "./krathong/Krathong";
+import { NOISE_METER, NoiseMeter } from "./noise/NoiseMeter";
 import { PROMO, Promo } from "./Promo";
 import type { ReelConfig, ReelProps } from "./Reel";
 import { FPS, H, W } from "./theme";
@@ -30,7 +32,7 @@ const Reel: React.FC<{ name: string; config: ReelConfig; component: React.FC<Ree
         : null;
       const ids = config.scenes.map((s) => s.id);
       const mins = Object.fromEntries(config.scenes.map((s) => [s.id, s.minSeconds]));
-      const slots = buildTimeline(ids, mins, timings, beats?.period);
+      const slots = buildTimeline(ids, mins, timings, beats?.period, config.lead);
       return { durationInFrames: totalFrames(slots), props: { ...props, slots, beats, placeholderVoice: !!timings.placeholder } };
     }}
   />
@@ -40,5 +42,7 @@ export const RemotionRoot: React.FC = () => (
   <>
     <Reel name="Promo" config={PROMO} component={Promo} />
     <Reel name="DuckRace" config={DUCK_RACE} component={DuckRace} />
+    <Reel name="Krathong" config={KRATHONG} component={Krathong} />
+    <Reel name="NoiseMeter" config={NOISE_METER} component={NoiseMeter} />
   </>
 );

@@ -11,6 +11,7 @@ Reference videos (match these):
 |---|---|---|
 | khuncool.com overview | `videos/promo.json` | `Promo` — `src/Promo.tsx` + `src/scenes/scenes.tsx` |
 | สุ่มเป็ด (duck race) | `videos/duck-race.json` | `DuckRace` — `src/duck/DuckRace.tsx` |
+| ลอยกระทงออนไลน์ (krathong designer) | `videos/krathong.json` | `Krathong` — `src/krathong/Krathong.tsx` |
 
 `src/duck/DuckRace.tsx` is the best template for a single-feature video.
 
@@ -139,7 +140,7 @@ one marker per scene, text that sits still for the whole scene with no motion.
 - Before using a shot, look at a contact sheet of stills (ffmpeg `tile`) and
   find key moments with `select='gt(scene,0.25)'`.
 - Name shots `d-…` (desktop) / `m-…` (phone), prefixed by video (`dr-` =
-  duck race).
+  duck race, `kd-` = krathong designer).
 
 ## 9. Known pitfalls
 
@@ -166,3 +167,13 @@ one marker per scene, text that sits still for the whole scene with no motion.
    than music-only parts.
 5. Offer captions for TikTok and Facebook Reels (hook line first, link in the
    first comment on Facebook, "ค้นหา …" or link-in-bio on TikTok, `#khuncool`).
+
+## 11. Lead-in before the first word
+
+Viewers who have just opened a Reel/TikTok miss a first word that starts at
+frame 0. Every new video sets `lead` (seconds, 0.8 recommended) on its
+`ReelConfig`: the first scene gets that much picture and music before the voice
+starts (`buildTimeline` lengthens it, `Reel` delays the first clip and the music
+ducking). The hook's headline and a moving element must already be on screen at
+frame 0 (see `Hook` in `src/noise/NoiseMeter.tsx`; keep its `LEAD` constant in
+sync with `"lead"` in the script JSON). Older videos have no lead (0).

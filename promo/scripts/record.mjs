@@ -109,8 +109,110 @@ async function rollNumbers(p, from, to, typeDelay = 90) {
   await btn(p, /^ใช้เลขที่/).click();
 }
 
+// ── Krathong designer helpers (/media/social-studies/krathong-designer) ──
+const KD_URL = "/media/social-studies/krathong-designer";
+const pick = (p, name) => p.getByRole("radio", { name, exact: true }).first().click();
+const kdNext = (p) => btn(p, /ถัดไป/).click();
+// The krathong every shot builds: banana base in a lotus shape, pink lotus
+// petals, pearl beads, a pink bud on top, roses and marigolds alternating,
+// a yellow candle. Steps run in order; `until` stops before that step number.
+const KD_STEPS = [
+  async (p) => { await pick(p, "หยวกกล้วย"); await pick(p, "กลีบบัว"); },
+  async (p) => { await pick(p, "กลีบบัวชมพู"); await pick(p, "มุกขาว"); },
+  async (p) => { await pick(p, "บัวตูมชมพู"); },
+  async (p) => { await pick(p, "กุหลาบ"); await btn(p, "ใส่ทุกช่อง").click(); await pick(p, "ดาวเรือง"); await btn(p, "เว้นช่อง").click(); },
+  async (p) => { await pick(p, "เทียนเหลือง"); await btn(p, "🔥 จุดเทียน").click(); },
+  async (p) => { await pick(p, "ขอให้เรียนเก่ง"); await p.getByPlaceholder("เช่น ต้นกล้า").fill("ต้นกล้า"); },
+];
+async function kdBuild(p, until) {
+  for (let i = 0; i < until - 1; i++) {
+    await KD_STEPS[i](p);
+    await wait(300);
+    if (i < until - 2) { await kdNext(p); await wait(500); }
+  }
+  if (until > 1) { await kdNext(p); await wait(1200); } // land on step `until`, thumbnails drawn
+}
+async function kdFloat(p) {
+  await btn(p, "🪷 ลอยกระทง").click();
+}
+
 // Each shot: setup runs before filming starts; film runs while recording.
 const SHOTS = {
+  // ─── Krathong designer video ───
+  // Step 1: flip through the four base materials, then the shapes.
+  "kd-base": {
+    device: DESKTOP, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await wait(1500); },
+    film: async (p) => {
+      await wait(700);
+      for (const m of ["ขนมปัง", "กะลามะพร้าว", "ใบบัว", "หยวกกล้วย"]) { await pick(p, m); await wait(1300); }
+      for (const s of ["กลีบบัว", "หัวใจ"]) { await pick(p, s); await wait(1300); }
+      await wait(500);
+    },
+  },
+  // Steps 2–4: petals, beads, top, flowers.
+  "kd-decor": {
+    device: DESKTOP, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await pick(p, "กลีบบัว"); await kdNext(p); await wait(1500); },
+    film: async (p) => {
+      await wait(600);
+      for (const x of ["ใบตองพับกุหลาบ", "กลีบบัวชมพู", "มุกขาว"]) { await pick(p, x); await wait(1200); }
+      await kdNext(p); await wait(1200);
+      for (const x of ["บัวบาน", "พุ่มดาวเรือง", "บัวตูมชมพู"]) { await pick(p, x); await wait(1200); }
+      await kdNext(p); await wait(1200);
+      await pick(p, "กุหลาบ"); await wait(300); await btn(p, "ใส่ทุกช่อง").click(); await wait(1300);
+      await pick(p, "ดาวเรือง"); await wait(300); await btn(p, "เว้นช่อง").click(); await wait(1800);
+    },
+  },
+  "m-kd-decor": {
+    device: MOBILE, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await kdBuild(p, 4); },
+    film: async (p) => {
+      await wait(600);
+      await pick(p, "กุหลาบ"); await wait(300); await btn(p, "ใส่ทุกช่อง").click(); await wait(1300);
+      await pick(p, "ดาวเรือง"); await wait(300); await btn(p, "เว้นช่อง").click(); await wait(1300);
+      await pick(p, "ลีลาวดี"); await wait(300); await btn(p, "เว้นช่อง").click(); await wait(1800);
+    },
+  },
+  // Steps 5–6 and the float: candle colour, light it, wish, name, float, river.
+  "kd-float": {
+    device: DESKTOP, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await kdBuild(p, 5); },
+    film: async (p) => {
+      await wait(600);
+      await pick(p, "เทียนชมพู"); await wait(700); await pick(p, "เทียนเหลือง"); await wait(700);
+      await btn(p, "🔥 จุดเทียน").click(); await wait(1500);
+      await kdNext(p); await wait(1000);
+      await pick(p, "ขอให้เรียนเก่ง"); await wait(500);
+      await p.getByPlaceholder("เช่น ต้นกล้า").pressSequentially("ต้นกล้า", { delay: 90 }); await wait(600);
+      await kdFloat(p); await wait(10000);
+    },
+  },
+  "m-kd-float": {
+    device: MOBILE, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await kdBuild(p, 6); await KD_STEPS[5](p); await wait(500); },
+    film: async (p) => { await wait(600); await kdFloat(p); await wait(10000); },
+  },
+  // Save dialog: the poster, then the 10-second video being made.
+  "kd-save": {
+    device: DESKTOP, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await kdBuild(p, 6); await KD_STEPS[5](p); await kdFloat(p); await wait(5000); },
+    film: async (p) => {
+      await wait(800);
+      await btn(p, /บันทึกผลงาน/).click(); await wait(2500);
+      await btn(p, /สร้างวิดีโอ/).click(); await wait(5000);
+    },
+  },
+  "m-kd-save": {
+    device: MOBILE, url: KD_URL,
+    setup: async (p) => { await fullscreen(p); await kdBuild(p, 6); await KD_STEPS[5](p); await kdFloat(p); await wait(5000); },
+    film: async (p) => {
+      await wait(800);
+      await btn(p, /บันทึกผลงาน/).click(); await wait(2500);
+      await btn(p, /สร้างวิดีโอ/).click(); await wait(5000);
+    },
+  },
+
   // ─── Duck race video ───
   "dr-type": {
     device: DESKTOP, url: "/duck-race",
@@ -245,6 +347,18 @@ const SHOTS = {
     setup: fullscreen,
     film: async (p) => { await wait(600); await btn(p, /เริ่มวัดเสียง/).click(); await wait(5000); },
   },
+  // Noise meter promo (nm-): the fake mic goes quiet -> just right -> too loud, so the
+  // meter walks through its faces and the red "over the limit" alarm.
+  "nm-desktop": {
+    device: DESKTOP, url: "/classroom-noise-meter", audio: "noise-demo",
+    setup: fullscreen,
+    film: async (p) => { await wait(600); await btn(p, /เริ่มวัดเสียง/).click(); await wait(14000); },
+  },
+  "nm-phone": {
+    device: MOBILE, url: "/classroom-noise-meter", audio: "noise-demo",
+    setup: fullscreen,
+    film: async (p) => { await wait(600); await btn(p, /เริ่มวัดเสียง/).click(); await wait(14000); },
+  },
   "d-typing": {
     device: DESKTOP, url: "/media/computer/typing-defense",
     setup: fullscreen,
@@ -331,17 +445,41 @@ const SHOTS = {
 // keeps canvas/WebGL games smooth while filming. GPU=0 turns this off.
 const GPU_ARGS = ["--enable-gpu", "--use-angle=d3d11", "--ignore-gpu-blocklist", "--enable-gpu-rasterization"];
 const browsers = new Map();
-async function browserFor(device) {
-  if (!browsers.has(device)) {
-    browsers.set(device, await chromium.launch({
-      args: [...device.launch, ...(process.env.GPU === "0" ? [] : GPU_ARGS), "--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
+// Optional fake microphone: a shot with `audio: "noise-demo"` hears the wav
+// built by `fakeMic` (Chrome plays it as the microphone from the moment the
+// page opens the mic), so the noise meter can go quiet -> loud on camera.
+async function browserFor(device, audio) {
+  const key = `${device.launch[0]}|${audio ?? ""}`;
+  if (!browsers.has(key)) {
+    const mic = audio ? [`--use-file-for-fake-audio-capture=${fakeMic(audio)}%noloop`] : [];
+    browsers.set(key, await chromium.launch({
+      args: [...device.launch, ...(process.env.GPU === "0" ? [] : GPU_ARGS), "--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required", ...mic],
     }));
   }
-  return browsers.get(device);
+  return browsers.get(key);
+}
+
+/**
+ * Builds a mono 48 kHz wav of white noise whose loudness steps up on a schedule.
+ * The meter reads level = rms * 260, and white noise of amplitude a has
+ * rms = a / sqrt 3: a 0.05 -> level ~7 (quiet), 0.23 -> ~35 (just right),
+ * 0.5 -> ~75 (too loud; the site's limit is 40).
+ */
+function fakeMic(name) {
+  const plans = {
+    // [seconds, amplitude] from the moment the mic opens
+    "noise-demo": [[1.2, 0.05], [2.4, 0.23], [6.5, 0.5], [6, 0.05]],
+  };
+  const plan = plans[name];
+  const file = path.join(os.tmpdir(), `fake-mic-${name}.wav`);
+  const inputs = plan.flatMap(([d, a]) => ["-f", "lavfi", "-t", String(d), "-i", `anoisesrc=r=48000:a=${a}:c=white`]);
+  const cat = plan.map((_, i) => `[${i}:a]`).join("") + `concat=n=${plan.length}:v=0:a=1`;
+  execFileSync("ffmpeg", ["-y", "-loglevel", "error", ...inputs, "-filter_complex", cat, "-ac", "1", "-ar", "48000", file]);
+  return file.replaceAll("\\", "/");
 }
 
 async function film(name, shot) {
-  const browser = await browserFor(shot.device);
+  const browser = await browserFor(shot.device, shot.audio);
   const ctx = await browser.newContext({ ...shot.device.context, locale: "th-TH", permissions: ["microphone"] });
   // Essential-cookies-only, so the consent banner never appears on camera.
   await ctx.addInitScript(() => { try { localStorage.setItem("khuncool.cookieConsent", "essential"); } catch {} });

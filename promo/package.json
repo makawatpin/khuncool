@@ -13,6 +13,8 @@
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts Promo out/khuncool-promo.mp4",
     "render:duck": "remotion render src/index.ts DuckRace out/duck-race.mp4",
+    "render:krathong": "remotion render src/index.ts Krathong out/krathong-raw.mp4",
+    "render:noise": "remotion render src/index.ts NoiseMeter out/noise-meter-raw.mp4",
     "still": "remotion still src/index.ts Promo",
     "typecheck": "tsc --noEmit"
   },
