@@ -359,6 +359,56 @@ const SHOTS = {
     setup: fullscreen,
     film: async (p) => { await wait(600); await btn(p, /เริ่มวัดเสียง/).click(); await wait(14000); },
   },
+  // Daily records promo (dc-): the pages start with a sample class of 8 (ป.5/2), so the
+  // demo data is only what the UI itself does: tap "all done", then ✗ one student.
+  "m-dc-tooth": {
+    device: MOBILE, url: "/tools/toothbrushing",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(900); await btn(p, /แปรงครบทุกคน/).click();
+      await wait(1500); await p.getByRole("button", { name: /^ไม่แปรง$/ }).nth(2).click(); await wait(1800);
+    },
+  },
+  "m-dc-milk": {
+    device: MOBILE, url: "/tools/milk",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(900); await btn(p, /ดื่มครบทุกคน/).click();
+      await wait(1500); await p.getByRole("button", { name: /^ไม่ดื่ม$/ }).nth(3).click(); await wait(1800);
+    },
+  },
+  "m-dc-save": {
+    device: MOBILE, url: "/tools/savings",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(900); await btn(p, /^\+20$/).click();
+      await wait(800); await btn(p, /ฝากทุกคน/).click(); await wait(2600);
+    },
+  },
+  "d-dc-tooth": {
+    device: DESKTOP, url: "/tools/toothbrushing",
+    setup: fullscreen,
+    film: async (p) => {
+      await wait(900); await btn(p, /แปรงครบทุกคน/).click();
+      await wait(1400); await p.getByRole("button", { name: /^ไม่แปรง$/ }).nth(2).click(); await wait(1800);
+    },
+  },
+  // A month of records built through the UI (back a school day, "all done", ✗ one student now
+  // and then), then the monthly table; the seeding happens before the camera rolls.
+  "d-dc-month": {
+    device: DESKTOP, url: "/tools/toothbrushing",
+    setup: async (p) => {
+      await btn(p, /แปรงครบทุกคน/).click(); await wait(250);
+      for (let i = 0; i < 12; i++) {
+        await btn(p, "วันก่อนหน้า").click(); await wait(250);
+        await btn(p, /ครบทุกคน/).click(); await wait(250);
+        if (i % 3 === 1) { await p.getByRole("button", { name: /^ไม่แปรง$/ }).nth(i % 6).click(); await wait(250); }
+      }
+      await p.getByRole("tab", { name: /ตารางรายเดือน/ }).click(); await wait(600);
+      await fullscreen(p);
+    },
+    film: async (p) => { await wait(1000); await smoothScroll(p, 500, 3000); await wait(1200); },
+  },
   "d-typing": {
     device: DESKTOP, url: "/media/computer/typing-defense",
     setup: fullscreen,

@@ -10,6 +10,7 @@ own `package.json`, excluded from the site's `tsconfig.json`, ESLint and git
 | khuncool.com overview | `videos/promo.json` | `Promo` (`src/Promo.tsx`, scenes in `src/scenes/`) | `npm run render` |
 | สุ่มเป็ด (duck race) | `videos/duck-race.json` | `DuckRace` (`src/duck/DuckRace.tsx`) | `npm run render:duck` |
 | ลอยกระทงออนไลน์ (krathong designer) | `videos/krathong.json` | `Krathong` (`src/krathong/Krathong.tsx`) | `npm run render:krathong` |
+| at / on / in กับเวลา (English short, teacher on camera) | own recording, word onsets in the file | `EnAtOnInTime` (`src/english/AtOnInTime.tsx`) | `npm run render:en-time` |
 
 All share one engine (`src/Reel.tsx`): scene order, beat-snapped timing,
 transitions, voice, sound effects and music. A new video is a script in
@@ -64,3 +65,8 @@ Noise meter video (`videos/noise-meter.json`, `npm run render:noise`) films the
 meter with a fake microphone (`audio: "noise-demo"` in `scripts/record.mjs`:
 a generated wav that goes quiet, just right, too loud) so the faces and alarm
 show on camera.
+
+Daily records video (`videos/daily-records.json`, `npm run render:daily`) shows
+toothbrushing, milk and savings (`/tools/...`). Footage is filmed with the pages'
+own sample class; the monthly table shot first builds 12 school days through the
+UI (back a day, "all done", ✗ one student now and then). `m-dc-*` / `d-dc-*` shots.

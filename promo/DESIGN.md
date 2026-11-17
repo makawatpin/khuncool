@@ -12,6 +12,8 @@ Reference videos (match these):
 | khuncool.com overview | `videos/promo.json` | `Promo` — `src/Promo.tsx` + `src/scenes/scenes.tsx` |
 | สุ่มเป็ด (duck race) | `videos/duck-race.json` | `DuckRace` — `src/duck/DuckRace.tsx` |
 | ลอยกระทงออนไลน์ (krathong designer) | `videos/krathong.json` | `Krathong` — `src/krathong/Krathong.tsx` |
+| วัดเสียงในห้อง (noise meter) | `videos/noise-meter.json` | `NoiseMeter` — `src/noise/NoiseMeter.tsx` |
+| แปรงฟัน/ดื่มนม/ออมเงิน (daily records) | `videos/daily-records.json` | `DailyRecords` — `src/daily/DailyRecords.tsx` |
 
 `src/duck/DuckRace.tsx` is the best template for a single-feature video.
 

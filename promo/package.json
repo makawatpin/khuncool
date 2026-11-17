@@ -15,6 +15,8 @@
     "render:duck": "remotion render src/index.ts DuckRace out/duck-race.mp4",
     "render:krathong": "remotion render src/index.ts Krathong out/krathong-raw.mp4",
     "render:noise": "remotion render src/index.ts NoiseMeter out/noise-meter-raw.mp4",
+    "render:en-time": "remotion render src/index.ts EnAtOnInTime out/en-at-on-in-time-raw.mp4",
+    "render:daily": "remotion render src/index.ts DailyRecords out/daily-records-raw.mp4",
     "still": "remotion still src/index.ts Promo",
     "typecheck": "tsc --noEmit"
   },

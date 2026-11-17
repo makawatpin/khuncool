@@ -7,8 +7,10 @@ import "@fontsource/fredoka/700.css";
 // rendered every emoji blank in the headless renderer, so it is not used.)
 import React from "react";
 import { Composition, staticFile } from "remotion";
+import { DAILY_RECORDS, DailyRecords } from "./daily/DailyRecords";
 import { DUCK_RACE, DuckRace } from "./duck/DuckRace";
 import { KRATHONG, Krathong } from "./krathong/Krathong";
+import { EnAtOnInTime } from "./english/AtOnInTime";
 import { NOISE_METER, NoiseMeter } from "./noise/NoiseMeter";
 import { PROMO, Promo } from "./Promo";
 import type { ReelConfig, ReelProps } from "./Reel";
@@ -44,5 +46,7 @@ export const RemotionRoot: React.FC = () => (
     <Reel name="DuckRace" config={DUCK_RACE} component={DuckRace} />
     <Reel name="Krathong" config={KRATHONG} component={Krathong} />
     <Reel name="NoiseMeter" config={NOISE_METER} component={NoiseMeter} />
+    <Reel name="DailyRecords" config={DAILY_RECORDS} component={DailyRecords} />
+    <EnAtOnInTime />
   </>
 );

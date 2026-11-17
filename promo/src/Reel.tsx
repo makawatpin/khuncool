@@ -31,7 +31,7 @@ export type ReelProps = {
 const VO_LEAD = 3;
 
 /** Hold the first frame until the Thai/Latin fonts are ready, so no frame renders in a fallback font. */
-function useFonts() {
+export function useFonts() {
   const [handle] = useState(() => delayRender("fonts"));
   useEffect(() => {
     Promise.all(
