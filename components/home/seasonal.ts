@@ -43,22 +43,16 @@ export const SEASONAL: Scheduled[] = [
     href: "/media/social-studies/krathong-designer",
     image: "/assets/loy-krathong-online-cover.webp",
   },
+  // The gift exchange takes all of December: schools hold their New Year
+  // parties around 20–29 Dec, and teachers search for a way to draw names
+  // from early December. Santa Sleigh is linked from the gift article and
+  // the English hub instead of taking the banner.
   {
     from: "12-01",
-    to: "12-25",
-    kicker: "🎄 ช่วงนี้ · คริสต์มาส",
-    title: "Santa Sleigh ฝึกภาษาอังกฤษไปกับซานต้า",
-    text: "เกมภาษาอังกฤษธีมคริสต์มาส เปิดเล่นหน้าชั้นได้ทันที",
-    cta: "เล่นเลย",
-    href: "/media/english/santa-sleigh",
-    image: "/assets/game-covers/santa-sleigh.webp",
-  },
-  {
-    from: "12-26",
     to: "01-05",
     kicker: "🎁 ช่วงนี้ · ปีใหม่",
-    title: "สุ่มจับของขวัญปีใหม่ในห้องเรียน",
-    text: "ใส่รายชื่อแล้วสุ่มจับคู่แลกของขวัญ ไม่มีใครจับได้ชื่อตัวเอง",
+    title: "จับฉลากแลกของขวัญปีใหม่ในห้องเรียน",
+    text: "เปิดกล่องของขวัญบนจอทีละคน ต่อกันเป็นห่วงโซ่ ไม่มีใครจับได้ชื่อตัวเอง",
     cta: "เริ่มจับของขวัญ",
     href: "/gift-exchange",
     image: "/assets/tool-covers/gift-exchange.webp",

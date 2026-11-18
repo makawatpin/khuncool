@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   keywords: [
     "จับฉลากแลกของขวัญ",
     "จับฉลากออนไลน์",
+    "จับสลากแลกของขวัญ",
     "แลกของขวัญปีใหม่",
     "secret santa",
     "กิจกรรมปีใหม่ในห้องเรียน",
@@ -238,6 +239,12 @@ export default function GiftExchangePage() {
           เครื่องมือที่ใช้คู่กันได้
         </h2>
         <div className="flex flex-wrap gap-2.5">
+          <Link
+            href="/blog/gift-exchange-new-year"
+            className="rounded-pill border border-[#C6C9FB] bg-[#F7F7FE] text-primary px-3.5 py-2 text-[13px] font-semibold no-underline hover:opacity-70"
+          >
+            📖 ไอเดียของขวัญตามงบ และแผนกิจกรรมปีใหม่
+          </Link>
           <Link
             href="/classrooms"
             className="rounded-pill border border-[#C6C9FB] bg-[#F7F7FE] text-primary px-3.5 py-2 text-[13px] font-semibold no-underline hover:opacity-70"

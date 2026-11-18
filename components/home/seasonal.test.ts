@@ -15,6 +15,12 @@ describe("pickSpotlight", () => {
     expect(at("2026-10-31T16:00:00Z")).toBe("/media/english/halloween-wordle");
   });
 
+  it("shows the gift exchange from the start of December", () => {
+    // 30 Nov 17:00 UTC is already 1 Dec 00:00 in Bangkok.
+    expect(at("2026-11-30T17:00:00Z")).toBe("/gift-exchange");
+    expect(at("2026-12-10T05:00:00Z")).toBe("/gift-exchange");
+  });
+
   it("handles the window that crosses New Year", () => {
     expect(at("2026-12-28T05:00:00Z")).toBe("/gift-exchange");
     expect(at("2027-01-03T05:00:00Z")).toBe("/gift-exchange");
